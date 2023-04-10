@@ -16,6 +16,7 @@ namespace Entityframework_MSSQL_Test.Models
         public int Age { get; set; }
         public int Balance { get; set; }
 
-        public List<Address> Addresses { get; set; }
+        public List<Address> Addresses { get; set; } = new List<Address>();
+        public List<Email> Emails { get; set; } = new List<Email>();
     }
 }
