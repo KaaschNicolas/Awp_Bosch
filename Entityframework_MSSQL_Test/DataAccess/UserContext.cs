@@ -11,13 +11,14 @@ namespace Entityframework_MSSQL_Test.DataAccess
 {
     public class UserContext : DbContext
     {
+        public UserContext(DbContextOptions<UserContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Email> Emails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;Integrated Security=True;");
+            optionsBuilder.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Nicolas!1234;TrustServerCertificate=True");
         }
     }
 }
