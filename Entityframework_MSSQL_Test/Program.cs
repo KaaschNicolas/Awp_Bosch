@@ -33,6 +33,20 @@ public class Program
             db.SaveChanges();
             Console.WriteLine($"Uploaded {db.Users.Count()} DB Records.");
         }
+
+        var users = db.Users
+            .Include(a => a.Emails)
+            .ToList();
+
+        if(users.Count != 0)
+        {
+            Console.WriteLine("Not Empty");
+        } else
+        {
+            Console.WriteLine("Empty");
+
+        }
+        
     }
 
     static void BuildConfig(IConfigurationBuilder builder)
