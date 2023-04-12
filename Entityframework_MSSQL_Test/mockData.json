@@ -1,72 +1,112 @@
 [
   {
-    "first_name": "Orel",
-    "last_name": "Benedtti",
-    "email": "obenedtti0@shutterfly.com",
-    "balance": "$40.63",
-    "age": 56
+    "Name": "Orel",
+    "LastName": "Benedtti",
+    "Emails": [
+      {
+        "EmailAddress": "obenedtti0@shutterfly.com"
+      }
+    ],
+    "Balance": "$40.63",
+    "Age": 56
   },
   {
-    "first_name": "Josi",
-    "last_name": "Owen",
-    "email": "jowen1@baidu.com",
-    "balance": "$19.31",
-    "age": 3
+    "Name": "Josi",
+    "LastName": "Owen",
+    "Emails": [
+      {
+        "EmailAddress": "jowen1@baidu.com"
+      }
+    ],
+    "Balance": "$19.31",
+    "Age": 3
   },
   {
-    "first_name": "Juliann",
-    "last_name": "Jindrak",
-    "email": "jjindrak2@dropbox.com",
-    "balance": "$30.95",
-    "age": 93
+    "Name": "Juliann",
+    "LastName": "Jindrak",
+    "Emails": [
+      {
+        "EmailAddress": "jjindrak2@dropbox.com"
+      }
+    ],
+    "Balance": "$30.95",
+    "Age": 93
   },
   {
-    "first_name": "Fionnula",
-    "last_name": "Rubes",
-    "email": "frubes3@upenn.edu",
-    "balance": "$72.20",
-    "age": 5
+    "Name": "Fionnula",
+    "LastName": "Rubes",
+    "Emails": [
+      {
+        "EmailAddress": "frubes3@upenn.edu"
+      }
+    ],
+    "Balance": "$72.20",
+    "Age": 5
   },
   {
-    "first_name": "Benny",
-    "last_name": "Bearblock",
-    "email": "bbearblock4@icio.us",
-    "balance": "$69.04",
-    "age": 63
+    "Name": "Benny",
+    "LastName": "Bearblock",
+    "Emails": [
+      {
+        "EmailAddress": "bbearblock4@icio.us"
+      }
+    ],
+    "Balance": "$69.04",
+    "Age": 63
   },
   {
-    "first_name": "Georgette",
-    "last_name": "McCarthy",
-    "email": "gmccarthy5@diigo.com",
-    "balance": "$31.34",
-    "age": 95
+    "Name": "Georgette",
+    "LastName": "McCarthy",
+    "Emails": [
+      {
+        "EmailAddress": "gmccarthy5@diigo.com"
+      }
+    ],
+    "Balance": "$31.34",
+    "Age": 95
   },
   {
-    "first_name": "Clyde",
-    "last_name": "O'Coskerry",
-    "email": "cocoskerry6@sphinn.com",
-    "balance": "$70.95",
-    "age": 85
+    "Name": "Clyde",
+    "LastName": "O'Coskerry",
+    "Emails": [
+      {
+        "EmailAddress": "cocoskerry6@sphinn.com"
+      }
+    ],
+    "Balance": "$70.95",
+    "Age": 85
   },
   {
-    "first_name": "Cris",
-    "last_name": "Jerdein",
-    "email": "cjerdein7@merriam-webster.com",
-    "balance": "$54.81",
-    "age": 55
+    "Name": "Cris",
+    "LastName": "Jerdein",
+    "Emails": [
+      {
+        "EmailAddress": "cjerdein7@merriam-webster.com"
+      }
+    ],
+    "Balance": "$54.81",
+    "Age": 55
   },
   {
-    "first_name": "Hercule",
-    "last_name": "Hixson",
-    "email": "hhixson8@narod.ru",
-    "balance": "$97.90",
-    "age": 22
+    "Name": "Hercule",
+    "LastName": "Hixson",
+    "Emails": [
+      {
+        "EmailAddress": "hhixson8@narod.ru"
+      }
+    ],
+    "Balance": "$97.90",
+    "Age": 22
   },
   {
-    "first_name": "Ernestus",
-    "last_name": "Laugheran",
-    "email": "elaugheran9@blinklist.com",
-    "balance": "$65.95",
-    "age": 52
+    "Name": "Ernestus",
+    "LastName": "Laugheran",
+    "Emails": [
+      {
+        "EmailAddress": "elaugheran9@blinklist.com"
+      }
+    ],
+    "Balance": "$65.95",
+    "Age": 52
   }
 ]
