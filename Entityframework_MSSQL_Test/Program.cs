@@ -36,11 +36,13 @@ public class Program
 
         var users = db.Users
             .Include(a => a.Emails)
+            .Where(a => a.Age > 0)
+            //.Where(a => CheckAge(a.Age))
             .ToList();
 
         if(users.Count != 0)
         {
-            Console.WriteLine("Not Empty");
+            Console.WriteLine($"Not Empty {users.Count}");
         } else
         {
             Console.WriteLine("Empty");
@@ -48,6 +50,8 @@ public class Program
         }
         
     }
+
+    private static bool CheckAge(int age) => age <= 50;
 
     static void BuildConfig(IConfigurationBuilder builder)
     {
