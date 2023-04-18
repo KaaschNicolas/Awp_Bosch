@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Models
 {
-    public class Fehlertype:BasisEntitaet
+    public class Fehlertype : BasisEntitaet
     {
         public int Id { get; set; }
 

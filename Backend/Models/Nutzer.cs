@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Models
 {
-    public class Nutzer:BasisEntitaet
+    public class Nutzer : BasisEntitaet
     {
         public int Id { get; set; }
         public string Name { get; set; }

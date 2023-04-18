@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Models
 {
-    public  class Leiterplatte
+    public class Leiterplatte : BasisEntitaet
     {
         public int Id { get; set; }
         public string SerienNummer { get; set; }

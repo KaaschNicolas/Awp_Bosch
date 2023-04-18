@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Models
 {
-    public class Umbuchung:BasisEntitaet
+    public class Umbuchung : BasisEntitaet
     {
         public int Id { get; set; }
         public string Anmerkung { get; set; }

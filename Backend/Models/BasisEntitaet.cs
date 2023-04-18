@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Models
 {
-    public class BasisEntitaet
+    public abstract class BasisEntitaet
     {
         public DateTime CreatedDate { get; set; }
         public DateTime DeletedDate { get; set; }

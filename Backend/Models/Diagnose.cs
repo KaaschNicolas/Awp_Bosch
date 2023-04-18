@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Models
 {
-    public class Diagnose:BasisEntitaet
+    public class Diagnose : BasisEntitaet
     {
         public int Id { get; set; }
 

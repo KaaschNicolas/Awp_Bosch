@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Models
 {
-    public class Leiterplattentyp:BasisEntitaet
+    public class Leiterplattentyp : BasisEntitaet
     {
         public string Id { get; set; }                
         [Required]

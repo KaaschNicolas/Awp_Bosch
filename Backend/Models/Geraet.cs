@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Models
 {
-    public class Geraet: BasisEntitaet
+    public class Geraet : BasisEntitaet
     {
         public int Id { get; set; }
 
