@@ -13,12 +13,12 @@ namespace Backend.DataAccess
     {
         public BoschContext(DbContextOptions<BoschContext> options) : base(options) { }
         public DbSet<Anmerkung> Anmerkungen { get; set; }
-        public DbSet<BasisEntitaet> BasisEntitaten { get; set; }
         public DbSet<Diagnose> Diagnosen { get; set; }
-        public DbSet<Fehlertype> Fehlertypen { get; set; }
+        public DbSet<Fehlertyp> Fehlertypen { get; set; }
         public DbSet<Geraet> Geraete { get; set; }
         public DbSet<LagerOrt> LagerOrte { get; set; }
         public DbSet<Leiterplattentyp> Leiterplattentypen { get; set; }
+        public DbSet<Leiterplatte> Leiterplatten { get; set; }
         public DbSet<Nutzer> Nutzende { get; set; }
         public DbSet<Umbuchung> Umbuchungen { get; set; }
 
