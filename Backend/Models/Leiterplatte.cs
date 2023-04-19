@@ -19,7 +19,7 @@ namespace Backend.Models
         public Geraet Einschraenkung { get; set; }
         [Column(TypeName = "nvarchar(650)")]
         public string Fehlerbeschreibung { get; set; }
-        public List<Fehlertype> Fehlertypen { get; set; }
+        public List<Fehlertyp> Fehlertypen { get; set; }
         public bool Abgeschlossen { get; set; }
         [Required]
         public Leiterplattentyp Leiterplattentyp { get; set; }
