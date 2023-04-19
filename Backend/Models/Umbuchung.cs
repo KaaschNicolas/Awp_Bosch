@@ -15,6 +15,5 @@ namespace Backend.Models
         public LagerOrt Nach { get; set; }
         [Required]
         public Nutzer VerbuchtVon { get; set; }
-        public Diagnose Enddiagnose { get; set; }
     }
 }
