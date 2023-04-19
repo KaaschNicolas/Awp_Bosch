@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Backend.DataAccess
 {
-    public class BoschContext: DbContext
+    public class BoschContext : DbContext
     {
         public BoschContext(DbContextOptions<BoschContext> options) : base(options) { }
         public DbSet<Anmerkung> Anmerkungen { get; set; }
@@ -18,6 +18,7 @@ namespace Backend.DataAccess
         public DbSet<Fehlertype> Fehlertypen { get; set; }
         public DbSet<Geraet> Geraete { get; set; }
         public DbSet<LagerOrt> LagerOrte { get; set; }
+        public DbSet<Leiterplatte> Leiterplatten { get; set; }
         public DbSet<Leiterplattentyp> Leiterplattentypen { get; set; }
         public DbSet<Nutzer> Nutzende { get; set; }
         public DbSet<Umbuchung> Umbuchungen { get; set; }
