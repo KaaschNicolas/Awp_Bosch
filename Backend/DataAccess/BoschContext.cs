@@ -19,7 +19,6 @@ namespace Backend.DataAccess
         public DbSet<LagerOrt> LagerOrte { get; set; }
         public DbSet<Leiterplatte> Leiterplatten { get; set; }
         public DbSet<Leiterplattentyp> Leiterplattentypen { get; set; }
-        public DbSet<Leiterplatte> Leiterplatten { get; set; }
         public DbSet<Nutzer> Nutzende { get; set; }
         public DbSet<Umbuchung> Umbuchungen { get; set; }
 
