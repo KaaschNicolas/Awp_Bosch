@@ -9,12 +9,13 @@ namespace Backend.Models
 {
     public class Umbuchung : BasisEntitaet
     {
+        [Key]
         public int Id { get; set; }
         public string Anmerkung { get; set; }
         [Required]
         public LagerOrt Nach { get; set; }
         [Required]
         public Nutzer VerbuchtVon { get; set; }
-        public Diagnose Enddiagnose { get; set; }
+        public Leiterplatte Leiterplatte { get; set; }
     }
 }
