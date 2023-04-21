@@ -17,6 +17,7 @@ namespace Backend.Models
         [Required]
         [Column(TypeName = "nvarchar(650)")]
         public string Name { get; set; }
+        public List<Leiterplatte> Leiterplatten { get; set; };
 
     }
 }

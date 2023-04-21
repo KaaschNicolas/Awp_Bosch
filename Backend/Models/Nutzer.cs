@@ -19,5 +19,7 @@ namespace Backend.Models
         [MaxLength(50)]
         [Column(TypeName = "nvarchar(50)")]
         public string AdUsername { get; set; }
+        public List<Umbuchung> Umbuchungen { get; set; }
+        public List<Anmerkung> Anmerkungen { get; set; }
     }
 }
