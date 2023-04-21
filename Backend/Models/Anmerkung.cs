@@ -18,5 +18,6 @@ namespace Backend.Models
         public string Name { get; set; }
         [Required]
         public Nutzer VermerktVon {get; set;} 
+        public Leiterplatte Leiterplatte { get; set; }
     }
 }

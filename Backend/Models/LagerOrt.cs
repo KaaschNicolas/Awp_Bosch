@@ -18,6 +18,7 @@ namespace Backend.Models
         public string LagerName { get; set; }
         public int VerweildauerGelb { get; set; }
         public int VerweildauerRot { get; set; }
+        public List<Umbuchung> Umbuchungen { get; set; }
 
     }
 }

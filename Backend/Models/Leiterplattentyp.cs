@@ -18,5 +18,7 @@ namespace Backend.Models
         [Column(TypeName = "nvarchar(10)")]
         public string LpSachnummer { get; set; }
         public int MaxWeitergaben { get; set; }           
+        public List<Leiterplatte> Leiterplatten { get; set; }
+
     }
 }
