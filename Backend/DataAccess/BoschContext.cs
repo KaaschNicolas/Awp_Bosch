@@ -11,6 +11,7 @@ namespace Backend.DataAccess
 {
     public class BoschContext : DbContext
     {
+        public BoschContext() { }
         public BoschContext(DbContextOptions<BoschContext> options) : base(options) { }
         public DbSet<Anmerkung> Anmerkungen { get; set; }
         public DbSet<Diagnose> Diagnosen { get; set; }

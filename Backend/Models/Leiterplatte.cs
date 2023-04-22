@@ -25,8 +25,10 @@ namespace Backend.Models
         public Leiterplattentyp Leiterplattentyp { get; set; }
         public Anmerkung Anmerkung { get; set; }
         [Required]
+        [NotMapped]
         public Umbuchung Einbuchung { get; set; }
         public List<Umbuchung> Weitergaben { get; set; }
+        [NotMapped]
         public Umbuchung EndgueltigerVerbleibOrt { get; set; }
         public Diagnose Enddiagnose { get; set; }
 
