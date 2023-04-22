@@ -19,7 +19,6 @@ namespace Backend.Models
         [Required]
         public Nutzer VermerktVon {get; set;}
         
-        [ForeignKey("Anmerkung")]
         public Leiterplatte Leiterplatte { get; set; }
     }
 }

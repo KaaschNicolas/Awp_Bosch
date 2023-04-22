@@ -23,6 +23,7 @@ namespace Backend.Models
         public bool Abgeschlossen { get; set; }
         [Required]
         public Leiterplattentyp Leiterplattentyp { get; set; }
+        [ForeignKey("Leiterplatte")]
         public Anmerkung Anmerkung { get; set; }
         [Required]
         [NotMapped]
