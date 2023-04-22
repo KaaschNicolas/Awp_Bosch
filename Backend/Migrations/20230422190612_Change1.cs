@@ -14,34 +14,24 @@ namespace Backend.Migrations
                 name: "FK_Anmerkungen_Leiterplatten_Anmerkung",
                 table: "Anmerkungen");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Anmerkungen_Anmerkung",
-                table: "Anmerkungen");
-
             migrationBuilder.DropColumn(
                 name: "Anmerkung",
                 table: "Anmerkungen");
 
             migrationBuilder.AddColumn<int>(
-                name: "Leiterplatte",
+                name: "AnmerkungId",
                 table: "Leiterplatten",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Leiterplatten_Leiterplatte",
-                table: "Leiterplatten",
-                column: "Leiterplatte",
-                unique: true);
-
             migrationBuilder.AddForeignKey(
                 name: "FK_Leiterplatten_Anmerkungen_Leiterplatte",
                 table: "Leiterplatten",
-                column: "Leiterplatte",
+                column: "AnmerkungId",
                 principalTable: "Anmerkungen",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.NoAction);
         }
 
         /// <inheritdoc />
