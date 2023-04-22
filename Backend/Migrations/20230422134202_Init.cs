@@ -233,17 +233,6 @@ namespace Backend.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Anmerkungen_Anmerkung",
-                table: "Anmerkungen",
-                column: "Anmerkung",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Anmerkungen_VermerktVonId",
-                table: "Anmerkungen",
-                column: "VermerktVonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FehlertypLeiterplatte_LeiterplattenId",
                 table: "FehlertypLeiterplatte",
                 column: "LeiterplattenId");
@@ -252,16 +241,6 @@ namespace Backend.Migrations
                 name: "IX_Leiterplatten_EinschraenkungId",
                 table: "Leiterplatten",
                 column: "EinschraenkungId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Leiterplatten_EnddiagnoseId",
-                table: "Leiterplatten",
-                column: "EnddiagnoseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Leiterplatten_LeiterplattentypId",
-                table: "Leiterplatten",
-                column: "LeiterplattentypId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Umbuchungen_LeiterplatteId",
@@ -273,10 +252,6 @@ namespace Backend.Migrations
                 table: "Umbuchungen",
                 column: "NachId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Umbuchungen_VerbuchtVonId",
-                table: "Umbuchungen",
-                column: "VerbuchtVonId");
         }
 
         /// <inheritdoc />
