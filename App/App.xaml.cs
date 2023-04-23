@@ -67,6 +67,8 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
 
             // Views and ViewModels
+            services.AddTransient<MDPartNumberViewModel>();
+            services.AddTransient<MDPartNumberPage>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
             services.AddTransient<BlankViewModel>();

@@ -218,4 +218,10 @@
   <data name="Shell_UserManagement.Content" xml:space="preserve">
     <value>User Management</value>
   </data>
+  <data name="Shell_Blank.Content" xml:space="preserve">
+    <value>Blank</value>
+  </data>
+  <data name="Shell_MDPartNumber.Content" xml:space="preserve">
+    <value>MDPartNumber</value>
+  </data>
 </root>
