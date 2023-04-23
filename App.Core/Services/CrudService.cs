@@ -29,6 +29,20 @@ namespace App.Core.Services
 
         public List<Nutzer> GetNutzer() => _boschContext.Nutzende.ToList();
 
+        public List<Umbuchung> GetUmbuchungen()
+        {
+            try
+            {
+                _boschContext.Umbuchungen.ToList();
+            }
+            catch (DbUpdateException)
+            {
+
+                throw;
+            }
+            return null;
+        }
+
         public List<Umbuchung> GetUmbuchungen(Leiterplatte leiterplatte)
         {
             string test;
@@ -52,7 +66,7 @@ namespace App.Core.Services
             try
             {
                 var query = _boschContext.Leiterplatten.Add(leiterplatte);
-                _boschContext.SaveChanges();
+                Update();
             }
             catch (DbUpdateException ex)
             {
@@ -62,13 +76,26 @@ namespace App.Core.Services
             return null;
         }
 
-        public List<Leiterplatte> UpdateLeiterplatte()
+        public void Update()
         {
             try
             {
                 _boschContext.SaveChanges();
             }
-            catch (Exception)
+            catch (DbUpdateException)
+            {
+
+                throw;
+            }
+        }
+
+        public List<Fehlertyp> GetErrorType()
+        {
+            try
+            {
+                _boschContext.Fehlertypen.ToList();
+            }
+            catch (DbUpdateException)
             {
 
                 throw;
@@ -76,5 +103,18 @@ namespace App.Core.Services
             return null;
         }
 
+        public void CreateErrorType(Fehlertyp errorType)
+        {
+            try
+            {
+                _boschContext.Fehlertypen.Add(errorType);
+                Update();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
