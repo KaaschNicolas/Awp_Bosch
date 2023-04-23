@@ -27,6 +27,7 @@ namespace App.Core.Models
         {
             get; set;
         }
+
         public Leiterplatte Leiterplatte
         {
             get; set;
