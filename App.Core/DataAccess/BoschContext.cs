@@ -52,7 +52,7 @@ namespace App.Core.DataAccess
             get; set;
         }
 
-
+        public DbSet<AuditEntry> AuditEntries { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Nicolas!1234;TrustServerCertificate=True");
