@@ -23,10 +23,13 @@ namespace Backend.Models
         public bool Abgeschlossen { get; set; }
         [Required]
         public Leiterplattentyp Leiterplattentyp { get; set; }
+        [ForeignKey("AnmerkungId")]
         public Anmerkung Anmerkung { get; set; }
         [Required]
+        [NotMapped]
         public Umbuchung Einbuchung { get; set; }
         public List<Umbuchung> Weitergaben { get; set; }
+        [NotMapped]
         public Umbuchung EndgueltigerVerbleibOrt { get; set; }
         public Diagnose Enddiagnose { get; set; }
 

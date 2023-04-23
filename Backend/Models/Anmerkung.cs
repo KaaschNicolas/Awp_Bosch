@@ -17,7 +17,8 @@ namespace Backend.Models
         [Column(TypeName = "nvarchar(650)")]
         public string Name { get; set; }
         [Required]
-        public Nutzer VermerktVon {get; set;} 
+        public Nutzer VermerktVon {get; set;}
+        
         public Leiterplatte Leiterplatte { get; set; }
     }
 }
