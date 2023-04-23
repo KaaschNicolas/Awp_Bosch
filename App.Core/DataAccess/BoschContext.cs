@@ -11,6 +11,9 @@ namespace App.Core.DataAccess
 {
     public class BoschContext : DbContext
     {
+        public BoschContext()
+        {
+        }
         public BoschContext(DbContextOptions<BoschContext> options) : base(options) { }
         public DbSet<Anmerkung> Anmerkungen
         {
@@ -32,11 +35,11 @@ namespace App.Core.DataAccess
         {
             get; set;
         }
-        public DbSet<Leiterplattentyp> Leiterplattentypen
+        public DbSet<Leiterplatte> Leiterplatten
         {
             get; set;
         }
-        public DbSet<Leiterplatte> Leiterplatten
+        public DbSet<Leiterplattentyp> Leiterplattentypen
         {
             get; set;
         }

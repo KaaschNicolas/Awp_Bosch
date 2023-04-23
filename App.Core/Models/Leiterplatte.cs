@@ -44,11 +44,13 @@ namespace App.Core.Models
         {
             get; set;
         }
+        [ForeignKey("AnmerkungId")]
         public Anmerkung Anmerkung
         {
             get; set;
         }
         [Required]
+        [NotMapped]
         public Umbuchung Einbuchung
         {
             get; set;
@@ -57,6 +59,7 @@ namespace App.Core.Models
         {
             get; set;
         }
+        [NotMapped]
         public Umbuchung EndgueltigerVerbleibOrt
         {
             get; set;
