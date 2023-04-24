@@ -9,6 +9,7 @@ using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace App.Core.Services
 {
@@ -25,9 +26,33 @@ namespace App.Core.Services
 
         public List<LagerOrt> GetLagerorte() => _boschContext.LagerOrte.ToList();
 
-        public List<Leiterplattentyp> GetLeiterplattentypen => _boschContext.Leiterplattentypen.ToList();
+        public List<Leiterplattentyp> GetPcbType()
+        {
+            try
+            {
+                var quuery = _boschContext.Leiterplattentypen.ToList();
+            }
+            catch (DbUpdateException)
+            {
 
-        public List<Nutzer> GetNutzer() => _boschContext.Nutzende.ToList();
+                throw;
+            }
+            return null;
+        }
+
+        public List<Nutzer> GetUser()
+        {
+            try
+            {
+                _boschContext.Nutzende.ToList();
+            }
+            catch (DbUpdateException)
+            {
+
+                throw;
+            }
+            return null;
+        }
 
         public List<Umbuchung> GetUmbuchungen()
         {
@@ -115,6 +140,34 @@ namespace App.Core.Services
 
                 throw;
             }
+        }
+
+        public List<LagerOrt> GetStorageLocation()
+        {
+            try
+            {
+                _boschContext.LagerOrte.ToList();
+            }
+            catch (DbUpdateException)
+            {
+
+                throw;
+            }
+            return null;
+        }
+
+        public List<LagerOrt> GetStorageLocationByPcb(Leiterplatte pcb)
+        {
+            try
+            {
+                //_boschContext.LagerOrte.Where(x => x.Umbuchungen.ForEach(e => e == pcb.Weitergaben));
+            }
+            catch (DbUpdateException)
+            {
+
+                throw;
+            }
+            return null;
         }
     }
 }
