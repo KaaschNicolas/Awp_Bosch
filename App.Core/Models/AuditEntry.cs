@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 namespace App.Core.Models;
 public class AuditEntry : BasisEntitaet
 {
+    [Key]
+    public int Id { get; set; }
+    
     [MaxLength(250)]
     public string Message { get; set; }
     
