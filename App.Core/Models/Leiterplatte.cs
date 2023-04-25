@@ -54,7 +54,7 @@ namespace App.Core.Models
         /// Liste der Weitergaben einer Laeterplatte
         /// Die Reihenfolge gilt nach ID bzw. Created_At
         /// Die erste Weitergabe ist die Einbuchung
-        /// Ist die leiterplatte abgeschlossen,
+        /// Ist die Leiterplatte abgeschlossen,
         /// so ist die letzte Umbunchung der EndgültigeVerbleibOrt
         /// </summary>
         public List<Umbuchung> Weitergaben
