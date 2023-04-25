@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Anmerkung : BasisEntitaet
+    public class StorageLocation : BaseEntity
     {
         [Key]
         public int Id
@@ -17,20 +17,23 @@ namespace App.Core.Models
             get; set;
         }
         [Required]
-        [Column(TypeName = "nvarchar(650)")]
-        public string Name
+        [Column(TypeName = "nvarchar(50)")]
+        public string LagerName
         {
             get; set;
         }
-        [Required]
-        public Nutzer VermerktVon
+        public int VerweildauerGelb
+        {
+            get; set;
+        }
+        public int VerweildauerRot
+        {
+            get; set;
+        }
+        public List<Transfer> Umbuchungen
         {
             get; set;
         }
 
-        public Leiterplatte Leiterplatte
-        {
-            get; set;
-        }
     }
 }

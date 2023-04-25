@@ -15,44 +15,45 @@ namespace App.Core.DataAccess
         {
         }
         public BoschContext(DbContextOptions<BoschContext> options) : base(options) { }
-        public DbSet<Anmerkung> Anmerkungen
+        public DbSet<Comment> Comments
         {
             get; set;
         }
-        public DbSet<Diagnose> Diagnosen
+        public DbSet<Diagnose> Diagnoses
         {
             get; set;
         }
-        public DbSet<Fehlertyp> Fehlertypen
+        public DbSet<ErrorType> ErrorTypes
         {
             get; set;
         }
-        public DbSet<Geraet> Geraete
+        public DbSet<Device> Devices
         {
             get; set;
         }
-        public DbSet<LagerOrt> LagerOrte
+        public DbSet<StorageLocation> StorageLocations
         {
             get; set;
         }
-        public DbSet<Leiterplatte> Leiterplatten
+        public DbSet<Pcb> Pcbs
         {
             get; set;
         }
-        public DbSet<Leiterplattentyp> Leiterplattentypen
+        public DbSet<PcbType> PcbTypes
         {
             get; set;
         }
-        public DbSet<Nutzer> Nutzende
+        public DbSet<User> Users
         {
             get; set;
         }
-        public DbSet<Umbuchung> Umbuchungen
+        public DbSet<Transfer> Transfers
         {
             get; set;
         }
 
         public DbSet<AuditEntry> AuditEntries { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Nicolas!1234;TrustServerCertificate=True");
@@ -60,10 +61,10 @@ namespace App.Core.DataAccess
 
         public override int SaveChanges()
         {
-            var entries = ChangeTracker.Entries().Where(e => e.Entity is BasisEntitaet && e.State == EntityState.Added);
+            var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && e.State == EntityState.Added);
             foreach (var entry in entries)
             {
-                ((BasisEntitaet)entry.Entity).CreatedDate = DateTime.Now;
+                ((BaseEntity)entry.Entity).CreatedDate = DateTime.Now;
             }
 
             return base.SaveChanges();

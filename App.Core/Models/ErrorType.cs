@@ -9,28 +9,27 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class LagerOrt : BasisEntitaet
+    public class ErrorType : BaseEntity
     {
         [Key]
         public int Id
         {
             get; set;
         }
+
         [Required]
-        [Column(TypeName = "nvarchar(50)")]
-        public string LagerName
+        [MaxLength(5)]
+        public string Code
         {
             get; set;
         }
-        public int VerweildauerGelb
+        [Required]
+        [Column(TypeName = "nvarchar(650)")]
+        public string ErrorDescribtion
         {
             get; set;
         }
-        public int VerweildauerRot
-        {
-            get; set;
-        }
-        public List<Umbuchung> Umbuchungen
+        public List<Pcb> Pcbs
         {
             get; set;
         }

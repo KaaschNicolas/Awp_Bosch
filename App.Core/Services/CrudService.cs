@@ -10,6 +10,7 @@ using App.Core.Models;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace App.Core.Services
 {
@@ -22,15 +23,25 @@ namespace App.Core.Services
 
         private BoschContext _boschContext;
 
-        public List<Leiterplatte> GetCompleteLeiterplatten() => _boschContext.Leiterplatten.Include(x => x.Weitergaben).ToList();
+        private LoggingService _loggingService;
 
-        public List<LagerOrt> GetLagerorte() => _boschContext.LagerOrte.ToList();
+        public List<Pcb> GetCompleteLeiterplatten() => _boschContext.Pcbs.Include(x => x.Transfers).ToList();
 
-        public List<Leiterplattentyp> GetPcbType()
+        public List<StorageLocation> GetLagerorte() => _boschContext.StorageLocations.ToList();
+
+        public List<PcbType> GetPcbType()
         {
+            _loggingService.Audit(LogLevel.Debug, "GetPcbType");
             try
             {
-                var quuery = _boschContext.Leiterplattentypen.ToList();
+                var query = _boschContext.PcbTypes.ToList();
+                _loggingService.Audit(
+                    LogLevel.Information,
+                    "GetPcbType",
+                    null,
+                    null,
+                    obj: query    
+                    );
             }
             catch (DbUpdateException)
             {
@@ -40,11 +51,12 @@ namespace App.Core.Services
             return null;
         }
 
-        public List<Nutzer> GetUser()
+        public List<User> GetUser()
         {
+            _loggingService.Audit(LogLevel.Debug, "GetUser");
             try
             {
-                _boschContext.Nutzende.ToList();
+                _boschContext.Users.ToList();
             }
             catch (DbUpdateException)
             {
@@ -54,11 +66,12 @@ namespace App.Core.Services
             return null;
         }
 
-        public List<Umbuchung> GetUmbuchungen()
+        public List<Transfer> GetTransfer()
         {
+            _loggingService.Audit(LogLevel.Debug, "GetTransfer");
             try
             {
-                _boschContext.Umbuchungen.ToList();
+                _boschContext.Transfers.ToList();
             }
             catch (DbUpdateException)
             {
@@ -68,12 +81,13 @@ namespace App.Core.Services
             return null;
         }
 
-        public List<Umbuchung> GetUmbuchungen(Leiterplatte leiterplatte)
+        public List<Transfer> GetTransfer(Pcb leiterplatte)
         {
+            _loggingService.Audit(LogLevel.Debug, "GetTransfer");
             string test;
             try
             {
-                var query = _boschContext.Umbuchungen.Where(x => x.Id == leiterplatte.Id).ToList();
+                var query = _boschContext.Transfers.Where(x => x.Id == leiterplatte.Id).ToList();
 
             }
             catch (DbUpdateException ex)
@@ -86,11 +100,12 @@ namespace App.Core.Services
 
         }
 
-        public List<Leiterplatte> CreateLeiterplatte(Leiterplatte leiterplatte)
+        public List<Pcb> CreatePcb(Pcb leiterplatte)
         {
+            _loggingService.Audit(LogLevel.Debug, "CreatePcb");
             try
             {
-                var query = _boschContext.Leiterplatten.Add(leiterplatte);
+                var query = _boschContext.Pcbs.Add(leiterplatte);
                 Update();
             }
             catch (DbUpdateException ex)
@@ -103,6 +118,7 @@ namespace App.Core.Services
 
         public void Update()
         {
+            _loggingService.Audit(LogLevel.Debug, "Update");
             try
             {
                 _boschContext.SaveChanges();
@@ -114,11 +130,12 @@ namespace App.Core.Services
             }
         }
 
-        public List<Fehlertyp> GetErrorType()
+        public List<ErrorType> GetErrorType()
         {
+            _loggingService.Audit(LogLevel.Debug, "GetErrorType");
             try
             {
-                _boschContext.Fehlertypen.ToList();
+                _boschContext.ErrorTypes.ToList();
             }
             catch (DbUpdateException)
             {
@@ -128,11 +145,12 @@ namespace App.Core.Services
             return null;
         }
 
-        public void CreateErrorType(Fehlertyp errorType)
+        public void CreateErrorType(ErrorType errorType)
         {
+            _loggingService.Audit(LogLevel.Debug, "CreateErrorType");
             try
             {
-                _boschContext.Fehlertypen.Add(errorType);
+                _boschContext.ErrorTypes.Add(errorType);
                 Update();
             }
             catch (Exception)
@@ -142,11 +160,12 @@ namespace App.Core.Services
             }
         }
 
-        public List<LagerOrt> GetStorageLocation()
+        public async Task<List<StorageLocation>> GetStorageLocation()
         {
+            _loggingService.Audit(LogLevel.Debug, "GetStorageLocation");
             try
             {
-                _boschContext.LagerOrte.ToList();
+                await _boschContext.StorageLocations.ToListAsync();
             }
             catch (DbUpdateException)
             {
@@ -156,8 +175,9 @@ namespace App.Core.Services
             return null;
         }
 
-        public List<LagerOrt> GetStorageLocationByPcb(Leiterplatte pcb)
+        public Task<List<StorageLocation>> GetStorageLocationByPcb(Pcb pcb)
         {
+            _loggingService.Audit(LogLevel.Debug, "GetStorageLocationByPcb");
             try
             {
                 //_boschContext.LagerOrte.Where(x => x.Umbuchungen.ForEach(e => e == pcb.Weitergaben));

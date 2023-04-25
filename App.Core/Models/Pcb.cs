@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Leiterplatte : BasisEntitaet
+    public class Pcb : BaseEntity
     {
         [Key]
         public int Id
@@ -18,34 +18,34 @@ namespace App.Core.Models
         }
         [MaxLength(10)]
         [Column(TypeName = "nvarchar(10)")]
-        public string SerienNummer
+        public string SerialNumber
         {
             get; set;
         }
-        public Geraet Einschraenkung
+        public Device Restriction
         {
             get; set;
         }
         [Column(TypeName = "nvarchar(650)")]
-        public string Fehlerbeschreibung
+        public string ErrorDescription
         {
             get; set;
         }
-        public List<Fehlertyp> Fehlertypen
+        public List<ErrorType> ErrorTypes
         {
             get; set;
         }
-        public bool Abgeschlossen
+        public bool Finalized
         {
             get; set;
         }
         [Required]
-        public Leiterplattentyp Leiterplattentyp
+        public PcbType PcbType
         {
             get; set;
         }
-        [ForeignKey("AnmerkungId")]
-        public Anmerkung Anmerkung
+        [ForeignKey("CommentId")]
+        public Comment Comment
         {
             get; set;
         }
@@ -57,7 +57,7 @@ namespace App.Core.Models
         /// Ist die Leiterplatte abgeschlossen,
         /// so ist die letzte Umbunchung der EndgültigeVerbleibOrt
         /// </summary>
-        public List<Umbuchung> Weitergaben
+        public List<Transfer> Transfers
         {
             get; set;
         }
