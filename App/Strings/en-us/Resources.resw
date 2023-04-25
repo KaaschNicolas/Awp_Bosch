@@ -224,4 +224,7 @@
   <data name="Shell_MDPartNumber.Content" xml:space="preserve">
     <value>MDPartNumber</value>
   </data>
+  <data name="Shell_MD_CreatePartNumber.Content" xml:space="preserve">
+    <value>MD_CreatePartNumber</value>
+  </data>
 </root>

@@ -64,9 +64,14 @@ public partial class App : Application
             services.AddSingleton<INavigationService, NavigationService>();
 
             // Core Services
+            services.AddSingleton<ISampleDataService, SampleDataService>();
             services.AddSingleton<IFileService, FileService>();
 
             // Views and ViewModels
+            services.AddTransient<DataGridViewModel>();
+            services.AddTransient<DataGridPage>();
+            services.AddTransient<MD_CreatePartNumberViewModel>();
+            services.AddTransient<MD_CreatePartNumberPage>();
             services.AddTransient<MDPartNumberViewModel>();
             services.AddTransient<MDPartNumberPage>();
             services.AddTransient<SettingsViewModel>();

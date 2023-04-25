@@ -18,6 +18,8 @@ public class PageService : IPageService
         Configure<BlankViewModel, BlankPage>();
         Configure<SettingsViewModel, SettingsPage>();
         Configure<MDPartNumberViewModel, MDPartNumberPage>();
+        Configure<MD_CreatePartNumberViewModel, MD_CreatePartNumberPage>();
+        Configure<DataGridViewModel, DataGridPage>();
     }
 
     public Type GetPageType(string key)

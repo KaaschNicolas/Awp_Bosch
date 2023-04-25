@@ -2,7 +2,7 @@
 using App.Views;
 
 using CommunityToolkit.Mvvm.ComponentModel;
-
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace App.ViewModels;
@@ -11,6 +11,7 @@ public class ShellViewModel : ObservableRecipient
 {
     private bool _isBackEnabled;
     private object? _selected;
+
 
     public INavigationService NavigationService
     {

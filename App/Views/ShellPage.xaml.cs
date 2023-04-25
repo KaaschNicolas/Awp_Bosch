@@ -1,4 +1,5 @@
-﻿using App.Contracts.Services;
+﻿using System.Collections;
+using App.Contracts.Services;
 using App.Helpers;
 using App.ViewModels;
 
@@ -14,15 +15,21 @@ namespace App.Views;
 // TODO: Update NavigationViewItem titles and icons in ShellPage.xaml.
 public sealed partial class ShellPage : Page
 {
+
+
+
     public ShellViewModel ViewModel
     {
         get;
     }
 
+
+
     public ShellPage(ShellViewModel viewModel)
     {
         ViewModel = viewModel;
         InitializeComponent();
+        this.DataContext = ViewModel;
 
         ViewModel.NavigationService.Frame = NavigationFrame;
         ViewModel.NavigationViewService.Initialize(NavigationViewControl);
@@ -34,7 +41,13 @@ public sealed partial class ShellPage : Page
         App.MainWindow.SetTitleBar(AppTitleBar);
         App.MainWindow.Activated += MainWindow_Activated;
         AppTitleBarText.Text = "AppDisplayName".GetLocalized();
+
+        
     }
+
+ 
+
+
 
     private void OnLoaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
@@ -82,4 +95,6 @@ public sealed partial class ShellPage : Page
 
         args.Handled = result;
     }
+
+
 }

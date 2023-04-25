@@ -5,52 +5,54 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="using:App.Behaviors"
+    xmlns:viewModels="using:App.ViewModels"
     mc:Ignorable="d">
 
+
+
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate x:DataType="viewModels:MDPartNumberViewModel">
+            <Grid Margin="0,0,50,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <CommandBar Padding ="0" Grid.Column="0" Background="Transparent" IsOpen="False"  DefaultLabelPosition="Right">
+                    <CommandBar.Content  >
+                        <!--Get MainPageTitle.Text from localizx:ed resources-->
+                        <TextBlock Text="Sachnummer"/>
+                    </CommandBar.Content>
+
+                    <!--All your AppBar buttons-->
+                    <!--Get SendAppBarButton.Label from localized resources-->
+                    <AppBarButton Label="Hinzufügen" Icon="Add" Click="CreatPartNumberButton_Click"/>
+                    <AppBarButton Label="Neu Laden" Icon="Refresh"/>
+
+                </CommandBar>
+                <StackPanel Grid.Column="1" Background="{ThemeResource CommandBarBackground}" VerticalAlignment="Center">
+                    <AutoSuggestBox PlaceholderText="Search" QueryIcon="Find" Width="200px" BorderThickness="0" x:Name="search_box"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+
     <Grid x:Name="ContentArea">
-      <controls:DataGrid
-   Grid.Row="1"
-     x:Name="dataGrid"
-     Margin="12"
-     VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-     HorizontalScrollBarVisibility="Visible"
-     VerticalScrollBarVisibility="Visible"
-     AlternatingRowBackground="Transparent"
-     AlternatingRowForeground="Gray"
-     AreRowDetailsFrozen="False"
-     AreRowGroupHeadersFrozen="True"
-     AutoGenerateColumns="False"
-     CanUserSortColumns="False"
-     CanUserReorderColumns="True"
-     CanUserResizeColumns="True"
-     ColumnHeaderHeight="32"
-     MaxColumnWidth="400"
-     FrozenColumnCount="0"
-     GridLinesVisibility="None"
-     HeadersVisibility="Column"
-     IsReadOnly="False"
-     RowDetailsVisibilityMode="Collapsed"
-     SelectionMode="Extended"
-     RowGroupHeaderPropertyNameAlternative="Range">
-        <controls:DataGrid.Columns>
-          <controls:DataGridTextColumn Header="Sachnummer" Binding="{Binding Rank}" Tag="Rank" />
-          <controls:DataGridComboBoxColumn Header="Bezeichnung" Binding="{Binding Mountain}" Tag="Mountain" />
-          <controls:DataGridTextColumn Header="Verweildauer OK (in Tage)" Binding="{Binding Height_m}" Tag="Height_m" />
-          <controls:DataGridTextColumn Header="Verweildauer MEDIUM (in Tage)" Binding="{Binding Range}" Tag="Range" />
-          <controls:DataGridTextColumn Header="Verweildauer HIGH (in Tage)" Binding="{Binding Parent_mountain}" Tag="Parent_mountain" />
-          <controls:DataGridTemplateColumn Header="Aktion" Tag="First_ascent">
-            <controls:DataGridTemplateColumn.CellTemplate>
-              <DataTemplate>
-                <TextBlock Text="{Binding First_ascent, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:MM/dd/yyy}'}" VerticalAlignment="Center" Margin="8,0,0,0"/>
-              </DataTemplate>
-            </controls:DataGridTemplateColumn.CellTemplate>
-            <controls:DataGridTemplateColumn.CellEditingTemplate>
-              <DataTemplate>
-                <CalendarDatePicker Margin="3,4,3,3" Date="{Binding First_ascent, Mode=TwoWay}"/>
-              </DataTemplate>
-            </controls:DataGridTemplateColumn.CellEditingTemplate>
-          </controls:DataGridTemplateColumn>
-        </controls:DataGrid.Columns>
-      </controls:DataGrid>
+        <controls:DataGrid
+            AutoGenerateColumns="False"
+            GridLinesVisibility="All"
+            ItemsSource="{x:Bind ViewModel.Source, Mode=OneWay}">
+            <controls:DataGrid.Resources>
+                <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
+            </controls:DataGrid.Resources>
+            <controls:DataGrid.Columns>
+                <!-- TODO: Replace column definitions to match real data. Consider adding Header values to Resources.resw. -->
+                <controls:DataGridTextColumn Binding="{Binding Number}" Header="Sachnummer" />
+                <controls:DataGridTextColumn Binding="{Binding Description}" Header="Beschreibung" />
+                <controls:DataGridTextColumn Binding="{Binding MaxTransfer}" Header="Max. Weitergaben" />
+                <controls:DataGridTextColumn Header="Aktionen"/>
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
     </Grid>
 </Page>
