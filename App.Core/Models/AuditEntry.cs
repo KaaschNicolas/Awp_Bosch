@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,8 @@ public class AuditEntry : BasisEntitaet
     
     [MaxLength(250)]
     public string Message { get; set; }
-    
+
+    [NotMapped]
     [Required]
     public Nutzer User { get; set; }
 
