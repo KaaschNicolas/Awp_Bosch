@@ -10,6 +10,6 @@ namespace App.Core.Services.Interfaces
 {
     public interface ICrudService
     {
-        public List<Leiterplatte> GetCompleteLeiterplatten();
+        public List<Pcb> GetCompleteLeiterplatten();
     }
 }

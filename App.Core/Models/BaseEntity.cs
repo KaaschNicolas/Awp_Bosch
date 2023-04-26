@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public abstract class BasisEntitaet
+    public abstract class BaseEntity
     {
         public DateTime CreatedDate
         {

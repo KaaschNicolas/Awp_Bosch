@@ -34,7 +34,10 @@ public class LoggingService
             _logger.Log(logLevel: LogLevel.Error, ex.Message);
         }
     }
-    public void Audit(LogLevel logLevel, string message, Nutzer user)
+
+    public void Audit(LogLevel logLevel, string message) => _logger.Log(logLevel, message);
+
+    public void Audit(LogLevel logLevel, string message, User user)
     {
         var auditEntry = new AuditEntry()
         {
@@ -45,7 +48,7 @@ public class LoggingService
         AuditBase(logLevel, message, auditEntry);     
     }
 
-    public void Audit(LogLevel logLevel, string message, Nutzer user, Exception exception)
+    public void Audit(LogLevel logLevel, string message, User user, Exception exception)
     {
         var auditEntry = new AuditEntry()
         {
@@ -57,7 +60,7 @@ public class LoggingService
         AuditBase(logLevel, message, auditEntry);
     }
 
-    public void Audit(LogLevel logLevel, string message, Nutzer user, Exception exception, object obj)
+    public void Audit(LogLevel logLevel, string message, User user, Exception? exception, object obj)
     {
         var auditEntry = new AuditEntry()
         {

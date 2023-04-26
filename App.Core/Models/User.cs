@@ -9,28 +9,32 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Leiterplattentyp : BasisEntitaet
+    public class User : BaseEntity
     {
         [Key]
-        public string Id
+        public int Id
         {
             get; set;
         }
-        [Required]
-        [MaxLength(10)]
-        [Column(TypeName = "nvarchar(10)")]
-        public string LpSachnummer
+        [MaxLength(50)]
+        [Column(TypeName = "nvarchar(50)")]
+        public string Name
         {
             get; set;
         }
-        public int MaxWeitergaben
+        [MaxLength(50)]
+        [Column(TypeName = "nvarchar(50)")]
+        public string AdUsername
         {
             get; set;
         }
-        public List<Leiterplatte> Leiterplatten
+        public List<Transfer> Umbuchungen
         {
             get; set;
         }
-
+        public List<Comment> Anmerkungen
+        {
+            get; set;
+        }
     }
 }

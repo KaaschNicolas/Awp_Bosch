@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Core.Models;
-public class AuditEntry : BasisEntitaet
+public class AuditEntry : BaseEntity
 {
     [Key]
     public int Id { get; set; }
@@ -17,7 +17,7 @@ public class AuditEntry : BasisEntitaet
 
     [NotMapped]
     [Required]
-    public Nutzer User { get; set; }
+    public User User { get; set; }
 
     [MaxLength(20)]
     public string Level { get; set; }
