@@ -11,11 +11,8 @@ namespace App.Core.Models
 {
     public class PcbType : BaseEntity
     {
-        [Key]
-        public string Id
-        {
-            get; set;
-        }
+        new public string Id { get; set; }
+
         [Required]
         [MaxLength(10)]
         [Column(TypeName = "nvarchar(10)")]
@@ -23,6 +20,10 @@ namespace App.Core.Models
         {
             get; set;
         }
+
+        [Required]
+        public string Description { get; set; }
+
         public int MaxTransfer
         {
             get; set;

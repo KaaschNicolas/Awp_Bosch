@@ -11,11 +11,6 @@ namespace App.Core.Models
 {
     public class User : BaseEntity
     {
-        [Key]
-        public int Id
-        {
-            get; set;
-        }
         [MaxLength(50)]
         [Column(TypeName = "nvarchar(50)")]
         public string Name
