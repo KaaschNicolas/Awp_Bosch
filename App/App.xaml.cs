@@ -2,6 +2,7 @@
 using App.Activation;
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
+using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
 using App.Helpers;
@@ -77,7 +78,7 @@ public partial class App : Application
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
-            services.AddTransient<ICrudService, CrudService>();
+            services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
 
             // Views and ViewModels
             services.AddTransient<MDPartNumberViewModel>();
@@ -102,7 +103,7 @@ public partial class App : Application
     private static void ConfigSetup(IConfigurationBuilder builder)
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsetttings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddEnvironmentVariables();
     }
 

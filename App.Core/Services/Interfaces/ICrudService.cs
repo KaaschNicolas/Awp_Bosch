@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace App.Core.Services.Interfaces
 {
-    public interface ICrudService
+    public interface ICrudService<T> where T : BaseEntity
     {
         public List<Pcb> GetCompleteLeiterplatten();
     }

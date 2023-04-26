@@ -11,19 +11,16 @@ using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
+using App.Core.Services.Base;
 
 namespace App.Core.Services
 {
-    public class CrudService : ICrudService
+    public class CrudService<T> : CrudServiceBase<T>, ICrudService<T> where T : BaseEntity
     {
-        public CrudService(BoschContext boschContext)
+        public CrudService(BoschContext boschContext, LoggingService loggingService) : base(boschContext, loggingService)
         {
-
+            
         }
-
-        private BoschContext _boschContext;
-
-        private LoggingService _loggingService;
 
         public List<Pcb> GetCompleteLeiterplatten() => _boschContext.Pcbs.Include(x => x.Transfers).ToList();
 

@@ -5,15 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Core.Models;
-public class Response
+public class Response<T>
 {
     public ResponseCode Code { get; set; }
 
-    public object Data { get; set; }
+    public T Data { get; set; }
 
-    public Response(ResponseCode code, object data)
+    public string  ErrorMessage { get; set; }
+
+    public Response(ResponseCode code, T data)
     {
         Code = code;
         Data = data;
+    }
+
+    public Response(ResponseCode code, string error)
+    {
+        Code = code;
+        ErrorMessage = error;
     }
 }
