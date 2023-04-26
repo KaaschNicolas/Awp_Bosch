@@ -33,6 +33,7 @@ public sealed partial class ShellPage : Page
 
         ViewModel.NavigationService.Frame = NavigationFrame;
         ViewModel.NavigationViewService.Initialize(NavigationViewControl);
+        ViewModel.InfoBarService.InfoBar = MessageBar;
 
         // TODO: Set the title bar icon by updating /Assets/WindowIcon.ico.
         // A custom title bar is required for full window theme and Mica support.
@@ -42,7 +43,6 @@ public sealed partial class ShellPage : Page
         App.MainWindow.Activated += MainWindow_Activated;
         AppTitleBarText.Text = "AppDisplayName".GetLocalized();
 
-        
     }
 
  
@@ -95,6 +95,5 @@ public sealed partial class ShellPage : Page
 
         args.Handled = result;
     }
-
 
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -9,6 +10,7 @@ using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace App.Core.Services
 {
@@ -75,6 +77,17 @@ namespace App.Core.Services
             }
             return null;
         }
+
+        public async Task<Leiterplattentyp> Create(Leiterplattentyp leiterplattentyp)
+        {
+            EntityEntry<Leiterplattentyp> createdResult = await _boschContext.Leiterplattentypen.AddAsync(leiterplattentyp);
+            await _boschContext.SaveChangesAsync();
+            return createdResult.Entity;
+        }
+
+
+
+        
 
     }
 }

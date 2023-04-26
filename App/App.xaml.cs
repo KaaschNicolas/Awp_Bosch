@@ -2,6 +2,7 @@
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
 using App.Core.Services;
+using App.Core.Services.Interfaces;
 using App.Helpers;
 using App.Models;
 using App.Services;
@@ -62,10 +63,13 @@ public partial class App : Application
             services.AddSingleton<IActivationService, ActivationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<IInfoBarService, InfoBarService>();
+          
 
             // Core Services
             services.AddSingleton<ISampleDataService, SampleDataService>();
             services.AddSingleton<IFileService, FileService>();
+            services.AddSingleton<ICrudService, CrudService>();
 
             // Views and ViewModels
             services.AddTransient<DataGridViewModel>();
@@ -82,6 +86,7 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
+            
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

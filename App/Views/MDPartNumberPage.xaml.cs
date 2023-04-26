@@ -25,4 +25,6 @@ public sealed partial class MDPartNumberPage : Page
     {
         Frame.Navigate(typeof(MD_CreatePartNumberPage));
     }
+
+
 }
