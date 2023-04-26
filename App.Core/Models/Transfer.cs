@@ -1,29 +1,34 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Geraet : BasisEntitaet
+    public class Transfer : BaseEntity
     {
         [Key]
         public int Id
         {
             get; set;
         }
-
-        [Required]
-        [Column(TypeName = "nvarchar(50)")]
-        public string Name
+        public string Anmerkung
         {
             get; set;
         }
-        public List<Leiterplatte> Leiterplatten
+        [Required]
+        public StorageLocation Nach
+        {
+            get; set;
+        }
+        [Required]
+        public User VerbuchtVon
+        {
+            get; set;
+        }
+        public Pcb Leiterplatte
         {
             get; set;
         }

@@ -1,34 +1,34 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Umbuchung : BasisEntitaet
+    public class Comment : BaseEntity
     {
         [Key]
         public int Id
         {
             get; set;
         }
-        public string Anmerkung
+        [Required]
+        [Column(TypeName = "nvarchar(650)")]
+        public string Name
         {
             get; set;
         }
         [Required]
-        public LagerOrt Nach
+        public User NotedBy
         {
             get; set;
         }
-        [Required]
-        public Nutzer VerbuchtVon
-        {
-            get; set;
-        }
-        public Leiterplatte Leiterplatte
+
+        public Pcb Pcb
         {
             get; set;
         }

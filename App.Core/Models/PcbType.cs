@@ -9,32 +9,28 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Nutzer : BasisEntitaet
+    public class PcbType : BaseEntity
     {
         [Key]
         public int Id
         {
             get; set;
         }
-        [MaxLength(50)]
-        [Column(TypeName = "nvarchar(50)")]
-        public string Name
+        [Required]
+        [MaxLength(10)]
+        [Column(TypeName = "nvarchar(10)")]
+        public string PcbPartNumber
         {
             get; set;
         }
-        [MaxLength(50)]
-        [Column(TypeName = "nvarchar(50)")]
-        public string AdUsername
+        public int MaxTransfer
         {
             get; set;
         }
-        public List<Umbuchung> Umbuchungen
+        public List<Pcb> Pcbs
         {
             get; set;
         }
-        public List<Anmerkung> Anmerkungen
-        {
-            get; set;
-        }
+
     }
 }

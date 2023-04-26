@@ -9,28 +9,30 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Anmerkung : BasisEntitaet
+    public class ErrorType : BaseEntity
     {
         [Key]
         public int Id
         {
             get; set;
         }
+
         [Required]
-        [Column(TypeName = "nvarchar(650)")]
-        public string Name
+        [MaxLength(5)]
+        public string Code
         {
             get; set;
         }
         [Required]
-        public Nutzer VermerktVon
+        [Column(TypeName = "nvarchar(650)")]
+        public string ErrorDescribtion
+        {
+            get; set;
+        }
+        public List<Pcb> Pcbs
         {
             get; set;
         }
 
-        public Leiterplatte Leiterplatte
-        {
-            get; set;
-        }
     }
 }

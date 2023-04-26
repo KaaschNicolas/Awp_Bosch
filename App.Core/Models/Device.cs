@@ -9,28 +9,23 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Leiterplattentyp : BasisEntitaet
+    public class Device : BaseEntity
     {
         [Key]
         public int Id
         {
             get; set;
         }
-        [Required]
-        [MaxLength(10)]
-        [Column(TypeName = "nvarchar(10)")]
-        public string LpSachnummer
-        {
-            get; set;
-        }
-        public int MaxWeitergaben
-        {
-            get; set;
-        }
-        public List<Leiterplatte> Leiterplatten
-        {
-            get; set;
-        }
 
+        [Required]
+        [Column(TypeName = "nvarchar(50)")]
+        public string Name
+        {
+            get; set;
+        }
+        public List<Pcb> Pcbs
+        {
+            get; set;
+        }
     }
 }

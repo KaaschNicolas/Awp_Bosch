@@ -9,30 +9,32 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Fehlertyp : BasisEntitaet
+    public class User : BaseEntity
     {
         [Key]
         public int Id
         {
             get; set;
         }
-
-        [Required]
-        [MaxLength(5)]
-        public string Code
+        [MaxLength(50)]
+        [Column(TypeName = "nvarchar(50)")]
+        public string Name
         {
             get; set;
         }
-        [Required]
-        [Column(TypeName = "nvarchar(650)")]
-        public string Fehlerbeschreibung
+        [MaxLength(50)]
+        [Column(TypeName = "nvarchar(50)")]
+        public string AdUsername
         {
             get; set;
         }
-        public List<Leiterplatte> Leiterplatten
+        public List<Transfer> Umbuchungen
         {
             get; set;
         }
-
+        public List<Comment> Anmerkungen
+        {
+            get; set;
+        }
     }
 }

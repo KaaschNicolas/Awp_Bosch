@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Leiterplatte : BasisEntitaet
+    public class Pcb : BaseEntity
     {
         [Key]
         public int Id
@@ -18,49 +18,46 @@ namespace App.Core.Models
         }
         [MaxLength(10)]
         [Column(TypeName = "nvarchar(10)")]
-        public string SerienNummer
+        public string SerialNumber
         {
             get; set;
         }
-        public Geraet Einschraenkung
+        public Device Restriction
         {
             get; set;
         }
         [Column(TypeName = "nvarchar(650)")]
-        public string Fehlerbeschreibung
+        public string ErrorDescription
         {
             get; set;
         }
-        public List<Fehlertyp> Fehlertypen
+        public List<ErrorType> ErrorTypes
         {
             get; set;
         }
-        public bool Abgeschlossen
-        {
-            get; set;
-        }
-        [Required]
-        public Leiterplattentyp Leiterplattentyp
-        {
-            get; set;
-        }
-        [ForeignKey("AnmerkungId")]
-        public Anmerkung Anmerkung
+        public bool Finalized
         {
             get; set;
         }
         [Required]
-        [NotMapped]
-        public Umbuchung Einbuchung
+        public PcbType PcbType
         {
             get; set;
         }
-        public List<Umbuchung> Weitergaben
+        [ForeignKey("CommentId")]
+        public Comment Comment
         {
             get; set;
         }
-        [NotMapped]
-        public Umbuchung EndgueltigerVerbleibOrt
+
+        /// <summary>
+        /// Liste der Weitergaben einer Laeterplatte
+        /// Die Reihenfolge gilt nach ID bzw. Created_At
+        /// Die erste Weitergabe ist die Einbuchung
+        /// Ist die Leiterplatte abgeschlossen,
+        /// so ist die letzte Umbunchung der EndgültigeVerbleibOrt
+        /// </summary>
+        public List<Transfer> Transfers
         {
             get; set;
         }
