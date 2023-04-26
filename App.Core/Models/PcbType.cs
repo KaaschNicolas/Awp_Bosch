@@ -27,6 +27,7 @@ namespace App.Core.Models
         {
             get; set;
         }
+
         public List<Pcb> Pcbs
         {
             get; set;

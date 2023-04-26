@@ -10,11 +10,11 @@ namespace App.Core.Services.Interfaces
 {
     public interface ICrudService
     {
-<<<<<<< HEAD
-        public List<Leiterplatte> GetCompleteLeiterplatten();
-        public Task<Leiterplattentyp> Create(Leiterplattentyp leiterplattentyp);
-=======
+
         public List<Pcb> GetCompleteLeiterplatten();
->>>>>>> master
+        public Task<PcbType> Create(PcbType pcbType);
+
+
+
     }
 }

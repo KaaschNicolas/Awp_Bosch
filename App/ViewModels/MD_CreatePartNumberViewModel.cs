@@ -68,7 +68,7 @@ public class MD_CreatePartNumberViewModel : ObservableRecipient
     public async void CreatePartNumber()
     {
 
-        var lpt = await _crudService.Create(new Leiterplattentyp { LpSachnummer = "123456", MaxWeitergaben = 3 });
+        var lpt = await _crudService.Create(new PcbType { PcbPartNumber = "123456", MaxTransfer = 3 });
         InfoBarService.showMessage("Erfolgreich Leiterplatte erstellt", "Erfolg");
 
     }

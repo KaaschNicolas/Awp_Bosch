@@ -20,12 +20,12 @@ using WinUIEx;
 
 namespace App.ViewModels;
 
+// public class MDPartNumberViewModel : ObservableRecipient, INavigationAware
 
-
-public class MDPartNumberViewModel : ObservableRecipient, INavigationAware
+public class MDPartNumberViewModel : ObservableRecipient
 {
 
-    private readonly ISampleDataService _sampleDataService;
+
 
     private ICrudService _crudService;
 
@@ -35,20 +35,19 @@ public class MDPartNumberViewModel : ObservableRecipient, INavigationAware
         get;
     }
 
-    public ObservableCollection<PartNumber> Source { get; } = new ObservableCollection<PartNumber>();
+    public ObservableCollection<PcbType> Source { get; } = new ObservableCollection<PcbType>();
     //public ObservableCollection<Leiterplattentyp> Source { get; } = new ObservableCollection<Leiterplattentyp>();
 
 
-    public MDPartNumberViewModel(ICrudService crudService, IInfoBarService infoBarService, ISampleDataService sampleDataService)
+    public MDPartNumberViewModel(ICrudService crudService, IInfoBarService infoBarService)
     {
         _crudService = crudService;
-        _sampleDataService = sampleDataService;
         InfoBarService = infoBarService;
     }
 
  
 
-    public async void OnNavigatedTo(object parameter)
+/*    public async void OnNavigatedTo(object parameter)
     {
         Source.Clear();
 
@@ -62,7 +61,7 @@ public class MDPartNumberViewModel : ObservableRecipient, INavigationAware
         InfoBarService.showError("ErrorMessage","ErrorTitle");
         
     }
-
+*/
 
     public void OnNavigatedFrom()
     {

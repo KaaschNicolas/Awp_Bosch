@@ -10,12 +10,12 @@ using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-<<<<<<< HEAD
+
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-=======
+using Microsoft.Extensions.Logging;
+
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
->>>>>>> master
 
 namespace App.Core.Services
 {
@@ -181,10 +181,10 @@ namespace App.Core.Services
             return null;
         }
 
-<<<<<<< HEAD
-        public async Task<Leiterplattentyp> Create(Leiterplattentyp leiterplattentyp)
+
+        public async Task<PcbType> Create(PcbType pcbType)
         {
-            EntityEntry<Leiterplattentyp> createdResult = await _boschContext.Leiterplattentypen.AddAsync(leiterplattentyp);
+            EntityEntry<PcbType> createdResult = await _boschContext.PcbTypes.AddAsync(pcbType);
             await _boschContext.SaveChangesAsync();
             return createdResult.Entity;
         }
@@ -193,7 +193,7 @@ namespace App.Core.Services
 
         
 
-=======
+
         public Task<List<StorageLocation>> GetStorageLocationByPcb(Pcb pcb)
         {
             _loggingService.Audit(LogLevel.Debug, "GetStorageLocationByPcb");
@@ -208,6 +208,6 @@ namespace App.Core.Services
             }
             return null;
         }
->>>>>>> master
+
     }
 }

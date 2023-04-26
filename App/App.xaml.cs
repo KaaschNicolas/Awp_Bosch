@@ -10,11 +10,8 @@ using App.Models;
 using App.Services;
 using App.ViewModels;
 using App.Views;
-<<<<<<< HEAD
 using Microsoft.EntityFrameworkCore;
-=======
 using Microsoft.Extensions.Configuration;
->>>>>>> master
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
@@ -83,17 +80,11 @@ public partial class App : Application
           
 
             // Core Services
-            services.AddSingleton<ISampleDataService, SampleDataService>();
             services.AddSingleton<IFileService, FileService>();
-<<<<<<< HEAD
             services.AddSingleton<ICrudService, CrudService>();
-=======
-            services.AddTransient<ICrudService, CrudService>();
->>>>>>> master
+            
 
             // Views and ViewModels
-            services.AddTransient<DataGridViewModel>();
-            services.AddTransient<DataGridPage>();
             services.AddTransient<MD_CreatePartNumberViewModel>();
             services.AddTransient<MD_CreatePartNumberPage>();
             services.AddTransient<MDPartNumberViewModel>();
@@ -121,7 +112,7 @@ public partial class App : Application
     private static void ConfigSetup(IConfigurationBuilder builder)
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsetttings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("Y:\\Studium\\Data Science\\Sem6\\AWP\\Repo\\App\\appsettings.json", optional: false, reloadOnChange: true)
             .AddEnvironmentVariables();
     }
 
