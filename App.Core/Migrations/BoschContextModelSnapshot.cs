@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Backend.Migrations
+namespace App.Core.Migrations
 {
     [DbContext(typeof(BoschContext))]
     partial class BoschContextModelSnapshot : ModelSnapshot
@@ -180,9 +180,8 @@ namespace Backend.Migrations
                     b.Property<bool>("Finalized")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PcbTypeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("PcbTypeId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("RestrictionId")
                         .HasColumnType("int");
@@ -208,8 +207,11 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("App.Core.Models.PcbType", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -244,15 +246,15 @@ namespace Backend.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LagerName")
+                    b.Property<int>("DwellTimeRed")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DwellTimeYellow")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StorageName")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("VerweildauerGelb")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VerweildauerRot")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -385,7 +387,7 @@ namespace Backend.Migrations
                         .HasForeignKey("LeiterplatteId");
 
                     b.HasOne("App.Core.Models.StorageLocation", "Nach")
-                        .WithMany("Umbuchungen")
+                        .WithMany("Transfers")
                         .HasForeignKey("NachId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -445,7 +447,7 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("App.Core.Models.StorageLocation", b =>
                 {
-                    b.Navigation("Umbuchungen");
+                    b.Navigation("Transfers");
                 });
 
             modelBuilder.Entity("App.Core.Models.User", b =>
