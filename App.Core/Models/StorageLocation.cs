@@ -18,19 +18,19 @@ namespace App.Core.Models
         }
         [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string LagerName
+        public string StorageName
         {
             get; set;
         }
-        public int VerweildauerGelb
+        public int DwellTimeYellow
         {
             get; set;
         }
-        public int VerweildauerRot
+        public int DwellTimeRed
         {
             get; set;
         }
-        public List<Transfer> Umbuchungen
+        public List<Transfer> Transfers
         {
             get; set;
         }
