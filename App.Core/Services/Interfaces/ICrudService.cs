@@ -11,6 +11,6 @@ namespace App.Core.Services.Interfaces
     public interface ICrudService
     {
         public List<Leiterplatte> GetCompleteLeiterplatten();
-        public Leiterplattentyp Create(Leiterplattentyp leiterplattentyp);
+        public Task<Leiterplattentyp> Create(Leiterplattentyp leiterplattentyp);
     }
 }

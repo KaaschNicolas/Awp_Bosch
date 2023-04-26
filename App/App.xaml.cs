@@ -1,6 +1,7 @@
 ﻿using App.Activation;
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
+using App.Core.DataAccess;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
 using App.Helpers;
@@ -8,7 +9,7 @@ using App.Models;
 using App.Services;
 using App.ViewModels;
 using App.Views;
-
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
@@ -90,6 +91,8 @@ public partial class App : Application
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
+            services.AddDbContext<BoschContext>(
+                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True"));
         }).
         Build();
 

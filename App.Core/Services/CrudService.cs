@@ -18,6 +18,7 @@ namespace App.Core.Services
     {
         public CrudService(BoschContext boschContext)
         {
+            _boschContext = boschContext;
 
         }
 

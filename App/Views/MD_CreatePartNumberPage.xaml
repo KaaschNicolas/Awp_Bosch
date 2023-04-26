@@ -2,36 +2,46 @@
     x:Class="App.Views.MD_CreatePartNumberPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:App.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:behaviors="using:App.Behaviors"
     xmlns:viewModels="using:App.ViewModels"
     mc:Ignorable="d">
 
-  <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-    <DataTemplate x:DataType="viewModels:MainViewModel">
-      <TextBlock Text="Sachnummer erstellen" />
-    </DataTemplate>
-  </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate x:DataType="viewModels:MD_CreatePartNumberViewModel">
+            <TextBlock Text="Sachnummer erstellen" />
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
     <Grid x:Name="ContentArea">
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="0.3*"></ColumnDefinition>
-          <ColumnDefinition Width="*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Spacing="20">
-          <TextBox Header="Sachnummer" PlaceholderText="10-stellige Sachnummer" />
-          <TextBox Header="Bezeichnung" PlaceholderText="Bezeichnung eingeben" />
-          <NumberBox x:Name="NumberBoxSpinButtonPlacementExample" Minimum="0" Maximum="100" Header="Maximale Anzahl an Weitergaben" Value="1" SpinButtonPlacementMode="Compact" SmallChange="1" />
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <Button Style="{StaticResource AccentButtonStyle}" Content="Hinzufügen" Click="Create_Click"/>
-            <Button Content="Abbrechen" Click="Cancel_Click"/>
-          </StackPanel>
-          
-        </StackPanel>
-      </Grid>
-     
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.3*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Spacing="20">
+                <TextBox Header="Sachnummer" PlaceholderText="10-stellige Sachnummer" />
+                <TextBox Header="Bezeichnung" PlaceholderText="Bezeichnung eingeben" />
+                <NumberBox
+                    x:Name="NumberBoxSpinButtonPlacementExample"
+                    Header="Maximale Anzahl an Weitergaben"
+                    Maximum="100"
+                    Minimum="0"
+                    SmallChange="1"
+                    SpinButtonPlacementMode="Compact"
+                    Value="1" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button
+                        Command="{Binding CreatePN}"
+                        Content="Hinzufügen"
+                        Style="{StaticResource AccentButtonStyle}" />
+                    <Button Click="Cancel_Click" Content="Abbrechen" />
+                </StackPanel>
+
+            </StackPanel>
+        </Grid>
+
 
     </Grid>
 </Page>

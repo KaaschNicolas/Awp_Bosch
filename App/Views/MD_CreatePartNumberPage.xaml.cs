@@ -16,6 +16,7 @@ public sealed partial class MD_CreatePartNumberPage : Page
 
     public MD_CreatePartNumberPage()
     {
+        
         ViewModel = App.GetService<MD_CreatePartNumberViewModel>();
         InitializeComponent();
         SetBinding(NavigationViewHeaderBehavior.HeaderContextProperty, new Binding
@@ -23,6 +24,9 @@ public sealed partial class MD_CreatePartNumberPage : Page
             Source = ViewModel,
             Mode = BindingMode.OneWay
         });
+        DataContext = ViewModel;
+
+
     }
 
     private void Create_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

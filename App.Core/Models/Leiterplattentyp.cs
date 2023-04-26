@@ -12,7 +12,7 @@ namespace App.Core.Models
     public class Leiterplattentyp : BasisEntitaet
     {
         [Key]
-        public string Id
+        public int Id
         {
             get; set;
         }
