@@ -1,0 +1,36 @@
+﻿<Page
+    x:Class="App.Views.AddStorageLocationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="ContentArea">
+		<StackPanel
+			Orientation="Vertical"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top">
+			<TextBox Margin="0,12,0,12" Header="Lagerort:" PlaceholderText="Bezeichnung hinzufügen" />
+			<TextBox Margin="0,12,0,12" Header="Tage bis Status GELB:" PlaceholderText="Anzahl hinzufügen" />
+			<TextBox Margin="0,12,0,12" Header="Tage bis Status ROT:" PlaceholderText="Anzahl hinzufügen" />
+			<StackPanel
+				Orientation="Horizontal"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Top">
+				<Button Margin="0,12,4,12" Style="{StaticResource AccentButtonStyle}">
+					<StackPanel Orientation="Horizontal">
+						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" FontSize="18"/>
+						<TextBlock Padding="8,0,0,0" >Speichern</TextBlock>
+					</StackPanel>
+				</Button>
+				<Button Margin="0,12,4,12">
+					<StackPanel Orientation="Horizontal">
+						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;"/>
+						<TextBlock Padding="8,0,0,0" >Abbrechen</TextBlock>
+					</StackPanel>
+				</Button>
+			</StackPanel>
+		</StackPanel>
+    </Grid>
+</Page>

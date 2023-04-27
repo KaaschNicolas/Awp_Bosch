@@ -224,4 +224,10 @@
   <data name="Shell_MDPartNumber.Content" xml:space="preserve">
     <value>MDPartNumber</value>
   </data>
+  <data name="Shell_StorageLocation.Content" xml:space="preserve">
+    <value>Lagerort</value>
+  </data>
+  <data name="Shell_AddStorageLocation.Content" xml:space="preserve">
+    <value>Lagerort hinzufügen</value>
+  </data>
 </root>
