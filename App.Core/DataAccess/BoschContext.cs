@@ -19,7 +19,7 @@ namespace App.Core.DataAccess
         {
             get; set;
         }
-        public DbSet<Diagnose> Diagnoses
+        public DbSet<Diagnosis> Diagnoses
         {
             get; set;
         }

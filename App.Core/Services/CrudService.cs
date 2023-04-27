@@ -180,7 +180,7 @@ namespace App.Core.Services
             _loggingService.Audit(LogLevel.Debug, "GetStorageLocationByPcb");
             try
             {
-                //_boschContext.LagerOrte.Where(x => x.Umbuchungen.ForEach(e => e == pcb.Weitergaben));
+                //_boschContext.StorageLocations.Where(x => x.Transfers.ForEach(e => e == pcb.Transfers));
             }
             catch (DbUpdateException)
             {

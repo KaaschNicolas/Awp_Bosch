@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Diagnose : BaseEntity
+    public class Diagnosis : BaseEntity
     {
         [Key]
         public int Id
@@ -23,7 +23,7 @@ namespace App.Core.Models
         {
             get; set;
         }
-        public List<Pcb> Leiterplatten
+        public List<Pcb> Pcbs
         {
             get; set;
         }

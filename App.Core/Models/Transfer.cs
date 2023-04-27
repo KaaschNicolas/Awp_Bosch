@@ -14,21 +14,21 @@ namespace App.Core.Models
         {
             get; set;
         }
-        public string Anmerkung
+        public string Comment
         {
             get; set;
         }
         [Required]
-        public StorageLocation Nach
+        public StorageLocation StorageLocation
         {
             get; set;
         }
         [Required]
-        public User VerbuchtVon
+        public User NotedBy
         {
             get; set;
         }
-        public Pcb Leiterplatte
+        public Pcb Pcb
         {
             get; set;
         }
