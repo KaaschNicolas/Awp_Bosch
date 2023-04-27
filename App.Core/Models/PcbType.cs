@@ -9,23 +9,28 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Geraet : BasisEntitaet
+    public class PcbType : BaseEntity
     {
         [Key]
-        public int Id
+        public string Id
+        {
+            get; set;
+        }
+        [Required]
+        [MaxLength(10)]
+        [Column(TypeName = "nvarchar(10)")]
+        public string PcbPartNumber
+        {
+            get; set;
+        }
+        public int MaxTransfer
+        {
+            get; set;
+        }
+        public List<Pcb> Pcbs
         {
             get; set;
         }
 
-        [Required]
-        [Column(TypeName = "nvarchar(50)")]
-        public string Name
-        {
-            get; set;
-        }
-        public List<Leiterplatte> Leiterplatten
-        {
-            get; set;
-        }
     }
 }

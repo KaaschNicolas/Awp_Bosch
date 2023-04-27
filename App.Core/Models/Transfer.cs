@@ -1,38 +1,36 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Fehlertyp : BasisEntitaet
+    public class Transfer : BaseEntity
     {
         [Key]
         public int Id
         {
             get; set;
         }
-
-        [Required]
-        [MaxLength(5)]
-        public string Code
+        public string Anmerkung
         {
             get; set;
         }
         [Required]
-        [Column(TypeName = "nvarchar(650)")]
-        public string Fehlerbeschreibung
+        public StorageLocation Nach
         {
             get; set;
         }
-        public List<Leiterplatte> Leiterplatten
+        [Required]
+        public User VerbuchtVon
         {
             get; set;
         }
-
+        public Pcb Leiterplatte
+        {
+            get; set;
+        }
     }
 }

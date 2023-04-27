@@ -9,30 +9,21 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Nutzer : BasisEntitaet
+    public class Device : BaseEntity
     {
         [Key]
         public int Id
         {
             get; set;
         }
-        [MaxLength(50)]
+
+        [Required]
         [Column(TypeName = "nvarchar(50)")]
         public string Name
         {
             get; set;
         }
-        [MaxLength(50)]
-        [Column(TypeName = "nvarchar(50)")]
-        public string AdUsername
-        {
-            get; set;
-        }
-        public List<Umbuchung> Umbuchungen
-        {
-            get; set;
-        }
-        public List<Anmerkung> Anmerkungen
+        public List<Pcb> Pcbs
         {
             get; set;
         }

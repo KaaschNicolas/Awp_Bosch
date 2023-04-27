@@ -1,16 +1,19 @@
-﻿using App.Activation;
+﻿using System.Linq.Expressions;
+using App.Activation;
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
 using App.Core.Services;
+using App.Core.Services.Interfaces;
 using App.Helpers;
 using App.Models;
 using App.Services;
 using App.ViewModels;
 using App.Views;
-
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+using Serilog;
 
 namespace App;
 
@@ -44,9 +47,18 @@ public partial class App : Application
     {
         InitializeComponent();
 
+        var builder = new ConfigurationBuilder();
+        ConfigSetup(builder);
+
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Build())
+            .CreateLogger();
+
+
         Host = Microsoft.Extensions.Hosting.Host.
         CreateDefaultBuilder().
         UseContentRoot(AppContext.BaseDirectory).
+        UseSerilog().
         ConfigureServices((context, services) =>
         {
             // Default Activation Handler
@@ -65,6 +77,7 @@ public partial class App : Application
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
+            services.AddTransient<ICrudService, CrudService>();
 
             // Views and ViewModels
             services.AddTransient<AddStorageLocationViewModel>();
@@ -88,6 +101,13 @@ public partial class App : Application
         Build();
 
         UnhandledException += App_UnhandledException;
+    }
+
+    private static void ConfigSetup(IConfigurationBuilder builder)
+    {
+        builder.SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsetttings.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables();
     }
 
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
