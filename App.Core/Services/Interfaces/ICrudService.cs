@@ -10,6 +10,11 @@ namespace App.Core.Services.Interfaces
 {
     public interface ICrudService
     {
+
         public List<Pcb> GetCompleteLeiterplatten();
+        public Task<PcbType> Create(PcbType pcbType);
+
+
+
     }
 }

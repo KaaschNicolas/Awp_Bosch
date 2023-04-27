@@ -4,8 +4,37 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="using:App.Behaviors"
+    xmlns:viewModels="using:App.ViewModels"
     mc:Ignorable="d">
 
+
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate x:DataType="viewModels:MainViewModel">
+            <Grid Margin="0,0,50,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <CommandBar Grid.Column="0" Background="Transparent" IsOpen="False"  DefaultLabelPosition="Right">
+                    <CommandBar.Content>
+                        <!--Get MainPageTitle.Text from localizx:ed resources-->
+                        <TextBlock Text="Dashboard"/>
+                    </CommandBar.Content>
+
+                    <!--All your AppBar buttons-->
+                    <!--Get SendAppBarButton.Label from localized resources-->
+                    <AppBarButton Label="Hinzufügen" Icon="Add" />
+                    <AppBarButton Label="Neu Laden" Icon="Refresh" />
+
+                </CommandBar>
+                <StackPanel Grid.Column="1" Background="{ThemeResource CommandBarBackground}" VerticalAlignment="Center">
+                    <AutoSuggestBox PlaceholderText="Search" QueryIcon="Find" Width="200px" BorderThickness="0" x:Name="search_box"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
     <Grid x:Name="ContentArea">
         
     </Grid>

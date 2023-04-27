@@ -56,7 +56,7 @@ namespace App.Core.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Nicolas!1234;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer(@"Data Source=127.0.0.1;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True");
         }
 
         public override int SaveChanges()

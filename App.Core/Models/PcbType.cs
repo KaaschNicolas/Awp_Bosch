@@ -12,7 +12,7 @@ namespace App.Core.Models
     public class PcbType : BaseEntity
     {
         [Key]
-        public string Id
+        public int Id
         {
             get; set;
         }
@@ -27,6 +27,7 @@ namespace App.Core.Models
         {
             get; set;
         }
+
         public List<Pcb> Pcbs
         {
             get; set;

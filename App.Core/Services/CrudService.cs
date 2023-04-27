@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -9,6 +10,10 @@ using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
+
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
 
@@ -18,6 +23,7 @@ namespace App.Core.Services
     {
         public CrudService(BoschContext boschContext)
         {
+            _boschContext = boschContext;
 
         }
 
@@ -175,6 +181,19 @@ namespace App.Core.Services
             return null;
         }
 
+
+        public async Task<PcbType> Create(PcbType pcbType)
+        {
+            EntityEntry<PcbType> createdResult = await _boschContext.PcbTypes.AddAsync(pcbType);
+            await _boschContext.SaveChangesAsync();
+            return createdResult.Entity;
+        }
+
+
+
+        
+
+
         public Task<List<StorageLocation>> GetStorageLocationByPcb(Pcb pcb)
         {
             _loggingService.Audit(LogLevel.Debug, "GetStorageLocationByPcb");
@@ -189,5 +208,6 @@ namespace App.Core.Services
             }
             return null;
         }
+
     }
 }
