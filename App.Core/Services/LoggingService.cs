@@ -6,18 +6,20 @@ using System.Threading.Tasks;
 using App.Core.DataAccess;
 using App.Core.Helpers;
 using App.Core.Models;
+using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace App.Core.Services;
-public class LoggingService
+public class LoggingService : ILoggingService
 {
     private BoschContext _boschContext;
-    public ILogger<LoggingService> _logger;
+    private readonly ILogger<LoggingService> _logger;
 
-    public LoggingService(BoschContext boschContext)
+    public LoggingService(BoschContext boschContext, ILogger<LoggingService> logger)
     {
+        _logger = logger;
         _boschContext = boschContext;
     }
 

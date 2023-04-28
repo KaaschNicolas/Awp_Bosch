@@ -14,6 +14,4 @@ public interface ILoggingService
     public void Audit(LogLevel logLevel, string message, User user);
     public void Audit(LogLevel logLevel, string message, User user, Exception exception);
     public void Audit(LogLevel logLevel, string message, User user, Exception? exception, object obj);
-
-
 }
