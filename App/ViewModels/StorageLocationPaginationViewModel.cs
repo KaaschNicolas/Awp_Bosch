@@ -7,6 +7,7 @@ using App.Core.Models;
 using App.Core.Services.Interfaces;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace App.ViewModels;
 public class StorageLocationPaginationViewModel : ObservableObject
@@ -22,6 +23,11 @@ public class StorageLocationPaginationViewModel : ObservableObject
     private int _pageNumber;
     private int _pageCount;
     private List<StorageLocation> _storageLocations;
+
+    public IAsyncRelayCommand FirstAsyncCommand { get; }
+    public IAsyncRelayCommand PreviousAsyncCommand { get; }
+    public IAsyncRelayCommand NextAsyncCommand { get; }
+    public IAsyncRelayCommand LastAsyncCommand { get; }
 
     public int PageNumber
     {
