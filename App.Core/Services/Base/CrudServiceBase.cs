@@ -105,7 +105,6 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         {
             _loggingService.Log(LogLevel.Error, "Error GetById()");
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
-            
         }
     }
 }
