@@ -7,8 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:App.ViewModels"
+    x:Name="_page"
     mc:Ignorable="d">
-
 
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
@@ -55,6 +55,7 @@
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
     <Grid x:Name="ContentArea">
+
         <!--  Remove wierd borders around cells, caused bug when opening MenuFlyout  -->
         <Grid.Resources>
             <ResourceDictionary>
@@ -63,12 +64,12 @@
             </ResourceDictionary>
         </Grid.Resources>
         <controls:DataGrid
-            x:Name="PNDataGrid"
             AutoGenerateColumns="False"
             ClipboardCopyMode="ExcludeHeader"
             GridLinesVisibility="All"
             IsReadOnly="True"
-            ItemsSource="{x:Bind ViewModel.PcbTypes, Mode=OneWay}"
+            ItemsSource="{Binding PcbTypes}"
+            SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
             SelectionMode="Single">
             <controls:DataGrid.Resources>
                 <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
@@ -90,10 +91,14 @@
                                 <AppBarButton.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
                                         <MenuFlyoutItem Icon="Edit" Text="Bearbeiten" />
-                                        <MenuFlyoutItem Icon="Delete" Text="Löschen" />
+                                        <MenuFlyoutItem
+                                            Click="deleteClick"
+                                            Icon="Delete"
+                                            Text="Löschen" />
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
+
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
