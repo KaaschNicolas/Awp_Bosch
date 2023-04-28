@@ -78,16 +78,16 @@ public partial class App : Application
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IInfoBarService, InfoBarService>();
-          
+
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
-
-            services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
-
+            services.AddTransient<LoggingService>();
+            services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
+            //services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
+            
 
             // Views and ViewModels
-            services.AddTransient<MD_CreatePartNumberViewModel>();
             services.AddTransient<MD_CreatePartNumberPage>();
             services.AddTransient<MDPartNumberViewModel>();
             services.AddTransient<MDPartNumberPage>();
@@ -115,7 +115,7 @@ public partial class App : Application
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
 
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("Y:\\Studium\\Data Science\\Sem6\\AWP\\Repo\\App\\appsettings.json", optional: false, reloadOnChange: true)
 
             .AddEnvironmentVariables();
     }

@@ -26,7 +26,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     {
         try
         {
-            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} hinzugefügt", null);
+            //_loggingService.Audit(LogLevel.Information, $"{typeof(T)} hinzugefügt", null);
 
             EntityEntry<T> entityEntry = await _boschContext.Set<T>().AddAsync(entity);
             await _boschContext.SaveChangesAsync();
@@ -80,7 +80,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     {
         try
         {
-            _loggingService.Log(LogLevel.Debug, $"GetAll()");
+            //_loggingService.Log(LogLevel.Debug, $"GetAll()");
 
             var list = await _boschContext.Set<T>().ToListAsync();
 
