@@ -9,7 +9,7 @@ namespace App.Views;
 
 public sealed partial class MD_CreatePartNumberPage : Page
 {
-    public MD_CreatePartNumberViewModel ViewModel
+    public MDPartNumberViewModel ViewModel
     {
         get;
     }
@@ -17,7 +17,7 @@ public sealed partial class MD_CreatePartNumberPage : Page
     public MD_CreatePartNumberPage()
     {
         
-        ViewModel = App.GetService<MD_CreatePartNumberViewModel>();
+        ViewModel = App.GetService<MDPartNumberViewModel>();
         InitializeComponent();
         SetBinding(NavigationViewHeaderBehavior.HeaderContextProperty, new Binding
         {
