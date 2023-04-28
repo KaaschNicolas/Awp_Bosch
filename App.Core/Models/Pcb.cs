@@ -11,11 +11,6 @@ namespace App.Core.Models
 {
     public class Pcb : BaseEntity
     {
-        [Key]
-        public int Id
-        {
-            get; set;
-        }
         [MaxLength(10)]
         [Column(TypeName = "nvarchar(10)")]
         public string SerialNumber

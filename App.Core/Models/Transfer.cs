@@ -9,12 +9,14 @@ namespace App.Core.Models
 {
     public class Transfer : BaseEntity
     {
+
         [Key]
         public int Id
         {
             get; set;
         }
         public string Comment
+
         {
             get; set;
         }

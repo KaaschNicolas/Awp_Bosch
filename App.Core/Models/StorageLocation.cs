@@ -11,11 +11,6 @@ namespace App.Core.Models
 {
     public class StorageLocation : BaseEntity
     {
-        [Key]
-        public int Id
-        {
-            get; set;
-        }
         [Required]
         [Column(TypeName = "nvarchar(50)")]
         public string StorageName

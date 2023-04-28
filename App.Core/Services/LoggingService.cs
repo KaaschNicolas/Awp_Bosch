@@ -35,7 +35,15 @@ public class LoggingService
         }
     }
 
-    public void Audit(LogLevel logLevel, string message) => _logger.Log(logLevel, message);
+    public void Log(LogLevel logLevel, string message) => _logger.Log(logLevel, message);
+
+    public void Log(LogLevel logLevel, string message, object obj)
+    {
+        _logger.Log(
+            logLevel,
+            message += $" {obj.PropertiesToString()}"
+            );
+    }
 
     public void Audit(LogLevel logLevel, string message, User user)
     {

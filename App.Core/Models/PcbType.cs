@@ -16,6 +16,7 @@ namespace App.Core.Models
         {
             get; set;
         }
+        
         [Required]
         [MaxLength(10)]
         [Column(TypeName = "nvarchar(10)")]
@@ -23,12 +24,14 @@ namespace App.Core.Models
         {
             get; set;
         }
+
         [Required]
         public string Description
         {
             get; set;
         }
         [Required]
+
         public int MaxTransfer
         {
             get; set;

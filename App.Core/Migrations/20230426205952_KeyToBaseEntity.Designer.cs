@@ -4,16 +4,18 @@ using App.Core.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace App.Core.Migrations
+namespace Backend.Migrations
 {
     [DbContext(typeof(BoschContext))]
-    partial class BoschContextModelSnapshot : ModelSnapshot
+    [Migration("20230426205952_KeyToBaseEntity")]
+    partial class KeyToBaseEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,7 +173,7 @@ namespace App.Core.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DiagnoseId")
+                    b.Property<int?>("EnddiagnoseId")
                         .HasColumnType("int");
 
                     b.Property<string>("ErrorDescription")
@@ -180,8 +182,9 @@ namespace App.Core.Migrations
                     b.Property<bool>("Finalized")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PcbTypeId")
-                        .HasColumnType("int");
+                    b.Property<string>("PcbTypeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("RestrictionId")
                         .HasColumnType("int");
@@ -196,7 +199,7 @@ namespace App.Core.Migrations
                         .IsUnique()
                         .HasFilter("[CommentId] IS NOT NULL");
 
-                    b.HasIndex("DiagnoseId");
+                    b.HasIndex("EnddiagnoseId");
 
                     b.HasIndex("PcbTypeId");
 
@@ -207,11 +210,8 @@ namespace App.Core.Migrations
 
             modelBuilder.Entity("App.Core.Models.PcbType", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -273,7 +273,7 @@ namespace App.Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Comment")
+                    b.Property<string>("Anmerkung")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -282,22 +282,22 @@ namespace App.Core.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("NotedById")
+                    b.Property<int?>("LeiterplatteId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PcbId")
+                    b.Property<int>("NachId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StorageLocationId")
+                    b.Property<int>("VerbuchtVonId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NotedById");
+                    b.HasIndex("LeiterplatteId");
 
-                    b.HasIndex("PcbId");
+                    b.HasIndex("NachId");
 
-                    b.HasIndex("StorageLocationId");
+                    b.HasIndex("VerbuchtVonId");
 
                     b.ToTable("Transfers");
                 });
@@ -347,7 +347,7 @@ namespace App.Core.Migrations
             modelBuilder.Entity("App.Core.Models.Comment", b =>
                 {
                     b.HasOne("App.Core.Models.User", "NotedBy")
-                        .WithMany("Comments")
+                        .WithMany("Anmerkungen")
                         .HasForeignKey("NotedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -361,9 +361,9 @@ namespace App.Core.Migrations
                         .WithOne("Pcb")
                         .HasForeignKey("App.Core.Models.Pcb", "CommentId");
 
-                    b.HasOne("App.Core.Models.Diagnose", "Diagnose")
-                        .WithMany("Pcbs")
-                        .HasForeignKey("DiagnoseId");
+                    b.HasOne("App.Core.Models.Diagnose", "Enddiagnose")
+                        .WithMany("Leiterplatten")
+                        .HasForeignKey("EnddiagnoseId");
 
                     b.HasOne("App.Core.Models.PcbType", "PcbType")
                         .WithMany("Pcbs")
@@ -377,7 +377,7 @@ namespace App.Core.Migrations
 
                     b.Navigation("Comment");
 
-                    b.Navigation("Diagnose");
+                    b.Navigation("Enddiagnose");
 
                     b.Navigation("PcbType");
 
@@ -386,29 +386,27 @@ namespace App.Core.Migrations
 
             modelBuilder.Entity("App.Core.Models.Transfer", b =>
                 {
-                    b.HasOne("App.Core.Models.User", "NotedBy")
+                    b.HasOne("App.Core.Models.Pcb", "Leiterplatte")
                         .WithMany("Transfers")
+                        .HasForeignKey("LeiterplatteId");
 
-                        .HasForeignKey("NotedById")
-
+                    b.HasOne("App.Core.Models.StorageLocation", "Nach")
+                        .WithMany("Transfers")
+                        .HasForeignKey("NachId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Core.Models.Pcb", "Pcb")
-                        .WithMany("Transfers")
-                        .HasForeignKey("PcbId");
-
-                    b.HasOne("App.Core.Models.StorageLocation", "StorageLocation")
-                        .WithMany("Transfers")
-                        .HasForeignKey("StorageLocationId")
+                    b.HasOne("App.Core.Models.User", "VerbuchtVon")
+                        .WithMany("Umbuchungen")
+                        .HasForeignKey("VerbuchtVonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("NotedBy");
+                    b.Navigation("Leiterplatte");
 
-                    b.Navigation("Pcb");
+                    b.Navigation("Nach");
 
-                    b.Navigation("StorageLocation");
+                    b.Navigation("VerbuchtVon");
                 });
 
             modelBuilder.Entity("ErrorTypePcb", b =>
@@ -438,7 +436,7 @@ namespace App.Core.Migrations
 
             modelBuilder.Entity("App.Core.Models.Diagnose", b =>
                 {
-                    b.Navigation("Pcbs");
+                    b.Navigation("Leiterplatten");
                 });
 
             modelBuilder.Entity("App.Core.Models.Pcb", b =>
@@ -458,9 +456,9 @@ namespace App.Core.Migrations
 
             modelBuilder.Entity("App.Core.Models.User", b =>
                 {
-                    b.Navigation("Comments");
+                    b.Navigation("Anmerkungen");
 
-                    b.Navigation("Transfers");
+                    b.Navigation("Umbuchungen");
                 });
 #pragma warning restore 612, 618
         }

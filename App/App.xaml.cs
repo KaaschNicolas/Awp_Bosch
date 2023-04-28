@@ -2,6 +2,7 @@
 using App.Activation;
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
+using App.Core.Models;
 using App.Core.DataAccess;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
@@ -81,8 +82,9 @@ public partial class App : Application
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
-            services.AddSingleton<ICrudService, CrudService>();
-            
+
+            services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
+
 
             // Views and ViewModels
             services.AddTransient<MD_CreatePartNumberViewModel>();
@@ -112,7 +114,9 @@ public partial class App : Application
     private static void ConfigSetup(IConfigurationBuilder builder)
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("Y:\\Studium\\Data Science\\Sem6\\AWP\\Repo\\App\\appsettings.json", optional: false, reloadOnChange: true)
+
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+
             .AddEnvironmentVariables();
     }
 
