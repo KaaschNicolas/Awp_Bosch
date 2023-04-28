@@ -3,6 +3,7 @@ using App.Activation;
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
 using App.Core.Models;
+using App.Core.DataAccess;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
 using App.Helpers;
@@ -10,6 +11,7 @@ using App.Models;
 using App.Services;
 using App.ViewModels;
 using App.Views;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -75,12 +77,18 @@ public partial class App : Application
             services.AddSingleton<IActivationService, ActivationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<IInfoBarService, InfoBarService>();
+          
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
+
             services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
 
+
             // Views and ViewModels
+            services.AddTransient<MD_CreatePartNumberViewModel>();
+            services.AddTransient<MD_CreatePartNumberPage>();
             services.AddTransient<MDPartNumberViewModel>();
             services.AddTransient<MDPartNumberPage>();
             services.AddTransient<SettingsViewModel>();
@@ -91,9 +99,12 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
+            
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
+            services.AddDbContext<BoschContext>(
+                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True"));
         }).
         Build();
 
@@ -103,7 +114,9 @@ public partial class App : Application
     private static void ConfigSetup(IConfigurationBuilder builder)
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
+
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+
             .AddEnvironmentVariables();
     }
 

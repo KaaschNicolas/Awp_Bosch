@@ -46,17 +46,16 @@ namespace App.Core.Models
         }
 
         /// <summary>
-        /// Liste der Weitergaben einer Laeterplatte
-        /// Die Reihenfolge gilt nach ID bzw. Created_At
-        /// Die erste Weitergabe ist die Einbuchung
-        /// Ist die Leiterplatte abgeschlossen,
-        /// so ist die letzte Umbunchung der EndgültigeVerbleibOrt
-        /// </summary>
+        /// List of Transfers a pcb went through
+        /// The List should always be orderd by ID or the field Created_At.
+        /// The first Trasnfer is always the starting destination of the pcb
+        /// The last Transfer is the End destination of the pcb but only if the pcb is finalized.
+        /// /// </summary>
         public List<Transfer> Transfers
         {
             get; set;
         }
-        public Diagnose Enddiagnose
+        public Diagnose Diagnose
         {
             get; set;
         }

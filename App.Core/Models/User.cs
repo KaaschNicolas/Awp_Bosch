@@ -23,11 +23,11 @@ namespace App.Core.Models
         {
             get; set;
         }
-        public List<Transfer> Umbuchungen
+        public List<Transfer> Transfers
         {
             get; set;
         }
-        public List<Comment> Anmerkungen
+        public List<Comment> Comments
         {
             get; set;
         }

@@ -17,7 +17,7 @@ namespace App.Core.Models
         {
             get; set;
         }
-        public List<Pcb> Leiterplatten
+        public List<Pcb> Pcbs
         {
             get; set;
         }

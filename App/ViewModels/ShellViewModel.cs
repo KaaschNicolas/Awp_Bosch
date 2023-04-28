@@ -2,7 +2,7 @@
 using App.Views;
 
 using CommunityToolkit.Mvvm.ComponentModel;
-
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace App.ViewModels;
@@ -11,6 +11,7 @@ public class ShellViewModel : ObservableRecipient
 {
     private bool _isBackEnabled;
     private object? _selected;
+
 
     public INavigationService NavigationService
     {
@@ -21,6 +22,11 @@ public class ShellViewModel : ObservableRecipient
     {
         get;
     }
+
+    public IInfoBarService InfoBarService
+    {
+    get; }
+
 
     public bool IsBackEnabled
     {
@@ -34,11 +40,12 @@ public class ShellViewModel : ObservableRecipient
         set => SetProperty(ref _selected, value);
     }
 
-    public ShellViewModel(INavigationService navigationService, INavigationViewService navigationViewService)
+    public ShellViewModel(INavigationService navigationService, INavigationViewService navigationViewService, IInfoBarService infoBarService)
     {
         NavigationService = navigationService;
         NavigationService.Navigated += OnNavigated;
         NavigationViewService = navigationViewService;
+        InfoBarService = infoBarService;
     }
 
     private void OnNavigated(object sender, NavigationEventArgs e)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -9,6 +10,10 @@ using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
+
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
 using App.Core.Services.Base;
@@ -19,7 +24,8 @@ namespace App.Core.Services
     {
         public CrudService(BoschContext boschContext, LoggingService loggingService) : base(boschContext, loggingService)
         {
-            
+
         }
+
     }
 }

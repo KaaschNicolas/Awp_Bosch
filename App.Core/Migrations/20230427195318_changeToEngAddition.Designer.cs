@@ -4,6 +4,7 @@ using App.Core.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Core.Migrations
 {
     [DbContext(typeof(BoschContext))]
-    partial class BoschContextModelSnapshot : ModelSnapshot
+    [Migration("20230427195318_changeToEngAddition")]
+    partial class changeToEngAddition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,10 +221,6 @@ namespace App.Core.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("MaxTransfer")
                         .HasColumnType("int");
 
@@ -388,9 +386,7 @@ namespace App.Core.Migrations
                 {
                     b.HasOne("App.Core.Models.User", "NotedBy")
                         .WithMany("Transfers")
-
                         .HasForeignKey("NotedById")
-
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
