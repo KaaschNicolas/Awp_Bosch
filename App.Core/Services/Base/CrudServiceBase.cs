@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using App.Core.DataAccess;
 using App.Core.Models;
+using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
@@ -15,8 +16,8 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
 {
     protected BoschContext _boschContext;
 
-    protected LoggingService _loggingService;
-    public CrudServiceBase(BoschContext boschContext, LoggingService loggingService)
+    protected ILoggingService _loggingService;
+    public CrudServiceBase(BoschContext boschContext, ILoggingService loggingService)
     {
         _boschContext = boschContext;
         _loggingService = loggingService;
@@ -26,7 +27,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     {
         try
         {
-            //_loggingService.Audit(LogLevel.Information, $"{typeof(T)} hinzugefügt", null);
+            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} hinzugefügt", null);
 
             EntityEntry<T> entityEntry = await _boschContext.Set<T>().AddAsync(entity);
             await _boschContext.SaveChangesAsync();
@@ -80,7 +81,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     {
         try
         {
-            //_loggingService.Log(LogLevel.Debug, $"GetAll()");
+            _loggingService.Log(LogLevel.Debug, $"GetAll()");
 
             var list = await _boschContext.Set<T>().ToListAsync();
 
@@ -105,7 +106,6 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         {
             _loggingService.Log(LogLevel.Error, "Error GetById()");
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
-            
         }
     }
 }

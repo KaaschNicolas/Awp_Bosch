@@ -22,7 +22,7 @@ namespace App.Core.Services
 {
     public class CrudService<T> : CrudServiceBase<T>, ICrudService<T> where T : BaseEntity
     {
-        public CrudService(BoschContext boschContext, LoggingService loggingService) : base(boschContext, loggingService)
+        public CrudService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService)
         {
 
         }
