@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-        <DataTemplate x:DataType="viewModels:MD_CreatePartNumberViewModel">
+        <DataTemplate x:DataType="viewModels:MDPartNumberViewModel">
             <TextBlock Text="Sachnummer erstellen" />
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>

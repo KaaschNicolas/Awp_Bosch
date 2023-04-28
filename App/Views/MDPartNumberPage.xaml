@@ -68,14 +68,14 @@
             ClipboardCopyMode="ExcludeHeader"
             GridLinesVisibility="All"
             IsReadOnly="True"
-            ItemsSource="{x:Bind ViewModel.Source, Mode=OneWay}"
+            ItemsSource="{x:Bind ViewModel.PcbTypes, Mode=OneWay}"
             SelectionMode="Single">
             <controls:DataGrid.Resources>
                 <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent" />
             </controls:DataGrid.Resources>
             <controls:DataGrid.Columns>
                 <!--  TODO: Replace column definitions to match real data. Consider adding Header values to Resources.resw.  -->
-                <controls:DataGridTextColumn Binding="{Binding Number}" Header="Sachnummer" />
+                <controls:DataGridTextColumn Binding="{Binding PcbPartNumber}" Header="Sachnummer" />
                 <controls:DataGridTextColumn Binding="{Binding Description}" Header="Beschreibung" />
                 <controls:DataGridTextColumn Binding="{Binding MaxTransfer}" Header="Max. Weitergaben" />
                 <controls:DataGridTemplateColumn Width="100" Header="Aktion">

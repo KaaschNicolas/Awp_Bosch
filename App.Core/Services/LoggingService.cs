@@ -14,7 +14,7 @@ namespace App.Core.Services;
 public class LoggingService
 {
     private BoschContext _boschContext;
-    private readonly ILogger<LoggingService> _logger;
+    public ILogger<LoggingService> _logger;
 
     public LoggingService(BoschContext boschContext)
     {
