@@ -25,10 +25,7 @@
                     Header="Sachnummer"
                     PlaceholderText="10-stellige Sachnummer"
                     Text="{Binding PcbPartNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBox
-                    Header="Bezeichnung"
-                    PlaceholderText="Bezeichnung eingeben"
-                    />
+                <TextBox Header="Bezeichnung" PlaceholderText="Bezeichnung eingeben" />
                 <NumberBox
                     x:Name="NumberBoxSpinButtonPlacementExample"
                     Header="Maximale Anzahl an Weitergaben"
@@ -36,8 +33,7 @@
                     Minimum="0"
                     SmallChange="1"
                     SpinButtonPlacementMode="Compact"
-                    Value="1"
-                    Text="{Binding MaxTransfer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}/>
+                    Value="{Binding MaxTransfer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Button
                         Command="{Binding CreatePN}"
