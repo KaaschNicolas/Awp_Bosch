@@ -98,12 +98,13 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         try
         {
             _loggingService.Log(LogLevel.Debug, $"GetById");
-            var entity = await _boschContext.Set<T>().Where(x => x.Id == id);
+            var entity = await _boschContext.Set<T>().Where(x => x.Id == id).ToListAsync();
+            return new Response<T>(ResponseCode.Success, entity.First());
         }
         catch (DbUpdateException)
         {
             _loggingService.Log(LogLevel.Error, "Error GetById()");
-            return new Response<T>
+            return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
             
         }
     }
