@@ -12,7 +12,7 @@ using System.ComponentModel;
 
 namespace App.ViewModels;
 
-public class MD_CreatePartNumberViewModel : ObservableRecipient, INotifyPropertyChanged
+public class MD_CreatePartNumberViewModel : ObservableObject, INotifyPropertyChanged
 {
 
     //private readonly ISampleDataService _sampleDataService;
@@ -36,6 +36,17 @@ public class MD_CreatePartNumberViewModel : ObservableRecipient, INotifyProperty
         {
             _maxTransfer = value;
             OnPropertyChanged(nameof(MaxTransfer));
+        }
+    }
+
+    private string _description;
+    public string Description
+    {
+        get => _description;
+        set
+        {
+            _description = value;
+            OnPropertyChanged(nameof(Description));
         }
     }
 
@@ -78,13 +89,10 @@ public class MD_CreatePartNumberViewModel : ObservableRecipient, INotifyProperty
 
 
 
-
     public MD_CreatePartNumberViewModel(ICrudService crudService, IInfoBarService infoBarService)
     {
         _crudService = crudService;
         InfoBarService = infoBarService;
-        this._maxTransfer = 0;
-        this._pcbPartNumber = string.Empty;
         CreatePN = new RelayCommand(CreatePartNumber, CanExecuteCreate);
     }
 
@@ -93,22 +101,12 @@ public class MD_CreatePartNumberViewModel : ObservableRecipient, INotifyProperty
         return _canExecute;
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    public void RaisePropertyChanged(string propertyName)
-    {
-        PropertyChangedEventHandler handler = PropertyChanged;
-        if (handler != null)
-        {
-            handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
 
 
     public async void CreatePartNumber()
     {
 
-        var lpt = await _crudService.Create(new PcbType { PcbPartNumber = _pcbPartNumber, MaxTransfer = _maxTransfer });
+        var lpt = await _crudService.Create(new PcbType { PcbPartNumber = _pcbPartNumber, MaxTransfer = _maxTransfer, Description = _description });
         InfoBarService.showMessage("Erfolgreich Leiterplatte erstellt", "Erfolg");
 
     }

@@ -23,11 +23,16 @@ namespace App.Core.Models
         {
             get; set;
         }
+        [Required]
+        public string Description
+        {
+            get; set;
+        }
+        [Required]
         public int MaxTransfer
         {
             get; set;
         }
-
         public List<Pcb> Pcbs
         {
             get; set;
