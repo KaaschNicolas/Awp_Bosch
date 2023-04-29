@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using App.Behaviors;
 using App.ViewModels;
-
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 
@@ -27,14 +27,16 @@ public sealed partial class MD_CreatePartNumberPage : Page
         DataContext = ViewModel;
 
 
+
     }
 
-    private void Create_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private void Create_Click(object sender, RoutedEventArgs e)
     {
         Debug.WriteLine("Create_Item");
     }
 
-    private void Cancel_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+
+    private void Cancel_Click(object sender, RoutedEventArgs e)
     {
         Frame.Navigate(typeof(MDPartNumberPage));
     }
