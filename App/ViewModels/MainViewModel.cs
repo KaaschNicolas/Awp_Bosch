@@ -8,6 +8,6 @@ public class MainViewModel : ObservableRecipient
 {
     public MainViewModel()
     {
-       
+
     }
 }

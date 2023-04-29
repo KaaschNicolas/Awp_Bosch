@@ -18,7 +18,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top">
 			<CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
-				<AppBarButton Icon="Add" Label="Hinzufügen"/>
+				<AppBarButton Icon="Add" Label="Hinzufügen"/> <!--Click=""-->
 				<AppBarButton Icon="Refresh" Label="Neu laden"/>
 			</CommandBar>
 			<AutoSuggestBox
@@ -61,6 +61,7 @@
 				<controls:DataGridTextColumn Binding="{Binding StorageLocation}" Header="Lagerort" />
 				<controls:DataGridTextColumn Binding="{Binding Days_Yellow}" Header="Tage bis Status GELB" />
 				<controls:DataGridTextColumn Binding="{Binding Days_Red}" Header="Tage bis Status ROT" />
+				<controls:DataGridTextColumn Binding="{Binding Status}" Header="Status"/>
 				<controls:DataGridTemplateColumn Header="Aktionen">
 					<controls:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>

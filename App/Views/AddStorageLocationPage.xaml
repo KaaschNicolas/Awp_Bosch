@@ -12,8 +12,16 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top">
 			<TextBox Margin="0,12,0,12" Header="Lagerort:" PlaceholderText="Bezeichnung hinzufügen" />
-			<TextBox Margin="0,12,0,12" Header="Tage bis Status GELB:" PlaceholderText="Anzahl hinzufügen" />
-			<TextBox Margin="0,12,0,12" Header="Tage bis Status ROT:" PlaceholderText="Anzahl hinzufügen" />
+			<!--StackPanel Margin="0,0,0,14" Orientation="Horizontal"-->
+			<!--ToggleSwitch Header="als 'Endgültiger Verbleib' festlegen" OffContent="Umlauf" OnContent="Endgültiger Verbleib" IsOn="False" />-->
+			<!--ProgressRing IsActive="{x:Bind ToggleSwitch2.IsOn, Mode=OneWay}" Width="32"/>-->
+			<!--/StackPanel-->
+			<CheckBox x:Name="finalDispositionCheckbox"
+				Content="als 'Endgültiger Verbleib' festlegen"/>
+			<!--Checked="TwoState_Checked"-->
+			<!--Unchecked="TwoState_Unchecked" />-->
+			<TextBox Margin="0,18,0,12" Header="Tage bis Status GELB:" PlaceholderText="Anzahl festlegen" />
+			<TextBox Margin="0,8,0,12" Header="Tage bis Status ROT:" PlaceholderText="Anzahl festlegen" />
 			<StackPanel
 				Orientation="Horizontal"
 				HorizontalAlignment="Left"
@@ -24,9 +32,9 @@
 						<TextBlock Padding="8,0,0,0" >Speichern</TextBlock>
 					</StackPanel>
 				</Button>
-				<Button Margin="0,12,4,12">
+				<Button Margin="0,12,4,12" ><!--Click="Button_Click"-->
 					<StackPanel Orientation="Horizontal">
-						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;"/>
+						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;" FontSize="18"/>
 						<TextBlock Padding="8,0,0,0" >Abbrechen</TextBlock>
 					</StackPanel>
 				</Button>
