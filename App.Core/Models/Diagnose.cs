@@ -9,21 +9,15 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Diagnose : BasisEntitaet
+    public class Diagnose : BaseEntity
     {
-        [Key]
-        public int Id
-        {
-            get; set;
-        }
-
         [Required]
         [Column(TypeName = "nvarchar(650)")]
         public string Name
         {
             get; set;
         }
-        public List<Leiterplatte> Leiterplatten
+        public List<Pcb> Pcbs
         {
             get; set;
         }

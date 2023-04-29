@@ -9,25 +9,21 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Leiterplattentyp : BasisEntitaet
+    public class ErrorType : BaseEntity
     {
-        [Key]
-        public string Id
+        [Required]
+        [MaxLength(5)]
+        public string Code
         {
             get; set;
         }
         [Required]
-        [MaxLength(10)]
-        [Column(TypeName = "nvarchar(10)")]
-        public string LpSachnummer
+        [Column(TypeName = "nvarchar(650)")]
+        public string ErrorDescribtion
         {
             get; set;
         }
-        public int MaxWeitergaben
-        {
-            get; set;
-        }
-        public List<Leiterplatte> Leiterplatten
+        public List<Pcb> Pcbs
         {
             get; set;
         }

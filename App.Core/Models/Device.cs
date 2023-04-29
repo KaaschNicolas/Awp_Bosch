@@ -9,30 +9,17 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Fehlertyp : BasisEntitaet
+    public class Device : BaseEntity
     {
-        [Key]
-        public int Id
-        {
-            get; set;
-        }
-
         [Required]
-        [MaxLength(5)]
-        public string Code
+        [Column(TypeName = "nvarchar(50)")]
+        public string Name
         {
             get; set;
         }
-        [Required]
-        [Column(TypeName = "nvarchar(650)")]
-        public string Fehlerbeschreibung
+        public List<Pcb> Pcbs
         {
             get; set;
         }
-        public List<Leiterplatte> Leiterplatten
-        {
-            get; set;
-        }
-
     }
 }

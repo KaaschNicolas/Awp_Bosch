@@ -7,28 +7,30 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Umbuchung : BasisEntitaet
+    public class Transfer : BaseEntity
     {
+
         [Key]
         public int Id
         {
             get; set;
         }
-        public string Anmerkung
+        public string Comment
+
         {
             get; set;
         }
         [Required]
-        public LagerOrt Nach
+        public StorageLocation StorageLocation
         {
             get; set;
         }
         [Required]
-        public Nutzer VerbuchtVon
+        public User NotedBy
         {
             get; set;
         }
-        public Leiterplatte Leiterplatte
+        public Pcb Pcb
         {
             get; set;
         }

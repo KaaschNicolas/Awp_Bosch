@@ -9,28 +9,23 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class LagerOrt : BasisEntitaet
+    public class StorageLocation : BaseEntity
     {
-        [Key]
-        public int Id
-        {
-            get; set;
-        }
         [Required]
         [Column(TypeName = "nvarchar(50)")]
-        public string LagerName
+        public string StorageName
         {
             get; set;
         }
-        public int VerweildauerGelb
+        public int DwellTimeYellow
         {
             get; set;
         }
-        public int VerweildauerRot
+        public int DwellTimeRed
         {
             get; set;
         }
-        public List<Umbuchung> Umbuchungen
+        public List<Transfer> Transfers
         {
             get; set;
         }

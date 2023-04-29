@@ -9,30 +9,22 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Nutzer : BasisEntitaet
+    public class Comment : BaseEntity
     {
-        [Key]
-        public int Id
-        {
-            get; set;
-        }
-        [MaxLength(50)]
-        [Column(TypeName = "nvarchar(50)")]
+        
+        [Required]
+        [Column(TypeName = "nvarchar(650)")]
         public string Name
         {
             get; set;
         }
-        [MaxLength(50)]
-        [Column(TypeName = "nvarchar(50)")]
-        public string AdUsername
+        [Required]
+        public User NotedBy
         {
             get; set;
         }
-        public List<Umbuchung> Umbuchungen
-        {
-            get; set;
-        }
-        public List<Anmerkung> Anmerkungen
+
+        public Pcb Pcb
         {
             get; set;
         }

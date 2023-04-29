@@ -9,21 +9,25 @@ using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
-    public class Geraet : BasisEntitaet
+    public class User : BaseEntity
     {
-        [Key]
-        public int Id
-        {
-            get; set;
-        }
-
-        [Required]
+        [MaxLength(50)]
         [Column(TypeName = "nvarchar(50)")]
         public string Name
         {
             get; set;
         }
-        public List<Leiterplatte> Leiterplatten
+        [MaxLength(50)]
+        [Column(TypeName = "nvarchar(50)")]
+        public string AdUsername
+        {
+            get; set;
+        }
+        public List<Transfer> Transfers
+        {
+            get; set;
+        }
+        public List<Comment> Comments
         {
             get; set;
         }

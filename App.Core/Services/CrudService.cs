@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
@@ -10,70 +11,20 @@ using App.Core.Models;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
+
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
+using App.Core.Services.Base;
+
 namespace App.Core.Services
 {
-    public class CrudService : ICrudService
+    public class CrudService<T> : CrudServiceBase<T>, ICrudService<T> where T : BaseEntity
     {
-        public CrudService(BoschContext boschContext)
+        public CrudService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService)
         {
 
-        }
-
-        private BoschContext _boschContext;
-
-        public List<Leiterplatte> GetCompleteLeiterplatten() => _boschContext.Leiterplatten.Include(x => x.Weitergaben).ToList();
-
-        public List<LagerOrt> GetLagerorte() => _boschContext.LagerOrte.ToList();
-
-        public List<Leiterplattentyp> GetLeiterplattentypen => _boschContext.Leiterplattentypen.ToList();
-
-        public List<Nutzer> GetNutzer() => _boschContext.Nutzende.ToList();
-
-        public List<Umbuchung> GetUmbuchungen(Leiterplatte leiterplatte)
-        {
-            string test;
-            try
-            {
-                var query = _boschContext.Umbuchungen.Where(x => x.Id == leiterplatte.Id).ToList();
-
-            }
-            catch (DbUpdateException ex)
-            {
-                test = ex.Source;
-
-            }
-            //Platzhalter für unsere ResponseCodes
-            return null;
-
-        }
-
-        public List<Leiterplatte> CreateLeiterplatte(Leiterplatte leiterplatte)
-        {
-            try
-            {
-                var query = _boschContext.Leiterplatten.Add(leiterplatte);
-                _boschContext.SaveChanges();
-            }
-            catch (DbUpdateException ex)
-            {
-
-                throw;
-            }
-            return null;
-        }
-
-        public List<Leiterplatte> UpdateLeiterplatte()
-        {
-            try
-            {
-                _boschContext.SaveChanges();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            return null;
         }
 
     }
