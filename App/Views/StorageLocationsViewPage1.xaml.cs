@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -27,6 +28,12 @@ public sealed partial class StorageLocationsViewPage1 : Page
 {
     public StorageLocationsViewPage1()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
+    private async void PaginationPage_Loaded(object sender, RoutedEventArgs e)
+    {
+        
+    }
+
+    private StorageLocationPaginationViewModel ViewModel => DataContext as StorageLocationPaginationViewModel;
 }

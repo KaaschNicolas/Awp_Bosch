@@ -10,11 +10,32 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace App.ViewModels;
-public class StorageLocationPaginationViewModel : ObservableObject
+public class StorageLocationPaginationViewModel : ObservableRecipient
 {
     public StorageLocationPaginationViewModel(ICrudService<StorageLocation> crudService)
     {
         _crudService = crudService;
+        FirstAsyncCommand = new AsyncRelayCommand(
+            async () => await GetStorageLocations(1, _pageSize),
+            () => _pageNumber != 1
+        );
+
+        PreviousAsyncCommand = new AsyncRelayCommand(
+            async () => await GetStorageLocations(_pageNumber -1, _pageSize),
+            () => _pageNumber > 1
+        );
+
+        NextAsyncCommand = new AsyncRelayCommand(
+            async () => await GetStorageLocations(_pageNumber + 1, _pageSize),
+            () => _pageNumber < _pageCount
+        );
+
+        LastAsyncCommand = new AsyncRelayCommand(
+            async () => await GetStorageLocations(_pageCount, _pageSize),
+            () => _pageNumber != _pageCount
+        );
+
+        Refresh();
     }
 
     private readonly ICrudService<StorageLocation> _crudService;
@@ -23,6 +44,8 @@ public class StorageLocationPaginationViewModel : ObservableObject
     private int _pageNumber;
     private int _pageCount;
     private List<StorageLocation> _storageLocations;
+
+    public List<int> PageSizes => new() { 5, 10, 15, 20 };
 
     public IAsyncRelayCommand FirstAsyncCommand { get; }
     public IAsyncRelayCommand PreviousAsyncCommand { get; }
@@ -33,6 +56,16 @@ public class StorageLocationPaginationViewModel : ObservableObject
     {
         get => _pageNumber;
         private set => SetProperty(ref _pageNumber, value);
+    }
+
+    public int PageSize
+    {
+        get => _pageSize;
+        set
+        {
+            SetProperty(ref _pageSize, value);
+            Refresh();
+        }
     }
 
     public int PageCount
@@ -56,10 +89,21 @@ public class StorageLocationPaginationViewModel : ObservableObject
                 storageLocations,
                 pageIndex,
                 pageSize
-                );
+            );
             PageNumber = storageLocationsPaginated.PageIndex;
             PageCount = storageLocationsPaginated.PageCount;
             StorageLocations = storageLocationsPaginated;
+            
+            FirstAsyncCommand.NotifyCanExecuteChanged();
+            PreviousAsyncCommand.NotifyCanExecuteChanged();
+            NextAsyncCommand.NotifyCanExecuteChanged();
+            LastAsyncCommand.NotifyCanExecuteChanged();
         }
+    }
+
+    private void Refresh()
+    {
+        _pageNumber = 0;
+        FirstAsyncCommand.Execute(null);
     }
 }
