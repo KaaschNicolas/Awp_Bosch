@@ -148,8 +148,9 @@ public class MDPartNumberViewModel : ObservableRecipient, INotifyPropertyChanged
 
     public async void DeletePcbType()
     {
-        PcbTypes.Remove(SelectedItem);
-        await _crudService.Delete(SelectedItem);
+        PcbType pcbToRemove = SelectedItem;
+        PcbTypes.Remove(pcbToRemove);
+        await _crudService.Delete(pcbToRemove);
         InfoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
     }
 
