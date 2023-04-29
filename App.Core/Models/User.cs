@@ -11,11 +11,6 @@ namespace App.Core.Models
 {
     public class User : BaseEntity
     {
-        [Key]
-        public int Id
-        {
-            get; set;
-        }
         [MaxLength(50)]
         [Column(TypeName = "nvarchar(50)")]
         public string Name
@@ -28,11 +23,11 @@ namespace App.Core.Models
         {
             get; set;
         }
-        public List<Transfer> Umbuchungen
+        public List<Transfer> Transfers
         {
             get; set;
         }
-        public List<Comment> Anmerkungen
+        public List<Comment> Comments
         {
             get; set;
         }

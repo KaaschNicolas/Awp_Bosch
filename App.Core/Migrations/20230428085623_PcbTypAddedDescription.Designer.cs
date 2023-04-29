@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Backend.Migrations
+namespace App.Core.Migrations
 {
     [DbContext(typeof(BoschContext))]
-    [Migration("20230425204901_ChangeToEng")]
-    partial class ChangeToEng
+    [Migration("20230428085623_PcbTypAddedDescription")]
+    partial class PcbTypAddedDescription
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -173,7 +173,7 @@ namespace Backend.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EnddiagnoseId")
+                    b.Property<int?>("DiagnoseId")
                         .HasColumnType("int");
 
                     b.Property<string>("ErrorDescription")
@@ -182,9 +182,8 @@ namespace Backend.Migrations
                     b.Property<bool>("Finalized")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PcbTypeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("PcbTypeId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("RestrictionId")
                         .HasColumnType("int");
@@ -199,7 +198,7 @@ namespace Backend.Migrations
                         .IsUnique()
                         .HasFilter("[CommentId] IS NOT NULL");
 
-                    b.HasIndex("EnddiagnoseId");
+                    b.HasIndex("DiagnoseId");
 
                     b.HasIndex("PcbTypeId");
 
@@ -210,14 +209,21 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("App.Core.Models.PcbType", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MaxTransfer")
                         .HasColumnType("int");
@@ -246,15 +252,15 @@ namespace Backend.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LagerName")
+                    b.Property<int>("DwellTimeRed")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DwellTimeYellow")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StorageName")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("VerweildauerGelb")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VerweildauerRot")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -269,7 +275,7 @@ namespace Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Anmerkung")
+                    b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -278,22 +284,22 @@ namespace Backend.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("LeiterplatteId")
+                    b.Property<int>("NotedById")
                         .HasColumnType("int");
 
-                    b.Property<int>("NachId")
+                    b.Property<int?>("PcbId")
                         .HasColumnType("int");
 
-                    b.Property<int>("VerbuchtVonId")
+                    b.Property<int>("StorageLocationId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LeiterplatteId");
+                    b.HasIndex("NotedById");
 
-                    b.HasIndex("NachId");
+                    b.HasIndex("PcbId");
 
-                    b.HasIndex("VerbuchtVonId");
+                    b.HasIndex("StorageLocationId");
 
                     b.ToTable("Transfers");
                 });
@@ -343,7 +349,7 @@ namespace Backend.Migrations
             modelBuilder.Entity("App.Core.Models.Comment", b =>
                 {
                     b.HasOne("App.Core.Models.User", "NotedBy")
-                        .WithMany("Anmerkungen")
+                        .WithMany("Comments")
                         .HasForeignKey("NotedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -357,9 +363,9 @@ namespace Backend.Migrations
                         .WithOne("Pcb")
                         .HasForeignKey("App.Core.Models.Pcb", "CommentId");
 
-                    b.HasOne("App.Core.Models.Diagnose", "Enddiagnose")
-                        .WithMany("Leiterplatten")
-                        .HasForeignKey("EnddiagnoseId");
+                    b.HasOne("App.Core.Models.Diagnose", "Diagnose")
+                        .WithMany("Pcbs")
+                        .HasForeignKey("DiagnoseId");
 
                     b.HasOne("App.Core.Models.PcbType", "PcbType")
                         .WithMany("Pcbs")
@@ -373,7 +379,7 @@ namespace Backend.Migrations
 
                     b.Navigation("Comment");
 
-                    b.Navigation("Enddiagnose");
+                    b.Navigation("Diagnose");
 
                     b.Navigation("PcbType");
 
@@ -382,27 +388,27 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("App.Core.Models.Transfer", b =>
                 {
-                    b.HasOne("App.Core.Models.Pcb", "Leiterplatte")
+                    b.HasOne("App.Core.Models.User", "NotedBy")
                         .WithMany("Transfers")
-                        .HasForeignKey("LeiterplatteId");
-
-                    b.HasOne("App.Core.Models.StorageLocation", "Nach")
-                        .WithMany("Umbuchungen")
-                        .HasForeignKey("NachId")
+                        .HasForeignKey("NotedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Core.Models.User", "VerbuchtVon")
-                        .WithMany("Umbuchungen")
-                        .HasForeignKey("VerbuchtVonId")
+                    b.HasOne("App.Core.Models.Pcb", "Pcb")
+                        .WithMany("Transfers")
+                        .HasForeignKey("PcbId");
+
+                    b.HasOne("App.Core.Models.StorageLocation", "StorageLocation")
+                        .WithMany("Transfers")
+                        .HasForeignKey("StorageLocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Leiterplatte");
+                    b.Navigation("NotedBy");
 
-                    b.Navigation("Nach");
+                    b.Navigation("Pcb");
 
-                    b.Navigation("VerbuchtVon");
+                    b.Navigation("StorageLocation");
                 });
 
             modelBuilder.Entity("ErrorTypePcb", b =>
@@ -432,7 +438,7 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("App.Core.Models.Diagnose", b =>
                 {
-                    b.Navigation("Leiterplatten");
+                    b.Navigation("Pcbs");
                 });
 
             modelBuilder.Entity("App.Core.Models.Pcb", b =>
@@ -447,14 +453,14 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("App.Core.Models.StorageLocation", b =>
                 {
-                    b.Navigation("Umbuchungen");
+                    b.Navigation("Transfers");
                 });
 
             modelBuilder.Entity("App.Core.Models.User", b =>
                 {
-                    b.Navigation("Anmerkungen");
+                    b.Navigation("Comments");
 
-                    b.Navigation("Umbuchungen");
+                    b.Navigation("Transfers");
                 });
 #pragma warning restore 612, 618
         }

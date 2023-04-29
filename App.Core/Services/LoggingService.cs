@@ -6,18 +6,20 @@ using System.Threading.Tasks;
 using App.Core.DataAccess;
 using App.Core.Helpers;
 using App.Core.Models;
+using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace App.Core.Services;
-public class LoggingService
+public class LoggingService : ILoggingService
 {
     private BoschContext _boschContext;
     private readonly ILogger<LoggingService> _logger;
 
-    public LoggingService(BoschContext boschContext)
+    public LoggingService(BoschContext boschContext, ILogger<LoggingService> logger)
     {
+        _logger = logger;
         _boschContext = boschContext;
     }
 
@@ -35,7 +37,15 @@ public class LoggingService
         }
     }
 
-    public void Audit(LogLevel logLevel, string message) => _logger.Log(logLevel, message);
+    public void Log(LogLevel logLevel, string message) => _logger.Log(logLevel, message);
+
+    public void Log(LogLevel logLevel, string message, object obj)
+    {
+        _logger.Log(
+            logLevel,
+            message += $" {obj.PropertiesToString()}"
+            );
+    }
 
     public void Audit(LogLevel logLevel, string message, User user)
     {
