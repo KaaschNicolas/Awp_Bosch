@@ -84,10 +84,12 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
             services.AddTransient<ILoggingService, LoggingService>();
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
+            services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
             //services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
-            
+
 
             // Views and ViewModels
+            services.AddTransient<StorageLocationPaginationViewModel>();
             services.AddTransient<MD_CreatePartNumberPage>();
             services.AddTransient<MDPartNumberViewModel>();
             services.AddTransient<MDPartNumberPage>();

@@ -218,4 +218,7 @@
   <data name="Shell_UserManagement.Content" xml:space="preserve">
     <value>Benutzerverwaltung</value>
   </data>
+  <data name="Shell_StoragLocations" xml:space="preserve">
+    <value>Verbleiborte</value>
+  </data>
 </root>

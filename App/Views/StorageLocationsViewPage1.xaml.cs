@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security.Cryptography.X509Certificates;
 using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -26,14 +27,13 @@ namespace App.Views;
 /// </summary>
 public sealed partial class StorageLocationsViewPage1 : Page
 {
+
     public StorageLocationsViewPage1()
     {
+        ViewModel = App.GetService<StorageLocationPaginationViewModel>();
         InitializeComponent();
     }
-    private async void PaginationPage_Loaded(object sender, RoutedEventArgs e)
-    {
-        
-    }
+    
 
-    private StorageLocationPaginationViewModel ViewModel => DataContext as StorageLocationPaginationViewModel;
+    public StorageLocationPaginationViewModel ViewModel { get; }
 }

@@ -18,6 +18,7 @@ public class PageService : IPageService
         Configure<BlankViewModel, BlankPage>();
         Configure<SettingsViewModel, SettingsPage>();
         Configure<MDPartNumberViewModel, MDPartNumberPage>();
+        Configure<StorageLocationPaginationViewModel, StorageLocationsViewPage1>();
     }
 
     public Type GetPageType(string key)
