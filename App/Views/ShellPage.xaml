@@ -57,7 +57,7 @@
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8FD;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_StorageAccounts"  helpers:NavigationHelper.NavigateTo="App.ViewModels.StorageLocationPaginationViewModel">
+                <NavigationViewItem x:Uid="Shell_StorageLocations"  helpers:NavigationHelper.NavigateTo="App.ViewModels.StorageLocationPaginationViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8FD;" />
                     </NavigationViewItem.Icon>

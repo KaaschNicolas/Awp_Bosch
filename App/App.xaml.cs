@@ -84,7 +84,7 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
             services.AddTransient<ILoggingService, LoggingService>();
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
-            services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
+            services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
             //services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
 
 

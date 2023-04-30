@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 
 namespace App.ViewModels;
 public class StorageLocationPaginationViewModel : ObservableRecipient
 {
-    public StorageLocationPaginationViewModel(ICrudService<StorageLocation> crudService)
+    private readonly ILogger _logger;
+    public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService, ILoggingService logging)
     {
         _crudService = crudService;
         FirstAsyncCommand = new AsyncRelayCommand(
@@ -38,7 +41,7 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
         Refresh();
     }
 
-    private readonly ICrudService<StorageLocation> _crudService;
+    private readonly IStorageLocationDataService<StorageLocation> _crudService;
 
     private int _pageSize = 10;
     private int _pageNumber;
@@ -82,23 +85,22 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
 
     private async Task GetStorageLocations(int pageIndex, int pageSize)
     {
-        var storageLocations = await _crudService.GetAll();
-        if (storageLocations.Code == ResponseCode.Success)
-        {
-            PaginatedList<StorageLocation> storageLocationsPaginated = await PaginatedList<StorageLocation>.CreateAsync(
-                storageLocations,
-                pageIndex,
-                pageSize
-            );
-            PageNumber = storageLocationsPaginated.PageIndex;
-            PageCount = storageLocationsPaginated.PageCount;
-            StorageLocations = storageLocationsPaginated;
+        var storageLocations = _crudService.GetAllQueryable();
+        
+                PaginatedList<StorageLocation> storageLocationsPaginated = await PaginatedList<StorageLocation>.CreateAsync(
+                    storageLocations,
+                    pageIndex,
+                    pageSize
+                );
+                PageNumber = storageLocationsPaginated.PageIndex;
+                PageCount = storageLocationsPaginated.PageCount;
+                StorageLocations = storageLocationsPaginated;
+            
             
             FirstAsyncCommand.NotifyCanExecuteChanged();
             PreviousAsyncCommand.NotifyCanExecuteChanged();
             NextAsyncCommand.NotifyCanExecuteChanged();
             LastAsyncCommand.NotifyCanExecuteChanged();
-        }
     }
 
     private void Refresh()
