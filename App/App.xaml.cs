@@ -1,9 +1,10 @@
 ﻿using System.Linq.Expressions;
+
 using App.Activation;
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
-using App.Core.Models;
 using App.Core.DataAccess;
+using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
 using App.Helpers;
@@ -11,11 +12,13 @@ using App.Models;
 using App.Services;
 using App.ViewModels;
 using App.Views;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+
 using Serilog;
 
 namespace App;
@@ -85,10 +88,13 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
             services.AddTransient<ILoggingService, LoggingService>();
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
+            services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
             //services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
-            
+
 
             // Views and ViewModels
+            services.AddTransient<DiagnoseViewModel>();
+            services.AddTransient<DiagnosePage>();
             services.AddTransient<MD_CreatePartNumberPage>();
             services.AddTransient<MDPartNumberViewModel>();
             services.AddTransient<MDPartNumberPage>();
