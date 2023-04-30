@@ -8,5 +8,7 @@ using App.Core.Models;
 namespace App.Core.Services.Interfaces;
 public interface IStorageLocationDataService<T> where T : StorageLocation
 {
-    public IQueryable<T> GetAllQueryable();
+    public Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize);
+
+    public Task<Response<int>> MaxEntries();
 }

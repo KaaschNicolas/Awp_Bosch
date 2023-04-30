@@ -85,17 +85,24 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
 
     private async Task GetStorageLocations(int pageIndex, int pageSize)
     {
-        var storageLocations = _crudService.GetAllQueryable();
-        
-                PaginatedList<StorageLocation> storageLocationsPaginated = await PaginatedList<StorageLocation>.CreateAsync(
-                    storageLocations,
-                    pageIndex,
-                    pageSize
-                );
-                PageNumber = storageLocationsPaginated.PageIndex;
-                PageCount = storageLocationsPaginated.PageCount;
-                StorageLocations = storageLocationsPaginated;
+        var storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+        var maxEntries = await _crudService.MaxEntries();
+
+        if (storageLocations.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
+        {
+            PaginatedList<StorageLocation> storageLocationsPaginated = await PaginatedList<StorageLocation>.CreateAsync(
+                storageLocations.Data,
+                pageIndex,
+                pageSize,
+                maxEntries.Data
+            );
+            PageNumber = storageLocationsPaginated.PageIndex;
+            PageCount = storageLocationsPaginated.PageCount;
+            StorageLocations = storageLocationsPaginated;
             
+        }
+
+
             
             FirstAsyncCommand.NotifyCanExecuteChanged();
             PreviousAsyncCommand.NotifyCanExecuteChanged();

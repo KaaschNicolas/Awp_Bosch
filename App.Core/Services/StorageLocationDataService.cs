@@ -14,8 +14,33 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
 {
     public StorageLocationDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) { }
 
-    public IQueryable<T> GetAllQueryable()
+    public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize)
     {
-        return _boschContext.Set<T>().AsQueryable();
+        try
+        {
+            var data = await _boschContext.Set<T>()
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return new Response<List<T>>(ResponseCode.Success, data: data);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<List<T>>(ResponseCode.Error, error: "GetAllQueryable() failed");
+        }
+    }
+
+    public async Task<Response<int>> MaxEntries()
+    {
+        try
+        {
+            var data = await _boschContext.Set<T>()
+                .CountAsync();
+            return new Response<int>(ResponseCode.Success, data: data);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
+        }
     }
 }
