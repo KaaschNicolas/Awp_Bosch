@@ -11,7 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace App.ViewModels;
 
-public class DiagnoseViewModel : ObservableRecipient, INavigationAware
+public class DiagnoseViewModel : ObservableValidator, INavigationAware
 {
     private string _name;
     public string Name
@@ -19,10 +19,26 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
         get => _name;
         set
         {
-            _name = value;
-            OnPropertyChanged(nameof(Name));
+            if (_name != value)
+            {
+                _name = value;
+                
+
+            }
+
         }
     }
+/*
+    private Diagnose _storeSelectedItem;
+    public Diagnose StoreSelectedItem
+    {
+        get => _storeSelectedItem;
+        set
+        {
+            _selectedItem = value;
+            OnPropertyChanged(nameof(SelectedItem));
+        }
+    }*/
 
     private Diagnose _selectedItem;
     public Diagnose SelectedItem
@@ -30,8 +46,13 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
         get => _selectedItem;
         set
         {
-            _selectedItem = value;
-            OnPropertyChanged(nameof(SelectedItem));
+            if (value != null)
+            {
+                _selectedItem = value;
+               
+            }
+            
+            
         }
     }
 
@@ -42,15 +63,12 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
     public ObservableCollection<Diagnose> Diagnoses
     {
         get => _diagnoses;
-        set {
-            _diagnoses = value;
-            OnPropertyChanged(nameof(Diagnose));
-        }
+        set => _diagnoses = value;
     }
 
     private readonly ICrudService<Diagnose> _crudService;
 
-
+    private readonly INavigationService _navigationService;
     public IInfoBarService InfoBarService
     {
         get;
@@ -67,15 +85,21 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
         get; 
     }
 
-    public DiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService)
+    public ICommand NavigateToUpdateDiagnoseCommand
+    {
+        get;
+    }
+
+    public DiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
         InfoBarService = infoBarService;
+        _navigationService = navigationService;
         CreateDiagnoseCommand = new RelayCommand(CreateDiagnose);
         DeleteDiagnoseCommand = new RelayCommand(DeleteDiagnose);
+        NavigateToUpdateDiagnoseCommand = new RelayCommand<Diagnose>(NavigateToUpdateDiagnose);
         Diagnoses = new ObservableCollection<Diagnose>();
     }
-
 
     private async void CreateDiagnose()
     {
@@ -87,10 +111,22 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
     }
     private async void DeleteDiagnose()
     {
+        
         Diagnose diagnoseToRemove = SelectedItem;
         Diagnoses.Remove(diagnoseToRemove);
         await _crudService.Delete(diagnoseToRemove);
         InfoBarService.showMessage("Erfolgreich gelöscht","Erfolgreich");
+    }
+
+    private async void NavigateToUpdateDiagnose(Diagnose diagnose)
+    {
+        _navigationService.NavigateTo("App.ViewModels.UpdateDiagnoseViewModel", diagnose);
+        /*var item = Diagnoses.FirstOrDefault(i => i == _selectedItem);
+        if (item != null)
+        {
+            item = _selectedItem;
+        }*/
+        
     }
 
     public async void OnNavigatedTo(object parameter)
