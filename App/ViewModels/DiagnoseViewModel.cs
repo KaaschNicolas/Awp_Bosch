@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 using App.Contracts.Services;
 using App.Contracts.ViewModels;
@@ -11,34 +12,8 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace App.ViewModels;
 
-public class DiagnoseViewModel : ObservableValidator, INavigationAware
+public class DiagnoseViewModel : ObservableObject, INavigationAware
 {
-    private string _name;
-    public string Name
-    {
-        get => _name;
-        set
-        {
-            if (_name != value)
-            {
-                _name = value;
-                
-
-            }
-
-        }
-    }
-/*
-    private Diagnose _storeSelectedItem;
-    public Diagnose StoreSelectedItem
-    {
-        get => _storeSelectedItem;
-        set
-        {
-            _selectedItem = value;
-            OnPropertyChanged(nameof(SelectedItem));
-        }
-    }*/
 
     private Diagnose _selectedItem;
     public Diagnose SelectedItem
@@ -50,9 +25,7 @@ public class DiagnoseViewModel : ObservableValidator, INavigationAware
             {
                 _selectedItem = value;
                
-            }
-            
-            
+            }   
         }
     }
 
@@ -80,11 +53,6 @@ public class DiagnoseViewModel : ObservableValidator, INavigationAware
     }
 
 
-    public ICommand CreateDiagnoseCommand
-    {
-        get; 
-    }
-
     public ICommand NavigateToUpdateDiagnoseCommand
     {
         get;
@@ -95,20 +63,12 @@ public class DiagnoseViewModel : ObservableValidator, INavigationAware
         _crudService = crudService;
         InfoBarService = infoBarService;
         _navigationService = navigationService;
-        CreateDiagnoseCommand = new RelayCommand(CreateDiagnose);
         DeleteDiagnoseCommand = new RelayCommand(DeleteDiagnose);
         NavigateToUpdateDiagnoseCommand = new RelayCommand<Diagnose>(NavigateToUpdateDiagnose);
         Diagnoses = new ObservableCollection<Diagnose>();
     }
 
-    private async void CreateDiagnose()
-    {
 
-        var response = await _crudService.Create(new Diagnose { Name = _name });
-        // TODO check response -> error handling 
-        InfoBarService.showMessage("Erfolgreich Leiterplatte erstellt", "Erfolg");
-
-    }
     private async void DeleteDiagnose()
     {
         

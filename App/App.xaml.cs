@@ -98,6 +98,7 @@ public partial class App : Application
             services.AddTransient<UpdateDiagnoseViewModel>();
             services.AddTransient<UpdateDiagnosePage>();
             services.AddTransient<CreateDiagnosePage>();
+            services.AddTransient<CreateDiagnoseViewModel>();
             services.AddTransient<MD_CreatePartNumberPage>();
             services.AddTransient<MDPartNumberViewModel>();
             services.AddTransient<MDPartNumberPage>();
