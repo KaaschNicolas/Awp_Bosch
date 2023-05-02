@@ -19,6 +19,8 @@ public class PageService : IPageService
         Configure<SettingsViewModel, SettingsPage>();
         Configure<MDPartNumberViewModel, MDPartNumberPage>();
         Configure<DiagnoseViewModel, DiagnosePage>();
+        Configure<UpdateDiagnoseViewModel, UpdateDiagnosePage>();
+        Configure<CreateDiagnoseViewModel, CreateDiagnosePage>();
     }
 
     public Type GetPageType(string key)

@@ -1,17 +1,16 @@
 ﻿<Page
-    x:Class="App.Views.CreateDiagnosePage"
+    x:Class="App.Views.UpdateDiagnosePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:App.Behaviors"
-    xmlns:controls="using:App.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:App.ViewModels"
     mc:Ignorable="d">
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-        <DataTemplate x:DataType="viewModels:CreateDiagnoseViewModel">
-            <TextBlock Text="Fehlerkategorie erstellen" />
+        <DataTemplate x:DataType="viewModels:DiagnoseViewModel">
+            <TextBlock Text="Fehlerkategorie bearbeiten" />
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
@@ -22,15 +21,14 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Spacing="20">
-                <controls:ValidationTextBox
-                    HeaderText="Bezeichnung eingeben"
-                    PlaceholderText="Bezeichnung"
-                    PropertyName="Name"
-                    Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Header="Name"
+                    PlaceholderText="Name Fehlerkategorie"
+                    Text="{x:Bind ViewModel.Name, Mode=TwoWay}" />
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Button
-                        Command="{x:Bind ViewModel.SaveCommand}"
-                        Content="Hinzufügen"
+                        Command="{Binding SaveCommand}"
+                        Content="Speichern"
                         Style="{StaticResource AccentButtonStyle}" />
                     <Button Content="Abbrechen" />
                 </StackPanel>

@@ -95,6 +95,10 @@ public partial class App : Application
             // Views and ViewModels
             services.AddTransient<DiagnoseViewModel>();
             services.AddTransient<DiagnosePage>();
+            services.AddTransient<UpdateDiagnoseViewModel>();
+            services.AddTransient<UpdateDiagnosePage>();
+            services.AddTransient<CreateDiagnoseViewModel>();
+            services.AddTransient<CreateDiagnosePage>();
             services.AddTransient<MD_CreatePartNumberPage>();
             services.AddTransient<MDPartNumberViewModel>();
             services.AddTransient<MDPartNumberPage>();

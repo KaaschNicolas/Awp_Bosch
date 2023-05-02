@@ -19,6 +19,7 @@
   <ItemGroup>
     <None Remove="Views\CreateDiagnosePage.xaml" />
     <None Remove="Views\DiagnosePage.xaml" />
+    <None Remove="Views\UpdateDiagnosePage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,6 +54,9 @@
     <Page Update="Views\DiagnosePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Update="Views\UpdateDiagnosePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
@@ -61,6 +65,12 @@
 
   <ItemGroup>
     <Folder Include="tmp\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\UpdateDiagnosePage.xaml.cs">
+      <Generator></Generator>
+    </Compile>
   </ItemGroup>
   
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
