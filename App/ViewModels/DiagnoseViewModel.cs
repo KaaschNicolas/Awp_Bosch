@@ -58,6 +58,8 @@ public class DiagnoseViewModel : ObservableObject, INavigationAware
         get;
     }
 
+
+
     public DiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
@@ -66,16 +68,16 @@ public class DiagnoseViewModel : ObservableObject, INavigationAware
         DeleteDiagnoseCommand = new RelayCommand(DeleteDiagnose);
         NavigateToUpdateDiagnoseCommand = new RelayCommand<Diagnose>(NavigateToUpdateDiagnose);
         Diagnoses = new ObservableCollection<Diagnose>();
-    }
 
+    }
 
     private async void DeleteDiagnose()
     {
-
         Diagnose diagnoseToRemove = SelectedItem;
         Diagnoses.Remove(diagnoseToRemove);
         await _crudService.Delete(diagnoseToRemove);
         InfoBarService.showMessage("Erfolgreich gelöscht", "Erfolgreich");
+
     }
 
     private async void NavigateToUpdateDiagnose(Diagnose diagnose)
