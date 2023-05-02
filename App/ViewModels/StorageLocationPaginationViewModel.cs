@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging;
 namespace App.ViewModels;
 public class StorageLocationPaginationViewModel : ObservableRecipient
 {
-    private readonly ILogger _logger;
     public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService, ILoggingService logging)
     {
         _crudService = crudService;
@@ -101,13 +100,11 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
             StorageLocations = storageLocationsPaginated;
             
         }
-
-
             
-            FirstAsyncCommand.NotifyCanExecuteChanged();
-            PreviousAsyncCommand.NotifyCanExecuteChanged();
-            NextAsyncCommand.NotifyCanExecuteChanged();
-            LastAsyncCommand.NotifyCanExecuteChanged();
+        FirstAsyncCommand.NotifyCanExecuteChanged();
+        PreviousAsyncCommand.NotifyCanExecuteChanged();
+        NextAsyncCommand.NotifyCanExecuteChanged();
+        LastAsyncCommand.NotifyCanExecuteChanged();
     }
 
     private void Refresh()
