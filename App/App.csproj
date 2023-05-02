@@ -17,6 +17,11 @@
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Views\CreateDiagnosePage.xaml" />
+    <None Remove="Views\DiagnosePage.xaml" />
+    <None Remove="Views\UpdateDiagnosePage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Views\StorageLocationsViewPage1.xaml" />
   </ItemGroup>
 
@@ -25,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
@@ -46,6 +51,15 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\CreateDiagnosePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\DiagnosePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\UpdateDiagnosePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\StorageLocationsViewPage1.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -57,6 +71,12 @@
 
   <ItemGroup>
     <Folder Include="tmp\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\UpdateDiagnosePage.xaml.cs">
+      <Generator></Generator>
+    </Compile>
   </ItemGroup>
   
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">

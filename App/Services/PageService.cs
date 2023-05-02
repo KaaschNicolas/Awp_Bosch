@@ -18,6 +18,9 @@ public class PageService : IPageService
         Configure<BlankViewModel, BlankPage>();
         Configure<SettingsViewModel, SettingsPage>();
         Configure<MDPartNumberViewModel, MDPartNumberPage>();
+        Configure<DiagnoseViewModel, DiagnosePage>();
+        Configure<UpdateDiagnoseViewModel, UpdateDiagnosePage>();
+        Configure<CreateDiagnoseViewModel, CreateDiagnosePage>();
         Configure<StorageLocationPaginationViewModel, StorageLocationsViewPage1>();
     }
 

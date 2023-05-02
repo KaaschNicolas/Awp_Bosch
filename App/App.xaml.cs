@@ -1,9 +1,10 @@
 ﻿using System.Linq.Expressions;
+
 using App.Activation;
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
-using App.Core.Models;
 using App.Core.DataAccess;
+using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
 using App.Helpers;
@@ -11,11 +12,13 @@ using App.Models;
 using App.Services;
 using App.ViewModels;
 using App.Views;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+
 using Serilog;
 
 namespace App;
@@ -49,6 +52,7 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+
 
         var builder = new ConfigurationBuilder();
         ConfigSetup(builder);
@@ -90,6 +94,12 @@ public partial class App : Application
 
             // Views and ViewModels
             services.AddTransient<StorageLocationPaginationViewModel>();
+            services.AddTransient<DiagnoseViewModel>();
+            services.AddTransient<DiagnosePage>();
+            services.AddTransient<UpdateDiagnoseViewModel>();
+            services.AddTransient<UpdateDiagnosePage>();
+            services.AddTransient<CreateDiagnoseViewModel>();
+            services.AddTransient<CreateDiagnosePage>();
             services.AddTransient<MD_CreatePartNumberPage>();
             services.AddTransient<MDPartNumberViewModel>();
             services.AddTransient<MDPartNumberPage>();
@@ -106,7 +116,7 @@ public partial class App : Application
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
             services.AddDbContext<BoschContext>(
-                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Nicolas!1234;TrustServerCertificate=True"));
+                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True"));
         }).
         Build();
 
@@ -117,7 +127,7 @@ public partial class App : Application
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
 
-            .AddJsonFile("C:\\Users\\Admin\\source\\repos\\AWP_Bosch\\App\\appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("Y:\\Studium\\Data Science\\Sem6\\AWP\\Repo\\App\\appsettings.json", optional: false, reloadOnChange: true)
 
             .AddEnvironmentVariables();
     }
