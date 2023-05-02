@@ -42,5 +42,9 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         {
             return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
         }
+        catch (Exception ex) 
+        {
+            return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
+        } 
     }
 }

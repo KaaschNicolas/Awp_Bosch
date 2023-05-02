@@ -113,6 +113,6 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
     private void Refresh()
     {
         _pageNumber = 0;
-        FirstAsyncCommand.Execute(null);
+        FirstAsyncCommand.ExecuteAsync(null);
     }
 }

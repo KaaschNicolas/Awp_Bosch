@@ -126,6 +126,7 @@ public partial class App : Application
     {
         // TODO: Log and handle exceptions as appropriate.
         // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
+        var ex = e.Exception;
     }
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
