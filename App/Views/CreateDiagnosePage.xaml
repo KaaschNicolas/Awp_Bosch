@@ -3,13 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:App.Behaviors"
+    xmlns:controls="using:App.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:App.ViewModels"
     mc:Ignorable="d">
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-        <DataTemplate x:DataType="viewModels:DiagnoseViewModel">
+        <DataTemplate x:DataType="viewModels:CreateDiagnoseViewModel">
             <TextBlock Text="Fehlerkategorie erstellen" />
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
@@ -21,13 +22,14 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Spacing="20">
-                <TextBox
-                    Header="Name"
-                    PlaceholderText="Name Fehlerkategorie"
-                    Text="{Binding Name, Mode=TwoWay}" />
+                <controls:ValidationTextBox
+                    HeaderText="Bezeichnung eingeben"
+                    PlaceholderText="Bezeichnung"
+                    PropertyName="Name"
+                    Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Button
-                        Command="{Binding CreateDiagnoseCommand}"
+                        Command="{x:Bind ViewModel.SaveCommand}"
                         Content="Hinzufügen"
                         Style="{StaticResource AccentButtonStyle}" />
                     <Button Content="Abbrechen" />
