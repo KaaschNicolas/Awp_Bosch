@@ -82,11 +82,12 @@ public partial class App : Application
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IInfoBarService, InfoBarService>();
-
+            services.AddTransient<IDialogService, DialogService>();
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
             services.AddTransient<ILoggingService, LoggingService>();
+            
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
             //services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
