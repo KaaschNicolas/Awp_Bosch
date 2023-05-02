@@ -81,7 +81,7 @@
                     <NavigationViewItem.MenuItems>
                         <NavigationViewItem x:Uid="Shell_MD_StorageLocation" />
                         <NavigationViewItem x:Uid="Shell_MD_PartNumber" helpers:NavigationHelper.NavigateTo="App.ViewModels.MDPartNumberViewModel" />
-                        <NavigationViewItem x:Uid="Shell_MD_ErrorCategory" />
+                        <NavigationViewItem x:Uid="Shell_MD_ErrorCategory" helpers:NavigationHelper.NavigateTo="App.ViewModels.DiagnoseViewModel" />
                     </NavigationViewItem.MenuItems>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
