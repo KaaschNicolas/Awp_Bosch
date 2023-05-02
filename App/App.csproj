@@ -21,6 +21,9 @@
     <None Remove="Views\DiagnosePage.xaml" />
     <None Remove="Views\UpdateDiagnosePage.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Views\StorageLocationsViewPage1.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
@@ -55,6 +58,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\UpdateDiagnosePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\StorageLocationsViewPage1.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

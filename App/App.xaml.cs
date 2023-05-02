@@ -89,10 +89,12 @@ public partial class App : Application
             services.AddTransient<ILoggingService, LoggingService>();
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
-            //services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
+            services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
+            
 
 
             // Views and ViewModels
+            services.AddTransient<StorageLocationPaginationViewModel>();
             services.AddTransient<DiagnoseViewModel>();
             services.AddTransient<DiagnosePage>();
             services.AddTransient<UpdateDiagnoseViewModel>();
@@ -115,7 +117,7 @@ public partial class App : Application
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
             services.AddDbContext<BoschContext>(
-                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True"));
+                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Nicolas!1234;TrustServerCertificate=True"));
         }).
         Build();
 
@@ -126,7 +128,7 @@ public partial class App : Application
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
 
-            .AddJsonFile("Y:\\Studium\\Data Science\\Sem6\\AWP\\Repo\\App\\appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("C:\\Users\\Admin\\source\\repos\\AWP_Bosch\\App\\appsettings.json", optional: false, reloadOnChange: true)
 
             .AddEnvironmentVariables();
     }
@@ -135,6 +137,7 @@ public partial class App : Application
     {
         // TODO: Log and handle exceptions as appropriate.
         // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
+        var ex = e.Exception;
     }
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
