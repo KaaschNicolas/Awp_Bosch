@@ -189,10 +189,10 @@
     <value>Sachnummer Eingang/Ausgang</value>
   </data>
   <data name="Shell_Analysis_WhereAbouts_1.Content" xml:space="preserve">
-    <value>Verweildauer alle Abteilungen</value>
+    <value>Verweildauer aller PVBs</value>
   </data>
   <data name="Shell_Analysis_WhereAbouts_2.Content" xml:space="preserve">
-    <value>Verweildauer pro Abteilung</value>
+    <value>Verweildauer PVB</value>
   </data>
   <data name="Shell_CircuitBoard.Content" xml:space="preserve">
     <value>Leiterplatten</value>
@@ -212,10 +212,10 @@
   <data name="Shell_MD_StorageLocation.Content" xml:space="preserve">
     <value>Lagerort</value>
   </data>
-  <data name="Shell_MD_WhereAbouts.Content" xml:space="preserve">
-    <value>Verbleibort</value>
-  </data>
   <data name="Shell_UserManagement.Content" xml:space="preserve">
     <value>Benutzerverwaltung</value>
+  </data>
+  <data name="Shell_StorageLocations.Content" xml:space="preserve">
+    <value>Verbleiborte</value>
   </data>
 </root>

@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<Page
+﻿<Page
     x:Class="App.Views.DiagnosePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -89,7 +88,10 @@
                                 LabelPosition="Collapsed">
                                 <AppBarButton.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
-                                        <MenuFlyoutItem Icon="Edit" Text="Bearbeiten" />
+                                        <MenuFlyoutItem
+                                            Click="NavigateToUpdateClick"
+                                            Icon="Edit"
+                                            Text="Bearbeiten" />
                                         <MenuFlyoutItem
                                             Click="deleteClick"
                                             Icon="Delete"

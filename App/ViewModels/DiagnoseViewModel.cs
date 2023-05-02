@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 using App.Contracts.Services;
 using App.Contracts.ViewModels;
@@ -11,18 +12,8 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace App.ViewModels;
 
-public class DiagnoseViewModel : ObservableRecipient, INavigationAware
+public class DiagnoseViewModel : ObservableObject, INavigationAware
 {
-    private string _name;
-    public string Name
-    {
-        get => _name;
-        set
-        {
-            _name = value;
-            OnPropertyChanged(nameof(Name));
-        }
-    }
 
     private Diagnose _selectedItem;
     public Diagnose SelectedItem
@@ -30,8 +21,11 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
         get => _selectedItem;
         set
         {
-            _selectedItem = value;
-            OnPropertyChanged(nameof(SelectedItem));
+            if (value != null)
+            {
+                _selectedItem = value;
+
+            }
         }
     }
 
@@ -42,15 +36,12 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
     public ObservableCollection<Diagnose> Diagnoses
     {
         get => _diagnoses;
-        set {
-            _diagnoses = value;
-            OnPropertyChanged(nameof(Diagnose));
-        }
+        set => _diagnoses = value;
     }
 
     private readonly ICrudService<Diagnose> _crudService;
 
-
+    private readonly INavigationService _navigationService;
     public IInfoBarService InfoBarService
     {
         get;
@@ -62,36 +53,41 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
     }
 
 
-    public ICommand CreateDiagnoseCommand
+    public ICommand NavigateToUpdateDiagnoseCommand
     {
-        get; 
+        get;
     }
 
-    public DiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService, IDialogService dialogService)
+
+
+    public DiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
         InfoBarService = infoBarService;
-        CreateDiagnoseCommand = new RelayCommand(CreateDiagnose);
+        _navigationService = navigationService;
         DeleteDiagnoseCommand = new RelayCommand(DeleteDiagnose);
+        NavigateToUpdateDiagnoseCommand = new RelayCommand<Diagnose>(NavigateToUpdateDiagnose);
         Diagnoses = new ObservableCollection<Diagnose>();
 
     }
 
-
-    private async void CreateDiagnose()
-    {
-
-        var response = await _crudService.Create(new Diagnose { Name = _name });
-        // TODO check response -> error handling 
-        InfoBarService.showMessage("Erfolgreich Leiterplatte erstellt", "Erfolg");
-
-    }
     private async void DeleteDiagnose()
     {
         Diagnose diagnoseToRemove = SelectedItem;
         Diagnoses.Remove(diagnoseToRemove);
         await _crudService.Delete(diagnoseToRemove);
         InfoBarService.showMessage("Erfolgreich gelöscht", "Erfolgreich");
+
+    }
+
+    private async void NavigateToUpdateDiagnose(Diagnose diagnose)
+    {
+        _navigationService.NavigateTo("App.ViewModels.UpdateDiagnoseViewModel", diagnose);
+        /*var item = Diagnoses.FirstOrDefault(i => i == _selectedItem);
+        if (item != null)
+        {
+            item = _selectedItem;
+        }*/
 
     }
 
@@ -118,6 +114,6 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
 
     public void OnNavigatedFrom()
     {
-    
+
     }
 }
