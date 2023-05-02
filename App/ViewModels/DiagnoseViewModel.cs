@@ -56,8 +56,6 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
         get;
     }
 
-    private readonly IDialogService _dialogService;
-
     public ICommand DeleteDiagnoseCommand
     {
         get;
@@ -73,11 +71,10 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
     {
         _crudService = crudService;
         InfoBarService = infoBarService;
-        _dialogService = dialogService;
         CreateDiagnoseCommand = new RelayCommand(CreateDiagnose);
         DeleteDiagnoseCommand = new RelayCommand(DeleteDiagnose);
         Diagnoses = new ObservableCollection<Diagnose>();
-        _dialogService = dialogService;
+
     }
 
 
@@ -91,15 +88,11 @@ public class DiagnoseViewModel : ObservableRecipient, INavigationAware
     }
     private async void DeleteDiagnose()
     {
-        var result = await _dialogService.ConfirmDeleteDialogAsync("Fehlerkategorie Löschen", "Sind Sie sicher das Sie den Eintrag löschen wollen?");
-        if (result != null && result == true)
-        {
-            Diagnose diagnoseToRemove = SelectedItem;
-            Diagnoses.Remove(diagnoseToRemove);
-            await _crudService.Delete(diagnoseToRemove);
-            InfoBarService.showMessage("Erfolgreich gelöscht", "Erfolgreich");
-        }
-       
+        Diagnose diagnoseToRemove = SelectedItem;
+        Diagnoses.Remove(diagnoseToRemove);
+        await _crudService.Delete(diagnoseToRemove);
+        InfoBarService.showMessage("Erfolgreich gelöscht", "Erfolgreich");
+
     }
 
     public async void OnNavigatedTo(object parameter)
