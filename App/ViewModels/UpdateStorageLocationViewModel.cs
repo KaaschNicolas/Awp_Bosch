@@ -68,10 +68,9 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
     private int _id = 0;
     public int Id => _id;
 
-    public IInfoBarService InfoBarService
-    {
-        get;
-    }
+    private readonly INavigationService _navigationService;
+
+    private readonly IInfoBarService InfoBarService;
 
     private readonly ICrudService<StorageLocation> _crudService;
 
@@ -84,11 +83,12 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
 
 
 
-    public UpdateStorageLocationViewModel(ICrudService<StorageLocation> crudService, IInfoBarService infoBarService)
+    public UpdateStorageLocationViewModel(ICrudService<StorageLocation> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
         InfoBarService = infoBarService;
-        SaveCommand = new RelayCommand(Save);   
+        SaveCommand = new RelayCommand(Save);
+        _navigationService = navigationService;
     }
 
 
@@ -104,6 +104,7 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
             if (response.Code == ResponseCode.Success)
             {
                 InfoBarService.showMessage("Update des Lagerortes war erfolgreich", "Erfolg");
+                _navigationService.NavigateTo("App.ViewModels.StorageLocationViewModel");
             }
             else
             {
@@ -113,7 +114,7 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
 
     }
 
-    public async void OnNavigatedTo(object parameter)
+    public void OnNavigatedTo(object parameter)
     {
         //var param = await _crudService.GetById(_storageLocation.Id);
         

@@ -55,7 +55,7 @@
 				VerticalAlignment="Top">
 				<Button
                     Margin="0,12,4,12"
-                    Command="{Binding UpdateSL}"
+                    Command="{Binding SaveCommand}"
                     Style="{StaticResource AccentButtonStyle}"
                     Click="UpdateStorageLocationButton_Click">
 					<StackPanel Orientation="Horizontal">

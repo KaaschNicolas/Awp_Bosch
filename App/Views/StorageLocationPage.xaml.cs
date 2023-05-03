@@ -25,7 +25,7 @@ public sealed partial class StorageLocationPage : Page
 
     private void UpdateStorageLocationButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        Frame.Navigate(typeof(UpdateStorageLocationPage));
+        ViewModel.NavigateToUpdateStorageLocationCommand.Execute(ViewModel.SelectedItem);
     }
 
     private void DeleteStorageLocation_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

@@ -40,6 +40,11 @@
                             Icon="Refresh" 
                             Label="Neu laden"/>
                     </CommandBar>
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <!-- Content body -->
+                        <TextBlock Text="Lorem ipsum dolor sit amet, adipisicing elit." TextWrapping="Wrap" />
+                        <CheckBox Content="Upload your content to the cloud."/>
+                    </StackPanel>
                     <AutoSuggestBox
                             MinWidth="304"
                             MaxWidth="320"
@@ -82,7 +87,7 @@
             IsReadOnly="True"
             ItemsSource="{Binding StorageLocations}"
             SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-            SelectionMode="Extended"
+            SelectionMode="Single"
             RowDetailsVisibilityMode="Collapsed"    
             RowGroupHeaderPropertyNameAlternative="Range">
             <!--AlternatingRowForeground="Gray"-->    

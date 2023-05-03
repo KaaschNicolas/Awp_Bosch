@@ -62,22 +62,12 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         }
     }
 
-    //private List<Transfer> _transfers;
+    private readonly ICrudService<StorageLocation> _crudService;
 
-    //public List<Transfer> Transfers
-    //{
-    //    get => _transfers; 
-    //    set
-    //    {
-    //        _transfers = value;
-    //        OnPropertyChanged(nameof(Transfers));
-    //    }
-    //}
+    private readonly IInfoBarService InfoBarService;
 
-    public IInfoBarService InfoBarService
-    {
-        get;
-    }
+    private readonly INavigationService _navigationService;
+
 
     public bool _canExecute = true;
 
@@ -112,9 +102,6 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         }
     }
 
-    private ICrudService<StorageLocation> _crudService;
-
-    private readonly INavigationService _navigationService;
 
     public bool CanExecute
     {
@@ -128,7 +115,6 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
             _canExecute = value;
         }
     }
-
 
     private ObservableCollection<StorageLocation> _storageLocations;
     public ObservableCollection<StorageLocation> StorageLocations
@@ -146,13 +132,15 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         _crudService = crudservice;
         InfoBarService = infoBarService;
         _navigationService = navigationService;
+        NavigateToUpdateStorageLocationCommand = new RelayCommand<StorageLocation>(NavigateToUpdateStorageLocation);
         CreateSL = new RelayCommand(CreateStorageLocation);
-        //UpdateSL = new RelayCommand(UpdateStorageLocation);
         DeleteSL = new RelayCommand(DeleteStorageLocation);
         StorageLocations = new ObservableCollection<StorageLocation>();
     }
 
     private StorageLocation _storageLocation;
+    
+    
     
     public async void CreateStorageLocation()
     {
@@ -160,54 +148,6 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         InfoBarService.showMessage("Erfolgreich Lagerort erstellt", "Erfolg");
     }
 
-    /*public async void UpdateStorageLocation()
-    {
-
-        _storageLocation.Id = _id;
-        _storageLocation.StorageName = _storageName;
-        _storageLocation.DwellTimeYellow = _dwellTimeYellow;
-        _storageLocation.DwellTimeRed = _dwellTimeRed;
-
-        var response = await _crudService.Update(_id, _storageLocation);
-        if (response != null)
-        {
-            if (response.Code == ResponseCode.Success)
-            {
-                InfoBarService.showMessage("Update des Lagerortes war erfolgreich", "Erfolg");
-            }
-            else
-            {
-                InfoBarService.showError("Fehler beim Update des Lagerortes", "Error");
-            }
-        }
-
-        *//*StorageLocation storage = SelectedItem;
-        if (storage != null)
-        {
-            var selected = await _crudService.GetById(storage.Id);
-
-            if (selected.Code == ResponseCode.Success)
-            {
-                storage.StorageName = _storageName;
-                storage.DwellTimeYellow = _dwellTimeYellow;
-                storage.DwellTimeRed = _dwellTimeRed;
-                var sl = await _crudService.Update(storage.Id, storage);
-            }
-        }*/
-        
-        
-
-        /*if (selected != null)
-        {
-            storage.StorageName = _storageName;
-            storage.DwellTimeYellow = _dwellTimeYellow;
-            storage.DwellTimeRed = _dwellTimeRed;
-
-            var sl = await _crudService.Update(storage.Id, selected);
-        }*//*
-        
-        InfoBarService.showMessage("Erfolgreich Lagerort bearbeitet", "Erfolg");
-    }*/
 
     public async void DeleteStorageLocation()
     {
