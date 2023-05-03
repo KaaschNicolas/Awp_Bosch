@@ -95,6 +95,10 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<UpdatePcbTypeViewModel>();
+            services.AddTransient<UpdatePcbTypePage>();
+            services.AddTransient<CreatePcbTypeViewModel>();
+            services.AddTransient<CreatePcbTypePage>();
             services.AddTransient<StorageLocationPaginationViewModel>();
             services.AddTransient<DiagnoseViewModel>();
             services.AddTransient<DiagnosePage>();
@@ -102,9 +106,8 @@ public partial class App : Application
             services.AddTransient<UpdateDiagnosePage>();
             services.AddTransient<CreateDiagnoseViewModel>();
             services.AddTransient<CreateDiagnosePage>();
-            services.AddTransient<MD_CreatePartNumberPage>();
-            services.AddTransient<MDPartNumberViewModel>();
-            services.AddTransient<MDPartNumberPage>();
+            services.AddTransient<PcbTypeViewModel>();
+            services.AddTransient<PcbTypePage>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
             services.AddTransient<BlankViewModel>();
@@ -118,7 +121,7 @@ public partial class App : Application
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
             services.AddDbContext<BoschContext>(
-                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Nicolas!1234;TrustServerCertificate=True"));
+                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True"));
         }).
         Build();
 
@@ -129,7 +132,7 @@ public partial class App : Application
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
 
-            .AddJsonFile("C:\\Users\\Admin\\source\\repos\\AWP_Bosch\\App\\appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("Y:\\Studium\\Data Science\\Sem6\\AWP\\Repo\\App\\appsettings.json", optional: false, reloadOnChange: true)
 
             .AddEnvironmentVariables();
     }
@@ -146,5 +149,7 @@ public partial class App : Application
         base.OnLaunched(args);
 
         await App.GetService<IActivationService>().ActivateAsync(args);
+
+        
     }
 }

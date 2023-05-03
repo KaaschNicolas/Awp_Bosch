@@ -2,6 +2,7 @@
 using App.Contracts.Services;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
+using App.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -9,50 +10,38 @@ using CommunityToolkit.Mvvm.Input;
 namespace App.ViewModels;
 public partial class CreateDiagnoseViewModel : ObservableValidator
 {
-
-    private string name;
-
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
     [Required]
     [MinLength(10)]
-    public string Name
-    {
-
-        get => name;
-        set
-        {
-            SetProperty(ref name, value, true);
-
-        }
-    }
-
-
+    private string _name;
 
     private readonly ICrudService<Diagnose> _crudService;
     private readonly IInfoBarService _infoBarService;
+    private readonly INavigationService _navigationService;
 
-
-    public CreateDiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService)
+    public CreateDiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
         _infoBarService = infoBarService;
-
+        _navigationService = navigationService;
     }
 
 
 
     [RelayCommand]
-    private async Task Save()
+    public async Task Save()
     {
         ValidateAllProperties();
         if (!HasErrors)
         {
-            var response = await _crudService.Create(new Diagnose { Name = name });
-            // TODO check response -> error handling 
+            var response = await _crudService.Create(new Diagnose { Name = _name });
             if (response != null)
             {
                 if (response.Code == ResponseCode.Success)
                 {
                     _infoBarService.showMessage("Erfolgreich Leiterplatte erstellt", "Erfolg");
+                    _navigationService.NavigateTo("App.ViewModels.DiagnoseViewModel");
                 }
                 else
                 {

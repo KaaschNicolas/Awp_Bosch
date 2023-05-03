@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="App.Views.MDPartNumberPage"
+    x:Class="App.Views.PcbTypePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:App.Behaviors"
@@ -12,7 +12,7 @@
 
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-        <DataTemplate x:DataType="viewModels:MDPartNumberViewModel">
+        <DataTemplate x:DataType="viewModels:PcbTypeViewModel">
             <Grid Margin="0,0,50,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -90,7 +90,10 @@
                                 LabelPosition="Collapsed">
                                 <AppBarButton.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
-                                        <MenuFlyoutItem Icon="Edit" Text="Bearbeiten" />
+                                        <MenuFlyoutItem
+                                            Click="NavigateToUpdate"
+                                            Icon="Edit"
+                                            Text="Bearbeiten" />
                                         <MenuFlyoutItem
                                             Click="deleteClick"
                                             Icon="Delete"

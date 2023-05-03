@@ -17,11 +17,13 @@ public class PageService : IPageService
         Configure<MainViewModel, MainPage>();
         Configure<BlankViewModel, BlankPage>();
         Configure<SettingsViewModel, SettingsPage>();
-        Configure<MDPartNumberViewModel, MDPartNumberPage>();
+        Configure<PcbTypeViewModel, PcbTypePage>();
         Configure<DiagnoseViewModel, DiagnosePage>();
         Configure<UpdateDiagnoseViewModel, UpdateDiagnosePage>();
         Configure<CreateDiagnoseViewModel, CreateDiagnosePage>();
         Configure<StorageLocationPaginationViewModel, StorageLocationsViewPage1>();
+        Configure<CreatePcbTypeViewModel, CreatePcbTypePage>();
+        Configure<UpdatePcbTypeViewModel, UpdatePcbTypePage>();
     }
 
     public Type GetPageType(string key)
