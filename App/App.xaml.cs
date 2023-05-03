@@ -95,6 +95,10 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<UpdatePcbTypeViewModel>();
+            services.AddTransient<UpdatePcbTypePage>();
+            services.AddTransient<CreatePcbTypeViewModel>();
+            services.AddTransient<CreatePcbTypePage>();
             services.AddTransient<StorageLocationPaginationViewModel>();
             services.AddTransient<DiagnoseViewModel>();
             services.AddTransient<DiagnosePage>();
@@ -102,9 +106,8 @@ public partial class App : Application
             services.AddTransient<UpdateDiagnosePage>();
             services.AddTransient<CreateDiagnoseViewModel>();
             services.AddTransient<CreateDiagnosePage>();
-            services.AddTransient<MD_CreatePartNumberPage>();
-            services.AddTransient<MDPartNumberViewModel>();
-            services.AddTransient<MDPartNumberPage>();
+            services.AddTransient<PcbTypeViewModel>();
+            services.AddTransient<PcbTypePage>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
             services.AddTransient<BlankViewModel>();

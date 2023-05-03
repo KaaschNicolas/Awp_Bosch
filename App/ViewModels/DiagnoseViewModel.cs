@@ -11,55 +11,28 @@ namespace App.ViewModels;
 
 public partial class DiagnoseViewModel : ObservableObject, INavigationAware
 {
-
+    [ObservableProperty]
     private Diagnose _selectedItem;
-    public Diagnose SelectedItem
-    {
-        get => _selectedItem;
-        set
-        {
-            if (value != null)
-            {
-                _selectedItem = value;
 
-            }
-        }
-    }
-
-
+    [ObservableProperty]
     private ObservableCollection<Diagnose> _diagnoses = new();
-    public ObservableCollection<Diagnose> Diagnoses
-    {
-        get => _diagnoses;
-        set => _diagnoses = value;
-    }
 
     private readonly ICrudService<Diagnose> _crudService;
-
     private readonly INavigationService _navigationService;
-
     private readonly IDialogService _dialogService;
-    public IInfoBarService InfoBarService { get; }
-
-    public ICommand DeleteDiagnoseCommand { get; }
-
-    public ICommand NavigateToUpdateDiagnoseCommand { get; }
-
-
+    public IInfoBarService _infoBarService;
 
 
     public DiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService, INavigationService navigationService, IDialogService dialogService)
     {
         _crudService = crudService;
-        InfoBarService = infoBarService;
+        _infoBarService = infoBarService;
         _navigationService = navigationService;
         _dialogService = dialogService;
-        NavigateToUpdateDiagnoseCommand = new RelayCommand<Diagnose>(NavigateToUpdateDiagnose);
-        Diagnoses = new ObservableCollection<Diagnose>();
 
     }
     [RelayCommand]
-    private async void Delete()
+    public async void Delete()
     {
         var result = await _dialogService.ConfirmDeleteDialogAsync("Fehlerkategorie löschen", "Sind sie sicher, dass sie diesen Eintrag löschen wollen?");
         if (result != null && result == true)
@@ -67,12 +40,13 @@ public partial class DiagnoseViewModel : ObservableObject, INavigationAware
             Diagnose diagnoseToRemove = SelectedItem;
             Diagnoses.Remove(diagnoseToRemove);
             await _crudService.Delete(diagnoseToRemove);
-            InfoBarService.showMessage("Erfolgreich gelöscht", "Erfolgreich");
+            _infoBarService.showMessage("Erfolgreich gelöscht", "Erfolgreich");
         }
 
     }
 
-    private void NavigateToUpdateDiagnose(Diagnose diagnose)
+    [RelayCommand]
+    public void NavigateToUpdate(Diagnose diagnose)
     {
         _navigationService.NavigateTo("App.ViewModels.UpdateDiagnoseViewModel", diagnose);
 
@@ -80,9 +54,8 @@ public partial class DiagnoseViewModel : ObservableObject, INavigationAware
 
     public async void OnNavigatedTo(object parameter)
     {
-        Diagnoses.Clear();
+        _diagnoses.Clear();
 
-        // TODO: Replace with real data.
         var response = await _crudService.GetAll();
 
 
@@ -90,12 +63,12 @@ public partial class DiagnoseViewModel : ObservableObject, INavigationAware
         {
             foreach (var item in response.Data)
             {
-                Diagnoses.Add(item);
+                _diagnoses.Add(item);
             }
         }
         else
         {
-            InfoBarService.showError("ErrorMessage", response.ErrorMessage);
+            _infoBarService.showError("Daten konnten nicht geladen werden", "Error");
         }
     }
 

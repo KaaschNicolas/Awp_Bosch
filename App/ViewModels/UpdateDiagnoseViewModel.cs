@@ -1,79 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿
+using System.ComponentModel.DataAnnotations;
 using App.Contracts.Services;
 using App.Contracts.ViewModels;
 using App.Core.Models;
-using App.Core.Services;
 using App.Core.Services.Interfaces;
-using App.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace App.ViewModels;
-public class UpdateDiagnoseViewModel: ObservableRecipient, INavigationAware
+public partial class UpdateDiagnoseViewModel: ObservableValidator, INavigationAware
 {
-    private string _name = "";
-    public string Name
-    {
-        get => _name;
-        set
-        {
-            if (_name != value)
-            {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
-
-            }
-
-        }
-    }
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private string _name;
 
     private int _id = 0;
     public int Id => _id;
 
-    public IInfoBarService InfoBarService
-    {
-        get;
-    }
-
+    private readonly IInfoBarService _infoBarService;
     private readonly ICrudService<Diagnose> _crudService;
-
-    public ICommand SaveCommand
-    {
-        get;
-    }
+    private readonly INavigationService _navigationService;
 
     private Diagnose _diagnose;
 
 
 
-    public UpdateDiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService)
+    public UpdateDiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
-        InfoBarService = infoBarService;
-        SaveCommand = new RelayCommand(Save);   
+        _infoBarService = infoBarService;  
+        _navigationService = navigationService;
     }
 
-
+    [RelayCommand]
     public async void Save()
     {
-        _diagnose.Id = _id;
-        _diagnose.Name = _name;
-        var response = await _crudService.Update(_id, _diagnose);
-        if (response != null)
+        ValidateAllProperties();
+        if (!HasErrors)
         {
-            if (response.Code == ResponseCode.Success)
+            _diagnose.Id = _id;
+            _diagnose.Name = _name;
+            var response = await _crudService.Update(_id, _diagnose);
+            if (response != null)
             {
-                InfoBarService.showMessage("Update der Fehlerkategorie war erfolgreich", "Erfolg");
+                if (response.Code == ResponseCode.Success)
+                {
+                    _infoBarService.showMessage("Update der Fehlerkategorie war erfolgreich", "Erfolg");
+                    _navigationService.NavigateTo("App.ViewModels.DiagnoseViewModel");
+
+                }
+                else
+                {
+                    _infoBarService.showError("Fehler beim Update der Fehlerkategorie", "Error");
+                }
+
             }
             else
             {
-                InfoBarService.showError("Fehler beim Update der Fehlerkategorie", "Error");
+                _infoBarService.showError("Fehler beim Update der Fehlerkategorie", "Error");
             }
         }
 
@@ -84,8 +69,6 @@ public class UpdateDiagnoseViewModel: ObservableRecipient, INavigationAware
         _diagnose = (Diagnose)parameter;
         _id = _diagnose.Id;
         _name = _diagnose.Name;
-        
-
     }
 
     public void OnNavigatedFrom()
