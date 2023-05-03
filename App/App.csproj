@@ -16,6 +16,14 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Views\CreateDiagnosePage.xaml" />
+    <None Remove="Views\DiagnosePage.xaml" />
+    <None Remove="Views\UpdateDiagnosePage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Views\StorageLocationsViewPage1.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
@@ -43,6 +51,18 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\CreateDiagnosePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\DiagnosePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\UpdateDiagnosePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\StorageLocationsViewPage1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
@@ -51,6 +71,12 @@
 
   <ItemGroup>
     <Folder Include="tmp\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\UpdateDiagnosePage.xaml.cs">
+      <Generator></Generator>
+    </Compile>
   </ItemGroup>
   
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
