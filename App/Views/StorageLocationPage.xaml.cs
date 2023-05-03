@@ -15,5 +15,31 @@ public sealed partial class StorageLocationPage : Page
     {
         ViewModel = App.GetService<StorageLocationViewModel>();
         InitializeComponent();
+        DataContext = ViewModel;
     }
+
+    private void CreateStorageLocationButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        Frame.Navigate(typeof(CreateStorageLocationPage));
+    }
+
+    private void UpdateStorageLocationButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        Frame.Navigate(typeof(UpdateStorageLocationPage));
+    }
+
+    private void DeleteStorageLocation_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        ViewModel.DeleteSL.Execute(null);
+    }
+
+    //private void Verbleib_Checked()
+    //{
+    
+    //}
+
+    //private void Verbleib_Unchecked()
+    //{
+
+    //}
 }

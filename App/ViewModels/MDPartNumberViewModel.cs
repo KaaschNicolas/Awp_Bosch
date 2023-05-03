@@ -166,7 +166,10 @@ public async void OnNavigatedTo(object parameter)
         if (response.Code == ResponseCode.Success) {
             foreach (var item in response.Data)
             {
-                PcbTypes.Add(item);
+                if (item.DeletedDate < new DateTime(2000, 01, 01))
+                {
+                    PcbTypes.Add(item);
+                }
             }
         }
         else

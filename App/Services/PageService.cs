@@ -19,7 +19,6 @@ public class PageService : IPageService
         Configure<SettingsViewModel, SettingsPage>();
         Configure<MDPartNumberViewModel, MDPartNumberPage>();
         Configure<StorageLocationViewModel, StorageLocationPage>();
-        Configure<AddStorageLocationViewModel, AddStorageLocationPage>();
     }
 
     public Type GetPageType(string key)
