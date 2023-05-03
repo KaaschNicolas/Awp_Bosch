@@ -29,7 +29,7 @@ public sealed partial class DiagnosePage : Page
     // Fix for Command not working in MenuFlyOut -> Bug WinUI
     void deleteClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        ViewModel.DeleteDiagnoseCommand.Execute(null);
+        ViewModel.DeleteCommand.Execute(null);
     }
 
     void NavigateToUpdateClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
