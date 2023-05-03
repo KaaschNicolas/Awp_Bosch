@@ -40,11 +40,6 @@
                             Icon="Refresh" 
                             Label="Neu laden"/>
                     </CommandBar>
-                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <!-- Content body -->
-                        <TextBlock Text="Lorem ipsum dolor sit amet, adipisicing elit." TextWrapping="Wrap" />
-                        <CheckBox Content="Upload your content to the cloud."/>
-                    </StackPanel>
                     <AutoSuggestBox
                             MinWidth="304"
                             MaxWidth="320"

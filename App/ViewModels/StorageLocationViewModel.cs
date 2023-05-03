@@ -64,7 +64,9 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
 
     private readonly ICrudService<StorageLocation> _crudService;
 
-    private readonly IInfoBarService InfoBarService;
+    private readonly IDialogService _dialogService;
+
+    private readonly IInfoBarService _infoBarService;
 
     private readonly INavigationService _navigationService;
 
@@ -89,6 +91,11 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
     public ICommand NavigateToUpdateStorageLocationCommand
     {
         get; 
+    }
+
+    public ICommand ConfirmationDeleteCommand
+    {
+        get;
     }
 
     private StorageLocation _selectedItem;
@@ -127,10 +134,11 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         }
     }
 
-    public StorageLocationViewModel(ICrudService<StorageLocation> crudservice, IInfoBarService infoBarService, INavigationService navigationService)
+    public StorageLocationViewModel(ICrudService<StorageLocation> crudservice, IDialogService dialogService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudservice;
-        InfoBarService = infoBarService;
+        _dialogService = dialogService;
+        _infoBarService = infoBarService;
         _navigationService = navigationService;
         NavigateToUpdateStorageLocationCommand = new RelayCommand<StorageLocation>(NavigateToUpdateStorageLocation);
         CreateSL = new RelayCommand(CreateStorageLocation);
@@ -145,19 +153,26 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
     public async void CreateStorageLocation()
     {
         var sl = await _crudService.Create(new StorageLocation { StorageName = _storageName, DwellTimeYellow = _dwellTimeYellow, DwellTimeRed = _dwellTimeRed });
-        InfoBarService.showMessage("Erfolgreich Lagerort erstellt", "Erfolg");
+        _infoBarService.showMessage("Erfolgreich Lagerort erstellt", "Erfolg");
+        _navigationService.NavigateTo("App.ViewModels.StorageLocationViewModel");
     }
 
 
     public async void DeleteStorageLocation()
     {
-        StorageLocation slToRemove = SelectedItem;
-        StorageLocations.Remove(slToRemove);
-        await _crudService.Delete(slToRemove);
-        InfoBarService.showMessage("Erfolgreich Lagerort gelöscht", "Erfolg");
+        var confirmDelete = await _dialogService.ConfirmDeleteDialogAsync("Lagerort löschen", "Sind Sie sicher, dass Sie den ausgewählten Lagerort löschen möchten?", "Löschen", "Abbrechen");
+        if(confirmDelete != null)
+        {
+            StorageLocation slToRemove = SelectedItem;
+            StorageLocations.Remove(slToRemove);
+            await _crudService.Delete(slToRemove);
+            _infoBarService.showMessage("Erfolgreich Lagerort gelöscht", "Erfolg");
+        }
+
+        
     }
 
-    private async void NavigateToUpdateStorageLocation(StorageLocation storageLocation)
+    private void NavigateToUpdateStorageLocation(StorageLocation storageLocation)
     {
         _navigationService.NavigateTo("App.ViewModels.UpdateStorageLocationViewModel", storageLocation);
     }
@@ -179,7 +194,7 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         }
         else
         {
-            InfoBarService.showError("ErrorMessage", "ErrorTitle");
+            _infoBarService.showError("ErrorMessage", "ErrorTitle");
         }
     }
 
