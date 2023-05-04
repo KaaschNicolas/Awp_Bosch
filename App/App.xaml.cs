@@ -18,7 +18,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
-
 using Serilog;
 
 namespace App;
@@ -52,7 +51,6 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
-
 
         var builder = new ConfigurationBuilder();
         ConfigSetup(builder);
@@ -89,12 +87,16 @@ public partial class App : Application
             services.AddTransient<ILoggingService, LoggingService>();
             
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
+            services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
+
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
             
 
 
             // Views and ViewModels
+            services.AddTransient<UpdateStorageLocationPage>();
+            services.AddTransient<UpdateStorageLocationViewModel>();
             services.AddTransient<UpdatePcbTypeViewModel>();
             services.AddTransient<UpdatePcbTypePage>();
             services.AddTransient<CreatePcbTypeViewModel>();
@@ -116,12 +118,15 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
-            
+            //services.AddTransient<CreateStorageLocation>();
+            services.AddTransient<StorageLocation>();
+            services.AddTransient<StorageLocationViewModel>();
+
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
             services.AddDbContext<BoschContext>(
-                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True"));
+                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Awp_2023;TrustServerCertificate=True"));
         }).
         Build();
 
@@ -132,7 +137,7 @@ public partial class App : Application
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
 
-            .AddJsonFile("Y:\\Studium\\Data Science\\Sem6\\AWP\\Repo\\App\\appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("C:\\Users\\Student\\source\\repos\\Awp_Bosch\\App\\appsettings.json", optional: false, reloadOnChange: true)
 
             .AddEnvironmentVariables();
     }
