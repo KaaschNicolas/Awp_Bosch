@@ -18,13 +18,19 @@ public class DataService : IDataService
 
     public void SeedMockData()
     {
-        var path = "C:\\Users\\Student\\Documents\\AWP\\Awp_Bosch\\App.Core\\Services\\mockData";
+        var path = "C:\\Users\\Student\\Documents\\AWP\\Awp_Bosch\\App.Core\\Services\\mockData\\";
 
         //Mocking of Diagnose Data
         var file = File.ReadAllText(path + "diagnoseMockData.json");
         var diagnoseMockData = JsonSerializer.Deserialize<List<Diagnose>>(file);
         _boschContext.AddRange(diagnoseMockData);
         Console.WriteLine(diagnoseMockData);
+
+        //Mocking of Device Data
+        file = File.ReadAllText(path + "errorTypeMockData.json");
+        var errorTypeMockData = JsonSerializer.Deserialize<List<ErrorType>>(file);
+        _boschContext.AddRange(errorTypeMockData);
+        Console.WriteLine(errorTypeMockData);
 
         //Mocking of Device Data
         file = File.ReadAllText(path + "deviceMockData.json");
@@ -61,7 +67,7 @@ public class DataService : IDataService
         var pcbMockData = JsonSerializer.Deserialize<List<Pcb>>(file);
         _boschContext.AddRange(pcbMockData);
         Console.WriteLine(pcbMockData);
-        _boschContext.SaveChanges();
+        //_boschContext.SaveChanges();
 
     }
     public void SeedFromExcel(string path)
