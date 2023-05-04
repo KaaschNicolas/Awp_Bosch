@@ -121,7 +121,8 @@ public partial class App : Application
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
             services.AddDbContext<BoschContext>(
-                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True"));
+                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True"),
+                    ServiceLifetime.Transient);
         }).
         Build();
 
