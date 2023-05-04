@@ -1,9 +1,10 @@
 ﻿using System.Linq.Expressions;
+
 using App.Activation;
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
-using App.Core.Models;
 using App.Core.DataAccess;
+using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
 using App.Helpers;
@@ -11,6 +12,7 @@ using App.Models;
 using App.Services;
 using App.ViewModels;
 using App.Views;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,7 +52,6 @@ public partial class App : Application
     {
         InitializeComponent();
 
-
         var builder = new ConfigurationBuilder();
         ConfigSetup(builder);
 
@@ -79,20 +80,36 @@ public partial class App : Application
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<IInfoBarService, InfoBarService>();
-
+            services.AddTransient<IDialogService, DialogService>();
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
             services.AddTransient<ILoggingService, LoggingService>();
-            services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
-            services.AddTransient<IDataService, DataService>();
-            //services.AddTransient<ICrudService<BaseEntity>, CrudService<BaseEntity>>();
             
+            services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
+            services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
+
+            services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
+            services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
+            services.AddTransient<IDataService, DataService>();
+
 
             // Views and ViewModels
-            services.AddTransient<MD_CreatePartNumberPage>();
-            services.AddTransient<MDPartNumberViewModel>();
-            services.AddTransient<MDPartNumberPage>();
+            services.AddTransient<UpdateStorageLocationPage>();
+            services.AddTransient<UpdateStorageLocationViewModel>();
+            services.AddTransient<UpdatePcbTypeViewModel>();
+            services.AddTransient<UpdatePcbTypePage>();
+            services.AddTransient<CreatePcbTypeViewModel>();
+            services.AddTransient<CreatePcbTypePage>();
+            services.AddTransient<StorageLocationPaginationViewModel>();
+            services.AddTransient<DiagnoseViewModel>();
+            services.AddTransient<DiagnosePage>();
+            services.AddTransient<UpdateDiagnoseViewModel>();
+            services.AddTransient<UpdateDiagnosePage>();
+            services.AddTransient<CreateDiagnoseViewModel>();
+            services.AddTransient<CreateDiagnosePage>();
+            services.AddTransient<PcbTypeViewModel>();
+            services.AddTransient<PcbTypePage>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
             services.AddTransient<BlankViewModel>();
@@ -101,12 +118,15 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
-            
+            //services.AddTransient<CreateStorageLocation>();
+            services.AddTransient<StorageLocation>();
+            services.AddTransient<StorageLocationViewModel>();
+
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
             services.AddDbContext<BoschContext>(
-                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True"));
+                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Awp_2023;TrustServerCertificate=True"));
         }).
         Build();
 
@@ -117,7 +137,7 @@ public partial class App : Application
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
 
-            .AddJsonFile("C:\\Users\\danie\\Documents\\GitHub\\Awp_Bosch\\App\\appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("C:\\Users\\Student\\source\\repos\\Awp_Bosch\\App\\appsettings.json", optional: false, reloadOnChange: true)
 
             .AddEnvironmentVariables();
     }
@@ -126,6 +146,7 @@ public partial class App : Application
     {
         // TODO: Log and handle exceptions as appropriate.
         // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
+        var ex = e.Exception;
     }
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
@@ -133,5 +154,7 @@ public partial class App : Application
         base.OnLaunched(args);
 
         await App.GetService<IActivationService>().ActivateAsync(args);
+
+        
     }
 }

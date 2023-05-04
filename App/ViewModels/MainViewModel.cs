@@ -11,7 +11,6 @@ public class MainViewModel : ObservableRecipient
         // IDataService dataService
         )
     {
+
     }
-
-
 }

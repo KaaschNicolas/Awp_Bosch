@@ -212,9 +212,6 @@
   <data name="Shell_MD_StorageLocation.Content" xml:space="preserve">
     <value>Storage Location</value>
   </data>
-  <data name="Shell_MD_WhereAbouts.Content" xml:space="preserve">
-    <value>Whereabouts</value>
-  </data>
   <data name="Shell_UserManagement.Content" xml:space="preserve">
     <value>User Management</value>
   </data>
@@ -226,5 +223,8 @@
   </data>
   <data name="Shell_MD_CreatePartNumber.Content" xml:space="preserve">
     <value>MD_CreatePartNumber</value>
+  </data>
+  <data name="Shell_UpdateStorageLocation.Content" xml:space="preserve">
+    <value>UpdateStorageLocation</value>
   </data>
 </root>
