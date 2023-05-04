@@ -121,7 +121,7 @@ public partial class App : Application
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
             services.AddDbContext<BoschContext>(
-                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True"));
+                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Nicolas!1234;TrustServerCertificate=True"));
         }).
         Build();
 
@@ -132,7 +132,7 @@ public partial class App : Application
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
 
-            .AddJsonFile("Y:\\Studium\\Data Science\\Sem6\\AWP\\Repo\\App\\appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("C:\\Users\\Admin\\source\\repos\\AWP_Bosch\\App\\appsettings.json", optional: false, reloadOnChange: true)
 
             .AddEnvironmentVariables();
     }

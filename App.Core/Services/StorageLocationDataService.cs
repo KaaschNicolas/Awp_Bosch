@@ -47,4 +47,9 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
             return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
         } 
     }
+
+    public async Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize)
+    {
+
+    }
 }

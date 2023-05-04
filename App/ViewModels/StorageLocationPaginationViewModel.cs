@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,22 +19,22 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
     {
         _crudService = crudService;
         FirstAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(1, _pageSize),
+            async () => await GetStorageLocations(1, _pageSize, false),
             () => _pageNumber != 1
         );
 
         PreviousAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageNumber -1, _pageSize),
+            async () => await GetStorageLocations(_pageNumber -1, _pageSize, false),
             () => _pageNumber > 1
         );
 
         NextAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageNumber + 1, _pageSize),
+            async () => await GetStorageLocations(_pageNumber + 1, _pageSize, false),
             () => _pageNumber < _pageCount
         );
 
         LastAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageCount, _pageSize),
+            async () => await GetStorageLocations(_pageCount, _pageSize, false),
             () => _pageNumber != _pageCount
         );
 
@@ -45,6 +46,7 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
     private int _pageSize = 10;
     private int _pageNumber;
     private int _pageCount;
+    private bool _sortedByDwellTimeYellow;
     private List<StorageLocation> _storageLocations;
 
     public List<int> PageSizes => new() { 5, 10, 15, 20 };
@@ -53,6 +55,7 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
     public IAsyncRelayCommand PreviousAsyncCommand { get; }
     public IAsyncRelayCommand NextAsyncCommand { get; }
     public IAsyncRelayCommand LastAsyncCommand { get; }
+    public IAsyncRelayCommand SortByDwellTime { get; }
 
     public int PageNumber
     {
@@ -76,14 +79,21 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
         private set => SetProperty(ref _pageCount, value);
     }
 
+    public bool SortedByDwellTimeYellow { get => _sortedByDwellTimeYellow; set => SetProperty(ref _sortedByDwellTimeYellow, value); }
+
     public List<StorageLocation> StorageLocations
     {
         get => _storageLocations;
         private set => SetProperty(ref _storageLocations, value);
     }
 
-    private async Task GetStorageLocations(int pageIndex, int pageSize)
+    private async Task GetStorageLocations(int pageIndex, int pageSize, bool isSortedByDwellTime)
     {
+        if (isSortedByDwellTime == true)
+        {
+
+        }
+
         var storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
         var maxEntries = await _crudService.MaxEntries();
 
@@ -106,6 +116,8 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
         NextAsyncCommand.NotifyCanExecuteChanged();
         LastAsyncCommand.NotifyCanExecuteChanged();
     }
+
+    public IEnumerable<StorageLocation> GetCurrentDisplayedItems() => StorageLocations;
 
     private void Refresh()
     {
