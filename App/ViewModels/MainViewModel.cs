@@ -7,7 +7,7 @@ namespace App.ViewModels;
 public class MainViewModel : ObservableRecipient
 {
     public MainViewModel(
-        //IDataService dataService
+        IDataService dataService
         )
     {
     }
