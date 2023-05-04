@@ -90,7 +90,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         catch (DbUpdateException)
         {
             _loggingService.Log(LogLevel.Error, "Error GetAll()");
-            return new Response<List<T>>(ResponseCode.Success, error: "Error GetAll()");
+            return new Response<List<T>>(ResponseCode.Error, error: "Error GetAll()");
         }
     }
 
