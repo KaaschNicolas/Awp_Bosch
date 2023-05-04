@@ -7,7 +7,8 @@ namespace App.ViewModels;
 public class MainViewModel : ObservableRecipient
 {
     public MainViewModel(
-        IDataService dataService
+        // Zeile Entkommentieren einmal Programm starten, damit Db mit Daten befüllt wird.
+        // IDataService dataService
         )
     {
     }
