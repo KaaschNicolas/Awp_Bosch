@@ -2,6 +2,8 @@
 using System.Windows.Input;
 
 using App.Contracts.Services;
+using App.Core.Services;
+using App.Core.Services.Interfaces;
 using App.Helpers;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -36,7 +38,9 @@ public class SettingsViewModel : ObservableRecipient
         get;
     }
 
-    public SettingsViewModel(IThemeSelectorService themeSelectorService)
+    public SettingsViewModel(IThemeSelectorService themeSelectorService, 
+        IDataService dataService 
+        )
     {
         _themeSelectorService = themeSelectorService;
         _elementTheme = _themeSelectorService.Theme;
