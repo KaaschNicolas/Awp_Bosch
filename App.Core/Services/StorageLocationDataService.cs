@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using App.Core.DataAccess;
 using App.Core.Helpers;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -61,5 +64,25 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         {
             return new Response<List<T>>(ResponseCode.Error, error: "GetAllSortedBy() failed");
         }
+    }
+
+    private async Task<Response<List<T>>> GetStorageLocationFiltered(int pageIndex, int pageSize, Func<bool> where)
+    {
+        try
+        {
+
+        }
+        catch (DbUpdateException ex)
+        {
+            return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
+        }
+    }
+
+    public async Task<Response<List<T>>> GetWithFilter(int pageIndex, int pageSize, StorageLocationFilterOptions filterOptions)
+    {
+        filterOptions switch
+        {
+            StorageLocationFilterOptions.DwellTimeRedHigh => await GetStorageLocationFiltered(pageIndex, pageSize)
+        };
     }
 }

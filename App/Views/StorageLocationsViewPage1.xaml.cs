@@ -81,10 +81,10 @@ public sealed partial class StorageLocationsViewPage1 : Page
         DetailsButton.IsEnabled = DataGrid.SelectedIndex >= 0;
     }
 
-    private void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)
+    private async void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)
     {
         _displayMode = DataGridDisplayMode.UserSorted;
-
+        await ViewModel.SortByDwellTime.ExecuteAsync(null); //hier nochmal schauen
         bool isAscending = e.Column.SortDirection is null or (ctWinUI.DataGridSortDirection?)ctWinUI.DataGridSortDirection.Descending;
         e.Column.SortDirection = isAscending
             ? ctWinUI.DataGridSortDirection.Ascending

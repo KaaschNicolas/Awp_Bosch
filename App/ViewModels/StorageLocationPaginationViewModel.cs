@@ -15,6 +15,13 @@ using Microsoft.Extensions.Logging;
 namespace App.ViewModels;
 public class StorageLocationPaginationViewModel : ObservableRecipient
 {
+    public enum FilterOption
+    {
+        DwellTimeYellowHigh,
+        DwellTimeYellowLow,
+        DwellTimeRedHigh,
+        DwellTimeRedLow
+    }
     public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService, ILoggingService logging)
     {
         _crudService = crudService;
@@ -38,6 +45,10 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
             () => _pageNumber != _pageCount
         );
 
+        SortByDwellTime = new AsyncRelayCommand(
+            async () => await GetStorageLocations(_pageCount, _pageSize, true),
+            () => _pageNumber != _pageCount && _sortedByDwellTimeYellow);
+
         Refresh();
     }
 
@@ -47,6 +58,7 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
     private int _pageNumber;
     private int _pageCount;
     private bool _sortedByDwellTimeYellow;
+    private bool _filterDwellTimeHigh;
     private List<StorageLocation> _storageLocations;
 
     public List<int> PageSizes => new() { 5, 10, 15, 20 };
@@ -56,6 +68,7 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
     public IAsyncRelayCommand NextAsyncCommand { get; }
     public IAsyncRelayCommand LastAsyncCommand { get; }
     public IAsyncRelayCommand SortByDwellTime { get; }
+    public IAsyncRelayCommand FilterDwellTimeHigh { get; }
 
     public int PageNumber
     {
@@ -79,7 +92,8 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
         private set => SetProperty(ref _pageCount, value);
     }
 
-    public bool SortedByDwellTimeYellow { get => _sortedByDwellTimeYellow; set => SetProperty(ref _sortedByDwellTimeYellow, value); }
+    public bool SortedByDwellTimeYellowFlag { get => _sortedByDwellTimeYellow; set => SetProperty(ref _sortedByDwellTimeYellow, value); }
+    public bool FilterDwellTimeHighFlag { get => _filterDwellTimeHigh; set => SetProperty(ref _filterDwellTimeHigh, value); }
 
     public List<StorageLocation> StorageLocations
     {
@@ -89,13 +103,19 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
 
     private async Task GetStorageLocations(int pageIndex, int pageSize, bool isAscending)
     {
-        var storageLocations = null;
-        if (SortedByDwellTimeYellow is true)
+        Response<List<StorageLocation>> storageLocations;
+        if (SortedByDwellTimeYellowFlag is true)
         {
             storageLocations = await _crudService.GetAllSortedBy(pageIndex, pageSize, "DwellTimeYellow", isAscending);
+        } if (FilterDwellTimeHighFlag is true)
+        {
+            storageLocations = await _crudService
         }
+        else
+        {
+            storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+        } 
 
-        storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
         var maxEntries = await _crudService.MaxEntries();
 
         if (storageLocations.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
