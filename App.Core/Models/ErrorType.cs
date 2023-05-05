@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
@@ -13,10 +8,13 @@ namespace App.Core.Models
     {
         [Required]
         [MaxLength(5)]
+        // TODO: Code immer nur max. 5?
         public string Code
         {
             get; set;
         }
+
+        // TODO: Rechtschreibfehler ändern
         [Required]
         [Column(TypeName = "nvarchar(650)")]
         public string ErrorDescribtion

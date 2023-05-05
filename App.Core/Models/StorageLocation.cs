@@ -17,10 +17,13 @@ namespace App.Core.Models
         {
             get; set;
         }
+
+        //TODO: Required
         public int DwellTimeYellow
         {
             get; set;
         }
+        //TODO: Required
         public int DwellTimeRed
         {
             get; set;

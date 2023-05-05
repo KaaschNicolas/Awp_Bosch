@@ -1,23 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
     public class PcbType : BaseEntity
     {
+        // TODO: Id in BaseEntity kann rausfliegen
         [Key]
         public int Id
         {
             get; set;
         }
-        
+
         [Required]
         [MaxLength(10)]
         [Column(TypeName = "nvarchar(10)")]
@@ -32,7 +28,6 @@ namespace App.Core.Models
             get; set;
         }
         [Required]
-
         public int MaxTransfer
         {
             get; set;

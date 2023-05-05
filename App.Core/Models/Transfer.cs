@@ -9,12 +9,14 @@ namespace App.Core.Models
 {
     public class Transfer : BaseEntity
     {
-
+        //TODO: In BaseEntity 
         [Key]
         public int Id
         {
             get; set;
         }
+
+        // TODO: Comment ist jetzt hier ein string haben aber eine Entity
         public string Comment
 
         {

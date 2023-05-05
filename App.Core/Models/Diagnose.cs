@@ -11,6 +11,7 @@ namespace App.Core.Models
 {
     public class Diagnose : BaseEntity
     {
+        // TODO: Brauchen wir 650 Zeichen für den Endfehler? Bezeichnungen wie Hardware, Software etc. sollten ja kurz sein
         [Required]
         [Column(TypeName = "nvarchar(650)")]
         public string Name

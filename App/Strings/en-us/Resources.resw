@@ -227,4 +227,10 @@
   <data name="Shell_UpdateStorageLocation.Content" xml:space="preserve">
     <value>UpdateStorageLocation</value>
   </data>
+  <data name="Shell_Pcb.Content" xml:space="preserve">
+    <value>Pcb</value>
+  </data>
+  <data name="Shell_PcbCreate.Content" xml:space="preserve">
+    <value>PcbCreate</value>
+  </data>
 </root>
