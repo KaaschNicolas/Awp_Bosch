@@ -42,7 +42,9 @@ public sealed partial class StorageLocationsViewPage1 : Page
     {
         ViewModel = App.GetService<StorageLocationPaginationViewModel>();
         InitializeComponent();
-        
+        Loaded += Page_Loaded;
+        Unloaded += Page_Unload;
+        //DataGrid.SelectionChanged += DataGrid_SelectionChanged;  <--- richtiges Event
     }
 
     private DataGridDisplayMode _displayMode = DataGridDisplayMode.Default;
@@ -60,18 +62,33 @@ public sealed partial class StorageLocationsViewPage1 : Page
         base.OnNavigatingFrom(e);
     }
 
-    private async void Page_Loaded(object sender, RoutedEventArgs e)
+    private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         _displayMode = DataGridDisplayMode.Default;
-        DataGrid.ItemsSource =  ViewModel.GetCurrentDisplayedItems(); //nötig? weil schon in Xaml gebunden
+        DataGrid.ItemsSource =  ViewModel.StorageLocations; //nötig? weil schon in Xaml gebunden
         DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Ascending;
         DataGrid.SelectionChanged += DataGrid_SelectionChanged;
+    }
+
+    private void Page_Unload(object sender, RoutedEventArgs e)
+    {
+        DataGrid.SelectionChanged -= DataGrid_SelectionChanged;
     }
 
     private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         DataGrid.RowDetailsVisibilityMode = ctWinUI.DataGridRowDetailsVisibilityMode.Collapsed;
         DetailsButton.IsEnabled = DataGrid.SelectedIndex >= 0;
+    }
+
+    private void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)
+    {
+        _displayMode = DataGridDisplayMode.UserSorted;
+
+        bool isAscending = e.Column.SortDirection is null or (ctWinUI.DataGridSortDirection?)ctWinUI.DataGridSortDirection.Descending;
+        e.Column.SortDirection = isAscending
+            ? ctWinUI.DataGridSortDirection.Ascending
+            : ctWinUI.DataGridSortDirection.Descending;
     }
 
     private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)

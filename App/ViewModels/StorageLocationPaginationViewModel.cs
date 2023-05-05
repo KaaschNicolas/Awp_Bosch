@@ -117,8 +117,6 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
         LastAsyncCommand.NotifyCanExecuteChanged();
     }
 
-    public IEnumerable<StorageLocation> GetCurrentDisplayedItems() => StorageLocations;
-
     private void Refresh()
     {
         _pageNumber = 0;
