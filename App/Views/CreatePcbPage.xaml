@@ -7,6 +7,104 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
-        
+        <ScrollViewer>
+            <Grid ColumnSpacing="24" RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel
+                    Grid.Row="0"
+                    Width="Auto"
+                    Orientation="Horizontal"
+                    Spacing="12">
+                    <CalendarDatePicker Header="Ausgefallen am" />
+                    <AutoSuggestBox Header="Aufgenommen von:" />
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="1"
+                    Orientation="Horizontal"
+                    Spacing="12">
+                    <TextBox Header="Sachnnummer:" PlaceholderText="10-Stellige Sachnummer" />
+                    <TextBox Header="Seriennummer:" PlaceholderText="10-Stellige Seriennummer" />
+                </StackPanel>
+
+
+                <TextBlock
+                    Grid.Row="2"
+                    FontSize="20"
+                    Text="Aufnahme Fehler" />
+
+                <StackPanel
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Padding="12"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Orientation="Vertical"
+                    Spacing="10">
+                    <TextBlock FontSize="16" Text="Fehlerbeschreibung Teil 1" />
+                    <TextBox Header="Fehler ID" PlaceholderText="M1..." />
+                    <TextBox
+                        Height="100"
+                        AcceptsReturn="True"
+                        Header="Fehlerbeschreibung" />
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Padding="12"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Orientation="Vertical"
+                    Spacing="10">
+                    <TextBlock FontSize="16" Text="Fehlerbeschreibung Teil 2" />
+                    <TextBox Header="Fehler ID" PlaceholderText="M1..." />
+                    <TextBox
+                        Height="100"
+                        AcceptsReturn="True"
+                        Header="Fehlerbeschreibung" />
+                </StackPanel>
+
+
+                <TextBox
+                    Grid.Row="4"
+                    Margin="0,0,0,20"
+                    Header="Einschränkungen" />
+                <StackPanel
+                    Grid.Row="5"
+                    Margin="0,0,0,20"
+                    Orientation="Vertical">
+                    <StackPanel
+                        Margin="0,0,0,20"
+                        Orientation="Horizontal"
+                        Spacing="12">
+                        <DatePicker Header="Am" />
+                        <ComboBox Header="Nach" PlaceholderText="Lagerort" />
+                    </StackPanel>
+                    <TextBox PlaceholderText="Anmerkung" />
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="6"
+                    Orientation="Horizontal"
+                    Spacing="8">
+                    <Button Content="Hinzufügen" Style="{StaticResource AccentButtonStyle}" />
+                    <Button Content="Abbrechen" />
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Page>
