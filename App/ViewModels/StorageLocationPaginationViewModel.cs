@@ -87,11 +87,11 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
         private set => SetProperty(ref _storageLocations, value);
     }
 
-    private async Task GetStorageLocations(int pageIndex, int pageSize, bool isSortedByDwellTime)
+    private async Task GetStorageLocations(int pageIndex, int pageSize, bool isAscending)
     {
-        if (isSortedByDwellTime == true)
+        if (SortedByDwellTimeYellow is true)
         {
-
+            var storageLocations = await _crudService.GetAllSortedBy(pageIndex, pageSize, "DwellTimeYellow", isAscending);
         }
 
         var storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);

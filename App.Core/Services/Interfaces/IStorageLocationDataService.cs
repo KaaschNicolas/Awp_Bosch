@@ -11,4 +11,6 @@ public interface IStorageLocationDataService<T> where T : StorageLocation
     public Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize);
 
     public Task<Response<int>> MaxEntries();
+
+    public Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
 }

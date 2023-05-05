@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using App.Core.DataAccess;
+using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
@@ -42,14 +43,23 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         {
             return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
         }
-        catch (Exception ex) 
-        {
-            return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
-        } 
     }
 
-    public async Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize)
+    public async Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize, string orderByProperty, bool isAscending)
     {
-
+        try
+        {
+            var data = await _boschContext.Set<T>()
+                .OrderBy(orderByProperty, isAscending)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
+            return new Response<List<T>>(ResponseCode.Success, data: data);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<List<T>>(ResponseCode.Error, error: "GetAllSortedBy() failed");
+        }
     }
 }
