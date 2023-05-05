@@ -89,12 +89,13 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
 
     private async Task GetStorageLocations(int pageIndex, int pageSize, bool isAscending)
     {
+        var storageLocations = null;
         if (SortedByDwellTimeYellow is true)
         {
-            var storageLocations = await _crudService.GetAllSortedBy(pageIndex, pageSize, "DwellTimeYellow", isAscending);
+            storageLocations = await _crudService.GetAllSortedBy(pageIndex, pageSize, "DwellTimeYellow", isAscending);
         }
 
-        var storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+        storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
         var maxEntries = await _crudService.MaxEntries();
 
         if (storageLocations.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
