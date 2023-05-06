@@ -12,6 +12,7 @@ namespace App.Core.Models.Enums
         DwellTimeYellowHigh,
         DwellTimeYellowLow,
         DwellTimeRedHigh,
-        DwellTimeRedLow,    
+        DwellTimeRedLow,
+        None
     }
 }
