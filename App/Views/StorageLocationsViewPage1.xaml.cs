@@ -19,6 +19,7 @@ using Microsoft.UI.Xaml.Navigation;
 using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using App.Core.Models;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -40,7 +41,7 @@ public sealed partial class StorageLocationsViewPage1 : Page
 
     public StorageLocationsViewPage1()
     {
-        ViewModel = App.GetService<StorageLocationPaginationViewModel>();
+        ViewModel = App.GetService<StorageLocationPaginationViewModel<StorageLocation>>();
         InitializeComponent();
         Loaded += Page_Loaded;
         Unloaded += Page_Unload;
@@ -84,11 +85,18 @@ public sealed partial class StorageLocationsViewPage1 : Page
     private async void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)
     {
         _displayMode = DataGridDisplayMode.UserSorted;
+        ViewModel.SortByDwellTime = true;
         await ViewModel.SortByDwellTime.ExecuteAsync(null); //hier nochmal schauen
         bool isAscending = e.Column.SortDirection is null or (ctWinUI.DataGridSortDirection?)ctWinUI.DataGridSortDirection.Descending;
         e.Column.SortDirection = isAscending
             ? ctWinUI.DataGridSortDirection.Ascending
             : ctWinUI.DataGridSortDirection.Descending;
+    }
+
+    private async void FilterDwellTimeHigh(object Sender, RoutedEventArgs e)
+    {
+        _displayMode = DataGridDisplayMode.Filtered;
+        await ViewModel
     }
 
     private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)

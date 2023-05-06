@@ -99,7 +99,7 @@ public partial class App : Application
             services.AddTransient<UpdatePcbTypePage>();
             services.AddTransient<CreatePcbTypeViewModel>();
             services.AddTransient<CreatePcbTypePage>();
-            services.AddTransient<StorageLocationPaginationViewModel>();
+            services.AddTransient<StorageLocationPaginationViewModel<StorageLocation>>();
             services.AddTransient<DiagnoseViewModel>();
             services.AddTransient<DiagnosePage>();
             services.AddTransient<UpdateDiagnoseViewModel>();
