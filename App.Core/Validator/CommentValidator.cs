@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using App.Core.Models;
+﻿using App.Core.Models;
 
 namespace App.Core.Validator;
 public class CommentValidator
@@ -19,12 +14,12 @@ public class CommentValidator
     {
         List<string> errors = new List<string>();
 
-        if(string.IsNullOrEmpty(_comment.Name) || _comment.Name.Length > 650)
+        if (string.IsNullOrEmpty(_comment.Content) || _comment.Content.Length > 650)
         {
             errors.Add("Name darf nicht null sein oder 650 Zeichen überschreiten.");
         }
 
-        if(_comment.NotedBy == null)
+        if (_comment.NotedBy == null)
         {
             errors.Add("NotedBy darf nicht null sein.");
         }

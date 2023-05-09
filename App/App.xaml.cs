@@ -1,13 +1,10 @@
-﻿using System.Linq.Expressions;
-
-using App.Activation;
+﻿using App.Activation;
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
 using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
-using App.Helpers;
 using App.Models;
 using App.Services;
 using App.ViewModels;
@@ -85,13 +82,13 @@ public partial class App : Application
             // Core Services
             services.AddSingleton<IFileService, FileService>();
             services.AddTransient<ILoggingService, LoggingService>();
-            
+
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
             services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
 
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
-            
+
 
 
             // Views and ViewModels
@@ -138,7 +135,7 @@ public partial class App : Application
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
 
-            .AddJsonFile("C:\\Users\\Student\\source\\repos\\Awp_Bosch\\App\\appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("Y:\\Studium\\Data Science\\Sem6\\AWP\\Repo\\App\\appsettings.json", optional: false, reloadOnChange: true)
 
             .AddEnvironmentVariables();
     }
@@ -156,6 +153,6 @@ public partial class App : Application
 
         await App.GetService<IActivationService>().ActivateAsync(args);
 
-        
+
     }
 }
