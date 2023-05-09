@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
@@ -22,6 +17,10 @@ namespace App.Core.Models
             get; set;
         }
         public int DwellTimeRed
+        {
+            get; set;
+        }
+        public bool IsFinalDestination
         {
             get; set;
         }
