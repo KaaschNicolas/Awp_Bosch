@@ -15,37 +15,40 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 
 namespace App.ViewModels;
-public class StorageLocationPaginationViewModel<T> : ObservableRecipient where T : StorageLocation
+public class StorageLocationPaginationViewModel : ObservableRecipient
 {   
     public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService)
     {
         _crudService = crudService;
         FirstAsyncCommand = new AsyncRelayCommand(
             async () => await GetStorageLocations(1, _pageSize, false),
-            () => _pageNumber != 1
+            () => _pageNumber != 1 && _filterOptions == StorageLocationFilterOptions.None
         );
 
         PreviousAsyncCommand = new AsyncRelayCommand(
             async () => await GetStorageLocations(_pageNumber -1, _pageSize, false),
-            () => _pageNumber > 1
+            () => _pageNumber > 1 && _filterOptions == StorageLocationFilterOptions.None
         );
 
         NextAsyncCommand = new AsyncRelayCommand(
             async () => await GetStorageLocations(_pageNumber + 1, _pageSize, false),
-            () => _pageNumber < _pageCount
+            () => _pageNumber < _pageCount && _filterOptions == StorageLocationFilterOptions.None
         );
 
         LastAsyncCommand = new AsyncRelayCommand(
             async () => await GetStorageLocations(_pageCount, _pageSize, false),
-            () => _pageNumber != _pageCount
+            () => _pageNumber != _pageCount && _filterOptions == StorageLocationFilterOptions.None
         );
 
         SortByDwellTime = new AsyncRelayCommand(
             async () => await GetStorageLocations(_pageCount, _pageSize, true),
-            () => _pageNumber != _pageCount && _sortedByDwellTimeYellow);
+            () => _pageNumber != _pageCount && _sortedByDwellTimeYellow
+        );
+
         FilterItems = new AsyncRelayCommand(
             async () => await GetStorageLocations(_pageCount, _pageSize, false),
-            () => _pageNumber != _pageCount && _filterOptions != StorageLocationFilterOptions.None);
+            () => _pageNumber != _pageCount && _filterOptions != StorageLocationFilterOptions.None
+        );
 
         Refresh();
     }
@@ -106,22 +109,22 @@ public class StorageLocationPaginationViewModel<T> : ObservableRecipient where T
             case StorageLocationFilterOptions.DwellTimeYellowLow:
                 Expression<Func<StorageLocation, bool>> whereDTYLow = x => x.DwellTimeYellow < 10;
                 maxEntries = await _crudService.MaxEntriesFiltered(whereDTYLow);
-                storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, _filterOptions, whereDTYLow);
+                storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTYLow);
                 break;
             case StorageLocationFilterOptions.DwellTimeYellowHigh:
-                Expression<Func<StorageLocation, bool>> whereDTYHigh = x => x.DwellTimeYellow < 10;
+                Expression<Func<StorageLocation, bool>> whereDTYHigh = x => x.DwellTimeYellow >= 10;
                 maxEntries = await _crudService.MaxEntriesFiltered(whereDTYHigh);
-                storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, _filterOptions, whereDTYHigh);
+                storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTYHigh);
                 break;
             case StorageLocationFilterOptions.DwellTimeRedLow:
                 Expression<Func<StorageLocation, bool>> whereDTRLow = x => x.DwellTimeRed < 10;
                 maxEntries = await _crudService.MaxEntriesFiltered(whereDTRLow);
-                storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, _filterOptions, whereDTRLow);
+                storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTRLow);
                 break;
             case StorageLocationFilterOptions.DwellTimeRedHigh:
-                Expression<Func<StorageLocation, bool>> whereDTRHigh = x => x.DwellTimeRed > 10;
+                Expression<Func<StorageLocation, bool>> whereDTRHigh = x => x.DwellTimeRed >= 10;
                 maxEntries = await _crudService.MaxEntriesFiltered(whereDTRHigh);
-                storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, _filterOptions, whereDTRHigh);
+                storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTRHigh);
                 break;
             default:
                 maxEntries = await _crudService.MaxEntries();
@@ -135,7 +138,7 @@ public class StorageLocationPaginationViewModel<T> : ObservableRecipient where T
         {
             PaginatedList<StorageLocation> storageLocationsPaginated = await PaginatedList<StorageLocation>.CreateAsync(
                 storageLocations.Data,
-                pageIndex,
+                pageIndex, //muss neu berechnet werden
                 pageSize,
                 maxEntries.Data
             );

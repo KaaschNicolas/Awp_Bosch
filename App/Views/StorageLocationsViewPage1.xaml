@@ -53,6 +53,35 @@
                         Background="Transparent"
                         VerticalAlignment="Center"
                         OverflowButtonVisibility="Collapsed">
+                <AppBarButton Icon="Filter"
+                              Label="Filter"
+                              Width="80">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Liegezeit Gelb &lt; 10"
+                                            Click="FilterDTYLow_Click" />
+                            <MenuFlyoutItem Text="Liegezeit Gelb &gt; 10"
+                                            Click="FilterDTYHigh_Click" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Name="FilterHeightLow"
+                                            Text="Liegezeit Rot &lt; 10"
+                                            Click="FilterDTRLow_Click" />
+                            <MenuFlyoutItem Text="Liegezeit Rot &gt; 10"
+                                            Click="FilterDTRHigh_Click" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Filter entfernen"
+                                            Click="FilterClear_Click" />
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarElementContainer x:Name="FilterIndicator"
+                                        Visibility="Collapsed"
+                                        Margin="-16 0 0 0">
+                    <FontIcon Glyph="&#xE73E;"
+                              FontSize="12"
+                              Foreground="Coral"
+                              VerticalAlignment="Top" />
+                </AppBarElementContainer>
                 <AppBarButton ToolTipService.ToolTip="First"
                               Icon="Previous"
                               Command="{x:Bind ViewModel.FirstAsyncCommand, Mode=OneWay}"
@@ -95,12 +124,13 @@
                 </AppBarElementContainer>
             </CommandBar>
         </StackPanel>
-        <StackPanel Orientation="Horizontal"
+        <!--<StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Left"
                     Margin="0 0 0 16"
                     CornerRadius="4"
                     Height="52">
-            <CommandBar DefaultLabelPosition="Right"
+            <CommandBar 
+                DefaultLabelPosition="Right"
                         Background="Transparent"
                         VerticalAlignment="Center">
                 <AppBarButton Icon="Filter"
@@ -109,15 +139,15 @@
                     <AppBarButton.Flyout>
                         <MenuFlyout>
                             <MenuFlyoutItem Text="Liegezeit Rot &lt; 50"
-                                            Command="{x:Bind ViewModel }" />
+                                            Click="FilterDTYLow_Click" />
                             <MenuFlyoutItem Text="Rank &gt; 50"
-                                            Click="FilterRankHigh_Click" />
+                                            Click="FilterDTYHigh_Click" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem x:Name="FilterHeightLow"
                                             Text="Height &lt; 8000 m"
-                                            Click="FilterHeightLow_Click" />
+                                            Click="FilterDTRLow_Click" />
                             <MenuFlyoutItem Text="Height &gt; 8000 m"
-                                            Click="FilterHeightHigh_Click" />
+                                            Click="FilterDTRHigh_Click" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem Text="Remove Filter"
                                             Click="FilterClear_Click" />
@@ -132,60 +162,8 @@
                               Foreground="Coral"
                               VerticalAlignment="Top" />
                 </AppBarElementContainer>
-                <AppBarButton Label="Group"
-                              Width="80">
-                    <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xF168;" />
-                    </AppBarButton.Icon>
-                    <AppBarButton.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem Text="Range"
-                                            Click="GroupByRange_Click" />
-                            <MenuFlyoutItem Text="Parent Mountain"
-                                            Click="GroupByParentMountain_Click" />
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-                <AppBarElementContainer x:Name="GroupIndicator"
-                                        Visibility="Collapsed"
-                                        Margin="-16 0 0 0">
-                    <FontIcon Glyph="&#xE73E;"
-                              FontSize="12"
-                              Foreground="Coral"
-                              VerticalAlignment="Top" />
-                </AppBarElementContainer>
             </CommandBar>
-            <AutoSuggestBox x:Name="SearchBox"
-                            QuerySubmitted="SearchBox_QuerySubmitted"
-                            QueryIcon="Find"
-                            Width="240"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Margin="8 0 0 0" />
-            <CommandBar DefaultLabelPosition="Right"
-                        Background="Transparent"
-                        VerticalAlignment="Center"
-                        Margin="0 0 8 0">
-                <AppBarButton Label="Search"
-                              Click="SearchButton_Click" />
-                <AppBarElementContainer x:Name="SearchIndicator"
-                                        Visibility="Collapsed"
-                                        Margin="-16 0 0 0">
-                    <FontIcon Glyph="&#xE73E;"
-                              FontSize="12"
-                              Foreground="Coral"
-                              VerticalAlignment="Top" />
-                </AppBarElementContainer>
-                <AppBarButton x:Name="DetailsButton"
-                              Click="DetailsButton_Click"
-                              Icon="View"
-                              Label="Details"
-                              IsEnabled="False" />
-                <AppBarButton Click="ResetButton_Click"
-                              Icon="Refresh"
-                              Label="Reset" />
-            </CommandBar>
-        </StackPanel>
+        </StackPanel>-->
         <ctWinUI:DataGrid x:Name="DataGrid"
                           ItemsSource="{x:Bind ViewModel.StorageLocations, Mode=OneWay}"
                           AutoGenerateColumns="False"

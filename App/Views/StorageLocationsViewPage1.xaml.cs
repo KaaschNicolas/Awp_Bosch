@@ -20,6 +20,7 @@ using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using App.Core.Models;
+using App.Core.Models.Enums;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -41,10 +42,11 @@ public sealed partial class StorageLocationsViewPage1 : Page
 
     public StorageLocationsViewPage1()
     {
-        ViewModel = App.GetService<StorageLocationPaginationViewModel<StorageLocation>>();
+        ViewModel = App.GetService<StorageLocationPaginationViewModel>();
         InitializeComponent();
         Loaded += Page_Loaded;
         Unloaded += Page_Unload;
+        ViewModel.FilterOptions = StorageLocationFilterOptions.None;
         //DataGrid.SelectionChanged += DataGrid_SelectionChanged;  <--- richtiges Event
     }
 
@@ -79,13 +81,12 @@ public sealed partial class StorageLocationsViewPage1 : Page
     private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         DataGrid.RowDetailsVisibilityMode = ctWinUI.DataGridRowDetailsVisibilityMode.Collapsed;
-        DetailsButton.IsEnabled = DataGrid.SelectedIndex >= 0;
     }
 
     private async void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)
     {
         _displayMode = DataGridDisplayMode.UserSorted;
-        ViewModel.SortByDwellTime = true;
+        ViewModel.SortedByDwellTimeYellowFlag = true;
         await ViewModel.SortByDwellTime.ExecuteAsync(null); //hier nochmal schauen
         bool isAscending = e.Column.SortDirection is null or (ctWinUI.DataGridSortDirection?)ctWinUI.DataGridSortDirection.Descending;
         e.Column.SortDirection = isAscending
@@ -93,10 +94,39 @@ public sealed partial class StorageLocationsViewPage1 : Page
             : ctWinUI.DataGridSortDirection.Descending;
     }
 
-    private async void FilterDwellTimeHigh(object Sender, RoutedEventArgs e)
+    private async void FilterDTYHigh_Click(object Sender, RoutedEventArgs e)
     {
         _displayMode = DataGridDisplayMode.Filtered;
-        await ViewModel
+        ViewModel.FilterOptions = StorageLocationFilterOptions.DwellTimeYellowHigh;
+        await ViewModel.FilterItems.ExecuteAsync(null);
+    }
+
+    private async void FilterDTYLow_Click(object Sender, RoutedEventArgs e)
+    {
+        _displayMode = DataGridDisplayMode.Filtered;
+        ViewModel.FilterOptions = StorageLocationFilterOptions.DwellTimeYellowLow;
+        await ViewModel.FilterItems.ExecuteAsync(null);
+    }
+
+    private async void FilterDTRHigh_Click(object Sender, RoutedEventArgs e)
+    {
+        _displayMode = DataGridDisplayMode.Filtered;
+        ViewModel.FilterOptions = StorageLocationFilterOptions.DwellTimeRedHigh;
+        await ViewModel.FilterItems.ExecuteAsync(null);
+    }
+
+    private async void FilterDTRLow_Click(object Sender, RoutedEventArgs e)
+    {
+        _displayMode = DataGridDisplayMode.Filtered;
+        ViewModel.FilterOptions = StorageLocationFilterOptions.DwellTimeRedLow;
+        await ViewModel.FilterItems.ExecuteAsync(null);
+    }
+
+    private async void FilterClear_Click(object sender, RoutedEventArgs e)
+    {
+        _displayMode = DataGridDisplayMode.Default;
+        ViewModel.FilterOptions = StorageLocationFilterOptions.None;
+        await ViewModel.FirstAsyncCommand.ExecuteAsync(null);
     }
 
     private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)
@@ -105,8 +135,7 @@ public sealed partial class StorageLocationsViewPage1 : Page
 
         // Remove Display Mode Indicators;
         FilterIndicator.Visibility = Visibility.Collapsed;
-        GroupIndicator.Visibility = Visibility.Collapsed;
-        SearchIndicator.Visibility = Visibility.Collapsed;
+       
 
         // Remove Sort Indicators.
         if (dp == ctWinUI.DataGrid.ItemsSourceProperty)
@@ -122,19 +151,6 @@ public sealed partial class StorageLocationsViewPage1 : Page
             FilterIndicator.Visibility = Visibility.Visible;
         }
 
-        if (_displayMode == DataGridDisplayMode.Grouped)
-        {
-            GroupIndicator.Visibility = Visibility.Visible;
-        }
-
-        if (_displayMode == DataGridDisplayMode.Search)
-        {
-            SearchIndicator.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            SearchBox.Text = string.Empty;
-        }
     }
 
     public StorageLocationPaginationViewModel ViewModel { get; }

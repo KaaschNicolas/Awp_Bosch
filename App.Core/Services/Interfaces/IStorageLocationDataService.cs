@@ -17,5 +17,5 @@ public interface IStorageLocationDataService<T> where T : StorageLocation
 
     public Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
 
-    public Task<Response<List<T>>> GetWithFilter(int pageIndex, int pageSize, StorageLocationFilterOptions filterOptions, Expression<Func<T, bool>> where);
+    public Task<Response<List<T>>> GetWithFilter(int pageIndex, int pageSize, Expression<Func<T, bool>> where);
 }
