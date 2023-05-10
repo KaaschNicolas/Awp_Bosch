@@ -50,8 +50,6 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        //var configuration = ConfigurationHelper.Configuration;
-
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(ConfigurationHelper.Configuration)
             .CreateLogger();
