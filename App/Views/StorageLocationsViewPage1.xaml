@@ -58,15 +58,15 @@
                               Width="80">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Text="Liegezeit Gelb &lt; 10"
+                            <MenuFlyoutItem Text="Liegezeit Gelb &lt; 5"
                                             Click="FilterDTYLow_Click" />
-                            <MenuFlyoutItem Text="Liegezeit Gelb &gt; 10"
+                            <MenuFlyoutItem Text="Liegezeit Gelb &gt; 5"
                                             Click="FilterDTYHigh_Click" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem x:Name="FilterHeightLow"
-                                            Text="Liegezeit Rot &lt; 10"
+                                            Text="Liegezeit Rot &lt; 5"
                                             Click="FilterDTRLow_Click" />
-                            <MenuFlyoutItem Text="Liegezeit Rot &gt; 10"
+                            <MenuFlyoutItem Text="Liegezeit Rot &gt; 5"
                                             Click="FilterDTRHigh_Click" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem Text="Filter entfernen"
@@ -123,38 +123,20 @@
                                Margin="8 0" />
                 </AppBarElementContainer>
             </CommandBar>
-        </StackPanel>
-        <!--<StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Left"
-                    Margin="0 0 0 16"
-                    CornerRadius="4"
-                    Height="52">
-            <CommandBar 
-                DefaultLabelPosition="Right"
+            <AutoSuggestBox x:Name="SearchBox"
+                            QuerySubmitted="SearchBox_QuerySubmitted"
+                            QueryIcon="Find"
+                            Width="240"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="8 0 0 0" />
+            <CommandBar DefaultLabelPosition="Right"
                         Background="Transparent"
-                        VerticalAlignment="Center">
-                <AppBarButton Icon="Filter"
-                              Label="Filter"
-                              Width="80">
-                    <AppBarButton.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem Text="Liegezeit Rot &lt; 50"
-                                            Click="FilterDTYLow_Click" />
-                            <MenuFlyoutItem Text="Rank &gt; 50"
-                                            Click="FilterDTYHigh_Click" />
-                            <MenuFlyoutSeparator />
-                            <MenuFlyoutItem x:Name="FilterHeightLow"
-                                            Text="Height &lt; 8000 m"
-                                            Click="FilterDTRLow_Click" />
-                            <MenuFlyoutItem Text="Height &gt; 8000 m"
-                                            Click="FilterDTRHigh_Click" />
-                            <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="Remove Filter"
-                                            Click="FilterClear_Click" />
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-                <AppBarElementContainer x:Name="FilterIndicator"
+                        VerticalAlignment="Center"
+                        Margin="0 0 8 0">
+                <AppBarButton Label="Search"
+                              Click="SearchBox_QueryClick" />
+                <AppBarElementContainer x:Name="SearchIndicator"
                                         Visibility="Collapsed"
                                         Margin="-16 0 0 0">
                     <FontIcon Glyph="&#xE73E;"
@@ -163,7 +145,7 @@
                               VerticalAlignment="Top" />
                 </AppBarElementContainer>
             </CommandBar>
-        </StackPanel>-->
+        </StackPanel>
         <ctWinUI:DataGrid x:Name="DataGrid"
                           ItemsSource="{x:Bind ViewModel.StorageLocations, Mode=OneWay}"
                           AutoGenerateColumns="False"

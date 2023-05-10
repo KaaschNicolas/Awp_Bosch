@@ -64,6 +64,22 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         }
     }
 
+    public async Task<Response<int>> MaxEntriesSearch(string queryText)
+    {
+        try
+        {
+            var data = await _boschContext.Set<T>()
+                .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
+                .CountAsync();
+            return new Response<int>(ResponseCode.Success, data: data);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
+        }
+    }
+
+
     public async Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize, string orderByProperty, bool isAscending)
     {
         try
@@ -82,12 +98,12 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         }
     }
 
-    private async Task<Response<List<T>>> GetStorageLocationFiltered(int pageIndex, int pageSize, Expression<Func<T,bool>> where)
+    public async Task<Response<List<T>>> Like(int pageIndex, int pageSize, string queryText)
     {
         try
         {
             var data = await _boschContext.Set<T>()
-                .Where(where)
+                .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
                 .Skip((pageIndex -1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -105,8 +121,8 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         {
             var data = await _boschContext.Set<T>()
                 .Where(where)
-                //.Skip((pageIndex - 1) * pageSize)
-                //.Take(pageSize)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }

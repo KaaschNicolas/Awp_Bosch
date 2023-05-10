@@ -103,6 +103,7 @@ public sealed partial class StorageLocationsViewPage1 : Page
 
     private async void FilterDTYLow_Click(object Sender, RoutedEventArgs e)
     {
+        ViewModel.PageNumber = 1;
         _displayMode = DataGridDisplayMode.Filtered;
         ViewModel.FilterOptions = StorageLocationFilterOptions.DwellTimeYellowLow;
         await ViewModel.FilterItems.ExecuteAsync(null);
@@ -127,6 +128,24 @@ public sealed partial class StorageLocationsViewPage1 : Page
         _displayMode = DataGridDisplayMode.Default;
         ViewModel.FilterOptions = StorageLocationFilterOptions.None;
         await ViewModel.FirstAsyncCommand.ExecuteAsync(null);
+    }
+
+    private async void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
+    {
+        _displayMode = DataGridDisplayMode.Search;
+        ViewModel.FilterOptions = StorageLocationFilterOptions.Search;
+        ViewModel.QueryText = e.QueryText;
+        await ViewModel.FilterItems.ExecuteAsync(null);
+        
+    }
+
+    private async void SearchBox_QueryClick(object sender, RoutedEventArgs e)
+    {
+        _displayMode = DataGridDisplayMode.Search;
+        ViewModel.FilterOptions = StorageLocationFilterOptions.Search;
+        ViewModel.QueryText = SearchBox.Text;
+        await ViewModel.FilterItems.ExecuteAsync(null);
+
     }
 
     private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)
