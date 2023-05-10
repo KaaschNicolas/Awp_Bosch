@@ -1,0 +1,180 @@
+﻿<Page
+    x:Class="App.Views.PcbSinglePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:App.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:viewModels="using:App.ViewModels"
+	DataContext="viewModels:PcbSingleViewModel"
+    mc:Ignorable="d">
+
+	
+	<behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+		<DataTemplate x:DataType="viewModels:PcbSingleViewModel">
+			<Grid  Margin="0,0,50,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="2,5*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+
+				<StackPanel
+					Grid.Column="0"
+					Orientation="Horizontal"
+					HorizontalAlignment="Left">
+					<CommandBar
+						Background="Transparent"
+						IsOpen="False"
+						DefaultLabelPosition="Right">
+						<CommandBar.Content >
+							<TextBlock Text="Leiterplatte:"/>
+						</CommandBar.Content>
+					</CommandBar>
+					<TextBlock
+						Text="{ Binding Path=SerialNumber }"
+						FontWeight="Bold"/>
+				</StackPanel>
+				<CommandBar
+					Grid.Column="1"
+					Background="Transparent"
+					IsOpen="False"
+					DefaultLabelPosition="Right"
+					HorizontalAlignment="Center">
+					<AppBarButton
+					    Icon="Print"
+						Label="Drucken"/>
+				</CommandBar>
+				<StackPanel
+                    Grid.Column="2"
+					Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+					<CommandBar
+                        DefaultLabelPosition="Right">
+						<AppBarButton
+                            Icon="Edit"
+                            Label="Beareiten"/>
+						<AppBarButton
+                            Icon="Delete"
+                            Label="Löschen"/>
+					</CommandBar>
+				</StackPanel>
+			</Grid>
+		</DataTemplate>
+	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+	
+	<Grid x:Name="ContentArea">
+		<Grid.Resources>
+			<CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
+		</Grid.Resources>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*" />
+			<ColumnDefinition Width="0,5*"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel
+			Grid.Column="0"
+			Grid.Row="0"
+			Orientation="Horizontal"
+			VerticalAlignment="Center">
+			<TextBlock
+				Margin="0,5,0,0"
+				Text="Ausgefallen am:" />
+			<CalendarDatePicker
+				x:Name="dateOfFailure"
+				Margin="5,0,25,0"
+				VerticalAlignment="Top"
+				PlaceholderText="Pick a date"/>
+			<!--DateChanded="CalendarDatePicker_DateChanged"/>-->
+			<TextBlock
+				Margin="0,5,0,0"
+				Text="Aufgenommenen von:"/>
+			<TextBlock
+				Margin="0,5,0,0"
+				Text="Tester_1" FontWeight="Bold"/>
+		</StackPanel>
+		<InfoBar
+				Grid.Column="0"
+				Grid.Row="1"
+				Grid.ColumnSpan="2"
+				HorizontalAlignment="Right"
+				IsOpen="True"
+				IsIconVisible="True"
+				Severity="Warning"
+				IsClosable="False"
+				Margin="0,0,0,0"
+				Title="Einschränkung"
+				Message="MTS651...342" />
+		
+		<StackPanel
+			Grid.Column="0"
+			Grid.Row="1"
+			Grid.ColumnSpan="2"
+			Orientation="Vertical">
+			<StackPanel
+				Margin="0,15,0,0"
+				Orientation="Horizontal">
+				<TextBlock Text="Leiterplatte:"/>
+				<TextBlock 
+					Margin="5,0,0,0"
+					Text="1688 400 628 - VCI-Renault mit Display" 
+					FontWeight="Bold"/>
+			</StackPanel>
+			<StackPanel
+				Margin="0,30,0,0"
+				Orientation="Horizontal">
+				<TextBlock Text="Fehlerkategorie:"/>
+				<TextBlock
+					Margin="5,0,0,0"
+					Text="Hardware" 
+					FontWeight="Bold"/>
+			</StackPanel>
+			<Expander
+				Margin="0,20,0,0"
+				IsExpanded="True"
+				ExpandDirection="Down"
+				VerticalAlignment="Top"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Stretch"
+				Header="Fehler: M320"
+				Content="Beschreibung: Linux Test Teil 2"/>
+			<Expander
+				Margin="0,20,0,0"
+				IsExpanded="True"
+				ExpandDirection="Down"
+				VerticalAlignment="Top"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Stretch"
+				Header="Fehler: 010"
+				Content="Beschreibung: Verbindung herstellen"/>
+		</StackPanel>
+
+		<StackPanel
+			Grid.Column="2"
+			Grid.Row="1"
+			Orientation="Vertical">
+			<Rectangle
+				Fill="White" Stroke="LightGray" StrokeThickness="0.5"
+				Height="250" Width="280"
+				RadiusX="4" RadiusY="4"
+				HorizontalAlignment="Right"/>
+			<Rectangle
+				Fill="White" Stroke="LightGray" StrokeThickness="0.5"
+				Height="100" Width="280"
+				RadiusX="4" RadiusY="4"
+				Margin="0,20,0,0"
+				HorizontalAlignment="Right"/>
+		</StackPanel>
+
+		<!--<ContentPresenter x:Name="ContentPresenter" Content="{TemplateBindingTransfersViewModel}" />-->
+		
+
+    </Grid>
+</Page>

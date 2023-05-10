@@ -5,7 +5,8 @@
     xmlns:behaviors="using:App.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" xmlns:viewModels="using:App.ViewModels"
+	xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:viewModels="using:App.ViewModels"
     mc:Ignorable="d">
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>

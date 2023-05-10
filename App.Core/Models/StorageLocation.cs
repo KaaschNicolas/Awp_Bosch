@@ -25,6 +25,7 @@ namespace App.Core.Models
         {
             get; set;
         }
+        
         public List<Transfer> Transfers
         {
             get; set;
