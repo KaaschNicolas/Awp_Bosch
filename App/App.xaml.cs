@@ -135,7 +135,7 @@ public partial class App : Application
     {
         builder.SetBasePath(Directory.GetCurrentDirectory())
 
-            .AddJsonFile("Y:\\Studium\\Data Science\\Sem6\\AWP\\Repo\\App\\appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("C:\\Users\\Student\\Documents\\AWP\\Awp_Bosch\\App\\appsettings.json", optional: false, reloadOnChange: true)
 
             .AddEnvironmentVariables();
     }

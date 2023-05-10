@@ -2,6 +2,7 @@
 using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 //using Excel = Microsoft.Office.Interop.Excel;
 
 namespace App.Core.Services;
@@ -16,39 +17,53 @@ public class DataService : IDataService
         //SeedFromExcel("");
     }
 
-    public void SeedMockData()
+    public async void SeedMockData()
     {
         var path = "C:\\Users\\danie\\Documents\\GitHub\\Awp_Bosch\\App.Core\\Services\\mockData\\";
 
         //Mocking of ErrorType Data
-        var file = File.ReadAllText(path + "errorTypeMockData.json");
-        var errorTypeMockData = JsonSerializer.Deserialize<List<ErrorType>>(file);
-        _boschContext.AddRange(errorTypeMockData);
-        Console.WriteLine(errorTypeMockData);
+        var count = await _boschContext.ErrorTypes.CountAsync();
+        if (count.Equals(0)) {
+            var file = File.ReadAllText(path + "errorTypeMockData.json");
+            var mockData = JsonSerializer.Deserialize<List<ErrorType>>(file);
+            _boschContext.AddRange(mockData);
+            Console.WriteLine(mockData);
 
-        _boschContext.SaveChanges();
+            _boschContext.SaveChanges(); 
+        }
         //Mocking of Device Data
-        file = File.ReadAllText(path + "deviceMockData.json");
-        var deviceMockData = JsonSerializer.Deserialize<List<Device>>(file);
-        _boschContext.AddRange(deviceMockData);
-        Console.WriteLine(deviceMockData);
+        count = await _boschContext.Devices.CountAsync();
+        if (count.Equals(0))
+        {
+            var file = File.ReadAllText(path + "deviceMockData.json");
+            var mockData = JsonSerializer.Deserialize<List<Device>>(file);
+            _boschContext.AddRange(mockData);
+            Console.WriteLine(mockData);
 
-        _boschContext.SaveChanges();
+            _boschContext.SaveChanges();
+        }
         //Mocking of User Data
-        file = File.ReadAllText(path + "userMockData.json");
-        var userMockData = JsonSerializer.Deserialize<List<User>>(file);
-        _boschContext.AddRange(userMockData);
-        Console.WriteLine(userMockData);
+        count = await _boschContext.Users.CountAsync();
+        if (count.Equals(0))
+        {
+            var file = File.ReadAllText(path + "userMockData.json");
+            var mockData = JsonSerializer.Deserialize<List<User>>(file);
+            _boschContext.AddRange(mockData);
+            Console.WriteLine(mockData);
 
-        _boschContext.SaveChanges();
-
+            _boschContext.SaveChanges();
+        }
         //Mocking of transfer Data
-        file = File.ReadAllText(path + "transferMockData.json");
-        var transferMockData = JsonSerializer.Deserialize<List<Transfer>>(file);
-        _boschContext.AddRange(transferMockData);
-        Console.WriteLine(transferMockData);
+        count = await _boschContext.Transfers.CountAsync();
+        if (count.Equals(0))
+        {
+            var file = File.ReadAllText(path + "transferMockData.json");
+            var mockData = JsonSerializer.Deserialize<List<Transfer>>(file);
+            _boschContext.AddRange(mockData);
+            Console.WriteLine(mockData);
 
-        _boschContext.SaveChanges();
+            _boschContext.SaveChanges();
+        }
 
     }
     public void SeedFromExcel(string path)
