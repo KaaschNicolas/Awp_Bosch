@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using App.Core.Models;
+﻿using App.Core.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace App.Core.DataAccess
 {
@@ -56,7 +50,7 @@ namespace App.Core.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=127.0.0.1;Initial Catalog=TestDB;User ID=sa;Password=Awp_2023;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer(@"Data Source=127.0.0.1;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True");
         }
 
         public override int SaveChanges()
