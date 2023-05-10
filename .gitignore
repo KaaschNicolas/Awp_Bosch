@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 tmp/
+
+# BOS-234
+appsettings.json
