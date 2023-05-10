@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 //using Excel = Microsoft.Office.Interop.Excel;
 
 namespace App.Core.Services;
-public class DataService : IDataService
+public class MockDataService : IMockDataService
 {
     private BoschContext _boschContext;
-    public DataService(BoschContext boschContext)
+    public MockDataService(BoschContext boschContext)
     {
         _boschContext = boschContext;
         SeedMockData();

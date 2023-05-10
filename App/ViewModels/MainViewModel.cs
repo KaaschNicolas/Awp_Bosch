@@ -8,7 +8,7 @@ public class MainViewModel : ObservableRecipient
 {
     public MainViewModel(
         // Zeile Entkommentieren einmal Programm starten, damit Db mit Daten befüllt wird.
-        IDataService dataService
+        IMockDataService dataService
         )
     {
 

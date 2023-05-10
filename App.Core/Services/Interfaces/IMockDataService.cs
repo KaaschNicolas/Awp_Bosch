@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Core.Services.Interfaces;
-public interface IDataService
+public interface IMockDataService
 {
     public void SeedFromExcel(string path);
     public void SeedMockData();
