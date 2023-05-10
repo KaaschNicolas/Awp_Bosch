@@ -1,5 +1,7 @@
-﻿using App.Core.Models;
+﻿using App.Core.Helpers;
+using App.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace App.Core.DataAccess
 {
@@ -50,7 +52,7 @@ namespace App.Core.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=127.0.0.1;Initial Catalog=TestDB;User ID=sa;Password=meinPasswort1234;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer(ConfigurationHelper.Configuration.GetConnectionString("BoschContext"));
         }
 
         public override int SaveChanges()
