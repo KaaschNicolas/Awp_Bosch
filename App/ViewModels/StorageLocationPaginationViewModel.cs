@@ -96,15 +96,9 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
         Response<List<StorageLocation>> storageLocations;
         Response<int> maxEntries;
 
-
-        if (SortedByDwellTimeYellowFlag is true)
-        {
-            storageLocations = await _crudService.GetAllSortedBy(pageIndex, pageSize, "DwellTimeYellow", isAscending);
-        }
-        else
-        {
-            storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
-        }
+        _ = SortedByDwellTimeYellowFlag is true 
+            ? storageLocations = await _crudService.GetAllSortedBy(pageIndex, pageSize, "DwellTimeYellow", isAscending) 
+            : storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
 
         if (FilterOptions != StorageLocationFilterOptions.None)
         {
@@ -139,8 +133,6 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
                     storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
                     break;
             }
-
-        
 
             if (storageLocations.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
             {
