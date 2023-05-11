@@ -16,6 +16,34 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Grid.Resources>
+            <DataTemplate x:Key="RowDetailsTemplate">
+                <Grid Padding="10"
+                      BorderThickness=".5 0 .5 .5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding StorageName}"
+                               HorizontalAlignment="Right" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Text="{Binding DwellTimeYellow}"
+                               HorizontalAlignment="Right" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Text="{Binding DwellTimeRed}"
+                               HorizontalAlignment="Right" />
+                </Grid>
+            </DataTemplate>
+        </Grid.Resources>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Left"
                     Margin="0 0 0 16"
@@ -25,6 +53,35 @@
                         Background="Transparent"
                         VerticalAlignment="Center"
                         OverflowButtonVisibility="Collapsed">
+                <AppBarButton Icon="Filter"
+                              Label="Filter"
+                              Width="80">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Liegezeit Gelb &lt; 5"
+                                            Click="FilterDTYLow_Click" />
+                            <MenuFlyoutItem Text="Liegezeit Gelb &gt; 5"
+                                            Click="FilterDTYHigh_Click" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Name="FilterHeightLow"
+                                            Text="Liegezeit Rot &lt; 5"
+                                            Click="FilterDTRLow_Click" />
+                            <MenuFlyoutItem Text="Liegezeit Rot &gt; 5"
+                                            Click="FilterDTRHigh_Click" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Filter entfernen"
+                                            Click="FilterClear_Click" />
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarElementContainer x:Name="FilterIndicator"
+                                        Visibility="Collapsed"
+                                        Margin="-16 0 0 0">
+                    <FontIcon Glyph="&#xE73E;"
+                              FontSize="12"
+                              Foreground="Coral"
+                              VerticalAlignment="Top" />
+                </AppBarElementContainer>
                 <AppBarButton ToolTipService.ToolTip="First"
                               Icon="Previous"
                               Command="{x:Bind ViewModel.FirstAsyncCommand, Mode=OneWay}"
@@ -64,6 +121,28 @@
                 <AppBarElementContainer VerticalContentAlignment="Center">
                     <TextBlock Text="rows per page"
                                Margin="8 0" />
+                </AppBarElementContainer>
+            </CommandBar>
+            <AutoSuggestBox x:Name="SearchBox"
+                            QuerySubmitted="SearchBox_QuerySubmitted"
+                            QueryIcon="Find"
+                            Width="240"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="8 0 0 0" />
+            <CommandBar DefaultLabelPosition="Right"
+                        Background="Transparent"
+                        VerticalAlignment="Center"
+                        Margin="0 0 8 0">
+                <AppBarButton Label="Search"
+                              Click="SearchBox_QueryClick" />
+                <AppBarElementContainer x:Name="SearchIndicator"
+                                        Visibility="Collapsed"
+                                        Margin="-16 0 0 0">
+                    <FontIcon Glyph="&#xE73E;"
+                              FontSize="12"
+                              Foreground="Coral"
+                              VerticalAlignment="Top" />
                 </AppBarElementContainer>
             </CommandBar>
         </StackPanel>
