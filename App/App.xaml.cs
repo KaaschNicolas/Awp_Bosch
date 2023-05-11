@@ -85,7 +85,7 @@ public partial class App : Application
 
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
-
+            services.AddTransient<IMockDataService, MockDataService>();
 
 
             // Views and ViewModels
