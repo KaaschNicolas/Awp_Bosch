@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using App.Contracts.Services;
 using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Models.Enums;
@@ -15,9 +16,9 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 
 namespace App.ViewModels;
-public class StorageLocationPaginationViewModel : ObservableRecipient
+public partial class StorageLocationPaginationViewModel : ObservableRecipient
 {   
-    public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService)
+    public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService)
     {
         _crudService = crudService;
         FirstAsyncCommand = new AsyncRelayCommand(
@@ -50,10 +51,17 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
             () => _pageNumber != _pageCount && _filterOptions != StorageLocationFilterOptions.None
         );
 
+        _dialogService = dialogService;
+        _infoBarService = infoBarService;
+        _navigationService = navigationService;
+
         Refresh();
     }
 
     private readonly IStorageLocationDataService<StorageLocation> _crudService;
+    private readonly IDialogService _dialogService;
+    private readonly IInfoBarService _infoBarService;
+    private readonly INavigationService _navigationService;
 
     public IAsyncRelayCommand FirstAsyncCommand { get; }
     public IAsyncRelayCommand PreviousAsyncCommand { get; }
@@ -90,6 +98,9 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
     public StorageLocationFilterOptions FilterOptions { get => _filterOptions; set => SetProperty(ref _filterOptions, value); }
 
     public List<StorageLocation> StorageLocations { get => _storageLocations; private set => SetProperty(ref _storageLocations, value); }
+
+    [ObservableProperty]
+    private StorageLocation _selectedItem;
 
     private async Task GetStorageLocations(int pageIndex, int pageSize, bool isAscending)
     {
@@ -171,6 +182,27 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
         NextAsyncCommand.NotifyCanExecuteChanged();
         LastAsyncCommand.NotifyCanExecuteChanged();
         FilterItems.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand]
+    public async void Delete()
+    {
+        var result = await _dialogService.ConfirmDeleteDialogAsync("Sachnummer Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?");
+        if (result != null && result == true)
+        {
+            StorageLocation pcbToRemove = _selectedItem;
+            _storageLocations.Remove(pcbToRemove);
+            await _crudService.Delete(pcbToRemove);
+            _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
+
+        }
+    }
+
+    [RelayCommand]
+    public void NavigateToUpdate(StorageLocation storageLocation)
+    {
+        _navigationService.NavigateTo("App.ViewModels.UpdateStorageLocationViewModel", storageLocation);
+
     }
 
     private void Refresh()

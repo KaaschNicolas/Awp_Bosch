@@ -148,6 +148,21 @@ public sealed partial class StorageLocationsViewPage1 : Page
 
     }
 
+    private void DeleteClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.DeleteCommand.Execute(null);
+    }
+
+    void NavigateToUpdate(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
+    }
+
+    private void CreatStorageLocationButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        Frame.Navigate(typeof(CreateStorageLocationPage));
+    }
+
     private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)
     {
         // Binding could do most of this ...
