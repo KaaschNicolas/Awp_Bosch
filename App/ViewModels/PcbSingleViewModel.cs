@@ -11,7 +11,7 @@ namespace App.ViewModels;
 
 public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 {
-    /*public PcbSingleViewModel ViewModel { get; }
+    public PcbSingleViewModel ViewModel { get; }
     
     private string _serialNumber = "0000652125";
     public string SerialNumber
@@ -25,12 +25,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     }
 
     [ObservableProperty]
-    private Pcb _selectedItem;*/
+    private Pcb _selectedItem;
 
-    [ObservableProperty]
+    /*[ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    private string _serialNumber;
+    private string _serialNumber;*/
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -82,6 +82,19 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         _dialogService = dialogService;
         _infoBarService = infoBarService;
         _navigationService = navigationService;
+        mockData = new()
+        {
+            Id = 1,
+            CreatedDate=DateTime.Now,
+            SerialNumber="0000652125",
+            ErrorDescription="ErrorMessage",
+            Finalized=false,
+            ErrorTypes= new List<ErrorType>()
+            {
+                new ErrorType(){Id=1, Code="M320", ErrorDescription="Beschreibung:Verbindung kann nicht hergestellt werden" }
+
+            }
+        };
     }
 
     [RelayCommand]
@@ -98,9 +111,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         }
     }
 
+    Pcb mockData { get; set; }
+
     public void OnNavigatedTo(object parameter)
     {
-        _pcb = (Pcb)parameter;
+        //_pcb = (Pcb)parameter;
+        _pcb=new Pcb();
         //_id = _pcb.Id;
         _serialNumber = "0000652125";//_pcb.SerialNumber;
         //_restriction = _pcb.Restriction;
