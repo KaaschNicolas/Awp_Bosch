@@ -10,6 +10,7 @@
     xmlns:behaviors="using:App.Behaviors"
       xmlns:ctWinUI="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:viewModels="using:App.ViewModels"
       mc:Ignorable="d"
       Background="Transparent">
     
@@ -29,7 +30,7 @@
                     IsOpen="False">
                     <CommandBar.Content>
                         <!--  Get MainPageTitle.Text from localizx:ed resources  -->
-                        <TextBlock Text="Sachnummer" />
+                        <TextBlock Text="Lagerort" />
                     </CommandBar.Content>
 
                     <!--  All your AppBar buttons  -->
