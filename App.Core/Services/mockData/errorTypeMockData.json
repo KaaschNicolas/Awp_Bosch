@@ -1,0 +1,32 @@
+[
+  {
+    "Code": "M150",
+    "ErrorDescription" : "SDKSTEST",
+    "DeletedDate": "2023-10-08T18:25:43.511Z",
+    "CreatedDate": "2013-07-06T18:25:43.511Z"
+  },
+  {
+    "Code": "M140",
+    "ErrorDescription" : "CAN Test",
+    "DeletedDate": "2023-10-08T18:25:43.511Z",
+    "CreatedDate": "2013-07-06T18:25:43.511Z"
+  },
+  {
+    "Code": "M120",
+    "ErrorDescription" : "LED & Beeper",
+    "DeletedDate": "2023-10-08T18:25:43.511Z",
+    "CreatedDate": "2013-07-06T18:25:43.511Z"
+  },
+  {
+    "Code": "M110",
+    "ErrorDescription" : "LinuxTest 1",
+    "DeletedDate": "2023-10-08T18:25:43.511Z",
+    "CreatedDate": "2013-07-06T18:25:43.511Z"
+  },
+  {
+    "Code": "M100",
+    "ErrorDescription" : "Programmieren",
+    "DeletedDate": "2023-10-08T18:25:43.511Z",
+    "CreatedDate": "2013-07-06T18:25:43.511Z"
+  }
+]
