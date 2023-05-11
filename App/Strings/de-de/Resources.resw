@@ -216,6 +216,6 @@
     <value>Benutzerverwaltung</value>
   </data>
   <data name="Shell_StorageLocations.Content" xml:space="preserve">
-    <value>Verbleiborte</value>
+    <value>Lagerort</value>
   </data>
 </root>
