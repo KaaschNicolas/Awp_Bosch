@@ -1,13 +1,11 @@
-﻿using System.Linq.Expressions;
-
-using App.Activation;
+﻿using App.Activation;
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
 using App.Core.DataAccess;
+using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
-using App.Helpers;
 using App.Models;
 using App.Services;
 using App.ViewModels;
@@ -18,7 +16,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
-
 using Serilog;
 
 namespace App;
@@ -53,14 +50,9 @@ public partial class App : Application
     {
         InitializeComponent();
 
-
-        var builder = new ConfigurationBuilder();
-        ConfigSetup(builder);
-
         Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(builder.Build())
+            .ReadFrom.Configuration(ConfigurationHelper.Configuration)
             .CreateLogger();
-
 
         Host = Microsoft.Extensions.Hosting.Host.
         CreateDefaultBuilder().
@@ -87,14 +79,18 @@ public partial class App : Application
             // Core Services
             services.AddSingleton<IFileService, FileService>();
             services.AddTransient<ILoggingService, LoggingService>();
-            
+
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
+            services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
+
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
-            
+
 
 
             // Views and ViewModels
+            services.AddTransient<UpdateStorageLocationPage>();
+            services.AddTransient<UpdateStorageLocationViewModel>();
             services.AddTransient<UpdatePcbTypeViewModel>();
             services.AddTransient<UpdatePcbTypePage>();
             services.AddTransient<CreatePcbTypeViewModel>();
@@ -116,25 +112,21 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
-            
+            //services.AddTransient<CreateStorageLocation>();
+            services.AddTransient<StorageLocation>();
+            services.AddTransient<StorageLocationViewModel>();
+
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
+ 
             services.AddDbContext<BoschContext>(
-                    options => options.UseSqlServer(@"Data Source=localhost;Initial Catalog=TestDB;User ID=sa;Password=Nicolas!1234;TrustServerCertificate=True"));
+                options => options.UseSqlServer(ConfigurationHelper.Configuration.GetConnectionString("BoschContext")),
+                ServiceLifetime.Transient);
         }).
         Build();
 
         UnhandledException += App_UnhandledException;
-    }
-
-    private static void ConfigSetup(IConfigurationBuilder builder)
-    {
-        builder.SetBasePath(Directory.GetCurrentDirectory())
-
-            .AddJsonFile("C:\\Users\\Admin\\source\\repos\\AWP_Bosch\\App\\appsettings.json", optional: false, reloadOnChange: true)
-
-            .AddEnvironmentVariables();
     }
 
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
@@ -150,6 +142,6 @@ public partial class App : Application
 
         await App.GetService<IActivationService>().ActivateAsync(args);
 
-        
+
     }
 }

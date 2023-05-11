@@ -1,0 +1,77 @@
+﻿<Page
+    x:Class="App.Views.UpdateStorageLocationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:behaviors="using:App.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:viewModels="using:App.ViewModels"
+    mc:Ignorable="d">
+
+	<behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+		<DataTemplate x:DataType="viewModels:StorageLocationViewModel">
+			<TextBlock Text="Lagerort bearbeiten" />
+		</DataTemplate>
+	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+	
+    <Grid x:Name="ContentArea">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="0.3*"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<StackPanel
+			Grid.Column="0"
+            Orientation="Vertical"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top">
+			<TextBox
+                Margin="0,12,0,12"
+                Header="Lagerort:"
+                PlaceholderText="Bezeichnung hinzufügen"
+                Text="{x:Bind Path=ViewModel.StorageName, Mode=TwoWay}"/>
+			<CheckBox x:Name="finalDispositionCheckbox"
+				Content="als 'Endgültiger Verbleib' festlegen" />
+			<!--Checked="Verbleib_Checked"-->
+			<!-- Unchecked="Verbleib_Unchecked" />-->
+			<NumberBox
+                Margin="0,18,0,12"
+                Header="Tage bis Status GELB:"
+                Maximum="100"
+                Minimum="0"
+                SmallChange="1"
+                SpinButtonPlacementMode="Compact"
+                Text="{x:Bind Path=ViewModel.DwellTimeYellow, Mode=TwoWay}"/>
+			<NumberBox
+                Margin="0,8,0,12"
+                Header="Tage bis Status ROT:"
+                Maximum="100"
+                Minimum="0"
+                SmallChange="1"
+                SpinButtonPlacementMode="Compact"
+                Text="{x:Bind Path=ViewModel.DwellTimeRed, Mode=TwoWay}"/>
+			<StackPanel
+				Orientation="Horizontal"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Top">
+				<Button
+                    Margin="0,12,4,12"
+                    Command="{Binding SaveCommand}"
+                    Style="{StaticResource AccentButtonStyle}"
+                    Click="UpdateStorageLocationButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" FontSize="18"/>
+						<TextBlock Padding="8,0,0,0">Speichern</TextBlock>
+					</StackPanel>
+				</Button>
+				<Button
+                    Margin="0,12,4,12"
+                    Click="CancelButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;" FontSize="18"/>
+						<TextBlock Padding="8,0,0,0" >Abbrechen</TextBlock>
+					</StackPanel>
+				</Button>
+			</StackPanel>
+		</StackPanel>
+    </Grid>
+</Page>

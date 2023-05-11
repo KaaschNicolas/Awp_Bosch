@@ -84,7 +84,7 @@
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE82D;" />
                     </NavigationViewItem.Icon>
                     <NavigationViewItem.MenuItems>
-                        <NavigationViewItem x:Uid="Shell_MD_StorageLocation" />
+                        <NavigationViewItem x:Uid="Shell_MD_StorageLocation" helpers:NavigationHelper.NavigateTo="App.ViewModels.StorageLocationViewModel"/>
                         <NavigationViewItem x:Uid="Shell_MD_PartNumber" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbTypeViewModel" />
                         <NavigationViewItem x:Uid="Shell_MD_ErrorCategory" helpers:NavigationHelper.NavigateTo="App.ViewModels.DiagnoseViewModel" />
                     </NavigationViewItem.MenuItems>
