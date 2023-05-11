@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Formats.Asn1;
 using System.Linq;
 using System.Linq.Expressions;
@@ -75,7 +76,9 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
     private int _pageCount;
     private bool _sortedByDwellTimeYellow;
     private string _queryText;
-    private List<StorageLocation> _storageLocations;
+
+    [ObservableProperty]
+    private ObservableCollection<StorageLocation> _storageLocations;
     private StorageLocationFilterOptions _filterOptions;
     public List<int> PageSizes => new() { 5, 10, 15, 20 };
 
@@ -97,7 +100,8 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
     public bool SortedByDwellTimeYellowFlag { get => _sortedByDwellTimeYellow; set => SetProperty(ref _sortedByDwellTimeYellow, value); }
     public StorageLocationFilterOptions FilterOptions { get => _filterOptions; set => SetProperty(ref _filterOptions, value); }
 
-    public List<StorageLocation> StorageLocations { get => _storageLocations; private set => SetProperty(ref _storageLocations, value); }
+    //[ObservableProperty]
+    //public List<StorageLocation> StorageLocations { get => _storageLocations; private set => SetProperty(ref _storageLocations, value); }
 
     [ObservableProperty]
     private StorageLocation _selectedItem;
@@ -155,7 +159,11 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
                 );
                 PageNumber = storageLocationsPaginated.PageIndex;
                 PageCount = storageLocationsPaginated.PageCount;
-                StorageLocations = storageLocationsPaginated;
+                //StorageLocations = storageLocationsPaginated;
+
+                ObservableCollection<StorageLocation> copy = new();
+                storageLocationsPaginated.ForEach(x => copy.Add(x));
+                StorageLocations = copy;
             }
         }
         else
@@ -173,7 +181,11 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
                 );
                 PageNumber = storageLocationsPaginated.PageIndex;
                 PageCount = storageLocationsPaginated.PageCount;
-                StorageLocations = storageLocationsPaginated;
+                //StorageLocations = storageLocationsPaginated;
+
+                ObservableCollection<StorageLocation> copy = new();
+                storageLocationsPaginated.ForEach(x => copy.Add(x));
+                StorageLocations = copy;
             }
         }
 
@@ -190,9 +202,9 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
         var result = await _dialogService.ConfirmDeleteDialogAsync("Sachnummer Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?");
         if (result != null && result == true)
         {
-            StorageLocation pcbToRemove = _selectedItem;
-            _storageLocations.Remove(pcbToRemove);
-            await _crudService.Delete(pcbToRemove);
+            StorageLocation storageLocationToRemove = _selectedItem;
+            _storageLocations.Remove(storageLocationToRemove);
+            await _crudService.Delete(storageLocationToRemove);
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
 
         }

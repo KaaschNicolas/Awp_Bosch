@@ -193,6 +193,7 @@
         </StackPanel>
         <ctWinUI:DataGrid x:Name="DataGrid"
                           ItemsSource="{x:Bind ViewModel.StorageLocations, Mode=OneWay}"
+                          SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
                           AutoGenerateColumns="False"
                           CanUserSortColumns="False"
                           SelectionMode="Single"
