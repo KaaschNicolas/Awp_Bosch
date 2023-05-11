@@ -89,6 +89,11 @@
                         <NavigationViewItem x:Uid="Shell_MD_ErrorCategory" helpers:NavigationHelper.NavigateTo="App.ViewModels.DiagnoseViewModel" />
                     </NavigationViewItem.MenuItems>
                 </NavigationViewItem>
+                <NavigationViewItem x:Uid="Shell_CreatePcb" helpers:NavigationHelper.NavigateTo="App.ViewModels.CreatePcbViewModel">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
             <NavigationView.HeaderTemplate>
                 <DataTemplate>
