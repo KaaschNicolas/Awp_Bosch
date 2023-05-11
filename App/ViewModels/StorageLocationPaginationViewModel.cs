@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using App.Core.Helpers;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,28 +16,38 @@ using Microsoft.Extensions.Logging;
 
 namespace App.ViewModels;
 public class StorageLocationPaginationViewModel : ObservableRecipient
-{
-    public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService, ILoggingService logging)
+{   
+    public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService)
     {
         _crudService = crudService;
         FirstAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(1, _pageSize),
+            async () => await GetStorageLocations(1, _pageSize, false),
             () => _pageNumber != 1
         );
 
         PreviousAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageNumber -1, _pageSize),
+            async () => await GetStorageLocations(_pageNumber -1, _pageSize, false),
             () => _pageNumber > 1
         );
 
         NextAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageNumber + 1, _pageSize),
+            async () => await GetStorageLocations(_pageNumber + 1, _pageSize, false),
             () => _pageNumber < _pageCount
         );
 
         LastAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageCount, _pageSize),
+            async () => await GetStorageLocations(_pageCount, _pageSize, false),
             () => _pageNumber != _pageCount
+        );
+
+        SortByDwellTime = new AsyncRelayCommand(
+            async () => await GetStorageLocations(_pageCount, _pageSize, true),
+            () => _pageNumber != _pageCount
+        );
+
+        FilterItems = new AsyncRelayCommand(
+            async () => await GetStorageLocations(_pageNumber, _pageSize, false),
+            () => _pageNumber != _pageCount && _filterOptions != StorageLocationFilterOptions.None
         );
 
         Refresh();
@@ -42,23 +55,25 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
 
     private readonly IStorageLocationDataService<StorageLocation> _crudService;
 
-    private int _pageSize = 10;
-    private int _pageNumber;
-    private int _pageCount;
-    private List<StorageLocation> _storageLocations;
-
-    public List<int> PageSizes => new() { 5, 10, 15, 20 };
-
     public IAsyncRelayCommand FirstAsyncCommand { get; }
     public IAsyncRelayCommand PreviousAsyncCommand { get; }
     public IAsyncRelayCommand NextAsyncCommand { get; }
     public IAsyncRelayCommand LastAsyncCommand { get; }
+    public IAsyncRelayCommand SortByDwellTime { get; }
+    public IAsyncRelayCommand FilterItems { get; }
 
-    public int PageNumber
-    {
-        get => _pageNumber;
-        private set => SetProperty(ref _pageNumber, value);
-    }
+    private int _pageSize = 10;
+    private int _pageNumber;
+    private int _pageCount;
+    private bool _sortedByDwellTimeYellow;
+    private string _queryText;
+    private List<StorageLocation> _storageLocations;
+    private StorageLocationFilterOptions _filterOptions;
+    public List<int> PageSizes => new() { 5, 10, 15, 20 };
+
+    public string QueryText { get => _queryText; set => SetProperty(ref _queryText, value); }
+
+    public int PageNumber { get => _pageNumber; set => SetProperty(ref _pageNumber, value); }
 
     public int PageSize
     {
@@ -70,41 +85,92 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
         }
     }
 
-    public int PageCount
-    {
-        get => _pageCount;
-        private set => SetProperty(ref _pageCount, value);
-    }
+    public int PageCount { get => _pageCount; private set => SetProperty(ref _pageCount, value); }
+    public bool SortedByDwellTimeYellowFlag { get => _sortedByDwellTimeYellow; set => SetProperty(ref _sortedByDwellTimeYellow, value); }
+    public StorageLocationFilterOptions FilterOptions { get => _filterOptions; set => SetProperty(ref _filterOptions, value); }
 
-    public List<StorageLocation> StorageLocations
-    {
-        get => _storageLocations;
-        private set => SetProperty(ref _storageLocations, value);
-    }
+    public List<StorageLocation> StorageLocations { get => _storageLocations; private set => SetProperty(ref _storageLocations, value); }
 
-    private async Task GetStorageLocations(int pageIndex, int pageSize)
+    private async Task GetStorageLocations(int pageIndex, int pageSize, bool isAscending)
     {
-        var storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
-        var maxEntries = await _crudService.MaxEntries();
+        Response<List<StorageLocation>> storageLocations;
+        Response<int> maxEntries;
 
-        if (storageLocations.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
+        _ = SortedByDwellTimeYellowFlag is true 
+            ? storageLocations = await _crudService.GetAllSortedBy(pageIndex, pageSize, "DwellTimeYellow", isAscending) 
+            : storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+
+        if (FilterOptions != StorageLocationFilterOptions.None)
         {
-            PaginatedList<StorageLocation> storageLocationsPaginated = await PaginatedList<StorageLocation>.CreateAsync(
-                storageLocations.Data,
-                pageIndex,
-                pageSize,
-                maxEntries.Data
-            );
-            PageNumber = storageLocationsPaginated.PageIndex;
-            PageCount = storageLocationsPaginated.PageCount;
-            StorageLocations = storageLocationsPaginated;
-            
+            switch (_filterOptions)
+            {
+                case StorageLocationFilterOptions.DwellTimeYellowLow:
+                    Expression<Func<StorageLocation, bool>> whereDTYLow = x => x.DwellTimeYellow < 5;
+                    maxEntries = await _crudService.MaxEntriesFiltered(whereDTYLow);
+                    storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTYLow);
+                    break;
+                case StorageLocationFilterOptions.DwellTimeYellowHigh:
+                    Expression<Func<StorageLocation, bool>> whereDTYHigh = x => x.DwellTimeYellow >= 5;
+                    maxEntries = await _crudService.MaxEntriesFiltered(whereDTYHigh);
+                    storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTYHigh);
+                    break;
+                case StorageLocationFilterOptions.DwellTimeRedLow:
+                    Expression<Func<StorageLocation, bool>> whereDTRLow = x => x.DwellTimeRed < 5;
+                    maxEntries = await _crudService.MaxEntriesFiltered(whereDTRLow);
+                    storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTRLow);
+                    break;
+                case StorageLocationFilterOptions.DwellTimeRedHigh:
+                    Expression<Func<StorageLocation, bool>> whereDTRHigh = x => x.DwellTimeRed >= 5;
+                    maxEntries = await _crudService.MaxEntriesFiltered(whereDTRHigh);
+                    storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTRHigh);
+                    break;
+                case StorageLocationFilterOptions.Search:
+                    maxEntries = await _crudService.MaxEntriesSearch(QueryText);
+                    storageLocations = await _crudService.Like(pageIndex, pageSize, QueryText);
+                    break;
+                default:
+                    maxEntries = await _crudService.MaxEntries();
+                    storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+                    break;
+            }
+
+            if (storageLocations.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
+            {
+                PaginatedList<StorageLocation> storageLocationsPaginated = await PaginatedList<StorageLocation>.CreateAsync(
+                    storageLocations.Data,
+                    pageIndex, //muss neu berechnet werden
+                    pageSize,
+                    maxEntries.Data
+                );
+                PageNumber = storageLocationsPaginated.PageIndex;
+                PageCount = storageLocationsPaginated.PageCount;
+                StorageLocations = storageLocationsPaginated;
+            }
         }
-            
+        else
+        {
+            maxEntries = await _crudService.MaxEntries();
+            storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+
+            if (storageLocations.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
+            {
+                PaginatedList<StorageLocation> storageLocationsPaginated = await PaginatedList<StorageLocation>.CreateAsync(
+                    storageLocations.Data,
+                    pageIndex, //muss neu berechnet werden
+                    pageSize,
+                    maxEntries.Data
+                );
+                PageNumber = storageLocationsPaginated.PageIndex;
+                PageCount = storageLocationsPaginated.PageCount;
+                StorageLocations = storageLocationsPaginated;
+            }
+        }
+
         FirstAsyncCommand.NotifyCanExecuteChanged();
         PreviousAsyncCommand.NotifyCanExecuteChanged();
         NextAsyncCommand.NotifyCanExecuteChanged();
         LastAsyncCommand.NotifyCanExecuteChanged();
+        FilterItems.NotifyCanExecuteChanged();
     }
 
     private void Refresh()
