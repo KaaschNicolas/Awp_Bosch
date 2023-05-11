@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Reflection;
+using System.Text.Json;
 using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
@@ -19,12 +20,12 @@ public class MockDataService : IMockDataService
 
     public async void SeedMockData()
     {
-        var path = "C:\\Users\\danie\\Documents\\GitHub\\Awp_Bosch\\App.Core\\Services\\mockData\\";
-
+        var prepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).Split("App")[0], @"App.Core\Services\mockData");
         //Mocking of ErrorType Data
         var count = await _boschContext.ErrorTypes.CountAsync();
         if (count.Equals(0)) {
-            var file = File.ReadAllText(path + "errorTypeMockData.json");
+            var path = Path.Combine(prepath, "errorTypeMockData.json");
+            var file = File.ReadAllText(path);
             var mockData = JsonSerializer.Deserialize<List<ErrorType>>(file);
             _boschContext.AddRange(mockData);
             Console.WriteLine(mockData);
@@ -35,7 +36,8 @@ public class MockDataService : IMockDataService
         count = await _boschContext.Devices.CountAsync();
         if (count.Equals(0))
         {
-            var file = File.ReadAllText(path + "deviceMockData.json");
+            var path = Path.Combine(prepath, "deviceMockData.json");
+            var file = File.ReadAllText(path); 
             var mockData = JsonSerializer.Deserialize<List<Device>>(file);
             _boschContext.AddRange(mockData);
             Console.WriteLine(mockData);
@@ -46,7 +48,8 @@ public class MockDataService : IMockDataService
         count = await _boschContext.Users.CountAsync();
         if (count.Equals(0))
         {
-            var file = File.ReadAllText(path + "userMockData.json");
+            var path = Path.Combine(prepath, "userMockData.json");
+            var file = File.ReadAllText(path); 
             var mockData = JsonSerializer.Deserialize<List<User>>(file);
             _boschContext.AddRange(mockData);
             Console.WriteLine(mockData);
@@ -57,7 +60,8 @@ public class MockDataService : IMockDataService
         count = await _boschContext.Transfers.CountAsync();
         if (count.Equals(0))
         {
-            var file = File.ReadAllText(path + "transferMockData.json");
+            var path = Path.Combine(prepath, "transferMockData.json");
+            var file = File.ReadAllText(path);
             var mockData = JsonSerializer.Deserialize<List<Transfer>>(file);
             _boschContext.AddRange(mockData);
             Console.WriteLine(mockData);
