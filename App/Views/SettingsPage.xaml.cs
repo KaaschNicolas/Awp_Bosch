@@ -1,14 +1,10 @@
 ﻿using App.Core.Services;
 using App.Core.Services.Interfaces;
-using App.Helpers;
 using App.Services.PrintService;
 using App.Services.PrintService.impl;
 using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Printing;
-using System.Diagnostics;
-using Windows.Graphics.Printing;
 
 namespace App.Views;
 

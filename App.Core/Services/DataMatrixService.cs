@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using ZXing;
-using ZXing.QrCode;
 using ZXing.Windows.Compatibility;
 
 namespace App.Core.Services
