@@ -62,6 +62,11 @@
                     Style="{ThemeResource BodyTextBlockStyle}" />
                 <HyperlinkButton x:Uid="SettingsPage_PrivacyTermsLink" Margin="{StaticResource SettingsPageHyperlinkButtonMargin}" />
             </StackPanel>
+            <StackPanel Margin="{StaticResource XSmallTopMargin}">
+                <Button Content="Drucken" Click="OnPrintButtonClicked"/>
+                <TextBox x:Name="text_test"/>
+                <Button Content="DataMatrixCode generieren" Click="OnDataMatrixButtonClicked"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>
