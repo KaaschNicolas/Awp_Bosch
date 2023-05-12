@@ -210,13 +210,13 @@
             <ctWinUI:DataGrid.Columns>
                 <ctWinUI:DataGridTextColumn Header="Name"
                                             Binding="{Binding StorageName}"
-                                            Tag="Name" />
+                                            Tag="StorageName" />
                 <ctWinUI:DataGridComboBoxColumn Header="Liegezeit Gelb"
                                                 Binding="{Binding DwellTimeYellow}"
-                                                Tag="Liegezeit Gelb" />
+                                                Tag="DwellTimeYellow" />
                 <ctWinUI:DataGridTextColumn Header="Liegezeit Rot"
                                             Binding="{Binding DwellTimeRed}"
-                                            Tag="Liegezeit Rot" />
+                                            Tag="DwellTimeRed" />
                 <controls:DataGridTemplateColumn Width="100" Header="Aktion">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

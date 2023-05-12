@@ -48,12 +48,11 @@ public sealed partial class StorageLocationsViewPage1 : Page
         Unloaded += Page_Unload;
         ViewModel.FilterOptions = StorageLocationFilterOptions.None;
         ViewModel.SortBy = DataGrid.Columns[0].Tag.ToString();
-        //DataGrid.SelectionChanged += DataGrid_SelectionChanged;  <--- richtiges Event
+        DataGrid.SelectionChanged += DataGrid_SelectionChanged;
     }
 
     private DataGridDisplayMode _displayMode = DataGridDisplayMode.Default;
     private long _token;
-    private string _grouping;
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
@@ -88,11 +87,12 @@ public sealed partial class StorageLocationsViewPage1 : Page
     {
         _displayMode = DataGridDisplayMode.UserSorted;
         ViewModel.SortBy = e.Column.Tag.ToString();
-        await ViewModel.SortByDwellTime.ExecuteAsync(null); //hier nochmal schauen
         bool isAscending = e.Column.SortDirection is null or (ctWinUI.DataGridSortDirection?)ctWinUI.DataGridSortDirection.Descending;
+        ViewModel.IsSortingAscending = isAscending;
         e.Column.SortDirection = isAscending
-            ? ctWinUI.DataGridSortDirection.Ascending
-            : ctWinUI.DataGridSortDirection.Descending;
+            ? DataGrid.Columns[e.Column.DisplayIndex].SortDirection = ctWinUI.DataGridSortDirection.Ascending
+            : DataGrid.Columns[e.Column.DisplayIndex].SortDirection = ctWinUI.DataGridSortDirection.Descending;
+        await ViewModel.SortByDwellTime.ExecuteAsync(null); //hier nochmal schauen
     }
 
     private async void FilterDTYHigh_Click(object Sender, RoutedEventArgs e)
@@ -184,6 +184,11 @@ public sealed partial class StorageLocationsViewPage1 : Page
         if (_displayMode == DataGridDisplayMode.Filtered)
         {
             FilterIndicator.Visibility = Visibility.Visible;
+        }
+        
+        if (_displayMode == DataGridDisplayMode.UserSorted)
+        {
+            
         }
 
     }
