@@ -19,11 +19,12 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
 {
     public StorageLocationDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) { }
 
-    public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize)
+    public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty, bool isAscending)
     {
         try
         {
             var data = await _boschContext.Set<T>()
+                .OrderBy(orderByProperty, isAscending)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

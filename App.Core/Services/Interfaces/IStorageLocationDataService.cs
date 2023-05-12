@@ -10,7 +10,7 @@ using App.Core.Models.Enums;
 namespace App.Core.Services.Interfaces;
 public interface IStorageLocationDataService<T> : ICrudService<T> where T : StorageLocation
 {
-    public Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize);
+    public Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
 
     public Task<Response<int>> MaxEntries();
 

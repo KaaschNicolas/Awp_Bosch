@@ -43,7 +43,7 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
         );
 
         SortByDwellTime = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageCount, _pageSize, true),
+            async () => await GetStorageLocations(_pageNumber, _pageSize, true),
             () => _pageNumber != _pageCount
         );
 
@@ -76,6 +76,7 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
     private int _pageCount;
     private bool _sortedByDwellTimeYellow;
     private string _queryText;
+    private string _sortyBy;
 
     [ObservableProperty]
     private ObservableCollection<StorageLocation> _storageLocations;
@@ -97,8 +98,9 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
     }
 
     public int PageCount { get => _pageCount; private set => SetProperty(ref _pageCount, value); }
-    public bool SortedByDwellTimeYellowFlag { get => _sortedByDwellTimeYellow; set => SetProperty(ref _sortedByDwellTimeYellow, value); }
+    //public bool SortedByDwellTimeYellowFlag { get => _sortedByDwellTimeYellow; set => SetProperty(ref _sortedByDwellTimeYellow, value); }
     public StorageLocationFilterOptions FilterOptions { get => _filterOptions; set => SetProperty(ref _filterOptions, value); }
+    public string SortBy { get => _sortyBy; set => SetProperty(ref _sortyBy, value); }
 
     //[ObservableProperty]
     //public List<StorageLocation> StorageLocations { get => _storageLocations; private set => SetProperty(ref _storageLocations, value); }
@@ -111,9 +113,9 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
         Response<List<StorageLocation>> storageLocations;
         Response<int> maxEntries;
 
-        _ = SortedByDwellTimeYellowFlag is true 
-            ? storageLocations = await _crudService.GetAllSortedBy(pageIndex, pageSize, "DwellTimeYellow", isAscending) 
-            : storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+        //_ = SortedByDwellTimeYellowFlag is true 
+        //    ? storageLocations = await _crudService.GetAllSortedBy(pageIndex, pageSize, "DwellTimeYellow", isAscending) 
+        //    : storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
 
         if (FilterOptions != StorageLocationFilterOptions.None)
         {
@@ -145,7 +147,7 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
                     break;
                 default:
                     maxEntries = await _crudService.MaxEntries();
-                    storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+                    storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize, _sortyBy, isAscending);
                     break;
             }
 
@@ -169,7 +171,7 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
         else
         {
             maxEntries = await _crudService.MaxEntries();
-            storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+            storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize, _sortyBy, isAscending);
 
             if (storageLocations.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
             {

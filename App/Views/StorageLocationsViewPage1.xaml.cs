@@ -47,6 +47,7 @@ public sealed partial class StorageLocationsViewPage1 : Page
         Loaded += Page_Loaded;
         Unloaded += Page_Unload;
         ViewModel.FilterOptions = StorageLocationFilterOptions.None;
+        ViewModel.SortBy = DataGrid.Columns[0].Tag.ToString();
         //DataGrid.SelectionChanged += DataGrid_SelectionChanged;  <--- richtiges Event
     }
 
@@ -86,7 +87,7 @@ public sealed partial class StorageLocationsViewPage1 : Page
     private async void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)
     {
         _displayMode = DataGridDisplayMode.UserSorted;
-        ViewModel.SortedByDwellTimeYellowFlag = true;
+        ViewModel.SortBy = e.Column.Tag.ToString();
         await ViewModel.SortByDwellTime.ExecuteAsync(null); //hier nochmal schauen
         bool isAscending = e.Column.SortDirection is null or (ctWinUI.DataGridSortDirection?)ctWinUI.DataGridSortDirection.Descending;
         e.Column.SortDirection = isAscending
