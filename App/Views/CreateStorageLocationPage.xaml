@@ -29,10 +29,11 @@
                 Header="Lagerort:" 
                 PlaceholderText="Bezeichnung hinzufügen" 
                 Text="{x:Bind Path=ViewModel.StorageName, Mode=TwoWay}"/>
-            <CheckBox x:Name="finalDispositionCheckbox"
-				Content="als 'Endgültiger Verbleib' festlegen" />
-            <!--Checked="Verbleib_Checked"-->
-			   <!-- Unchecked="Verbleib_Unchecked" />-->
+            <CheckBox x:Name="finalDestinationCheckbox"
+				Content="als 'Endgültiger Verbleib' festlegen"
+                IsChecked="{x:Bind Path=ViewModel.IsFinalDestination, Mode=TwoWay}"/>
+                <!--Checked="Verbleib_Checked"-->
+			    <!-- Unchecked="Verbleib_Unchecked" />-->
 			<NumberBox 
                 Margin="0,18,0,12" 
                 Header="Tage bis Status GELB:" 

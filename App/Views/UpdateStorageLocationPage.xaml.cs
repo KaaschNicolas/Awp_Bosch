@@ -25,7 +25,7 @@ public sealed partial class UpdateStorageLocationPage : Page
         });
         DataContext = ViewModel;
     }
-
+    
     public void UpdateStorageLocationButton_Click(object sender, RoutedEventArgs e)
     {
         Debug.WriteLine("Update_StorageLocation");

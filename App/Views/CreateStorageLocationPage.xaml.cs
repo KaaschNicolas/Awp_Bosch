@@ -26,6 +26,11 @@ public sealed partial class CreateStorageLocationPage : Page
         DataContext = ViewModel;
     }
 
+    public void checkFinalDestination(object sender, RoutedEventArgs e)
+    {
+        
+    }
+
     public void SaveStorageLocationButton_Click(object sender, RoutedEventArgs e)
     {
         Debug.WriteLine("Create_StorageLocation");
