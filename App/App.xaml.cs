@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+
 using Serilog;
 
 namespace App;
@@ -80,6 +81,7 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
             services.AddTransient<ILoggingService, LoggingService>();
 
+            services.AddTransient<ICrudService<Pcb>, CrudService<Pcb>>();
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
             services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
 
@@ -89,6 +91,10 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<TransfersViewModel>();
+            services.AddTransient<TransfersPage>();
+            services.AddTransient<PcbSingleViewModel>();
+            services.AddTransient<PcbSinglePage>();
             services.AddTransient<UpdateStorageLocationPage>();
             services.AddTransient<UpdateStorageLocationViewModel>();
             services.AddTransient<UpdatePcbTypeViewModel>();

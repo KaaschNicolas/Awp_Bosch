@@ -62,12 +62,21 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         }
     }
 
+    public bool _isFinalDestination;
+    public bool IsFinalDestination
+    {
+        get => _isFinalDestination;
+        set
+        {
+            _isFinalDestination = value;
+            OnPropertyChanged(nameof(IsFinalDestination));
+        }
+    }
+
+
     private readonly ICrudService<StorageLocation> _crudService;
-
     private readonly IDialogService _dialogService;
-
     private readonly IInfoBarService _infoBarService;
-
     private readonly INavigationService _navigationService;
 
 
@@ -152,7 +161,7 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
     
     public async void CreateStorageLocation()
     {
-        var sl = await _crudService.Create(new StorageLocation { StorageName = _storageName, DwellTimeYellow = _dwellTimeYellow, DwellTimeRed = _dwellTimeRed });
+        var sl = await _crudService.Create(new StorageLocation { StorageName = _storageName, DwellTimeYellow = _dwellTimeYellow, DwellTimeRed = _dwellTimeRed, IsFinalDestination=_isFinalDestination});
         _infoBarService.showMessage("Erfolgreich Lagerort erstellt", "Erfolg");
         _navigationService.NavigateTo("App.ViewModels.StorageLocationViewModel");
     }
