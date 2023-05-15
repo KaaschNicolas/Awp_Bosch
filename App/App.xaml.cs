@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+
 using Serilog;
 
 namespace App;
@@ -91,6 +92,8 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<UnauthorizedViewModel>();
+            services.AddTransient<UnauthorizedPage>();
             services.AddTransient<UpdateStorageLocationPage>();
             services.AddTransient<UpdateStorageLocationViewModel>();
             services.AddTransient<UpdatePcbTypeViewModel>();

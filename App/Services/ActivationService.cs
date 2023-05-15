@@ -1,5 +1,6 @@
 ﻿using App.Activation;
 using App.Contracts.Services;
+using App.Core.Services.Interfaces;
 using App.Views;
 
 using Microsoft.UI.Xaml;
@@ -12,13 +13,15 @@ public class ActivationService : IActivationService
     private readonly ActivationHandler<LaunchActivatedEventArgs> _defaultHandler;
     private readonly IEnumerable<IActivationHandler> _activationHandlers;
     private readonly IThemeSelectorService _themeSelectorService;
+    private readonly IAuthenticationService _authenticationService;
     private UIElement? _shell = null;
 
-    public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, IThemeSelectorService themeSelectorService)
+    public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, IThemeSelectorService themeSelectorService, IAuthenticationService authenticationService)
     {
         _defaultHandler = defaultHandler;
         _activationHandlers = activationHandlers;
         _themeSelectorService = themeSelectorService;
+        _authenticationService = authenticationService;
     }
 
     public async Task ActivateAsync(object activationArgs)
@@ -29,7 +32,15 @@ public class ActivationService : IActivationService
         // Set the MainWindow Content.
         if (App.MainWindow.Content == null)
         {
-            _shell = App.GetService<ShellPage>();
+            
+            if (_authenticationService.isAuthenticated())
+            {
+                _shell = App.GetService<ShellPage>();
+            }
+            else {
+                _shell = App.GetService<UnauthorizedPage>();
+            }
+
             App.MainWindow.Content = _shell ?? new Frame();
         }
 
