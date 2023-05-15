@@ -82,10 +82,12 @@ public partial class App : Application
 
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
             services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
+            services.AddTransient<ICrudService<User>, CrudService<User>>();
 
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
             services.AddTransient<IMockDataService, MockDataService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
 
 
             // Views and ViewModels

@@ -8,7 +8,12 @@
       "DeletedDate": "2023-10-08T18:25:43.511Z",
       "CreatedDate": "2013-07-06T18:25:43.511Z"
     },
-    "NotedBy": {},
+    "NotedBy": {
+      "Name": "Graham Vinson",
+      "AdUsername": "Martha Jennings",
+      "DeletedDate": "2023-10-08T18:25:43.511Z",
+      "CreatedDate": "2013-07-06T18:25:43.511Z"
+    },
     "Pcb": {
       "SerialNumber": "0006157531",
       "ErrorDescription": "Ishmael Gaines",
@@ -23,7 +28,12 @@
       },
       "Comment": {
         "Content": "Some Notes",
-        "NotedBy": {},
+        "NotedBy": {
+          "Name": "Graham Vinson",
+          "AdUsername": "Martha Jennings",
+          "DeletedDate": "2023-10-08T18:25:43.511Z",
+          "CreatedDate": "2013-07-06T18:25:43.511Z"
+        },
         "DeletedDate": "2023-10-08T18:25:43.511Z",
         "CreatedDate": "2013-07-06T18:25:43.511Z"
       },
@@ -47,7 +57,12 @@
       "DeletedDate": "2023-10-08T18:25:43.511Z",
       "CreatedDate": "2013-07-06T18:25:43.511Z"
     },
-    "NotedBy": {},
+    "NotedBy": {
+      "Name": "Graham Vinson",
+      "AdUsername": "Martha Jennings",
+      "DeletedDate": "2023-10-08T18:25:43.511Z",
+      "CreatedDate": "2013-07-06T18:25:43.511Z"
+    },
     "Pcb": {
       "SerialNumber": "0006157669",
       "ErrorDescription": "Ausgefallen",
@@ -62,7 +77,12 @@
       },
       "Comment": {
         "Content": "Kommentar",
-        "NotedBy": {},
+        "NotedBy": {
+          "Name": "Graham Vinson",
+          "AdUsername": "Martha Jennings",
+          "DeletedDate": "2023-10-08T18:25:43.511Z",
+          "CreatedDate": "2013-07-06T18:25:43.511Z"
+        },
         "DeletedDate": "2023-10-08T18:25:43.511Z",
         "CreatedDate": "2013-07-06T18:25:43.511Z"
       },
@@ -86,7 +106,12 @@
       "DeletedDate": "2023-10-08T18:25:43.511Z",
       "CreatedDate": "2013-07-06T18:25:43.511Z"
     },
-    "NotedBy": {},
+    "NotedBy": {
+      "Name": "Graham Vinson",
+      "AdUsername": "Martha Jennings",
+      "DeletedDate": "2023-10-08T18:25:43.511Z",
+      "CreatedDate": "2013-07-06T18:25:43.511Z"
+    },
     "Pcb": {
       "SerialNumber": "0006078538",
       "ErrorDescription": "Fehlerbeschreibung...",
@@ -101,7 +126,12 @@
       },
       "Comment": {
         "Content": "Kommentar",
-        "NotedBy": {},
+        "NotedBy": {
+          "Name": "Graham Vinson",
+          "AdUsername": "Martha Jennings",
+          "DeletedDate": "2023-10-08T18:25:43.511Z",
+          "CreatedDate": "2013-07-06T18:25:43.511Z"
+        },
         "DeletedDate": "2023-10-08T18:25:43.511Z",
         "CreatedDate": "2013-07-06T18:25:43.511Z"
       },
@@ -125,7 +155,12 @@
       "DeletedDate": "2023-10-08T18:25:43.511Z",
       "CreatedDate": "2013-07-06T18:25:43.511Z"
     },
-    "NotedBy": {},
+    "NotedBy": {
+      "Name": "Graham Vinson",
+      "AdUsername": "Martha Jennings",
+      "DeletedDate": "2023-10-08T18:25:43.511Z",
+      "CreatedDate": "2013-07-06T18:25:43.511Z"
+    },
     "Pcb": {
       "SerialNumber": "0006090550",
       "ErrorDescription": "Some Error",
@@ -140,7 +175,12 @@
       },
       "Comment": {
         "Content": "Notes",
-        "NotedBy": {},
+        "NotedBy": {
+          "Name": "Graham Vinson",
+          "AdUsername": "Martha Jennings",
+          "DeletedDate": "2023-10-08T18:25:43.511Z",
+          "CreatedDate": "2013-07-06T18:25:43.511Z"
+        },
         "DeletedDate": "2023-10-08T18:25:43.511Z",
         "CreatedDate": "2013-07-06T18:25:43.511Z"
       },
@@ -164,7 +204,12 @@
       "DeletedDate": "2023-10-08T18:25:43.511Z",
       "CreatedDate": "2013-07-06T18:25:43.511Z"
     },
-    "NotedBy": {},
+    "NotedBy": {
+      "Name": "Graham Vinson",
+      "AdUsername": "Martha Jennings",
+      "DeletedDate": "2023-10-08T18:25:43.511Z",
+      "CreatedDate": "2013-07-06T18:25:43.511Z"
+    },
     "Pcb": {
       "SerialNumber": "0006144734",
       "ErrorDescription": "Some  Error",
@@ -179,7 +224,12 @@
       },
       "Content": {
         "Name": "Comment",
-        "NotedBy": {},
+        "NotedBy": {
+          "Name": "Graham Vinson",
+          "AdUsername": "Martha Jennings",
+          "DeletedDate": "2023-10-08T18:25:43.511Z",
+          "CreatedDate": "2013-07-06T18:25:43.511Z"
+        },
         "DeletedDate": "2023-10-08T18:25:43.511Z",
         "CreatedDate": "2013-07-06T18:25:43.511Z"
       },
