@@ -189,6 +189,9 @@
                               Foreground="Coral"
                               VerticalAlignment="Top" />
                 </AppBarElementContainer>
+                <AppBarButton Click="FilterClear_Click"
+                              Icon="Refresh"
+                              Label="Reset" />
             </CommandBar>
         </StackPanel>
         <ctWinUI:DataGrid x:Name="DataGrid"

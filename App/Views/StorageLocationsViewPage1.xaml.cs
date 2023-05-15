@@ -21,6 +21,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using App.Core.Models;
 using App.Core.Models.Enums;
+using CommunityToolkit.WinUI.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -39,6 +40,8 @@ public sealed partial class StorageLocationsViewPage1 : Page
         Grouped,
         Search
     }
+
+    public StorageLocationPaginationViewModel ViewModel { get; }
 
     public StorageLocationsViewPage1()
     {
@@ -71,11 +74,13 @@ public sealed partial class StorageLocationsViewPage1 : Page
         DataGrid.ItemsSource =  ViewModel.StorageLocations; //nötig? weil schon in Xaml gebunden
         DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Ascending;
         DataGrid.SelectionChanged += DataGrid_SelectionChanged;
+        ViewModel.FilterOptions = StorageLocationFilterOptions.None;
     }
 
     private void Page_Unload(object sender, RoutedEventArgs e)
     {
         DataGrid.SelectionChanged -= DataGrid_SelectionChanged;
+        ViewModel.FilterOptions = StorageLocationFilterOptions.None;
     }
 
     private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -86,12 +91,18 @@ public sealed partial class StorageLocationsViewPage1 : Page
     private async void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)
     {
         _displayMode = DataGridDisplayMode.UserSorted;
+
+        _ = ViewModel.IsSortingAscending 
+            ? ViewModel.IsSortingAscending = false
+            : ViewModel.IsSortingAscending = true;
+        _ = ViewModel.IsSortingAscending
+            ? e.Column.SortDirection = ctWinUI.DataGridSortDirection.Ascending
+            : e.Column.SortDirection = ctWinUI.DataGridSortDirection.Descending;
+        _actualSortedColumn = e.Column;
+
         ViewModel.SortBy = e.Column.Tag.ToString();
         bool isAscending = e.Column.SortDirection is null or (ctWinUI.DataGridSortDirection?)ctWinUI.DataGridSortDirection.Descending;
-        ViewModel.IsSortingAscending = isAscending;
-        e.Column.SortDirection = isAscending
-            ? DataGrid.Columns[e.Column.DisplayIndex].SortDirection = ctWinUI.DataGridSortDirection.Ascending
-            : DataGrid.Columns[e.Column.DisplayIndex].SortDirection = ctWinUI.DataGridSortDirection.Descending;
+        
         await ViewModel.SortByDwellTime.ExecuteAsync(null); //hier nochmal schauen
     }
 
@@ -166,11 +177,16 @@ public sealed partial class StorageLocationsViewPage1 : Page
 
     private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)
     {
-        // Binding could do most of this ...
+        if (_actualSortedColumn != null)
+        {
+        _ = ViewModel.IsSortingAscending
+            ? DataGrid.Columns[_actualSortedColumn.DisplayIndex].SortDirection = ctWinUI.DataGridSortDirection.Ascending
+            : DataGrid.Columns[_actualSortedColumn.DisplayIndex].SortDirection = ctWinUI.DataGridSortDirection.Descending;
+        }
 
         // Remove Display Mode Indicators;
         FilterIndicator.Visibility = Visibility.Collapsed;
-       
+        SearchIndicator.Visibility = Visibility.Collapsed;
 
         // Remove Sort Indicators.
         if (dp == ctWinUI.DataGrid.ItemsSourceProperty)
@@ -186,12 +202,12 @@ public sealed partial class StorageLocationsViewPage1 : Page
             FilterIndicator.Visibility = Visibility.Visible;
         }
         
-        if (_displayMode == DataGridDisplayMode.UserSorted)
+        if (_displayMode == DataGridDisplayMode.Search)
         {
-            
+            SearchIndicator.Visibility = Visibility.Visible;
         }
 
     }
+    private DataGridColumn _actualSortedColumn;
 
-    public StorageLocationPaginationViewModel ViewModel { get; }
 }

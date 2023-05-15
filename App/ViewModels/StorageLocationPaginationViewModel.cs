@@ -52,6 +52,7 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
             () => _pageNumber != _pageCount && _filterOptions != StorageLocationFilterOptions.None
         );
 
+        _filterOptions = StorageLocationFilterOptions.None;
         _dialogService = dialogService;
         _infoBarService = infoBarService;
         _navigationService = navigationService;
