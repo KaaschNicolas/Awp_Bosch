@@ -1,12 +1,4 @@
-﻿using App.Contracts.Services;
-using App.ViewModels;
-using App.Views;
-
-using CommunityToolkit.Mvvm.ComponentModel;
-
-using Microsoft.UI.Xaml.Controls;
-
-namespace App.Services;
+﻿namespace App.Services;
 
 public class PageService : IPageService
 {
@@ -27,6 +19,8 @@ public class PageService : IPageService
         Configure<CreatePcbTypeViewModel, CreatePcbTypePage>();
         Configure<UpdatePcbTypeViewModel, UpdatePcbTypePage>();
         Configure<CreatePcbViewModel, CreatePcbPage>();
+        Configure<PcbSingleViewModel, PcbSinglePage>();
+        Configure<TransfersViewModel, TransfersPage>();
     }
 
     public Type GetPageType(string key)
