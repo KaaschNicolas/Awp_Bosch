@@ -1,25 +1,4 @@
-﻿using App.Activation;
-using App.Contracts.Services;
-using App.Core.Contracts.Services;
-using App.Core.DataAccess;
-using App.Core.Helpers;
-using App.Core.Models;
-using App.Core.Services;
-using App.Core.Services.Interfaces;
-using App.Models;
-using App.Services;
-using App.ViewModels;
-using App.Views;
-
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.UI.Xaml;
-
-using Serilog;
-
-namespace App;
+﻿namespace App;
 
 // To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
 public partial class App : Application
@@ -83,11 +62,12 @@ public partial class App : Application
 
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
             services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
-            services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
-            services.AddTransient<ICrudService<Pcb>, CrudService<Pcb>>();
+            services.AddTransient<ICrudService<User>, CrudService<User>>();
 
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
+            services.AddTransient<ITransferDataService<Transfer>, TransferDataService<Transfer>>();
             services.AddTransient<IMockDataService, MockDataService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
 
 
             // Views and ViewModels
