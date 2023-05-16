@@ -21,20 +21,4 @@ public sealed partial class SettingsPage : Page
         ViewModel = App.GetService<SettingsViewModel>();
         InitializeComponent();
     }
-
-    // Laufzettel Drucken
-    private async void OnPrintButtonClicked(object sender, RoutedEventArgs e)
-    {
-        IPrintService printSerivce = new PrintService();
-        await printSerivce.Print(ContentArea);
-    }
-
-    // Matrix Code generieren
-    private void OnDataMatrixButtonClicked(object sender, RoutedEventArgs e)
-    {
-        IDataMatrixService dataMatrixService = new DataMatrixService();
-        var data = text_test.Text;
-        var path = @"C:\Logs";
-        dataMatrixService.SaveDataMatrix(data, path);
-    }
 }
