@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace App.Core.Services
 {
-    public class TransferDataService<T> : CrudServiceBase<T> where T : Transfer
+    public class TransferDataService<T> : CrudServiceBase<T> , ITransferDataService<T> where T : Transfer
     {
         public TransferDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) { }
 
