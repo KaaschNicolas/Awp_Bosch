@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Formats.Asn1;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using App.Contracts.Services;
 using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Models.Enums;
@@ -15,45 +17,53 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 
 namespace App.ViewModels;
-public class StorageLocationPaginationViewModel : ObservableRecipient
+public partial class StorageLocationPaginationViewModel : ObservableRecipient
 {   
-    public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService)
+    public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService)
     {
         _crudService = crudService;
         FirstAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(1, _pageSize, false),
+            async () => await GetStorageLocations(1, _pageSize, _isSortingAscending),
             () => _pageNumber != 1
         );
 
         PreviousAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageNumber -1, _pageSize, false),
+            async () => await GetStorageLocations(_pageNumber -1, _pageSize, _isSortingAscending),
             () => _pageNumber > 1
         );
 
         NextAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageNumber + 1, _pageSize, false),
+            async () => await GetStorageLocations(_pageNumber + 1, _pageSize, _isSortingAscending),
             () => _pageNumber < _pageCount
         );
 
         LastAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageCount, _pageSize, false),
+            async () => await GetStorageLocations(_pageCount, _pageSize, _isSortingAscending),
             () => _pageNumber != _pageCount
         );
 
         SortByDwellTime = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageCount, _pageSize, true),
+            async () => await GetStorageLocations(_pageNumber, _pageSize, _isSortingAscending),
             () => _pageNumber != _pageCount
         );
 
         FilterItems = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageNumber, _pageSize, false),
+            async () => await GetStorageLocations(_pageNumber, _pageSize, _isSortingAscending),
             () => _pageNumber != _pageCount && _filterOptions != StorageLocationFilterOptions.None
         );
+
+        _filterOptions = StorageLocationFilterOptions.None;
+        _dialogService = dialogService;
+        _infoBarService = infoBarService;
+        _navigationService = navigationService;
 
         Refresh();
     }
 
     private readonly IStorageLocationDataService<StorageLocation> _crudService;
+    private readonly IDialogService _dialogService;
+    private readonly IInfoBarService _infoBarService;
+    private readonly INavigationService _navigationService;
 
     public IAsyncRelayCommand FirstAsyncCommand { get; }
     public IAsyncRelayCommand PreviousAsyncCommand { get; }
@@ -65,9 +75,15 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
     private int _pageSize = 10;
     private int _pageNumber;
     private int _pageCount;
-    private bool _sortedByDwellTimeYellow;
     private string _queryText;
-    private List<StorageLocation> _storageLocations;
+    private string _sortyBy;
+
+    [ObservableProperty]
+    private ObservableCollection<StorageLocation> _storageLocations;
+
+    [ObservableProperty]
+    private bool _isSortingAscending;
+
     private StorageLocationFilterOptions _filterOptions;
     public List<int> PageSizes => new() { 5, 10, 15, 20 };
 
@@ -86,19 +102,17 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
     }
 
     public int PageCount { get => _pageCount; private set => SetProperty(ref _pageCount, value); }
-    public bool SortedByDwellTimeYellowFlag { get => _sortedByDwellTimeYellow; set => SetProperty(ref _sortedByDwellTimeYellow, value); }
     public StorageLocationFilterOptions FilterOptions { get => _filterOptions; set => SetProperty(ref _filterOptions, value); }
+    public string SortBy { get => _sortyBy; set => SetProperty(ref _sortyBy, value); }
 
-    public List<StorageLocation> StorageLocations { get => _storageLocations; private set => SetProperty(ref _storageLocations, value); }
+    
+    [ObservableProperty]
+    private StorageLocation _selectedItem;
 
     private async Task GetStorageLocations(int pageIndex, int pageSize, bool isAscending)
     {
         Response<List<StorageLocation>> storageLocations;
         Response<int> maxEntries;
-
-        _ = SortedByDwellTimeYellowFlag is true 
-            ? storageLocations = await _crudService.GetAllSortedBy(pageIndex, pageSize, "DwellTimeYellow", isAscending) 
-            : storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
 
         if (FilterOptions != StorageLocationFilterOptions.None)
         {
@@ -130,7 +144,7 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
                     break;
                 default:
                     maxEntries = await _crudService.MaxEntries();
-                    storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+                    storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize, _sortyBy, isAscending);
                     break;
             }
 
@@ -144,13 +158,17 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
                 );
                 PageNumber = storageLocationsPaginated.PageIndex;
                 PageCount = storageLocationsPaginated.PageCount;
-                StorageLocations = storageLocationsPaginated;
+                //StorageLocations = storageLocationsPaginated;
+
+                ObservableCollection<StorageLocation> copy = new();
+                storageLocationsPaginated.ForEach(x => copy.Add(x));
+                StorageLocations = copy;
             }
         }
         else
         {
             maxEntries = await _crudService.MaxEntries();
-            storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize);
+            storageLocations = await _crudService.GetAllQueryable(pageIndex, pageSize, _sortyBy, isAscending);
 
             if (storageLocations.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
             {
@@ -162,7 +180,11 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
                 );
                 PageNumber = storageLocationsPaginated.PageIndex;
                 PageCount = storageLocationsPaginated.PageCount;
-                StorageLocations = storageLocationsPaginated;
+                //StorageLocations = storageLocationsPaginated;
+
+                ObservableCollection<StorageLocation> copy = new();
+                storageLocationsPaginated.ForEach(x => copy.Add(x));
+                StorageLocations = copy;
             }
         }
 
@@ -171,6 +193,27 @@ public class StorageLocationPaginationViewModel : ObservableRecipient
         NextAsyncCommand.NotifyCanExecuteChanged();
         LastAsyncCommand.NotifyCanExecuteChanged();
         FilterItems.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand]
+    public async void Delete()
+    {
+        var result = await _dialogService.ConfirmDeleteDialogAsync("Sachnummer Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?");
+        if (result != null && result == true)
+        {
+            StorageLocation storageLocationToRemove = _selectedItem;
+            _storageLocations.Remove(storageLocationToRemove);
+            await _crudService.Delete(storageLocationToRemove);
+            _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
+
+        }
+    }
+
+    [RelayCommand]
+    public void NavigateToUpdate(StorageLocation storageLocation)
+    {
+        _navigationService.NavigateTo("App.ViewModels.UpdateStorageLocationViewModel", storageLocation);
+
     }
 
     private void Refresh()

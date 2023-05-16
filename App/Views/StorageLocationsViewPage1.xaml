@@ -7,10 +7,55 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="using:App.Behaviors"
       xmlns:ctWinUI="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:viewModels="using:App.ViewModels"
       mc:Ignorable="d"
       Background="Transparent">
+    
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate x:DataType="viewModels:StorageLocationPaginationViewModel">
+            <Grid Margin="0,0,50,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
+                <CommandBar
+                    Grid.Column="0"
+                    Padding="0"
+                    Background="Transparent"
+                    DefaultLabelPosition="Right"
+                    IsOpen="False">
+                    <CommandBar.Content>
+                        <!--  Get MainPageTitle.Text from localizx:ed resources  -->
+                        <TextBlock Text="Lagerort" />
+                    </CommandBar.Content>
+
+                    <!--  All your AppBar buttons  -->
+                    <!--  Get SendAppBarButton.Label from localized resources  -->
+                    <AppBarButton
+                        Click="CreatStorageLocationButton_Click"
+                        Icon="Add"
+                        Label="Hinzufügen" />
+                    <AppBarButton Icon="Refresh" Label="Neu Laden" />
+
+                </CommandBar>
+                <StackPanel
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Background="{ThemeResource CommandBarBackground}">
+                    <AutoSuggestBox
+                        x:Name="search_box"
+                        Width="200px"
+                        BorderThickness="0"
+                        PlaceholderText="Search"
+                        QueryIcon="Find" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
     <Grid Margin="0 0 0 80">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -144,12 +189,17 @@
                               Foreground="Coral"
                               VerticalAlignment="Top" />
                 </AppBarElementContainer>
+                <AppBarButton Click="FilterClear_Click"
+                              Icon="Refresh"
+                              Label="Reset" />
             </CommandBar>
         </StackPanel>
         <ctWinUI:DataGrid x:Name="DataGrid"
                           ItemsSource="{x:Bind ViewModel.StorageLocations, Mode=OneWay}"
+                          SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
                           AutoGenerateColumns="False"
-                          CanUserSortColumns="False"
+                          CanUserSortColumns="True"
+                          Sorting="DataGrid_Sorting"
                           SelectionMode="Single"
                           IsReadOnly="True"
                           RowDetailsVisibilityMode="Collapsed"
@@ -163,13 +213,39 @@
             <ctWinUI:DataGrid.Columns>
                 <ctWinUI:DataGridTextColumn Header="Name"
                                             Binding="{Binding StorageName}"
-                                            Tag="Name" />
+                                            Tag="StorageName" />
                 <ctWinUI:DataGridComboBoxColumn Header="Liegezeit Gelb"
                                                 Binding="{Binding DwellTimeYellow}"
-                                                Tag="Liegezeit Gelb" />
+                                                Tag="DwellTimeYellow" />
                 <ctWinUI:DataGridTextColumn Header="Liegezeit Rot"
                                             Binding="{Binding DwellTimeRed}"
-                                            Tag="Liegezeit Rot" />
+                                            Tag="DwellTimeRed" />
+                <controls:DataGridTemplateColumn Width="100" Header="Aktion">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <AppBarButton
+                                Width="60"
+                                VerticalAlignment="Center"
+                                Background="Transparent"
+                                Icon="More"
+                                LabelPosition="Collapsed">
+                                <AppBarButton.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                        <MenuFlyoutItem
+                                            Click="NavigateToUpdate"
+                                            Icon="Edit"
+                                            Text="Bearbeiten" />
+                                        <MenuFlyoutItem
+                                            Click="DeleteClick"
+                                            Icon="Delete"
+                                            Text="Löschen" />
+                                    </MenuFlyout>
+                                </AppBarButton.Flyout>
+                            </AppBarButton>
+
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
             </ctWinUI:DataGrid.Columns>
         </ctWinUI:DataGrid>
     </Grid>

@@ -19,11 +19,12 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
 {
     public StorageLocationDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) { }
 
-    public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize)
+    public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty, bool isAscending)
     {
         try
         {
             var data = await _boschContext.Set<T>()
+                .OrderBy(orderByProperty, isAscending)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -102,11 +103,24 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
     {
         try
         {
-            var data = await _boschContext.Set<T>()
+            List<T> data;
+
+            if (pageIndex == 0)
+            {
+                data = await _boschContext.Set<T>()
                 .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
-                .Skip((pageIndex -1) * pageSize)
+                .Skip((pageIndex) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+            }
+            else
+            {
+                data = await _boschContext.Set<T>()
+                    .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
+                    .Skip((pageIndex -1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            }
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
