@@ -8,6 +8,12 @@
     xmlns:viewModels="using:App.ViewModels"
     mc:Ignorable="d">
 
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate x:DataType="viewModels:PcbTypeViewModel">
+            <TextBlock Text="Leiterplatte hinzufügen" />
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+
     <Grid x:Name="ContentArea">
         <ScrollViewer>
             <Grid
@@ -76,6 +82,11 @@
                     Grid.Row="3"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
+                    Padding="20"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
                     Orientation="Vertical">
                     <TextBlock Text="Fehlerbeschreibung Teil 1" />
                     <TextBox
@@ -91,6 +102,11 @@
                     Grid.Row="3"
                     Grid.Column="2"
                     Grid.ColumnSpan="2"
+                    Padding="20"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
                     Spacing="10">
                     <StackPanel Grid.Column="0" Orientation="Vertical">
                         <TextBlock Text="Fehlerbeschreibung Teil 2" />
