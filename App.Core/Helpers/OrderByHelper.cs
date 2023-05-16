@@ -15,7 +15,7 @@ namespace App.Core.Helpers
             string orderByProperty,
             bool desc)
         {
-            string command = desc ? "OrderByDescending" : "OrderBy";
+            string command = desc ? "OrderBy" : "OrderByDescending";
             Type type = typeof(TEntity);
             PropertyInfo property = type.GetProperty(orderByProperty);
             ParameterExpression parameter = Expression.Parameter(
