@@ -9,6 +9,161 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
-     
+        <ScrollViewer>
+            <Grid
+                Padding="0,0,20,20"
+                ColumnSpacing="20"
+                RowSpacing="20">
+
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+
+                <TextBox
+                    Grid.Column="0"
+                    Header="Ausgefallen am"
+                    Text="{x:Bind ViewModel.CreatedAt}" />
+
+                <TextBox
+                    Grid.Column="1"
+                    Header="Aufgenommen von"
+                    PlaceholderText="Benutzername" />
+
+                <AutoSuggestBox
+                    x:Name="PcbPartNumber"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    DisplayMemberPath="PcbPartNumber"
+                    Header="Sachnummer"
+                    ItemsSource="{x:Bind ViewModel.PcbTypes}"
+                    PlaceholderText="10-Stellige Sachnummer"
+                    SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                    Text="{x:Bind ViewModel.SelectedPcbType}"
+                    TextChanged="AutoSuggestBox_TextChanged"
+                    TextMemberPath="PcbPartNumber" />
+
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Header="Seriennummer"
+                    PlaceholderText="10-Stellige Seriennummer"
+                    Text="{x:Bind ViewModel.SerialNumber, Mode=TwoWay}" />
+
+
+                <TextBlock
+                    Grid.Row="2"
+                    FontSize="20"
+                    Text="Aufnahme Fehler" />
+
+                <StackPanel
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Orientation="Vertical">
+                    <TextBlock Text="Fehlerbeschreibung Teil 1" />
+                    <TextBox
+                        Header="Fehler ID"
+                        PlaceholderText="M1.."
+                        Text="{x:Bind ViewModel.ErrorCode1, Mode=TwoWay}" />
+                    <TextBox
+                        Header="Fehlerbeschreibung"
+                        PlaceholderText="Fehlerbeschreibung eintragen"
+                        Text="{x:Bind ViewModel.ErrorDescription1, Mode=TwoWay}" />
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    Spacing="10">
+                    <StackPanel Grid.Column="0" Orientation="Vertical">
+                        <TextBlock Text="Fehlerbeschreibung Teil 2" />
+                        <TextBox
+                            Header="Fehler ID"
+                            PlaceholderText="M1.."
+                            Text="{x:Bind ViewModel.ErrorCode2, Mode=TwoWay}" />
+                        <TextBox
+                            Header="Fehlerbeschreibung"
+                            PlaceholderText="Fehlerbeschreibung eintragen"
+                            Text="{x:Bind ViewModel.ErrorDescription2, Mode=TwoWay}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBox
+                    Grid.Row="4"
+                    Header="Einschränkung"
+                    Text="{x:Bind ViewModel.Restriction, Mode=TwoWay}" />
+                <TextBlock
+                    Grid.Row="5"
+                    FontSize="20"
+                    Text="Weitergabe" />
+
+                <Grid
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    ColumnSpacing="20"
+                    RowSpacing="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Header="Am"
+                        Text="{x:Bind ViewModel.CreatedAt}" />
+                    <ComboBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        DisplayMemberPath="StorageName"
+                        Header="Lagerot"
+                        ItemsSource="{x:Bind ViewModel.StorageLocations}"
+                        PlaceholderText="Lagerort auswählen"
+                        SelectedItem="{x:Bind ViewModel.SelectedStorageLocation, Mode=TwoWay}"
+                        SelectedValuePath="ID" />
+
+                    <TextBox
+                        Grid.Row="1"
+                        Header="Anmerkung"
+                        Text="{x:Bind ViewModel.Comment, Mode=TwoWay}" />
+
+                </Grid>
+                <StackPanel
+                    Grid.Row="7"
+                    Margin="0,10,0,0"
+                    Orientation="Horizontal"
+                    Spacing="10">
+                    <Button
+                        Command="{x:Bind ViewModel.SaveCommand}"
+                        Content="Hinzufügen"
+                        Style="{StaticResource AccentButtonStyle}" />
+                    <Button Content="Abbrechen" />
+                </StackPanel>
+
+            </Grid>
+        </ScrollViewer>
+
     </Grid>
 </Page>

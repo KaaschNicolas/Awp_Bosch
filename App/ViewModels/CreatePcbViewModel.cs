@@ -4,12 +4,13 @@ using App.Core.Models;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace App.ViewModels;
 
 public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
 {
-    private readonly IPcbDataService<Pcb> _pcbDataService;
+    private readonly ICrudService<Pcb> _pcbCrudService;
     private readonly ICrudService<PcbType> _pcbTypeCrudService;
     private readonly ICrudService<StorageLocation> _storageLocationCrudService;
     private readonly IInfoBarService _infoBarService;
@@ -18,10 +19,10 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     private DateTime createdAt = DateTime.Now;
 
     [ObservableProperty]
-    private User? _user = null;
+    private User _user;
 
     [ObservableProperty]
-    private PcbType _selectedPcbTypes;
+    private PcbType _selectedPcbType;
 
     [ObservableProperty]
     private string _serialNumber;
@@ -47,34 +48,43 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     [ObservableProperty]
     private string _comment;
 
-    private List<StorageLocation> _storageLocations = new();
+    [ObservableProperty]
+    private ObservableCollection<StorageLocation> _storageLocations;
 
-    private List<PcbType> _pcbTypes = new();
-    public CreatePcbViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<PcbType> pcbTypesCrudService, IInfoBarService infoBarService)
+    [ObservableProperty]
+    private ObservableCollection<PcbType> _pcbTypes;
+    public CreatePcbViewModel(ICrudService<Pcb> pcbCrudService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<PcbType> pcbTypesCrudService, IInfoBarService infoBarService)
     {
-        _pcbDataService = pcbDataService;
+        _pcbCrudService = pcbCrudService;
         _storageLocationCrudService = storageLocationCrudService;
         _pcbTypeCrudService = pcbTypesCrudService;
         _infoBarService = infoBarService;
+
+        _storageLocations = new ObservableCollection<StorageLocation>();
+        _pcbTypes = new ObservableCollection<PcbType>();
     }
 
-
-
-
-
     [RelayCommand]
-    public async void Save()
+    public async Task Save()
     {
-        Comment comment = new Comment { Content = _comment };
-        Transfer transfer = new Transfer { StorageLocation = _selectedStorageLocation };
+        Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = 1 };
         ErrorType errorType1 = new ErrorType { Code = _errorCode1, ErrorDescription = _errorDescription1 };
         ErrorType errorType2 = new ErrorType { Code = _errorCode2, ErrorDescription = _errorDescription2 };
-
+        Device restriction = new Device { Name = _restriction };
         var errorTypes = new List<ErrorType> { errorType1, errorType2 };
 
-        Device device = new Device();
-        Pcb pcb = new Pcb { SerialNumber = _serialNumber, Finalized = false, PcbType = _selectedPcbTypes };
-        var response = await _pcbDataService.Create(transfer, pcb, errorTypes, device, comment);
+        var transfers = new List<Transfer>() { transfer };
+
+        Pcb pcb = new Pcb
+        {
+            SerialNumber = _serialNumber,
+            Finalized = false,
+            PcbTypeId = _selectedPcbType.Id,
+            Transfers = transfers,
+            Restriction = restriction,
+            ErrorTypes = errorTypes,
+        };
+        var response = await _pcbCrudService.Create(pcb);
 
 
         if (response != null)
@@ -99,14 +109,20 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
         var pcbResponse = await _pcbTypeCrudService.GetAll();
         if (pcbResponse != null)
         {
-
-            _pcbTypes = pcbResponse.Data;
+            foreach (var item in pcbResponse.Data)
+            {
+                _pcbTypes.Add(item);
+            }
         }
 
         var storageLocationResponse = await _storageLocationCrudService.GetAll();
         if (storageLocationResponse != null)
         {
-            _storageLocations = storageLocationResponse.Data;
+            foreach (var item in storageLocationResponse.Data)
+            {
+                _storageLocations.Add(item);
+            }
+
         }
 
     }

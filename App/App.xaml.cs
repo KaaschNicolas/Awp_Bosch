@@ -83,8 +83,9 @@ public partial class App : Application
 
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
             services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
-
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
+            services.AddTransient<ICrudService<Pcb>, CrudService<Pcb>>();
+
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
             services.AddTransient<IMockDataService, MockDataService>();
 
@@ -122,7 +123,7 @@ public partial class App : Application
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
- 
+
             services.AddDbContext<BoschContext>(
                 options => options.UseSqlServer(ConfigurationHelper.Configuration.GetConnectionString("BoschContext")),
                 ServiceLifetime.Transient);
