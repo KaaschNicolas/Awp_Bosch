@@ -103,11 +103,24 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
     {
         try
         {
-            var data = await _boschContext.Set<T>()
+            List<T> data;
+
+            if (pageIndex == 0)
+            {
+                data = await _boschContext.Set<T>()
                 .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
-                .Skip((pageIndex -1) * pageSize)
+                .Skip((pageIndex) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+            }
+            else
+            {
+                data = await _boschContext.Set<T>()
+                    .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
+                    .Skip((pageIndex -1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            }
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
