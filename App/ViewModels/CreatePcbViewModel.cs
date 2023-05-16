@@ -14,6 +14,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     private readonly ICrudService<PcbType> _pcbTypeCrudService;
     private readonly ICrudService<StorageLocation> _storageLocationCrudService;
     private readonly IInfoBarService _infoBarService;
+    private readonly INavigationService _navigationService;
 
     [ObservableProperty]
     private DateTime createdAt = DateTime.Now;
@@ -53,12 +54,13 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
 
     [ObservableProperty]
     private ObservableCollection<PcbType> _pcbTypes;
-    public CreatePcbViewModel(ICrudService<Pcb> pcbCrudService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<PcbType> pcbTypesCrudService, IInfoBarService infoBarService)
+    public CreatePcbViewModel(ICrudService<Pcb> pcbCrudService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<PcbType> pcbTypesCrudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _pcbCrudService = pcbCrudService;
         _storageLocationCrudService = storageLocationCrudService;
         _pcbTypeCrudService = pcbTypesCrudService;
         _infoBarService = infoBarService;
+        _navigationService = navigationService;
 
         _storageLocations = new ObservableCollection<StorageLocation>();
         _pcbTypes = new ObservableCollection<PcbType>();
@@ -92,6 +94,8 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
             if (response.Code == ResponseCode.Success)
             {
                 _infoBarService.showMessage("Leiterplatte erfolgreich erstellt", "Erfolg");
+                // TODO: when List View exists, navigate to it after successfull creation of Pcb
+                // _navigationService.NavigateTo("App.ViewModels.ListPcbViewModel");
             }
             else
             {
