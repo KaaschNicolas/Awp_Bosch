@@ -1,4 +1,11 @@
-﻿namespace App.Services;
+﻿using App.Contracts.Services;
+using App.ViewModels;
+using App.Views;
+
+using CommunityToolkit.Mvvm.ComponentModel;
+
+using Microsoft.UI.Xaml.Controls;
+namespace App.Services;
 
 public class PageService : IPageService
 {
