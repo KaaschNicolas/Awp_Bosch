@@ -87,6 +87,7 @@ public partial class App : Application
             services.AddTransient<ICrudService<Pcb>, CrudService<Pcb>>();
 
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
+            services.AddTransient<IPcbDataService<Pcb>, PcbDataService<Pcb>>();
             services.AddTransient<ITransferDataService<Transfer>, TransferDataService<Transfer>>();
             services.AddTransient<IMockDataService, MockDataService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
@@ -99,6 +100,7 @@ public partial class App : Application
             services.AddTransient<TransfersPage>();
             services.AddTransient<PcbSingleViewModel>();
             services.AddTransient<PcbSinglePage>();
+            services.AddTransient<PcbPaginationViewModel>();
             services.AddTransient<UpdateStorageLocationPage>();
             services.AddTransient<UpdateStorageLocationViewModel>();
             services.AddTransient<UpdatePcbTypeViewModel>();

@@ -20,6 +20,7 @@
     <None Remove="Controls\ErrorCardUserControl.xaml" />
     <None Remove="Views\CreateDiagnosePage.xaml" />
     <None Remove="Views\DiagnosePage.xaml" />
+    <None Remove="Views\PcbViewPage.xaml" />
     <None Remove="Views\UpdateDiagnosePage.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -78,7 +79,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Controls\ErrorCardUserControl.xaml">
+    <Page Update="Views\PcbViewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
