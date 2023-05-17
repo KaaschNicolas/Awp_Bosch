@@ -97,7 +97,7 @@
                 <TextBlock FontSize="18"
 						   Text="Seriennummer:"/>
                 <TextBlock Margin="5,0,0,0" FontWeight="Bold" FontSize="18"
-						   Text="{x:Bind Path=ViewModel.SerialNumber, Mode=OneWay}"/>
+						   Text="{x:Bind Path=ViewModel.SerialNumber, Mode=TwoWay}"/>
             </StackPanel>
             <StackPanel
 				Margin="0,15,0,0"
@@ -106,13 +106,13 @@
                 <TextBlock
 					Margin="0,5,0,0"
 					Text="Ausgefallen am:" />
-                <CalendarDatePicker
+                    <CalendarDatePicker
 					x:Name="dateOfFailure"
 					Margin="5,0,25,0"
 					VerticalAlignment="Top"
 					PlaceholderText="Pick a date"
 					IsHitTestVisible="false"/>
-                <!--DateChanded="CalendarDatePicker_DateChanged"/>-->
+                    <!--="{x:Bind Path=ViewModel.CreatedDate}"/>-->
                 <TextBlock
 					Margin="0,5,0,0"
 					Text="Aufgenommenen von:"/>
@@ -132,7 +132,7 @@
 				IsClosable="False"
 				Margin="0,0,0,0"
 				Title="Einschränkung"
-				Message="{x:Bind Path=ViewModel.Restriction, Mode=OneWay}" />
+				Message="{x:Bind Path=ViewModel.Restriction.Name, Mode=OneWay}" />
 
 
             <StackPanel
@@ -202,7 +202,7 @@
         AreRowGroupHeadersFrozen="True"
         AutoGenerateColumns="False"
         CanUserSortColumns="False"
-        CanUserReorderColumns="True"
+        CanUserReorderColumns="False"
         CanUserResizeColumns="True"
         ColumnHeaderHeight="32"
         MaxColumnWidth="400"
@@ -226,7 +226,7 @@
                                     </grid>
                                     </datatemplate>
                                 </controls:datagridtemplatecolumn.celltemplate>-->
-                            <controls:DataGridTextColumn Binding="{Binding StorageLocation, Mode=OneWay}" Header="Lagerort"/>
+                            <controls:DataGridTextColumn x:Name="_storageLocation" Header="Lagerort"/>
                             <controls:DataGridTextColumn Binding="{Binding TransferComment, Mode=OneWay}" Header="Comment"/>
                             <!--<controls:datagridtemplatecolumn header="standort" tag="storagelocation">
                                 <controls:datagridtemplatecolumn.celltemplate>
@@ -314,11 +314,37 @@
         <StackPanel
 			Grid.Column="2"
 			Grid.Row="0"
-			Grid.RowSpan="3"
-			Margin="0,30,0,0"
+			Grid.RowSpan="2"
+			Margin="0,0,0,0"
 			Orientation="Vertical"
-            ScrollViewer.VerticalScrollMode="Disabled">
-                <Rectangle
+            ScrollViewer.VerticalScrollMode="Disabled"
+            Background="White"
+            Height="250" Width="280">
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock Margin="20,20,0,0" Text="Status:"/>
+                    <TextBlock Margin="20,20,0,0" FontWeight="Bold" 
+                        Text="{x:Bind Path=ViewModel.Status, Mode=OneWay}"/>
+                </StackPanel>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock Margin="20,20,0,0" Text="im Umlauf seit:"/>
+                </StackPanel>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock Margin="20,20,0,0" Text="aktueller Standort:"/>
+                    <TextBlock Margin="20,20,0,0" FontWeight="Bold" Text="{x:Bind Path=ViewModel.Storage, Mode=TwoWay}"/>
+                </StackPanel>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock Margin="20,20,0,0" Text="Verweildauer:"/>
+                </StackPanel>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock Margin="20,20,0,0" Text="letzte Bearbeitung:"/>
+                </StackPanel>
+            </StackPanel>
+            <!--<Rectangle
 				Fill="White" Stroke="LightGray" StrokeThickness="0.5"
 				Height="250" Width="280"
 				RadiusX="4" RadiusY="4"
@@ -328,8 +354,7 @@
 				Height="100" Width="280"
 				RadiusX="4" RadiusY="4"
 				Margin="0,20,0,0"
-				HorizontalAlignment="Right"/>
-        </StackPanel>
+				HorizontalAlignment="Right"/>-->
 
         <!--<ContentControl  ContentTemplate="{StaticResource TransfersPage}"/>-->
 

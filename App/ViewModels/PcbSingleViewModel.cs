@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace App.ViewModels;
 
@@ -27,6 +28,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     [ObservableProperty]
     private Pcb _selectedItem;
+
+    /*[ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private DateTime _createdDate;*/
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -66,6 +72,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
+    private string _status;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
     private PcbType _pcbType;
 
     [ObservableProperty]
@@ -94,9 +105,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private string _transferComment;
 
     [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
-    private StorageLocation _storageLocation;
+    private string _storage;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -118,28 +127,35 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     public PcbSingleViewModel(ICrudService<Pcb> crudService, ICrudService<StorageLocation> storageService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, ITransferDataService<Transfer> transfersService)
     {
-        _crudService = crudService;
-        _storageService = storageService;
-        _dialogService = dialogService;
-        _infoBarService = infoBarService;
-        _navigationService = navigationService;
-        _transfersService = transfersService;
-        _transfers = new ObservableCollection<Transfer>();
-        mockData = new()
+        try
         {
-            Id = 1,
-            CreatedDate = DateTime.Now,
-            SerialNumber = "0000652125",
-            ErrorDescription = "ErrorMessage",
-            Restriction = null,
-            Finalized = false,
-
-            ErrorTypes = new List<ErrorType>()
+            _crudService = crudService;
+            _storageService = storageService;
+            _dialogService = dialogService;
+            _infoBarService = infoBarService;
+            _navigationService = navigationService;
+            _transfersService = transfersService;
+            _transfers = new ObservableCollection<Transfer>();
+            mockData = new()
             {
-                new ErrorType(){Id=1, Code="M320", ErrorDescription="Beschreibung:Verbindung kann nicht hergestellt werden" }
+                Id = 1,
+                CreatedDate = DateTime.Now,
+                SerialNumber = "0000652125",
+                ErrorDescription = "ErrorMessage",
+                Restriction = null,
+                Finalized = false,
 
-            }
-        };
+                ErrorTypes = new List<ErrorType>()
+                {
+                    new ErrorType(){Id=1, Code="M320", ErrorDescription="Beschreibung:Verbindung kann nicht hergestellt werden" }
+
+                }
+            };
+        }
+        catch(Exception e)
+        {
+            Debug.WriteLine(e);
+        }
     }
 
     [RelayCommand]
@@ -167,10 +183,19 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _pcb = response.Data as Pcb;
             
             _serialNumber = response.Data.SerialNumber;
+            //_createdDate = response.Data.CreatedDate;
             _restriction = response.Data.Restriction;
             _errorDescription = response.Data.ErrorDescription;
             _errorTypes = response.Data.ErrorTypes;
             _finalized = response.Data.Finalized;
+            if (!_finalized)
+            {
+                _status = "offen";
+            }
+            else
+            {
+                _status = "abgeschlossen";
+            }
             _pcbType = response.Data.PcbType;
             _comment = response.Data.Comment;
             _diagnose = response.Data.Diagnose;
@@ -186,7 +211,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         {
             foreach (var transfer in transfers.Data)
             {
-                
+                _storage= transfer.StorageLocation.StorageName;
                 _transfers.Add(transfer);
             }
         }
@@ -195,14 +220,15 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _infoBarService.showError("Couldn't load transfer list", "Transfer List");
         }
         //_id = _pcb.Id;
-        _serialNumber = _pcb.SerialNumber;
+        /*_serialNumber = _pcb.SerialNumber;
+        //_createdDate = _pcb.CreatedDate;    
         _restriction = _pcb.Restriction;
         _errorDescription = _pcb.ErrorDescription;
         _errorTypes = _pcb.ErrorTypes;
         _finalized = _pcb.Finalized;
         _pcbType = _pcb.PcbType;
         _comment = _pcb.Comment;
-        _diagnose =  _pcb.Diagnose;
+        _diagnose =  _pcb.Diagnose;*/
     }
 
     public void OnNavigatedFrom()
