@@ -83,21 +83,47 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [Required]
     private ObservableCollection<Transfer> _transfers;
 
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private Transfer _transfer;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private string _transferComment;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private StorageLocation _storageLocation;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private User _notedBy;
+
+
+
     private int _id;
     
     private Pcb _pcb;
 
     private readonly ICrudService<Pcb> _crudService;
+    private readonly ICrudService<StorageLocation> _storageService;
     private readonly IDialogService _dialogService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
+    private readonly ITransferDataService<Transfer> _transfersService;
 
-    public PcbSingleViewModel(ICrudService<Pcb> crudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService)
+    public PcbSingleViewModel(ICrudService<Pcb> crudService, ICrudService<StorageLocation> storageService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, ITransferDataService<Transfer> transfersService)
     {
         _crudService = crudService;
+        _storageService = storageService;
         _dialogService = dialogService;
         _infoBarService = infoBarService;
         _navigationService = navigationService;
+        _transfersService = transfersService;
         _transfers = new ObservableCollection<Transfer>();
         mockData = new()
         {
@@ -106,9 +132,9 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             SerialNumber = "0000652125",
             ErrorDescription = "ErrorMessage",
             Restriction = null,
-            Finalized=false,
+            Finalized = false,
 
-            ErrorTypes= new List<ErrorType>()
+            ErrorTypes = new List<ErrorType>()
             {
                 new ErrorType(){Id=1, Code="M320", ErrorDescription="Beschreibung:Verbindung kann nicht hergestellt werden" }
 
@@ -133,9 +159,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     public async void OnNavigatedTo(object parameter)
     {
-        //_pcb = (Pcb)parameter;
-
-        //var transfers = await _
+        //_pcb = (Pcb)parameter; 
 
         var response = await _crudService.GetById(1);
         if (response.Code == ResponseCode.Success)
@@ -154,6 +178,21 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         else
         {
             _infoBarService.showError("ErrorMessage", "ErrorTitle");
+        }
+
+        var transfers = await _transfersService.GetTransfersByPcb(response.Data.Id);
+        _transfers = new ObservableCollection<Transfer>();
+        if (transfers.Code == ResponseCode.Success)
+        {
+            foreach (var transfer in transfers.Data)
+            {
+                
+                _transfers.Add(transfer);
+            }
+        }
+        else
+        {
+            _infoBarService.showError("Couldn't load transfer list", "Transfer List");
         }
         //_id = _pcb.Id;
         _serialNumber = _pcb.SerialNumber;

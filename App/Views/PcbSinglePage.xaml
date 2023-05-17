@@ -35,9 +35,7 @@
 							<TextBlock Text="Leiterplatte"/>
 						</CommandBar.Content>
 					</CommandBar>
-					<TextBlock
-						Text="{ x:Bind Path=ViewModel.SerialNumber }"
-						FontWeight="Bold"/>
+					<!--<TextBlock Text="{ x:Bind Path=ViewModel.SerialNumber, Mode=OneWay }" FontWeight="Bold"/>-->
 				</StackPanel>
 				<CommandBar
 					Grid.Column="1"
@@ -134,7 +132,7 @@
 				IsClosable="False"
 				Margin="0,0,0,0"
 				Title="Einschränkung"
-				Message="{x:Bind Path=ViewModel.Restriction, Mode=TwoWay}" />
+				Message="{x:Bind Path=ViewModel.Restriction, Mode=OneWay}" />
 
 
             <StackPanel
@@ -150,7 +148,7 @@
 				    Margin="0,30,0,0"
 				    Orientation="Horizontal">
                     <TextBlock Text="Fehlerkategorie:"/>
-                    <TextBlock Text="{x:Bind Path=ViewModel.Diagnose}"/>
+                    <TextBlock Text="{x:Bind Path=ViewModel.Diagnose, Mode=OneWay}"/>
                     <TextBlock Margin="5,0,0,0" FontWeight="Bold"
 					Text="Hardware"/>
                 </StackPanel>
@@ -216,9 +214,10 @@
         RowDetailsVisibilityMode="VisibleWhenSelected"
         SelectionMode="Extended"
         RowGroupHeaderPropertyNameAlternative="Range"
-        ItemsSource="{Binding Transfers}">
+        ItemsSource="{Binding Transfers}"
+        SelectedItem="{Binding Transfer, Mode=OneWay}">
                         <controls:DataGrid.Columns>
-                            <controls:DataGridTemplateColumn Header="Id" Tag="Id" />
+                            <controls:DataGridTextColumn Binding="{Binding Id, Mode=TwoWay}" Header="Id" Tag="Id" />
                                 <!--<controls:datagridtemplatecolumn.celltemplate>
                                     <datatemplate>
                                     <grid width="40" height="40" verticalalignment="top">
@@ -226,19 +225,21 @@
                                         <textblock text="{binding id}" foreground="white" fontweight="bold" horizontalalignment="center" verticalalignment="center" />
                                     </grid>
                                     </datatemplate>
-                                </controls:datagridtemplatecolumn.celltemplate>--> 
-                            <controls:DataGridTemplateColumn Header="Standort" Tag="StorageLocation">
-                                <controls:DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Expander 
-                                            IsExpanded="false"
-                                            Header="{Binding Standort.Name}" 
-                                            Content="{Binding Comment}"/>
-                                    </DataTemplate>
-                                </controls:DataGridTemplateColumn.CellTemplate>
-                            </controls:DataGridTemplateColumn>
-                            <controls:DataGridTextColumn Header="Created" Binding="{Binding CreatedDate}" Tag="Created" />
-                            <controls:DataGridTextColumn Header="Noted By" Binding="{Binding NotedBy}" Tag="User" />
+                                </controls:datagridtemplatecolumn.celltemplate>-->
+                            <controls:DataGridTextColumn Binding="{Binding StorageLocation, Mode=OneWay}" Header="Lagerort"/>
+                            <controls:DataGridTextColumn Binding="{Binding TransferComment, Mode=OneWay}" Header="Comment"/>
+                            <!--<controls:datagridtemplatecolumn header="standort" tag="storagelocation">
+                                <controls:datagridtemplatecolumn.celltemplate>
+                                    <datatemplate>
+                                        <expander 
+                                            isexpanded="false"
+                                            header="{binding storagelocation, mode=oneway}" 
+                                            content="{binding transfercomment, mode=oneway}"/>
+                                    </datatemplate>
+                                </controls:datagridtemplatecolumn.celltemplate>
+                            </controls:datagridtemplatecolumn>-->
+                            <controls:DataGridTextColumn Header="Created" Binding="{Binding CreatedDate, Mode=OneWay}" Tag="Created" />
+                            <controls:DataGridTextColumn Header="Noted By" Binding="{Binding NotedBy, Mode=OneWay}" Tag="User" />
                         </controls:DataGrid.Columns>
                     </controls:DataGrid>
                 </Grid>
@@ -317,7 +318,7 @@
 			Margin="0,30,0,0"
 			Orientation="Vertical"
             ScrollViewer.VerticalScrollMode="Disabled">
-            <Rectangle
+                <Rectangle
 				Fill="White" Stroke="LightGray" StrokeThickness="0.5"
 				Height="250" Width="280"
 				RadiusX="4" RadiusY="4"
