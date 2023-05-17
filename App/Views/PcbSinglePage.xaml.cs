@@ -17,5 +17,6 @@ public sealed partial class PcbSinglePage : Page
         InitializeComponent();
         DataContext = ViewModel;
         dateOfFailure.Date = new DateTime(2023, 04, 23);
+        
     }
 }

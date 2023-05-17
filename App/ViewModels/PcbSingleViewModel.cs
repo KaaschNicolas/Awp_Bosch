@@ -5,6 +5,7 @@ using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels;
@@ -13,7 +14,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 {
     public PcbSingleViewModel ViewModel { get; }
     
-    private string _serialNumber = "0000652125";
+    /*private string _serialNumber = "0000652125";
     public string SerialNumber
     {
         get => _serialNumber; //"0000652125";
@@ -22,15 +23,15 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _serialNumber = value;
             OnPropertyChanged(nameof(SerialNumber));
         }
-    }
+    }*/
 
     [ObservableProperty]
     private Pcb _selectedItem;
 
-    /*[ObservableProperty]
+    [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    private string _serialNumber;*/
+    private string _serialNumber;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -46,6 +47,16 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [NotifyDataErrorInfo]
     [Required]
     private List<ErrorType> _errorTypes;
+
+    /*[ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private string _code;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private string _errorDescription2;*/
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -67,6 +78,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [Required]
     private Diagnose _diagnose;
 
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private ObservableCollection<Transfer> _transfers;
+
     private int _id;
     
     private Pcb _pcb;
@@ -82,13 +98,16 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         _dialogService = dialogService;
         _infoBarService = infoBarService;
         _navigationService = navigationService;
+        _transfers = new ObservableCollection<Transfer>();
         mockData = new()
         {
             Id = 1,
-            CreatedDate=DateTime.Now,
-            SerialNumber="0000652125",
-            ErrorDescription="ErrorMessage",
+            CreatedDate = DateTime.Now,
+            SerialNumber = "0000652125",
+            ErrorDescription = "ErrorMessage",
+            Restriction = null,
             Finalized=false,
+
             ErrorTypes= new List<ErrorType>()
             {
                 new ErrorType(){Id=1, Code="M320", ErrorDescription="Beschreibung:Verbindung kann nicht hergestellt werden" }
@@ -107,25 +126,44 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             //_pcb.Remove(pcbToRemove);
             //await _crudService.Delete(pcbToRemove);
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
-
         }
     }
 
     Pcb mockData { get; set; }
 
-    public void OnNavigatedTo(object parameter)
+    public async void OnNavigatedTo(object parameter)
     {
         //_pcb = (Pcb)parameter;
-        _pcb=new Pcb();
+
+        //var transfers = await _
+
+        var response = await _crudService.GetById(1);
+        if (response.Code == ResponseCode.Success)
+        {
+            _pcb = response.Data as Pcb;
+            
+            _serialNumber = response.Data.SerialNumber;
+            _restriction = response.Data.Restriction;
+            _errorDescription = response.Data.ErrorDescription;
+            _errorTypes = response.Data.ErrorTypes;
+            _finalized = response.Data.Finalized;
+            _pcbType = response.Data.PcbType;
+            _comment = response.Data.Comment;
+            _diagnose = response.Data.Diagnose;
+        }
+        else
+        {
+            _infoBarService.showError("ErrorMessage", "ErrorTitle");
+        }
         //_id = _pcb.Id;
-        _serialNumber = "0000652125";//_pcb.SerialNumber;
-        //_restriction = _pcb.Restriction;
-        _errorDescription = "Fehlerbeschreibung";// _pcb.ErrorDescription;
-        /*_errorTypes = _pcb.ErrorTypes;
-        _finalized = false;
+        _serialNumber = _pcb.SerialNumber;
+        _restriction = _pcb.Restriction;
+        _errorDescription = _pcb.ErrorDescription;
+        _errorTypes = _pcb.ErrorTypes;
+        _finalized = _pcb.Finalized;
         _pcbType = _pcb.PcbType;
         _comment = _pcb.Comment;
-        _diagnose =  _pcb.Diagnose;*/
+        _diagnose =  _pcb.Diagnose;
     }
 
     public void OnNavigatedFrom()

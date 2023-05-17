@@ -6,17 +6,22 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:in="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
 	xmlns:viewModels="using:App.ViewModels"
+    xmlns:local="using:App.Views" 
+    xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
     mc:Ignorable="d">
 
-	<behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+    <!--<Page.Resources> <DataTemplate x:Key="TransfersPageTemplate"> <local:TransfersPage/> </DataTemplate> </Page.Resources>-->
+    
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 		<DataTemplate x:DataType="viewModels:PcbSingleViewModel">
 			<Grid  Margin="0,0,50,0">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="2*"/>
 					<ColumnDefinition Width="2,5*"/>
 					<ColumnDefinition Width="*"/>
-				</Grid.ColumnDefinitions>
+				</Grid.ColumnDefinitions> 
 
 				<StackPanel
 					Grid.Column="0"
@@ -63,56 +68,62 @@
 		</DataTemplate>
 	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
-	<Grid x:Name="ContentArea">
-		<Grid.Resources>
-			<CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
-		</Grid.Resources>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="2*" />
-			<ColumnDefinition Width="0,5*"/>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
 
-		<StackPanel
+    <ScrollViewer
+            VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+        <Grid x:Name="ContentArea">
+        <Grid.Resources>
+            <CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
+            <!--<DataTemplate x:Key="TransfersPageTemplate"> <local:TransfersPage/> </DataTemplate>-->
+
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="0,5*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <StackPanel
 			Grid.Column="0"
 			Grid.Row="0"
 			Orientation="Vertical">
-			<StackPanel
+            <StackPanel
 				Margin="0,0,0,15"
 				Orientation="Horizontal">
-				<TextBlock FontSize="18"
+                <TextBlock FontSize="18"
 						   Text="Seriennummer:"/>
-				<TextBlock Margin="5,0,0,0" FontWeight="Bold" FontSize="18"
-						   Text="{Binding SerialNumber}"/>
-			</StackPanel>
-			<StackPanel
+                <TextBlock Margin="5,0,0,0" FontWeight="Bold" FontSize="18"
+						   Text="{x:Bind Path=ViewModel.SerialNumber, Mode=OneWay}"/>
+            </StackPanel>
+            <StackPanel
 				Margin="0,15,0,0"
 				Orientation="Horizontal"
 				VerticalAlignment="Center">
-				<TextBlock
+                <TextBlock
 					Margin="0,5,0,0"
 					Text="Ausgefallen am:" />
-				<CalendarDatePicker
+                <CalendarDatePicker
 					x:Name="dateOfFailure"
 					Margin="5,0,25,0"
 					VerticalAlignment="Top"
 					PlaceholderText="Pick a date"
 					IsHitTestVisible="false"/>
-				<!--DateChanded="CalendarDatePicker_DateChanged"/>-->
-				<TextBlock
+                <!--DateChanded="CalendarDatePicker_DateChanged"/>-->
+                <TextBlock
 					Margin="0,5,0,0"
 					Text="Aufgenommenen von:"/>
-				<TextBlock
+                <TextBlock
 					Margin="0,5,0,0"
 					Text="Tester_1" FontWeight="Bold"/>
-			</StackPanel>
-		</StackPanel>
-		<InfoBar
+            </StackPanel>
+        </StackPanel>
+        <InfoBar
 				Grid.Column="0"
 				Grid.Row="1"
 				Grid.ColumnSpan="1"
@@ -123,27 +134,29 @@
 				IsClosable="False"
 				Margin="0,0,0,0"
 				Title="Einschränkung"
-				Message="{Binding Device}" />
+				Message="{x:Bind Path=ViewModel.Restriction, Mode=TwoWay}" />
 
-		<StackPanel
+
+            <StackPanel
 			Grid.Column="0"
-			Grid.Row="1">
-			<StackPanel Margin="0,15,0,0" Orientation="Horizontal">
-				<TextBlock Text="Sachnummer:"/>
-				<TextBlock Text="{Binding PcbType}"/>
-				<TextBlock Margin="5,0,0,0" FontWeight="Bold"
-					Text="1688 400 628 - VCI-Renault mit Display"/>
-			</StackPanel>
-			<StackPanel
-				Margin="0,30,0,0"
-				Orientation="Horizontal">
-				<TextBlock Text="Fehlerkategorie:"/>
-				<TextBlock Text="{Binding Diagnose}"/>
-				<TextBlock Margin="5,0,0,0" FontWeight="Bold"
+			Grid.Row="1"
+            Grid.RowSpan="2">
+                <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
+                    <TextBlock Text="Sachnummer:"/>
+                    <TextBlock Text="{x:Bind Path=ViewModel.PcbType, Mode=TwoWay}"/>
+                    <!--<TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="1688 400 628 - VCI-Renault mit Display"/>-->
+                </StackPanel>
+                <StackPanel
+				    Margin="0,30,0,0"
+				    Orientation="Horizontal">
+                    <TextBlock Text="Fehlerkategorie:"/>
+                    <TextBlock Text="{x:Bind Path=ViewModel.Diagnose}"/>
+                    <TextBlock Margin="5,0,0,0" FontWeight="Bold"
 					Text="Hardware"/>
-			</StackPanel>
+                </StackPanel>
 
-			<Expander
+                <!-- Fehlertypen -->
+                <Expander
 				Margin="0,20,0,0"
 				IsExpanded="True"
 				ExpandDirection="Down"
@@ -151,7 +164,7 @@
 				HorizontalContentAlignment="Stretch"
 				Header="Fehler: M320"
 				Content="Beschreibung: Fehler nicht gefunden"/>
-			<Expander
+                <Expander
 				Margin="0,20,0,0"
 				IsExpanded="True"
 				ExpandDirection="Down"
@@ -161,30 +174,166 @@
 				Content="Beschreibung: Verbindung herstellen"/>
 
 
+                <!-- Umlauf-Historie -->
+                
+                <Grid Margin="0,60,0,0">
+                    <Grid.Resources>
+                        <converters:StringFormatConverter x:Key="StringFormatConverter"/>
+                        <DataTemplate x:Key="RowDetailsTemplate">
+                            <StackPanel>
+                                <TextBlock Margin="20" Text="Beschreibung:" />
+                                <TextBlock Margin="20" Text="{Binding Comment}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Umlauf-Historie" VerticalAlignment="Center" Margin="5,0" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                    <controls:DataGrid
+      Grid.Row="1"
+        x:Name="dataGrid"
+        Margin="12"
+        VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+        HorizontalScrollBarVisibility="Visible"
+        VerticalScrollBarVisibility="Visible"
+        AlternatingRowBackground="Transparent"
+        AlternatingRowForeground="Gray"
+        AreRowDetailsFrozen="False"
+        AreRowGroupHeadersFrozen="True"
+        AutoGenerateColumns="False"
+        CanUserSortColumns="False"
+        CanUserReorderColumns="True"
+        CanUserResizeColumns="True"
+        ColumnHeaderHeight="32"
+        MaxColumnWidth="400"
+        FrozenColumnCount="0"
+        GridLinesVisibility="None"
+        HeadersVisibility="Column"
+        IsReadOnly="False"
+        RowDetailsTemplate="{StaticResource RowDetailsTemplate}"
+        RowDetailsVisibilityMode="VisibleWhenSelected"
+        SelectionMode="Extended"
+        RowGroupHeaderPropertyNameAlternative="Range"
+        ItemsSource="{Binding Transfers}">
+                        <controls:DataGrid.Columns>
+                            <controls:DataGridTemplateColumn Header="Id" Tag="Id" />
+                                <!--<controls:datagridtemplatecolumn.celltemplate>
+                                    <datatemplate>
+                                    <grid width="40" height="40" verticalalignment="top">
+                                        <ellipse fill="black" stroke="white" strokethickness="2" />
+                                        <textblock text="{binding id}" foreground="white" fontweight="bold" horizontalalignment="center" verticalalignment="center" />
+                                    </grid>
+                                    </datatemplate>
+                                </controls:datagridtemplatecolumn.celltemplate>--> 
+                            <controls:DataGridTemplateColumn Header="Standort" Tag="StorageLocation">
+                                <controls:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Expander 
+                                            IsExpanded="false"
+                                            Header="{Binding Standort.Name}" 
+                                            Content="{Binding Comment}"/>
+                                    </DataTemplate>
+                                </controls:DataGridTemplateColumn.CellTemplate>
+                            </controls:DataGridTemplateColumn>
+                            <controls:DataGridTextColumn Header="Created" Binding="{Binding CreatedDate}" Tag="Created" />
+                            <controls:DataGridTextColumn Header="Noted By" Binding="{Binding NotedBy}" Tag="User" />
+                        </controls:DataGrid.Columns>
+                    </controls:DataGrid>
+                </Grid>
+
+
+
+
+
+                <TextBlock
+                Margin="0,60,0,0"
+                FontWeight="Bold"
+                FontSize="20"
+                FontStyle="Normal"
+                Text="Umlauf-Historie"/>
+                <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                <Grid Width="40" Height="40" VerticalAlignment="Top">
+                    <Ellipse Fill="Black" Stroke="White" StrokeThickness="2" />
+                    <TextBlock Text="1" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Expander
+				Margin="10,0,0,0"
+				IsExpanded="True"
+				ExpandDirection="Down"
+				VerticalAlignment="Top"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Stretch"
+				Width="600"
+				Header="PVB-Labor"
+				Content="Anmerkung: kann Fehler nicht nachvollziehen"/>
+            </StackPanel>
+            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                <Grid Width="40" Height="40" VerticalAlignment="Top">
+                    <Ellipse Fill="Gray" Stroke="White" StrokeThickness="2" />
+                    <TextBlock Text="2" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Expander
+				Margin="10,0,0,0"
+				IsExpanded="True"
+				ExpandDirection="Down"
+				VerticalAlignment="Top"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Stretch"
+				Width="600"
+				Header="PVB-Labor"
+				Content="Anmerkung: kann Fehler nicht nachvollziehen"/>
+            </StackPanel>
+        
         </StackPanel>
 
+
+        <!-- Weitergabe- & Anmerkungs-Buttons -->
 		<StackPanel
 			Grid.Column="2"
+			Grid.Row="2"
+            Grid.RowSpan="2"
+			Margin="0,120,15,0"
+			Orientation="Vertical"
+            ScrollViewer.VerticalScrollMode="Disabled">
+            <Button
+				HorizontalAlignment="Right"
+				Height="60" Width="250"
+				Style="{StaticResource AccentButtonStyle}"
+				FontWeight="Bold">Weitergeben</Button>
+            <Button
+				Margin="0,15,0,0"
+				HorizontalAlignment="Right"
+				Height="60"
+				Width="250">Anmerkung hinzufügen</Button>
+        </StackPanel>
+
+        <!-- Status & Info-Panel -->
+        <StackPanel
+			Grid.Column="2"
 			Grid.Row="0"
-			Grid.RowSpan="2"
+			Grid.RowSpan="3"
 			Margin="0,30,0,0"
-			Orientation="Vertical">
-			<Rectangle
+			Orientation="Vertical"
+            ScrollViewer.VerticalScrollMode="Disabled">
+            <Rectangle
 				Fill="White" Stroke="LightGray" StrokeThickness="0.5"
 				Height="250" Width="280"
 				RadiusX="4" RadiusY="4"
 				HorizontalAlignment="Right"/>
-			<Rectangle
+            <Rectangle
 				Fill="White" Stroke="LightGray" StrokeThickness="0.5"
 				Height="100" Width="280"
 				RadiusX="4" RadiusY="4"
 				Margin="0,20,0,0"
 				HorizontalAlignment="Right"/>
-		</StackPanel>
+        </StackPanel>
 
-		<!--<ContentPresenter x:Name="ContentPresenter" Content="{TemplateBindingTransfersViewModel}" />-->
+        <!--<ContentControl  ContentTemplate="{StaticResource TransfersPage}"/>-->
 
+    </Grid>
 
-	</Grid>
-	
+    </ScrollViewer>
+
 </Page>
