@@ -106,24 +106,32 @@ namespace App.ViewModels
             Response<List<Pcb>> pcbs;
             Response<int> maxEntries;
 
-            if (FilterOptions != PcbFilterOptions.None)
+            if (_filterOptions != PcbFilterOptions.None)
             {
                 switch (_filterOptions)
                 {
-                    case PcbFilterOptions.None:
+                    case PcbFilterOptions.Search:
+                        maxEntries = await _crudService.MaxEntriesSearch(QueryText);
+                        pcbs = await _crudService.Like(pageIndex, pageSize, QueryText);
+                        break;
+                    case PcbFilterOptions.Filter1:
                         Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
                         maxEntries = await _crudService.MaxEntriesFiltered(where1);
                         pcbs = await _crudService.GetWithFilter(pageIndex, pageSize, where1);
                         break;
-                    case PcbFilterOptions.Search:
-                        break;
-                    case PcbFilterOptions.Filter1:
-                        break;
                     case PcbFilterOptions.Filter2:
+                        Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate == DateTime.Now;
+                        maxEntries = await _crudService.MaxEntriesFiltered(where2);
+                        pcbs = await _crudService.GetWithFilter(pageIndex, pageSize, where2);
                         break;
                     case PcbFilterOptions.Filter3:
+                        Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0;
+                        maxEntries = await _crudService.MaxEntriesFiltered(where3);
+                        pcbs = await _crudService.GetWithFilter(pageIndex, pageSize, where3);
                         break;
                     default:
+                        maxEntries = await _crudService.MaxEntries();
+                        pcbs = await _crudService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending)
                         break;
                 }
             }
