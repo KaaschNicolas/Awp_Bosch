@@ -134,6 +134,8 @@ namespace App.ViewModels
                         pcbs = await _crudService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending)
                         break;
                 }
+
+                if (pcbs.Code == ResponseCode.Success)
             }
         }
 
