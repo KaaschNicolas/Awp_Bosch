@@ -206,7 +206,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         }
 
         var transfers = await _transfersService.GetTransfersByPcb(response.Data.Id);
-        _transfers = new ObservableCollection<Transfer>();
+        //_transfers = new ObservableCollection<Transfer>();
         if (transfers.Code == ResponseCode.Success)
         {
             foreach (var transfer in transfers.Data)

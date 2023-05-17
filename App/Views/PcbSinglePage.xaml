@@ -35,7 +35,7 @@
 							<TextBlock Text="Leiterplatte"/>
 						</CommandBar.Content>
 					</CommandBar>
-					<!--<TextBlock Text="{ x:Bind Path=ViewModel.SerialNumber, Mode=OneWay }" FontWeight="Bold"/>-->
+					<!--<TextBlock Text="{ x:Bind Path=ViewModel.SerialNumber, Mode=TwoWay }" FontWeight="Bold"/>-->
 				</StackPanel>
 				<CommandBar
 					Grid.Column="1"
@@ -68,7 +68,7 @@
 
 
     <ScrollViewer
-            VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+            VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Enabled">
         <Grid x:Name="ContentArea">
         <Grid.Resources>
             <CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
@@ -132,7 +132,7 @@
 				IsClosable="False"
 				Margin="0,0,0,0"
 				Title="Einschränkung"
-				Message="{x:Bind Path=ViewModel.Restriction.Name, Mode=OneWay}" />
+				Message="{x:Bind Path=ViewModel.Restriction.Name, Mode=TwoWay}" />
 
 
             <StackPanel
@@ -148,7 +148,7 @@
 				    Margin="0,30,0,0"
 				    Orientation="Horizontal">
                     <TextBlock Text="Fehlerkategorie:"/>
-                    <TextBlock Text="{x:Bind Path=ViewModel.Diagnose, Mode=OneWay}"/>
+                    <TextBlock Text="{x:Bind Path=ViewModel.Diagnose, Mode=TwoWay}"/>
                     <TextBlock Margin="5,0,0,0" FontWeight="Bold"
 					Text="Hardware"/>
                 </StackPanel>
@@ -215,7 +215,7 @@
         SelectionMode="Extended"
         RowGroupHeaderPropertyNameAlternative="Range"
         ItemsSource="{Binding Transfers}"
-        SelectedItem="{Binding Transfer, Mode=OneWay}">
+        SelectedItem="{Binding Transfer, Mode=TwoWay}">
                         <controls:DataGrid.Columns>
                             <controls:DataGridTextColumn Binding="{Binding Id, Mode=TwoWay}" Header="Id" Tag="Id" />
                                 <!--<controls:datagridtemplatecolumn.celltemplate>
@@ -226,20 +226,20 @@
                                     </grid>
                                     </datatemplate>
                                 </controls:datagridtemplatecolumn.celltemplate>-->
-                            <controls:DataGridTextColumn x:Name="_storageLocation" Header="Lagerort"/>
-                            <controls:DataGridTextColumn Binding="{Binding TransferComment, Mode=OneWay}" Header="Comment"/>
+                            <controls:DataGridTextColumn Binding="{Binding StorageLocation.StorageName, Mode=TwoWay}" Header="Lagerort"/>
+                            <controls:DataGridTextColumn Binding="{Binding Comment, Mode=TwoWay}" Header="Comment"/>
                             <!--<controls:datagridtemplatecolumn header="standort" tag="storagelocation">
                                 <controls:datagridtemplatecolumn.celltemplate>
                                     <datatemplate>
                                         <expander 
                                             isexpanded="false"
-                                            header="{binding storagelocation, mode=oneway}" 
-                                            content="{binding transfercomment, mode=oneway}"/>
+                                            header="{binding storagelocation, mode=TwoWay}" 
+                                            content="{binding transfercomment, mode=TwoWay}"/>
                                     </datatemplate>
                                 </controls:datagridtemplatecolumn.celltemplate>
                             </controls:datagridtemplatecolumn>-->
-                            <controls:DataGridTextColumn Header="Created" Binding="{Binding CreatedDate, Mode=OneWay}" Tag="Created" />
-                            <controls:DataGridTextColumn Header="Noted By" Binding="{Binding NotedBy, Mode=OneWay}" Tag="User" />
+                            <controls:DataGridTextColumn Header="Created" Binding="{Binding CreatedDate, Mode=TwoWay}" Tag="Created" />
+                            <controls:DataGridTextColumn Header="Noted By" Binding="{Binding NotedBy, Mode=TwoWay}" Tag="User" />
                         </controls:DataGrid.Columns>
                     </controls:DataGrid>
                 </Grid>
@@ -249,7 +249,7 @@
 
 
                 <TextBlock
-                Margin="0,60,0,0"
+                Margin="0,20,0,0"
                 FontWeight="Bold"
                 FontSize="20"
                 FontStyle="Normal"
@@ -324,7 +324,7 @@
                     Orientation="Horizontal">
                     <TextBlock Margin="20,20,0,0" Text="Status:"/>
                     <TextBlock Margin="20,20,0,0" FontWeight="Bold" 
-                        Text="{x:Bind Path=ViewModel.Status, Mode=OneWay}"/>
+                        Text="{Binding Status}"/>
                 </StackPanel>
                 <StackPanel
                     Orientation="Horizontal">
@@ -333,7 +333,8 @@
                 <StackPanel
                     Orientation="Horizontal">
                     <TextBlock Margin="20,20,0,0" Text="aktueller Standort:"/>
-                    <TextBlock Margin="20,20,0,0" FontWeight="Bold" Text="{x:Bind Path=ViewModel.Storage, Mode=TwoWay}"/>
+                    <TextBlock Margin="20,20,0,0" FontWeight="Bold" 
+                               Text="{Binding Storage}"/>
                 </StackPanel>
                 <StackPanel
                     Orientation="Horizontal">
@@ -358,6 +359,15 @@
 
         <!--<ContentControl  ContentTemplate="{StaticResource TransfersPage}"/>-->
 
+            <StackPanel>
+                <TextBlock Margin="5,0,0,0" FontWeight="Bold" FontSize="18"
+						   Text="{x:Bind Path=ViewModel.SerialNumber, Mode=TwoWay}"/>
+                <TextBlock Margin="20,20,0,0" FontWeight="Bold" 
+                        Text="{Binding Status}"/>
+                <TextBlock Margin="20,20,0,0" FontWeight="Bold" 
+                               Text="{Binding Storage}"/>
+            </StackPanel>   
+            
     </Grid>
 
     </ScrollViewer>
