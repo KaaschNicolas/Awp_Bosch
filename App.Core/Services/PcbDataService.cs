@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 namespace App.Core.Services;
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
 {
-    public PcbDataService(BoschContext boschContext, LoggingService loggingService) : base(boschContext, loggingService) { }
+    public PcbDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) { }
 
     public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty, bool isAscending)
     {

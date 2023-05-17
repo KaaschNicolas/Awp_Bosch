@@ -28,6 +28,7 @@ public class PageService : IPageService
         Configure<UpdatePcbTypeViewModel, UpdatePcbTypePage>();
         Configure<PcbSingleViewModel, PcbSinglePage>();
         Configure<TransfersViewModel, TransfersPage>();
+        Configure<PcbPaginationViewModel, PcbViewPage>();
     }
 
     public Type GetPageType(string key)

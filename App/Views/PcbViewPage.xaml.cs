@@ -173,7 +173,7 @@ namespace App.Views
             ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
         }
 
-        private void CreatePcbButton_Click(DependencyObject sender, DependencyProperty dp)
+        private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             Frame.Navigate(typeof(PcbSinglePage));
         }
