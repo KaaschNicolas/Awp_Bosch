@@ -209,13 +209,13 @@
                 <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
             </ctWinUI:DataGrid.Resources>
             <ctWinUI:DataGrid.Columns>
-                <ctWinUI:DataGridTextColumn Header="Name"
+                <ctWinUI:DataGridTextColumn Header="SerialNumber"
                                             Binding="{Binding SerialNumber}"
                                             Tag="SerialNumber" />
-                <ctWinUI:DataGridComboBoxColumn Header="Liegezeit Gelb"
+                <ctWinUI:DataGridComboBoxColumn Header="Fehler Beschreibung"
                                                 Binding="{Binding ErrorDescription}"
                                                 Tag="ErrorDescription" />
-                <ctWinUI:DataGridTextColumn Header="Liegezeit Rot"
+                <ctWinUI:DataGridTextColumn Header="Abgeschlossen"
                                             Binding="{Binding Finalized}"
                                             Tag="Finalized" />
                 <controls:DataGridTemplateColumn Width="100" Header="Aktion">

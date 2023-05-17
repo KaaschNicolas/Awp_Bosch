@@ -50,6 +50,13 @@ namespace App.ViewModels
                 async () => await GetPcbs(_pageNumber, _pageSize, _isSortingAscending),
                 () => _pageNumber != _pageCount && _filterOptions != PcbFilterOptions.None
             );
+
+            FilterOptions = PcbFilterOptions.None;
+            _dialogService = dialogService;
+            _infoBarService = infoBarService;
+            _navigationService = navigationService;
+
+            Refresh();
         }
 
         private readonly IPcbDataService<Pcb> _crudService;
