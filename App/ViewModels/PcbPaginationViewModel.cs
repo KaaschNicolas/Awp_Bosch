@@ -2,6 +2,7 @@
 using App.Core.Models;
 using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
+using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -120,7 +121,7 @@ namespace App.ViewModels
                         pcbs = await _crudService.GetWithFilter(pageIndex, pageSize, where1);
                         break;
                     case PcbFilterOptions.Filter2:
-                        Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate == DateTime.Now;
+                        Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.Now.Date;
                         maxEntries = await _crudService.MaxEntriesFiltered(where2);
                         pcbs = await _crudService.GetWithFilter(pageIndex, pageSize, where2);
                         break;
@@ -131,11 +132,56 @@ namespace App.ViewModels
                         break;
                     default:
                         maxEntries = await _crudService.MaxEntries();
-                        pcbs = await _crudService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending)
+                        pcbs = await _crudService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
                         break;
                 }
 
-                if (pcbs.Code == ResponseCode.Success)
+                if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
+                {
+                    PaginatedList<Pcb> pcbsPaginated = await PaginatedList<Pcb>.CreateAsync(
+                        pcbs.Data,
+                        pageIndex,
+                        pageSize,
+                        maxEntries.Data
+                    );
+
+                    PageNumber = pcbsPaginated.PageIndex;
+                    PageCount = pcbsPaginated.PageCount;
+
+                    ObservableCollection<Pcb> copy = new();
+                    pcbsPaginated.ForEach(x => copy.Add(x));
+                    Pcbs = copy;
+                    
+
+                }
+            }
+            else
+            {
+                maxEntries = await _crudService.MaxEntries();
+                pcbs = await _crudService.GetAllQueryable(pageIndex, pageSize, _sortyBy, isAscending);
+
+                if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
+                {
+                    PaginatedList<Pcb> pcbsPaginated = await PaginatedList<Pcb>.CreateAsync(
+                        pcbs.Data,
+                        pageIndex,
+                        pageSize,
+                        maxEntries.Data
+                    );
+
+                    PageNumber = pcbsPaginated.PageIndex;
+                    PageCount = pcbsPaginated.PageCount;
+
+                    ObservableCollection<Pcb> copy = new();
+                    pcbsPaginated.ForEach(x => copy.Add(x));
+                    Pcbs = copy;
+                }
+
+                FirstAsyncCommand.NotifyCanExecuteChanged();
+                PreviousAsyncCommand.NotifyCanExecuteChanged();
+                NextAsyncCommand.NotifyCanExecuteChanged();
+                LastAsyncCommand.NotifyCanExecuteChanged();
+                FilterItems.NotifyCanExecuteChanged();
             }
         }
 
