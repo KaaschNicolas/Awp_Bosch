@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -107,7 +108,24 @@ namespace App.ViewModels
 
             if (FilterOptions != PcbFilterOptions.None)
             {
-                
+                switch (_filterOptions)
+                {
+                    case PcbFilterOptions.None:
+                        Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
+                        maxEntries = await _crudService.MaxEntriesFiltered(where1);
+                        pcbs = await _crudService.GetWithFilter(pageIndex, pageSize, where1);
+                        break;
+                    case PcbFilterOptions.Search:
+                        break;
+                    case PcbFilterOptions.Filter1:
+                        break;
+                    case PcbFilterOptions.Filter2:
+                        break;
+                    case PcbFilterOptions.Filter3:
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
