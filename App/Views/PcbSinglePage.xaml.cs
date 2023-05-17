@@ -48,7 +48,7 @@ public sealed partial class PcbSinglePage : Page
         pageTest.Content = layoutControl;*/
         
         IPrintService printSerivce = new PrintService();
-        await printSerivce.Print(Test); //PcbSinglePageContent
+        await printSerivce.Print(PcbSinglePageContent); //Test
     }
 
     private void GenerateBarcode()
