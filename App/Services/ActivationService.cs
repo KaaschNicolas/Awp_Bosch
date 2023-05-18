@@ -14,14 +14,16 @@ public class ActivationService : IActivationService
     private readonly IEnumerable<IActivationHandler> _activationHandlers;
     private readonly IThemeSelectorService _themeSelectorService;
     private readonly IAuthenticationService _authenticationService;
+    private readonly IDialogService _dialogService;
     private UIElement? _shell = null;
 
-    public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, IThemeSelectorService themeSelectorService, IAuthenticationService authenticationService)
+    public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, IThemeSelectorService themeSelectorService, IAuthenticationService authenticationService, IDialogService dialogService)
     {
         _defaultHandler = defaultHandler;
         _activationHandlers = activationHandlers;
         _themeSelectorService = themeSelectorService;
         _authenticationService = authenticationService;
+        _dialogService = dialogService;
     }
 
     public async Task ActivateAsync(object activationArgs)
@@ -32,15 +34,7 @@ public class ActivationService : IActivationService
         // Set the MainWindow Content.
         if (App.MainWindow.Content == null)
         {
-            
-            if (_authenticationService.isAuthenticated())
-            {
-                _shell = App.GetService<ShellPage>();
-            }
-            else {
-                _shell = App.GetService<UnauthorizedPage>();
-            }
-
+            _shell = App.GetService<ShellPage>();
             App.MainWindow.Content = _shell ?? new Frame();
         }
 
@@ -79,5 +73,10 @@ public class ActivationService : IActivationService
     {
         await _themeSelectorService.SetRequestedThemeAsync();
         await Task.CompletedTask;
+        if (!_authenticationService.isAuthenticated()) { 
+            if (App.MainWindow.Content is FrameworkElement fe) {
+               fe.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync("403-Unauthorized", "Sie haben keine Berichtigungen diese Anwendung zu Nutzen. \nBitte wenden sie sich an ihren nächsten Vorgestzten, \nwenn Sie dennoch Zugriff benötigen.", App.MainWindow.Content.XamlRoot);
+            } 
+        }
     }
 }
