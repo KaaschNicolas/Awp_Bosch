@@ -81,19 +81,25 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
             services.AddTransient<ILoggingService, LoggingService>();
 
+            services.AddTransient<ICrudService<Pcb>, CrudService<Pcb>>();
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
             services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
             services.AddTransient<ICrudService<User>, CrudService<User>>();
 
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
+            services.AddTransient<IPcbDataService<Pcb>, PcbDataService<Pcb>>();
+            services.AddTransient<ITransferDataService<Transfer>, TransferDataService<Transfer>>();
             services.AddTransient<IMockDataService, MockDataService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
 
 
             // Views and ViewModels
-            services.AddTransient<UnauthorizedViewModel>();
-            services.AddTransient<UnauthorizedPage>();
+            services.AddTransient<TransfersViewModel>();
+            services.AddTransient<TransfersPage>();
+            services.AddTransient<PcbSingleViewModel>();
+            services.AddTransient<PcbSinglePage>();
+            services.AddTransient<PcbPaginationViewModel>();
             services.AddTransient<UpdateStorageLocationPage>();
             services.AddTransient<UpdateStorageLocationViewModel>();
             services.AddTransient<UpdatePcbTypeViewModel>();

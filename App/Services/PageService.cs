@@ -26,7 +26,9 @@ public class PageService : IPageService
         Configure<StorageLocationPaginationViewModel, StorageLocationsViewPage1>();
         Configure<CreatePcbTypeViewModel, CreatePcbTypePage>();
         Configure<UpdatePcbTypeViewModel, UpdatePcbTypePage>();
-        Configure<UnauthorizedViewModel, UnauthorizedPage>();
+        Configure<PcbSingleViewModel, PcbSinglePage>();
+        Configure<TransfersViewModel, TransfersPage>();
+        Configure<PcbPaginationViewModel, PcbViewPage>();
     }
 
     public Type GetPageType(string key)

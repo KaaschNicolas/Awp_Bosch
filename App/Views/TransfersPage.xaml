@@ -1,0 +1,77 @@
+﻿<Page
+    x:Class="App.Views.TransfersPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:behaviors="using:App.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:viewModels="using:App.ViewModels"
+    mc:Ignorable="d">
+
+	<behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+		<DataTemplate x:DataType="viewModels:TransfersViewModel">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width ="*"/>
+				</Grid.ColumnDefinitions>
+
+				<CommandBar
+                    Grid.Column="0"
+                    Padding="0"
+                    Background="Transparent"
+                    DefaultLabelPosition="Right"
+                    IsOpen="False">
+					<CommandBar.Content>
+						<!--  Get MainPageTitle.Text from localizx:ed resources  -->
+						<TextBlock Text="Umlauf-Historie" />
+					</CommandBar.Content>
+				</CommandBar>
+			</Grid>
+		</DataTemplate>
+	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+	
+	<Grid x:Name="ContentArea">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width ="*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<StackPanel Orientation="Horizontal">
+			<Grid Width="40" Height="40" VerticalAlignment="Top">
+					<Ellipse Fill="Black" Stroke="White" StrokeThickness="2" />
+					<TextBlock Text="1" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			</Grid>
+			<Expander
+				Margin="10,0,0,0"
+				IsExpanded="True"
+				ExpandDirection="Down"
+				VerticalAlignment="Top"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Stretch"
+				Width="600"
+				Header="PVB-Labor"
+				Content="Anmerkung: kann Fehler nicht nachvollziehen"/>
+		</StackPanel>
+		
+		<StackPanel
+			Grid.Column="1"
+			Grid.Row="0"
+			Margin="0,0,15,0"
+			Orientation="Vertical">
+			<Button
+				HorizontalAlignment="Right"
+				Height="60" Width="250"
+				Style="{StaticResource AccentButtonStyle}"
+				FontWeight="Bold">Weitergeben</Button>
+			<Button
+				Margin="0,15,0,0"
+				HorizontalAlignment="Right"
+				Height="60"
+				Width="250">Anmerkung hinzufügen</Button>
+		</StackPanel>
+    </Grid>
+</Page>

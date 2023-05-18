@@ -2,7 +2,7 @@
 <!-- Licensed under the MIT License. -->
 
 <Page
-    x:Class="App.Views.StorageLocationsViewPage1"
+    x:Class="App.Views.PcbViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,9 +13,9 @@
     xmlns:viewModels="using:App.ViewModels"
       mc:Ignorable="d"
       Background="Transparent">
-    
+
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-        <DataTemplate x:DataType="viewModels:StorageLocationPaginationViewModel">
+        <DataTemplate x:DataType="viewModels:PcbPaginationViewModel">
             <Grid Margin="0,0,50,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -30,13 +30,13 @@
                     IsOpen="False">
                     <CommandBar.Content>
                         <!--  Get MainPageTitle.Text from localizx:ed resources  -->
-                        <TextBlock Text="Lagerort" />
+                        <TextBlock Text="Leiterplatten" />
                     </CommandBar.Content>
 
                     <!--  All your AppBar buttons  -->
                     <!--  Get SendAppBarButton.Label from localized resources  -->
                     <AppBarButton
-                        Click="CreatStorageLocationButton_Click"
+                        Click="CreatePcbButton_Click"
                         Icon="Add"
                         Label="Hinzufügen" />
                     <AppBarButton Icon="Refresh" Label="Neu Laden" />
@@ -76,15 +76,15 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="1"
-                               Text="{Binding StorageName}"
+                               Text="{Binding SerialNumber}"
                                HorizontalAlignment="Right" />
                     <TextBlock Grid.Row="1"
                                Grid.Column="1"
-                               Text="{Binding DwellTimeYellow}"
+                               Text="{Binding ErrorDescription}"
                                HorizontalAlignment="Right" />
                     <TextBlock Grid.Row="2"
                                Grid.Column="1"
-                               Text="{Binding DwellTimeRed}"
+                               Text="{Binding Finalized}"
                                HorizontalAlignment="Right" />
                 </Grid>
             </DataTemplate>
@@ -103,16 +103,14 @@
                               Width="80">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Text="Liegezeit Gelb &lt; 5"
-                                            Click="FilterDTYLow_Click" />
-                            <MenuFlyoutItem Text="Liegezeit Gelb &gt; 5"
-                                            Click="FilterDTYHigh_Click" />
+                            <MenuFlyoutItem Text="Abgeschlossene Einträge"
+                                            Click="Filter1_Click" />
+                            <MenuFlyoutItem Text="Heute erstellt"
+                                            Click="Filter2_Click" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem x:Name="FilterHeightLow"
-                                            Text="Liegezeit Rot &lt; 5"
-                                            Click="FilterDTRLow_Click" />
-                            <MenuFlyoutItem Text="Liegezeit Rot &gt; 5"
-                                            Click="FilterDTRHigh_Click" />
+                                            Text="keine Weitergaben"
+                                            Click="Filter3_Click" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem Text="Filter entfernen"
                                             Click="FilterClear_Click" />
@@ -195,7 +193,7 @@
             </CommandBar>
         </StackPanel>
         <ctWinUI:DataGrid x:Name="DataGrid"
-                          ItemsSource="{x:Bind ViewModel.StorageLocations, Mode=OneWay}"
+                          ItemsSource="{x:Bind ViewModel.Pcbs, Mode=OneWay}"
                           SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
                           AutoGenerateColumns="False"
                           CanUserSortColumns="True"
@@ -211,15 +209,15 @@
                 <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
             </ctWinUI:DataGrid.Resources>
             <ctWinUI:DataGrid.Columns>
-                <ctWinUI:DataGridTextColumn Header="Name"
-                                            Binding="{Binding StorageName}"
-                                            Tag="StorageName" />
-                <ctWinUI:DataGridComboBoxColumn Header="Liegezeit Gelb"
-                                                Binding="{Binding DwellTimeYellow}"
-                                                Tag="DwellTimeYellow" />
-                <ctWinUI:DataGridTextColumn Header="Liegezeit Rot"
-                                            Binding="{Binding DwellTimeRed}"
-                                            Tag="DwellTimeRed" />
+                <ctWinUI:DataGridTextColumn Header="SerialNumber"
+                                            Binding="{Binding SerialNumber}"
+                                            Tag="SerialNumber" />
+                <ctWinUI:DataGridComboBoxColumn Header="Fehler Beschreibung"
+                                                Binding="{Binding ErrorDescription}"
+                                                Tag="ErrorDescription" />
+                <ctWinUI:DataGridTextColumn Header="Abgeschlossen"
+                                            Binding="{Binding Finalized}"
+                                            Tag="Finalized" />
                 <controls:DataGridTemplateColumn Width="100" Header="Aktion">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
