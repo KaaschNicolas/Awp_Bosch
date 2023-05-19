@@ -1,4 +1,6 @@
-﻿using System;
+
+using App.Core.DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,11 +9,10 @@ using System.Threading.Tasks;
 using App.Core.DataAccess;
 using App.Core.Helpers;
 using App.Core.Models;
+using App.Core.Services;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
-namespace App.Core.Services;
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
 {
     public PcbDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) { }
