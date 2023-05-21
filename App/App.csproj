@@ -17,8 +17,10 @@
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\ErrorCardUserControl.xaml" />
     <None Remove="Views\CreateDiagnosePage.xaml" />
     <None Remove="Views\DiagnosePage.xaml" />
+    <None Remove="Views\PcbViewPage.xaml" />
     <None Remove="Views\UpdateDiagnosePage.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +76,12 @@
     <Compile Update="Views\UpdateDiagnosePage.xaml.cs">
       <Generator></Generator>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\PcbViewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">

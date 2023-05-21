@@ -60,7 +60,11 @@ namespace App.Core.DataAccess
             var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && e.State == EntityState.Added);
             foreach (var entry in entries)
             {
-                ((BaseEntity)entry.Entity).CreatedDate = DateTime.Now;
+                if (((BaseEntity)entry.Entity).CreatedDate == DateTime.MinValue)
+                {
+                    ((BaseEntity)entry.Entity).CreatedDate = DateTime.Now;
+                }
+
             }
 
             return base.SaveChanges();

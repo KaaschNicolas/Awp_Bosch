@@ -198,13 +198,13 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
     [RelayCommand]
     public async void Delete()
     {
-        var result = await _dialogService.ConfirmDeleteDialogAsync("Sachnummer Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?");
+        var result = await _dialogService.ConfirmDeleteDialogAsync("Lagerort Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?");
         if (result != null && result == true)
         {
             StorageLocation storageLocationToRemove = _selectedItem;
             _storageLocations.Remove(storageLocationToRemove);
             await _crudService.Delete(storageLocationToRemove);
-            _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
+            _infoBarService.showMessage("Erfolgreich Lagerort gelöscht", "Erfolg");
 
         }
     }
@@ -213,7 +213,6 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
     public void NavigateToUpdate(StorageLocation storageLocation)
     {
         _navigationService.NavigateTo("App.ViewModels.UpdateStorageLocationViewModel", storageLocation);
-
     }
 
     private void Refresh()

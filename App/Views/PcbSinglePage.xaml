@@ -1,5 +1,6 @@
 ﻿<Page
     x:Class="App.Views.PcbSinglePage"
+	x:Name="PcbSinglePageContent"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:App.Behaviors"
@@ -16,7 +17,7 @@
     
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 		<DataTemplate x:DataType="viewModels:PcbSingleViewModel">
-			<Grid  Margin="0,0,50,0">
+            <Grid x:Name="uiElementGrid1" Margin="0,0,50,0">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="2*"/>
 					<ColumnDefinition Width="2,5*"/>
@@ -45,7 +46,8 @@
 					HorizontalAlignment="Center">
 					<AppBarButton
 					    Icon="Print"
-						Label="Drucken"/>
+						Label="Drucken"
+                        Click="OnPrintButtonClicked"/>
 				</CommandBar>
 				<StackPanel
                     Grid.Column="2"
@@ -56,7 +58,7 @@
                         DefaultLabelPosition="Right">
 						<AppBarButton
                             Icon="Edit"
-                            Label="Beareiten"/>
+                            Label="Bearbeiten"/>
 						<AppBarButton
                             Icon="Delete"
                             Label="Löschen"/>

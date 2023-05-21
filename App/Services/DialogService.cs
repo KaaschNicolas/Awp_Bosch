@@ -40,5 +40,20 @@ public sealed class DialogService : IDialogService
         }
         return null;
     }
-       
+
+    public async void UnAuthorizedDialogAsync(string title, string content, XamlRoot xamlRoot) {
+
+     if(xamlRoot != null) { 
+        ContentDialog unAuthorizedDialog = new ContentDialog()
+        {
+            Title = title,
+            Content = content,
+            XamlRoot = xamlRoot
+        };
+
+        await unAuthorizedDialog.ShowAsync();
+        }
+
+    }
+    
 }
