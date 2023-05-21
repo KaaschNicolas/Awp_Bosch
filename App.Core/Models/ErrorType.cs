@@ -18,7 +18,7 @@ namespace App.Core.Models
         {
             get; set;
         }
-        public List<Pcb> Pcbs
+        public Pcb Pcb
         {
             get; set;
         }
