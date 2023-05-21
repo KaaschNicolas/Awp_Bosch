@@ -15,7 +15,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 {
     public PcbSingleViewModel ViewModel { get; }
     
-    /*private string _serialNumber = "0000652125";
+    private string _serialNumber;
     public string SerialNumber
     {
         get => _serialNumber; //"0000652125";
@@ -24,7 +24,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _serialNumber = value;
             OnPropertyChanged(nameof(SerialNumber));
         }
-    }*/
+    }
 
     [ObservableProperty]
     private Pcb _selectedItem;
@@ -34,10 +34,10 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [Required]
     private DateTime _createdDate;*/
 
-    [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
-    private string _serialNumber;
+    //[ObservableProperty]
+    //[NotifyDataErrorInfo]
+    //[Required]
+    //private string _serialNumber;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -182,23 +182,23 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         {
             _pcb = response.Data as Pcb;
             
-            _serialNumber = response.Data.SerialNumber;
+            SerialNumber = response.Data.SerialNumber;
             //_createdDate = response.Data.CreatedDate;
-            _restriction = response.Data.Restriction;
-            _errorDescription = response.Data.ErrorDescription;
-            _errorTypes = response.Data.ErrorTypes;
-            _finalized = response.Data.Finalized;
-            if (!_finalized)
+            Restriction = response.Data.Restriction;
+            ErrorDescription = response.Data.ErrorDescription;
+            ErrorTypes = response.Data.ErrorTypes;
+            Finalized = response.Data.Finalized;
+            if (!Finalized)
             {
-                _status = "offen";
+                Status = "offen";
             }
             else
             {
-                _status = "abgeschlossen";
+                Status = "abgeschlossen";
             }
-            _pcbType = response.Data.PcbType;
-            _comment = response.Data.Comment;
-            _diagnose = response.Data.Diagnose;
+            PcbType = response.Data.PcbType;
+            Comment = response.Data.Comment;
+            Diagnose = response.Data.Diagnose;
         }
         else
         {
@@ -211,7 +211,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         {
             foreach (var transfer in transfers.Data)
             {
-                _storage= transfer.StorageLocation.StorageName;
+                Storage= transfer.StorageLocation.StorageName;
                 _transfers.Add(transfer);
             }
         }
@@ -219,16 +219,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         {
             _infoBarService.showError("Couldn't load transfer list", "Transfer List");
         }
-        //_id = _pcb.Id;
-        /*_serialNumber = _pcb.SerialNumber;
-        //_createdDate = _pcb.CreatedDate;    
-        _restriction = _pcb.Restriction;
-        _errorDescription = _pcb.ErrorDescription;
-        _errorTypes = _pcb.ErrorTypes;
-        _finalized = _pcb.Finalized;
-        _pcbType = _pcb.PcbType;
-        _comment = _pcb.Comment;
-        _diagnose =  _pcb.Diagnose;*/
+        
     }
 
     public void OnNavigatedFrom()
