@@ -102,15 +102,13 @@
                     <ComboBox x:Name="ComboBox" 
                             ItemsSource="{x:Bind ViewModel.StorageLocations}" 
                             SelectionChanged="ComboBox_SelectionChanged"
-                            PlaceholderText="Alle"  
+                            PlaceholderText="Alles"
                     >
-                             <!--SelectionMode="Single"-->
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding StorageName}"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
-
                     </ComboBox>
                 </AppBarElementContainer>
                 <AppBarButton Icon="Filter"

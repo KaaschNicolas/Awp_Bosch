@@ -102,11 +102,14 @@ namespace App.Views
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.First() is not null)
+            if (e.AddedItems.Count > 0)
             {
-                ViewModel.SelectedComboBox = e.AddedItems.First() as StorageLocation;
+                if (e.AddedItems.First() is not null)
+                {
+                    ViewModel.SelectedComboBox = e.AddedItems.First() as StorageLocation;
 
-                ViewModel.IsFilteredByStorageLocation = true;
+                    ViewModel.IsFilteredByStorageLocation = true;
+                }
             }
         }
 
@@ -157,6 +160,7 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Default;
             ViewModel.FilterOptions = PcbFilterOptions.None;
+            ComboBox.SelectedItem = null;
             await ViewModel.FirstAsyncCommand.ExecuteAsync(null);
         }
 
