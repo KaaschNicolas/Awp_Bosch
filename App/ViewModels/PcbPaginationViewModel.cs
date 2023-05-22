@@ -18,9 +18,16 @@ namespace App.ViewModels
 {
     public partial class PcbPaginationViewModel : ObservableRecipient
     {
-        public PcbPaginationViewModel(IPcbDataService<Pcb> crudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService) 
+        public PcbPaginationViewModel(
+            IPcbDataService<Pcb> pcbDataService,
+            IStorageLocationDataService<StorageLocation> storageLocationDataService,
+            IInfoBarService infoBarService,
+            IDialogService dialogService,
+            INavigationService navigationService
+        ) 
         {
-            _pcbDataService = crudService;
+            _pcbDataService = pcbDataService;
+            _storageLocationDataService = storageLocationDataService;
             FirstAsyncCommand = new AsyncRelayCommand(
                 async () => await GetPcbs(1, _pageSize, _isSortingAscending),
                 () => _pageNumber != 1
@@ -88,7 +95,7 @@ namespace App.ViewModels
         private PcbFilterOptions _filterOptions;
 
         [ObservableProperty]
-        private StorageLocation _storageLocation;
+        private ObservableCollection<StorageLocation> _storageLocations;
 
         public List<int> PageSizes => new() { 5, 10, 15, 20 };
 
@@ -117,6 +124,13 @@ namespace App.ViewModels
         {
             Response<List<Pcb>> pcbs;
             Response<int> maxEntries;
+            var storageLocations = await _storageLocationDataService.GetAll();
+
+            if (storageLocations.Code == ResponseCode.Success)
+            {
+                _storageLocations = new();
+                storageLocations.Data.ForEach(x => _storageLocations.Add(x));
+            }
 
             if (_filterOptions != PcbFilterOptions.None)
             {

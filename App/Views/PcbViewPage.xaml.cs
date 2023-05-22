@@ -100,6 +100,11 @@ namespace App.Views
             DataGrid.RowDetailsVisibilityMode = ctWinUI.DataGridRowDetailsVisibilityMode.Collapsed;
         }
 
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedStorageLocation = e.AddedItems.First() as StorageLocation;
+        }
+
         private async void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)
         {
             _displayMode = DataGridDisplayMode.UserSorted;
@@ -112,7 +117,10 @@ namespace App.Views
                 : e.Column.SortDirection = ctWinUI.DataGridSortDirection.Descending;
             _actualSortedColumn = e.Column;
 
-            ViewModel.SortBy = e.Column.Tag.ToString();
+            if (e.Column.Tag is not null)
+            {
+                ViewModel.SortBy = e.Column.Tag.ToString();
+            }
             bool isAscending = e.Column.SortDirection is null or (ctWinUI.DataGridSortDirection?)ctWinUI.DataGridSortDirection.Descending;
 
             await ViewModel.SortByCommand.ExecuteAsync(null); //hier nochmal schauen

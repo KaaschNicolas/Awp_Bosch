@@ -98,6 +98,19 @@
                         Background="Transparent"
                         VerticalAlignment="Center"
                         OverflowButtonVisibility="Collapsed">
+                <AppBarElementContainer VerticalContentAlignment="Center">
+                    <ComboBox x:Name="ListBox" ItemsSource="{x:Bind ViewModel.StorageLocations}" 
+                             SelectionChanged="ListBox_SelectionChanged"
+                    >
+                             <!--SelectionMode="Single"-->
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StorageName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+
+                    </ComboBox>
+                </AppBarElementContainer>
                 <AppBarButton Icon="Filter"
                               Label="Filter"
                               Width="80">
@@ -218,7 +231,7 @@
                 <ctWinUI:DataGridTextColumn Header="Abgeschlossen"
                                             Binding="{Binding Finalized}"
                                             Tag="Finalized" />
-                <controls:DataGridTemplateColumn Width="100" Header="Aktion">
+                <controls:DataGridTemplateColumn Width="100" Header="Aktion" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <AppBarButton
@@ -240,7 +253,6 @@
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
-
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>

@@ -24,5 +24,7 @@ namespace App.Core.Services.Interfaces
         public Task<Response<List<T>>> Like(int pageIndex, int pageSize, string queryText);
 
         public Task<Response<List<T>>> GetWithFilter(int pageIndex, int pageSize, Expression<Func<T, bool>> where);
+
+        public Task<Response<List<Transfer>>> GetLatestStorageLocation();
     }
 }
