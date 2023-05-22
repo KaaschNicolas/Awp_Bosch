@@ -20,7 +20,7 @@ namespace App.ViewModels
     {
         public PcbPaginationViewModel(IPcbDataService<Pcb> crudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService) 
         {
-            _crudService = crudService;
+            _pcbDataService = crudService;
             FirstAsyncCommand = new AsyncRelayCommand(
                 async () => await GetPcbs(1, _pageSize, _isSortingAscending),
                 () => _pageNumber != 1
@@ -59,7 +59,8 @@ namespace App.ViewModels
             Refresh();
         }
 
-        private readonly IPcbDataService<Pcb> _crudService;
+        private readonly IPcbDataService<Pcb> _pcbDataService;
+        private readonly IStorageLocationDataService<StorageLocation> _storageLocationDataService;
         private readonly IInfoBarService _infoBarService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
@@ -85,6 +86,9 @@ namespace App.ViewModels
 
         [ObservableProperty]
         private PcbFilterOptions _filterOptions;
+
+        [ObservableProperty]
+        private StorageLocation _storageLocation;
 
         public List<int> PageSizes => new() { 5, 10, 15, 20 };
 
@@ -119,27 +123,27 @@ namespace App.ViewModels
                 switch (_filterOptions)
                 {
                     case PcbFilterOptions.Search:
-                        maxEntries = await _crudService.MaxEntriesSearch(QueryText);
-                        pcbs = await _crudService.Like(pageIndex, pageSize, QueryText);
+                        maxEntries = await _pcbDataService.MaxEntriesSearch(QueryText);
+                        pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
                         break;
                     case PcbFilterOptions.Filter1:
                         Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
-                        maxEntries = await _crudService.MaxEntriesFiltered(where1);
-                        pcbs = await _crudService.GetWithFilter(pageIndex, pageSize, where1);
+                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where1);
                         break;
                     case PcbFilterOptions.Filter2:
                         Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.Now.Date;
-                        maxEntries = await _crudService.MaxEntriesFiltered(where2);
-                        pcbs = await _crudService.GetWithFilter(pageIndex, pageSize, where2);
+                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where2);
                         break;
                     case PcbFilterOptions.Filter3:
                         Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0;
-                        maxEntries = await _crudService.MaxEntriesFiltered(where3);
-                        pcbs = await _crudService.GetWithFilter(pageIndex, pageSize, where3);
+                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where3);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
                         break;
                     default:
-                        maxEntries = await _crudService.MaxEntries();
-                        pcbs = await _crudService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
+                        maxEntries = await _pcbDataService.MaxEntries();
+                        pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
                         break;
                 }
 
@@ -164,8 +168,8 @@ namespace App.ViewModels
             }
             else
             {
-                maxEntries = await _crudService.MaxEntries();
-                pcbs = await _crudService.GetAllQueryable(pageIndex, pageSize, _sortyBy, isAscending);
+                maxEntries = await _pcbDataService.MaxEntries();
+                pcbs = await _pcbDataService.GetAllQueryable(pageIndex, pageSize, _sortyBy, isAscending);
 
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
@@ -200,7 +204,7 @@ namespace App.ViewModels
             {
                 Pcb pcbToRemove = _selectedItem;
                 _pcbs.Remove(pcbToRemove);
-                await _crudService.Delete(pcbToRemove);
+                await _pcbDataService.Delete(pcbToRemove);
                 _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
             }
         }
