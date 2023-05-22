@@ -145,20 +145,4 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
         }
     }
-
-    public async Task<Response<List<Transfer>>> GetLatestStorageLocation()
-    {
-        try
-        {
-            var data = await _boschContext
-                .Set<T>()
-                .Select(x => x.Transfers.LastOrDefault())
-                .ToListAsync();
-            return new Response<List<Transfer>>(ResponseCode.Success, data: data);
-        }
-        catch (DbUpdateException)
-        {
-            return new Response<List<Transfer>>(ResponseCode.Error, error: "GetLatestStorageLication() failed");
-        }
-    }
 }

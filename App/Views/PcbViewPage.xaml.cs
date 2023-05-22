@@ -100,9 +100,14 @@ namespace App.Views
             DataGrid.RowDetailsVisibilityMode = ctWinUI.DataGridRowDetailsVisibilityMode.Collapsed;
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedStorageLocation = e.AddedItems.First() as StorageLocation;
+            if (e.AddedItems.First() is not null)
+            {
+                ViewModel.SelectedComboBox = e.AddedItems.First() as StorageLocation;
+
+                ViewModel.IsFilteredByStorageLocation = true;
+            }
         }
 
         private async void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)

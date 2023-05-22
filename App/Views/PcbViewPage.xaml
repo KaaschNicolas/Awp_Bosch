@@ -99,8 +99,10 @@
                         VerticalAlignment="Center"
                         OverflowButtonVisibility="Collapsed">
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <ComboBox x:Name="ListBox" ItemsSource="{x:Bind ViewModel.StorageLocations}" 
-                             SelectionChanged="ListBox_SelectionChanged"
+                    <ComboBox x:Name="ComboBox" 
+                            ItemsSource="{x:Bind ViewModel.StorageLocations}" 
+                            SelectionChanged="ComboBox_SelectionChanged"
+                            PlaceholderText="Alle"  
                     >
                              <!--SelectionMode="Single"-->
                         <ComboBox.ItemTemplate>

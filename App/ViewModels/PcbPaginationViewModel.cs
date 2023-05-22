@@ -5,6 +5,7 @@ using App.Core.Services.Interfaces;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
@@ -89,13 +90,22 @@ namespace App.ViewModels
         private ObservableCollection<Pcb> _pcbs;
 
         [ObservableProperty]
+        private ObservableCollection<StorageLocation> _storageLocations;
+        
+        [ObservableProperty]
         private bool _isSortingAscending;
+
+        [ObservableProperty]
+        private bool _isFilteredByStorageLocation;
 
         [ObservableProperty]
         private PcbFilterOptions _filterOptions;
 
         [ObservableProperty]
-        private ObservableCollection<StorageLocation> _storageLocations;
+        private StorageLocation _selectedComboBox;
+        
+        [ObservableProperty]
+        private Pcb _selectedItem;
 
         public List<int> PageSizes => new() { 5, 10, 15, 20 };
 
@@ -117,8 +127,6 @@ namespace App.ViewModels
 
         public string SortBy { get => _sortyBy; set => SetProperty(ref _sortyBy, value); }
 
-        [ObservableProperty]
-        private Pcb _selectedItem;
 
         private async Task GetPcbs(int pageIndex, int pageSize, bool isAscending)
         {
@@ -132,7 +140,7 @@ namespace App.ViewModels
                 storageLocations.Data.ForEach(x => _storageLocations.Add(x));
             }
 
-            if (_filterOptions != PcbFilterOptions.None)
+            if (_filterOptions != PcbFilterOptions.None && _isFilteredByStorageLocation is not true)
             {
                 switch (_filterOptions)
                 {
@@ -178,6 +186,35 @@ namespace App.ViewModels
                     Pcbs = copy;
                     
 
+                }
+            }
+            else if (_filterOptions != PcbFilterOptions.None && _isFilteredByStorageLocation is true)
+            {
+                switch (_filterOptions)
+                {
+                    case PcbFilterOptions.Search:
+                        maxEntries = await _pcbDataService.MaxEntriesSearch(QueryText);
+                        pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
+                        break;
+                    case PcbFilterOptions.Filter1:
+                        Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true && x.Transfers.LastOrDefault().StorageLocation == _selectedComboBox;
+                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where1);
+                        break;
+                    case PcbFilterOptions.Filter2:
+                        Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.Now.Date && x.Transfers.LastOrDefault().StorageLocation == _selectedComboBox;
+                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where2);
+                        break;
+                    case PcbFilterOptions.Filter3:
+                        Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0 && x.Transfers.LastOrDefault().StorageLocation == _selectedComboBox;
+                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where3);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
+                        break;
+                    default:
+                        maxEntries = await _pcbDataService.MaxEntries();
+                        pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
+                        break;
                 }
             }
             else
