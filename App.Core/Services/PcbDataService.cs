@@ -6,6 +6,7 @@ using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
 {
@@ -15,7 +16,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
+            var data = await _boschContext
+                .Set<T>()
                 .OrderBy(orderByProperty, isAscending)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -32,7 +34,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
+            var data = await _boschContext
+                .Set<T>()
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
         }
@@ -46,7 +49,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
+            var data = await _boschContext
+                .Set<T>()
                 .Where(where)
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
@@ -61,7 +65,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
+            var data = await _boschContext
+                .Set<T>()
                 .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
@@ -76,7 +81,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
+            var data = await _boschContext
+                .Set<T>()
                 .OrderBy(orderByProperty, isAscending)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -98,7 +104,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
 
             if (pageIndex == 0)
             {
-                data = await _boschContext.Set<T>()
+                data = await _boschContext
+                .Set<T>()
                 .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
                 .Skip((pageIndex) * pageSize)
                 .Take(pageSize)
@@ -106,7 +113,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             }
             else
             {
-                data = await _boschContext.Set<T>()
+                data = await _boschContext
+                    .Set<T>()
                     .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
@@ -124,7 +132,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
+            var data = await _boschContext
+                .Set<T>()
                 .Where(where)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -134,6 +143,22 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         catch (DbUpdateException)
         {
             return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
+        }
+    }
+
+    public async Task<Response<List<Transfer>>> GetLatestStorageLocation()
+    {
+        try
+        {
+            var data = await _boschContext
+                .Set<T>()
+                .Select(x => x.Transfers.LastOrDefault())
+                .ToListAsync();
+            return new Response<List<Transfer>>(ResponseCode.Success, data: data);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<List<Transfer>>(ResponseCode.Error, error: "GetLatestStorageLication() failed");
         }
     }
 }
