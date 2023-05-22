@@ -10,12 +10,21 @@ namespace App.Core.Models
         {
             get; set;
         }
+
+        [Required]
+        public int StorageLocationId { get; set; }
+
         [Required]
         public StorageLocation StorageLocation
         {
             get; set;
         }
+
+
         [Required]
+        public int NotedById { get; set; }
+
+
         public User NotedBy
         {
             get; set;

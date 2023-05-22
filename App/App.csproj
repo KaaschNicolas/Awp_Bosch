@@ -17,6 +17,7 @@
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\ErrorCardUserControl.xaml" />
     <None Remove="Views\CreateDiagnosePage.xaml" />
     <None Remove="Views\DiagnosePage.xaml" />
     <None Remove="Views\PcbViewPage.xaml" />

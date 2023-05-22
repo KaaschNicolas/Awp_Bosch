@@ -1,5 +1,6 @@
 ﻿using App.Activation;
 using App.Contracts.Services;
+using App.Core.Services.Interfaces;
 using App.Views;
 
 using Microsoft.UI.Xaml;
@@ -12,13 +13,17 @@ public class ActivationService : IActivationService
     private readonly ActivationHandler<LaunchActivatedEventArgs> _defaultHandler;
     private readonly IEnumerable<IActivationHandler> _activationHandlers;
     private readonly IThemeSelectorService _themeSelectorService;
+    private readonly IAuthenticationService _authenticationService;
+    private readonly IDialogService _dialogService;
     private UIElement? _shell = null;
 
-    public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, IThemeSelectorService themeSelectorService)
+    public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, IThemeSelectorService themeSelectorService, IAuthenticationService authenticationService, IDialogService dialogService)
     {
         _defaultHandler = defaultHandler;
         _activationHandlers = activationHandlers;
         _themeSelectorService = themeSelectorService;
+        _authenticationService = authenticationService;
+        _dialogService = dialogService;
     }
 
     public async Task ActivateAsync(object activationArgs)
@@ -68,5 +73,10 @@ public class ActivationService : IActivationService
     {
         await _themeSelectorService.SetRequestedThemeAsync();
         await Task.CompletedTask;
+        if (!_authenticationService.isAuthenticated()) { 
+            if (App.MainWindow.Content is FrameworkElement fe) {
+               fe.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync("Unauthorized", "Sie haben keine Berechtigungen diese Anwendung zu nutzen. \n Bitte wenden sie sich an ihren nächsten Vorgesetzten, \n wenn Sie dennoch Zugriff benötigen.", App.MainWindow.Content.XamlRoot);
+            } 
+        }
     }
 }
