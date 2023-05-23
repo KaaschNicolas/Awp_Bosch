@@ -1,0 +1,250 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<Page
+    x:Class="App.Views.PcbViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="using:App.Behaviors"
+      xmlns:ctWinUI="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:viewModels="using:App.ViewModels"
+      mc:Ignorable="d"
+      Background="Transparent">
+
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate x:DataType="viewModels:PcbPaginationViewModel">
+            <Grid Margin="0,0,50,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <CommandBar
+                    Grid.Column="0"
+                    Padding="0"
+                    Background="Transparent"
+                    DefaultLabelPosition="Right"
+                    IsOpen="False">
+                    <CommandBar.Content>
+                        <!--  Get MainPageTitle.Text from localizx:ed resources  -->
+                        <TextBlock Text="Leiterplatten" />
+                    </CommandBar.Content>
+
+                    <!--  All your AppBar buttons  -->
+                    <!--  Get SendAppBarButton.Label from localized resources  -->
+                    <AppBarButton
+                        Click="CreatePcbButton_Click"
+                        Icon="Add"
+                        Label="Hinzufügen" />
+                    <AppBarButton Icon="Refresh" Label="Neu Laden" />
+
+                </CommandBar>
+                <StackPanel
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Background="{ThemeResource CommandBarBackground}">
+                    <AutoSuggestBox
+                        x:Name="search_box"
+                        Width="200px"
+                        BorderThickness="0"
+                        PlaceholderText="Search"
+                        QueryIcon="Find" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+    <Grid Margin="0 0 0 80">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <DataTemplate x:Key="RowDetailsTemplate">
+                <Grid Padding="10"
+                      BorderThickness=".5 0 .5 .5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding SerialNumber}"
+                               HorizontalAlignment="Right" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Text="{Binding ErrorDescription}"
+                               HorizontalAlignment="Right" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Text="{Binding Finalized}"
+                               HorizontalAlignment="Right" />
+                </Grid>
+            </DataTemplate>
+        </Grid.Resources>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    Margin="0 0 0 16"
+                    CornerRadius="4"
+                    Height="52">
+            <CommandBar DefaultLabelPosition="Right"
+                        Background="Transparent"
+                        VerticalAlignment="Center"
+                        OverflowButtonVisibility="Collapsed">
+                <AppBarButton Icon="Filter"
+                              Label="Filter"
+                              Width="80">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Abgeschlossene Einträge"
+                                            Click="Filter1_Click" />
+                            <MenuFlyoutItem Text="Heute erstellt"
+                                            Click="Filter2_Click" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Name="FilterHeightLow"
+                                            Text="keine Weitergaben"
+                                            Click="Filter3_Click" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Filter entfernen"
+                                            Click="FilterClear_Click" />
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarElementContainer x:Name="FilterIndicator"
+                                        Visibility="Collapsed"
+                                        Margin="-16 0 0 0">
+                    <FontIcon Glyph="&#xE73E;"
+                              FontSize="12"
+                              Foreground="Coral"
+                              VerticalAlignment="Top" />
+                </AppBarElementContainer>
+                <AppBarButton ToolTipService.ToolTip="First"
+                              Icon="Previous"
+                              Command="{x:Bind ViewModel.FirstAsyncCommand, Mode=OneWay}"
+                              Foreground="{ThemeResource SystemAccentColor}" />
+                <AppBarButton ToolTipService.ToolTip="Previous"
+                              Icon="Back"
+                              Command="{x:Bind ViewModel.PreviousAsyncCommand, Mode=OneWay}"
+                              Foreground="{ThemeResource SystemAccentColor}" />
+                <AppBarElementContainer VerticalContentAlignment="Center">
+                    <TextBlock Text="Page"
+                               Margin="12 0 8 0" />
+                </AppBarElementContainer>
+                <AppBarElementContainer VerticalContentAlignment="Center">
+                    <TextBlock Text="{x:Bind ViewModel.PageNumber, Mode=OneWay}" />
+                </AppBarElementContainer>
+                <AppBarElementContainer VerticalContentAlignment="Center">
+                    <TextBlock Text="of"
+                               Margin="8 0" />
+                </AppBarElementContainer>
+                <AppBarElementContainer VerticalContentAlignment="Center">
+                    <TextBlock Text="{x:Bind ViewModel.PageCount, Mode=OneWay}"
+                               Margin="0 0 12 0" />
+                </AppBarElementContainer>
+                <AppBarButton ToolTipService.ToolTip="Next"
+                              Icon="Forward"
+                              Command="{x:Bind ViewModel.NextAsyncCommand, Mode=OneWay}"
+                              Foreground="{ThemeResource SystemAccentColor}" />
+                <AppBarButton ToolTipService.ToolTip="Last"
+                              Icon="Next"
+                              Command="{x:Bind ViewModel.LastAsyncCommand, Mode=OneWay}"
+                              Foreground="{ThemeResource SystemAccentColor}" />
+                <AppBarSeparator />
+                <AppBarElementContainer VerticalContentAlignment="Center">
+                    <ComboBox ItemsSource="{x:Bind ViewModel.PageSizes}"
+                              SelectedItem="{x:Bind ViewModel.PageSize, Mode=TwoWay}" />
+                </AppBarElementContainer>
+                <AppBarElementContainer VerticalContentAlignment="Center">
+                    <TextBlock Text="rows per page"
+                               Margin="8 0" />
+                </AppBarElementContainer>
+            </CommandBar>
+            <AutoSuggestBox x:Name="SearchBox"
+                            QuerySubmitted="SearchBox_QuerySubmitted"
+                            QueryIcon="Find"
+                            Width="240"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="8 0 0 0" />
+            <CommandBar DefaultLabelPosition="Right"
+                        Background="Transparent"
+                        VerticalAlignment="Center"
+                        Margin="0 0 8 0">
+                <AppBarButton Label="Search"
+                              Click="SearchBox_QueryClick" />
+                <AppBarElementContainer x:Name="SearchIndicator"
+                                        Visibility="Collapsed"
+                                        Margin="-16 0 0 0">
+                    <FontIcon Glyph="&#xE73E;"
+                              FontSize="12"
+                              Foreground="Coral"
+                              VerticalAlignment="Top" />
+                </AppBarElementContainer>
+                <AppBarButton Click="FilterClear_Click"
+                              Icon="Refresh"
+                              Label="Reset" />
+            </CommandBar>
+        </StackPanel>
+        <ctWinUI:DataGrid x:Name="DataGrid"
+                          ItemsSource="{x:Bind ViewModel.Pcbs, Mode=OneWay}"
+                          SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
+                          AutoGenerateColumns="False"
+                          CanUserSortColumns="True"
+                          Sorting="DataGrid_Sorting"
+                          SelectionMode="Single"
+                          IsReadOnly="True"
+                          RowDetailsVisibilityMode="Collapsed"
+                          Grid.Row="1">
+            <ctWinUI:DataGrid.Resources>
+                <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundBrush"
+                                 Opacity=".5" />
+                <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush">Transparent</SolidColorBrush>
+                <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
+            </ctWinUI:DataGrid.Resources>
+            <ctWinUI:DataGrid.Columns>
+                <ctWinUI:DataGridTextColumn Header="SerialNumber"
+                                            Binding="{Binding SerialNumber}"
+                                            Tag="SerialNumber" />
+                <ctWinUI:DataGridComboBoxColumn Header="Fehler Beschreibung"
+                                                Binding="{Binding ErrorDescription}"
+                                                Tag="ErrorDescription" />
+                <ctWinUI:DataGridTextColumn Header="Abgeschlossen"
+                                            Binding="{Binding Finalized}"
+                                            Tag="Finalized" />
+                <controls:DataGridTemplateColumn Width="100" Header="Aktion">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <AppBarButton
+                                Width="60"
+                                VerticalAlignment="Center"
+                                Background="Transparent"
+                                Icon="More"
+                                LabelPosition="Collapsed">
+                                <AppBarButton.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                        <MenuFlyoutItem
+                                            Click="NavigateToUpdate"
+                                            Icon="Edit"
+                                            Text="Bearbeiten" />
+                                        <MenuFlyoutItem
+                                            Click="DeleteClick"
+                                            Icon="Delete"
+                                            Text="Löschen" />
+                                    </MenuFlyout>
+                                </AppBarButton.Flyout>
+                            </AppBarButton>
+
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+            </ctWinUI:DataGrid.Columns>
+        </ctWinUI:DataGrid>
+    </Grid>
+</Page>
