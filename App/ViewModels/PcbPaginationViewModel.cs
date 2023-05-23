@@ -5,30 +5,25 @@ using App.Core.Services.Interfaces;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.ViewModels
 {
     public partial class PcbPaginationViewModel : ObservableRecipient
     {
-        public PcbPaginationViewModel(IPcbDataService<Pcb> crudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService) 
+        public PcbPaginationViewModel(IPcbDataService<Pcb> crudService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transferDataService)
         {
             _crudService = crudService;
+            _authenticationService = authenticationService;
             FirstAsyncCommand = new AsyncRelayCommand(
                 async () => await GetPcbs(1, _pageSize, _isSortingAscending),
                 () => _pageNumber != 1
             );
 
             PreviousAsyncCommand = new AsyncRelayCommand(
-                async () => await GetPcbs(_pageNumber -1, _pageSize, _isSortingAscending),
-                () => _pageNumber > 1 
+                async () => await GetPcbs(_pageNumber - 1, _pageSize, _isSortingAscending),
+                () => _pageNumber > 1
             );
 
             NextAsyncCommand = new AsyncRelayCommand(
@@ -55,14 +50,20 @@ namespace App.ViewModels
             _dialogService = dialogService;
             _infoBarService = infoBarService;
             _navigationService = navigationService;
-
+            _storageLocationCrudService = storageLocationCrudService;
+            _diagnoseCrudService = diagnoseCrudService;
+            _transferDataService = transferDataService;
             Refresh();
         }
 
         private readonly IPcbDataService<Pcb> _crudService;
+        private readonly ICrudService<StorageLocation> _storageLocationCrudService;
+        private readonly ICrudService<Diagnose> _diagnoseCrudService;
         private readonly IInfoBarService _infoBarService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly ITransferDataService<Transfer> _transferDataService;
 
         public IAsyncRelayCommand FirstAsyncCommand { get; }
         public IAsyncRelayCommand PreviousAsyncCommand { get; }
@@ -158,7 +159,7 @@ namespace App.ViewModels
                     ObservableCollection<Pcb> copy = new();
                     pcbsPaginated.ForEach(x => copy.Add(x));
                     Pcbs = copy;
-                    
+
 
                 }
             }
@@ -206,6 +207,48 @@ namespace App.ViewModels
         }
 
         [RelayCommand]
+        public async void ShowTransfer()
+        {
+            User currentUser = _authenticationService.currentUser();
+            var storageLocationsResponse = await _storageLocationCrudService.GetAll();
+            var storageLocations = new List<StorageLocation>();
+            if (storageLocationsResponse.Code == ResponseCode.Success)
+            {
+                storageLocations = storageLocationsResponse.Data;
+            }
+
+            var diagnoseResponse = await _diagnoseCrudService.GetAll();
+            var diagnoses = new List<Diagnose>();
+            if (diagnoseResponse.Code == ResponseCode.Success)
+            {
+                diagnoses = diagnoseResponse.Data;
+            }
+            var result = await _dialogService.ShowCreateTransferDialog("Weitergabe", currentUser, storageLocations, diagnoses);
+            if (result != null)
+            {
+                Transfer transfer = result.Item1;
+                int diagnoseId = result.Item2;
+
+                transfer.PcbId = _selectedItem.Id;
+
+                var response = await _transferDataService.CreateTransfer(transfer, diagnoseId);
+                if (response == ResponseCode.Success)
+                {
+                    _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
+                }
+                else
+                {
+                    _infoBarService.showError("Fehler bei der Weitergabe", "Error");
+
+                }
+
+
+            }
+
+
+        }
+
+        [RelayCommand]
         public void NavigateToUpdate(Pcb pcb)
         {
             _navigationService.NavigateTo("App.ViewModels.PcbSingleViewModel", pcb);
@@ -216,5 +259,6 @@ namespace App.ViewModels
             _pageNumber = 0;
             FirstAsyncCommand.ExecuteAsync(null);
         }
+
     }
 }

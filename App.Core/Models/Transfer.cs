@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.Core.Models
 {
@@ -29,6 +30,13 @@ namespace App.Core.Models
         {
             get; set;
         }
+
+
+        public int PcbId
+        {
+            get; set;
+        }
+        [ForeignKey(nameof(PcbId))]
         public Pcb Pcb
         {
             get; set;
