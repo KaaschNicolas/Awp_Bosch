@@ -15,6 +15,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     private readonly ICrudService<StorageLocation> _storageLocationCrudService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
+    private readonly IAuthenticationService _authenticationService;
 
     [ObservableProperty]
     private DateTime createdAt = DateTime.Now;
@@ -54,13 +55,14 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
 
     [ObservableProperty]
     private ObservableCollection<PcbType> _pcbTypes;
-    public CreatePcbViewModel(ICrudService<Pcb> pcbCrudService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<PcbType> pcbTypesCrudService, IInfoBarService infoBarService, INavigationService navigationService)
+    public CreatePcbViewModel(ICrudService<Pcb> pcbCrudService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<PcbType> pcbTypesCrudService, IInfoBarService infoBarService, INavigationService navigationService, IAuthenticationService authenticationService)
     {
         _pcbCrudService = pcbCrudService;
         _storageLocationCrudService = storageLocationCrudService;
         _pcbTypeCrudService = pcbTypesCrudService;
         _infoBarService = infoBarService;
         _navigationService = navigationService;
+        _authenticationService = authenticationService;
 
         _storageLocations = new ObservableCollection<StorageLocation>();
         _pcbTypes = new ObservableCollection<PcbType>();
@@ -69,7 +71,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     [RelayCommand]
     public async Task Save()
     {
-        Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = 1 };
+        Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = User.Id };
         ErrorType errorType1 = new ErrorType { Code = _errorCode1, ErrorDescription = _errorDescription1 };
         ErrorType errorType2 = new ErrorType { Code = _errorCode2, ErrorDescription = _errorDescription2 };
         Device restriction = new Device { Name = _restriction };
@@ -128,6 +130,8 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
             }
 
         }
+
+        User = _authenticationService.currentUser();
 
     }
 
