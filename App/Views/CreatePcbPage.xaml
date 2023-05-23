@@ -49,7 +49,9 @@
                 <TextBox
                     Grid.Column="1"
                     Header="Aufgenommen von"
-                    PlaceholderText="Benutzername" />
+                    IsReadOnly="True"
+                    PlaceholderText="Benutzername"
+                    Text="{x:Bind ViewModel.User.Name, Mode=OneWay}" />
 
                 <AutoSuggestBox
                     x:Name="PcbPartNumber"
