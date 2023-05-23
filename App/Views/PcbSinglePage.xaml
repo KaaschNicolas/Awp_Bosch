@@ -118,22 +118,32 @@
 					    Text="Aufgenommenen von:"/>
                     <TextBlock
 					    Margin="0,5,0,0"
-					    Text="Tester_1" FontWeight="Bold"/>
+					    Text="{x:Bind Path=ViewModel.NotedBy, Mode=OneWay}" FontWeight="Bold"/>
                 </StackPanel>
             </StackPanel>
+            <Button
+				x:Name="RestrictionButton"
+				Grid.Column="0"
+				Grid.Row="1"
+				Grid.ColumnSpan="1"
+                Margin="0,-260,0,0"
+				HorizontalAlignment="Right" 
+				Height="50" Width="230"
+				Background="#f7e771"
+				FontWeight="SemiBold">Einschränkung hinzufügen</Button>
             <InfoBar
-				    Grid.Column="0"
-				    Grid.Row="1"
-				    Grid.ColumnSpan="1"
-				    HorizontalAlignment="Right"
-				    IsOpen="True"
-				    IsIconVisible="True"
-				    Severity="Warning"
-				    IsClosable="False"
-				    Margin="0,0,0,0"
-				    Title="Einschränkung"
-				    Message="{x:Bind Path=ViewModel.Restriction.Name, Mode=TwoWay}" />
-
+				x:Name="RestrictionInfoBar"
+                Grid.Column="0"
+				Grid.Row="1"
+				Grid.ColumnSpan="1"
+				HorizontalAlignment="Right"
+				IsOpen="True"
+				IsIconVisible="True"
+				Severity="Warning"
+				IsClosable="False"
+				Margin="0,0,0,0"
+				Title="Einschränkung"
+				Message="{x:Bind Path=ViewModel.Restriction.Name, Mode=TwoWay}" />
 
             <StackPanel
 			    Grid.Column="0"
@@ -159,17 +169,40 @@
 				    IsExpanded="True"
 				    ExpandDirection="Down"
 				    HorizontalAlignment="Stretch"
-				    HorizontalContentAlignment="Stretch"
-				    Header="Fehler: M320"
-				    Content="Beschreibung: Fehler nicht gefunden"/>
+				    HorizontalContentAlignment="Stretch">
+                    <Expander.Header>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBlock Text="Fehler:"/>
+                            <TextBlock Text="{x:Bind Path=ViewModel.FirstErrorCode, Mode=OneWay}"/>
+                        </StackPanel>
+                    </Expander.Header>
+                    <StackPanel
+                        Orientation="Horizontal">
+                        <TextBlock Text="Beschreibung:"/>
+                        <TextBlock Text="{x:Bind Path=ViewModel.FirstErrorDescription, Mode=OneWay}"/>
+                    </StackPanel>
+                </Expander>
+
                 <Expander
 				    Margin="0,20,0,0"
 				    IsExpanded="True"
 				    ExpandDirection="Down"
 				    HorizontalAlignment="Stretch"
-				    HorizontalContentAlignment="Stretch" 
-				    Header="Fehler: 010"
-				    Content="Beschreibung: Verbindung herstellen"/>
+				    HorizontalContentAlignment="Stretch" >
+                    <Expander.Header>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBlock Text="Fehler:"/>
+                            <TextBlock Text="{x:Bind Path=ViewModel.SecondErrorCode, Mode=OneWay}"/>
+                        </StackPanel>
+                    </Expander.Header>
+                    <StackPanel
+                        Orientation="Horizontal">
+                        <TextBlock Text="Beschreibung:"/>
+                        <TextBlock Text="{x:Bind Path=ViewModel.SecondErrorDescription, Mode=OneWay}"/>
+                    </StackPanel>
+                </Expander>
 
 
                 <!-- Umlauf-Historie -->
@@ -196,6 +229,7 @@
             CanUserReorderColumns="False"
             CanUserResizeColumns="True"
             ColumnHeaderHeight="32"
+            ColumnWidth="Auto"
             MaxColumnWidth="400"
             FrozenColumnCount="0"
             GridLinesVisibility="None"
@@ -205,25 +239,28 @@
             SelectionMode="Extended"
             RowGroupHeaderPropertyNameAlternative="Range"
             ItemsSource="{Binding Transfers}"
-            SelectedItem="{Binding Transfer, Mode=TwoWay}"><!--RowDetailsTemplate="{StaticResource RowDetailsTemplate}"-->
+            SelectedItem="{Binding Transfer, Mode=TwoWay}">
+                        <!--RowDetailsTemplate="{StaticResource RowDetailsTemplate}"-->
                         <controls:DataGrid.Columns>
-                            <controls:DataGridTextColumn Binding="{Binding Id, Mode=TwoWay}" Header="Id" Tag="Id" />
-                            <!--<controls:DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Grid Width="40" Height="40" VerticalAlignment="top">
-                                        <Ellipse Fill="black" Stroke="white" StrokeThickness="2" />
-                                        <TextBlock Text="{Binding Id}" Foreground="white" FontWeight="Bold" HorizontalAlignment="center" VerticalAlignment="center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </controls:DataGridTemplateColumn.CellTemplate>-->
+                            <!--<controls:DataGridTextColumn Binding="{Binding Id, Mode=TwoWay}" />-->
+                            <controls:DataGridTemplateColumn Header="Id" Width="40">
+                                <controls:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid Width="40" Height="40" VerticalAlignment="top">
+                                            <Ellipse Fill="black" Stroke="white" StrokeThickness="2" />
+                                            <TextBlock Text="{Binding Id, Mode=OneWay}" Foreground="white" FontWeight="Bold" HorizontalAlignment="center" VerticalAlignment="center" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </controls:DataGridTemplateColumn.CellTemplate>
                             <!--<controls:DataGridTextColumn Binding="{Binding StorageLocation.StorageName, Mode=TwoWay}" Header="Lagerort"/>
                             <controls:DataGridTextColumn Binding="{Binding Comment, Mode=TwoWay}" Header="Comment"/>-->
-                            <controls:DataGridTemplateColumn Header="standort" >
-                                    <controls:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
+                            </controls:DataGridTemplateColumn>
+                            <controls:DataGridTemplateColumn Header="standort" Width="500">
+                                <controls:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
                                         <Expander 
+                                            Margin="10,0,0,0"
                                             IsExpanded="false"
-                                            Width="410"
                                             VerticalAlignment="Top"
                                             HorizontalAlignment="Stretch"
                                             HorizontalContentAlignment="Stretch"
@@ -236,21 +273,18 @@
                                                 <TextBlock Text="Beschreibung:"/>
                                                 <TextBlock Text="{Binding Comment, Mode=OneWay}"/>
                                             </StackPanel>
-                                        </Expander> 
-                                        </DataTemplate>
-                                    </controls:DataGridTemplateColumn.CellTemplate>
-                                </controls:DataGridTemplateColumn>
+                                        </Expander>
+                                    </DataTemplate>
+                                </controls:DataGridTemplateColumn.CellTemplate>
+                            </controls:DataGridTemplateColumn>
                             <!--<controls:DataGridTextColumn Header="Created" Binding="{Binding CreatedDate, Mode=TwoWay}" Tag="Created" />
                             <controls:DataGridTextColumn Header="Noted By" Binding="{Binding NotedBy.Name, Mode=TwoWay}" Tag="User" />-->
                         </controls:DataGrid.Columns>
                     </controls:DataGrid>
                 </Grid>
 
-
-
-
-
-                <TextBlock
+                <!-- Hard-coded Umlauf -->
+                <!--<TextBlock
                     Margin="0,20,0,0"
                     FontWeight="Bold"
                     FontSize="20"
@@ -278,7 +312,7 @@
                         <TextBlock Text="2" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Grid>
                     <Expander
-				    Margin="10,0,0,0"
+				    Margin="10,0,0,50"
 				    IsExpanded="True"
 				    ExpandDirection="Down"
 				    VerticalAlignment="Top"
@@ -287,7 +321,7 @@
 				    Width="600"
 				    Header="PVB-Labor"
 				    Content="Anmerkung: kann Fehler nicht nachvollziehen"/>
-                </StackPanel>
+                </StackPanel>-->
 
             </StackPanel>
 
@@ -321,35 +355,57 @@
                 HorizontalAlignment="Right">
                 <!-- Status Panel -->
                 <StackPanel
-                x:Name="StatusPanelContent"
-			    Orientation="Vertical"
-                ScrollViewer.VerticalScrollMode="Disabled"
-                Background="white"
-                Height="250" Width="280"
-                HorizontalAlignment="Right">
-                    <!--Style="{ThemeResource }"-->
-                    <StackPanel
-                        Orientation="Horizontal">
-                        <TextBlock Margin="20,20,0,0" Text="Status:"/>
-                        <TextBlock Margin="20,20,0,0" FontWeight="Bold" 
-                            Text="{Binding Status}"/>
+                    x:Name="StatusPanelContent"
+			        Orientation="Vertical"
+                    ScrollViewer.VerticalScrollMode="Disabled"
+                    Background="white"
+                    Height="250" Width="280"
+                    HorizontalAlignment="Right">
+                        <!--Style="{ThemeResource }"-->
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBlock Margin="20,20,0,0" Text="Status:"/>
+                            <TextBlock Margin="20,20,0,0" FontWeight="Bold" 
+                                Text="{Binding Status}"/>
+                        </StackPanel>
+                        <StackPanel
+                            Orientation="Horizontal"
+                            Margin="0,20,0,10">
+                            <TextBlock Margin="20,0,0,0" Text="im Umlauf seit:    "/>
+                            <Border 
+                                x:Name="inCirculationText"
+                                Margin="20,0,0,0" CornerRadius="5,0,0,5">
+                                <TextBlock FontWeight="SemiBold" Margin="10,0,0,0" Text="{Binding InCirculationDays}"/>
+                            </Border>
+                            <Border 
+                                x:Name="Days"
+                                Margin="0,0,0,0" CornerRadius="0,5,5,0">
+                                <TextBlock Margin="0,0,10,3" Text=" Tage(e)"/>
+                            </Border>
+                        
+                        </StackPanel>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBlock Margin="20,20,0,0" Text="aktueller Standort:"/>
+                            <TextBlock Margin="20,20,0,0" FontWeight="Bold" 
+                                       Text="{Binding Storage}"/>
+                        </StackPanel>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBlock Margin="20,20,0,0" Text="Verweildauer:"/>
+                            <Border 
+                                x:Name="StorageDuration"
+                                Margin="20,20,0,0" CornerRadius="5,0,0,5">
+                                <TextBlock FontWeight="SemiBold" Margin="10,0,0,0" Text="{Binding AtLocationDays}"/>
+                            </Border>
+                            <Border 
+                                x:Name="DurationDays"
+                                Margin="0,20,0,0" CornerRadius="0,5,5,0">
+                            <TextBlock Margin="0,0,10,3" Text=" Tage(e)"/>
+                        </Border>
                     </StackPanel>
                     <StackPanel
-                        Orientation="Horizontal">
-                        <TextBlock Margin="20,20,0,0" Text="im Umlauf seit:"/>
-                    </StackPanel>
-                    <StackPanel
-                        Orientation="Horizontal">
-                        <TextBlock Margin="20,20,0,0" Text="aktueller Standort:"/>
-                        <TextBlock Margin="20,20,0,0" FontWeight="Bold" 
-                                   Text="{Binding Storage}"/>
-                    </StackPanel>
-                    <StackPanel
-                        Orientation="Horizontal">
-                        <TextBlock Margin="20,20,0,0" Text="Verweildauer:"/>
-                    </StackPanel>
-                    <StackPanel
-                        Orientation="Horizontal">
+                            Orientation="Horizontal">
                         <TextBlock Margin="20,20,0,0" Text="letzte Bearbeitung:"/>
                     </StackPanel>
                 </StackPanel>

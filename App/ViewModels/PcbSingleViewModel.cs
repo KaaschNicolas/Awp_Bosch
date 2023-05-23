@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using static ZXing.QrCode.Internal.Version;
 
 namespace App.ViewModels;
 
@@ -53,6 +54,26 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [NotifyDataErrorInfo]
     [Required]
     private List<ErrorType> _errorTypes;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private string _firstErrorCode; 
+    
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private string _secondErrorCode;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private string _firstErrorDescription;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private string _secondErrorDescription;
 
     /*[ObservableProperty]
     [NotifyDataErrorInfo]
@@ -110,12 +131,32 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    private User _notedBy;
+    private string _notedBy;
 
 
+    [ObservableProperty]
+    private int _id = 1;
 
-    private int _id;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private int _inCirculationDays;
     
+    [ObservableProperty]
+    [Required]
+    private string _colorDays;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private int _atLocationDays;
+
+    [ObservableProperty]
+    [Required]
+    private string _colorTransferDays;
+
+
     private Pcb _pcb;
 
     private readonly ICrudService<Pcb> _crudService;
@@ -136,21 +177,21 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _navigationService = navigationService;
             _transfersService = transfersService;
             _transfers = new ObservableCollection<Transfer>();
-            mockData = new()
-            {
-                Id = 1,
-                CreatedDate = DateTime.Now,
-                SerialNumber = "0000652125",
-                ErrorDescription = "ErrorMessage",
-                Restriction = null,
-                Finalized = false,
+            //mockData = new()
+            //{
+            //    Id = 1,
+            //    CreatedDate = DateTime.Now,
+            //    SerialNumber = "0000652125",
+            //    ErrorDescription = "ErrorMessage",
+            //    Restriction = null,
+            //    Finalized = false,
 
-                ErrorTypes = new List<ErrorType>()
-                {
-                    new ErrorType(){Id=1, Code="M320", ErrorDescription="Beschreibung:Verbindung kann nicht hergestellt werden" }
+            //    ErrorTypes = new List<ErrorType>()
+            //    {
+            //        new ErrorType(){Id=1, Code="M320", ErrorDescription="Beschreibung:Verbindung kann nicht hergestellt werden" }
 
-                }
-            };
+            //    }
+            //};
         }
         catch(Exception e)
         {
@@ -175,44 +216,123 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     public async void OnNavigatedTo(object parameter)
     {
-        //_pcb = (Pcb)parameter; 
+        _pcb = (Pcb)parameter; 
 
-        var response = await _crudService.GetById(1);
-        if (response.Code == ResponseCode.Success)
-        {
-            _pcb = response.Data as Pcb;
+        //var response = await _crudService.GetById(1);
+        //if (response.Code == ResponseCode.Success)
+        //{
+        //    _pcb = response.Data as Pcb;
             
-            SerialNumber = response.Data.SerialNumber;
-            //_createdDate = response.Data.CreatedDate;
-            Restriction = response.Data.Restriction;
-            ErrorDescription = response.Data.ErrorDescription;
-            ErrorTypes = response.Data.ErrorTypes;
-            Finalized = response.Data.Finalized;
-            if (!Finalized)
+        //    SerialNumber = response.Data.SerialNumber;
+        //    //_createdDate = response.Data.CreatedDate;
+        //    Restriction = response.Data.Restriction;
+        //    ErrorDescription = response.Data.ErrorDescription;
+        //    ErrorTypes = response.Data.ErrorTypes;
+        //    Finalized = response.Data.Finalized;
+        //    if (!Finalized)
+        //    {
+        //        Status = "offen";
+        //    }
+        //    else
+        //    {
+        //        Status = "abgeschlossen";
+        //    }
+        //    PcbType = response.Data.PcbType;
+        //    Comment = response.Data.Comment;
+        //    Diagnose = response.Data.Diagnose;
+        //}
+        //else
+        //{
+        //    _infoBarService.showError("ErrorMessage", "ErrorTitle");
+        //}
+
+        SerialNumber = _pcb.SerialNumber;
+        //_createdDate = response.Data.CreatedDate;
+        Restriction = _pcb.Restriction;
+        ErrorDescription = _pcb.ErrorDescription;
+        ErrorTypes = _pcb.ErrorTypes;
+        if (ErrorTypes != null)
+        {
+            FirstErrorCode = ErrorTypes[0].Code;
+            FirstErrorDescription = ErrorTypes[0].ErrorDescription;
+
+            if (ErrorTypes[1] != null)
             {
-                Status = "offen";
+               SecondErrorCode = ErrorTypes[1].Code;
+               SecondErrorDescription = ErrorTypes[1].ErrorDescription;
             }
             else
             {
-                Status = "abgeschlossen";
+               SecondErrorCode = " nicht vorhanden";
+               SecondErrorDescription = " nicht vorhanden";
             }
-            PcbType = response.Data.PcbType;
-            Comment = response.Data.Comment;
-            Diagnose = response.Data.Diagnose;
         }
         else
         {
-            _infoBarService.showError("ErrorMessage", "ErrorTitle");
+            FirstErrorCode = " nicht vorhanden";
+            FirstErrorDescription = " nicht vorhanden";
+            SecondErrorCode = " nicht vorhanden";
+            SecondErrorDescription = " nicht vorhanden";
+        }
+        
+        Finalized = _pcb.Finalized;
+        if (!Finalized)
+        {
+            Status = "offen";
+        }
+        else
+        {
+            Status = "abgeschlossen";
+        }
+        PcbType = _pcb.PcbType;
+        Comment = _pcb.Comment;
+        Diagnose = _pcb.Diagnose;
+        //NotedBy = _pcb.NotedBy;
+
+        InCirculationDays = (int)Math.Round((DateTime.Now - _pcb.CreatedDate).TotalDays);
+        if(InCirculationDays > 5) 
+        {
+            ColorDays = "yellow";
+        }
+        else if (InCirculationDays > 10)
+        {
+            ColorDays = "red";
+        }
+        else
+        {
+            ColorDays="green";
         }
 
-        var transfers = await _transfersService.GetTransfersByPcb(response.Data.Id);
+        var transfers = await _transfersService.GetTransfersByPcb(_pcb.Id);
+        
         //_transfers = new ObservableCollection<Transfer>();
         if (transfers.Code == ResponseCode.Success)
         {
+            
             foreach (var transfer in transfers.Data)
             {
+                transfer.Id = 1;
+                NotedBy = transfer.NotedBy.Name;
                 Storage= transfer.StorageLocation.StorageName;
                 _transfers.Add(transfer);
+                transfer.Id += 1;
+
+                if(transfer == transfers.Data[transfers.Data.Count - 1])
+                {
+                    var AtLocationDays = (int)Math.Round((transfer.CreatedDate - DateTime.Now).TotalDays);
+                    if(AtLocationDays > transfer.StorageLocation.DwellTimeYellow)
+                    {
+                        ColorTransferDays = "yellow";
+                    }
+                    else if(AtLocationDays > transfer.StorageLocation.DwellTimeRed)
+                    {
+                        ColorTransferDays = "red";
+                    }
+                    else
+                    {
+                        ColorTransferDays = "green";
+                    }
+                }
             }
         }
         else
