@@ -61,6 +61,26 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    public async Task<Response<int>> MaxEntriesByStorageLocation(int storageLocationId)
+    {
+        try
+        {
+
+            var lastTransfer = await _boschContext
+                .Set<Transfer>()
+                .GroupBy(x => x.Pcb)
+                .Select(x => x.OrderByDescending(y => y.CreatedDate).First())
+                .Where(x => x.StorageLocationId == storageLocationId)
+                .CountAsync();
+                
+            return new Response<int>(ResponseCode.Success, data: lastTransfer);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
+        }
+    }
+
     public async Task<Response<int>> MaxEntriesSearch(string queryText)
     {
         try
@@ -135,6 +155,24 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             var data = await _boschContext
                 .Set<T>()
                 .Where(where)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return new Response<List<T>>(ResponseCode.Success, data: data);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
+        }
+    }
+
+    public async Task<Response<List<T>>> GetWithFilterStorageLocation(int pageIndex, int pageSize, int storageLocationId)
+    {
+        try
+        {
+            var data = await _boschContext
+                .Set<T>()
+                .Include(e => e.Transfers.LastOrDefault().StorageLocationId == storageLocationId)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

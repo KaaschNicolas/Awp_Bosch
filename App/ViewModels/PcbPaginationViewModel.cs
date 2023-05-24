@@ -90,7 +90,7 @@ namespace App.ViewModels
         private ObservableCollection<Pcb> _pcbs;
 
         [ObservableProperty]
-        private ObservableCollection<StorageLocation> _storageLocations;
+        private ObservableCollection<StorageLocation> _storageLocations = new();
         
         [ObservableProperty]
         private bool _isSortingAscending;
@@ -129,12 +129,15 @@ namespace App.ViewModels
         {
             Response<List<Pcb>> pcbs;
             Response<int> maxEntries;
-            var storageLocations = await _storageLocationDataService.GetAll();
-
-            if (storageLocations.Code == ResponseCode.Success)
+            
+            if (_storageLocations.Count == 0)
             {
-                _storageLocations = new();
-                storageLocations.Data.ForEach(x => _storageLocations.Add(x));
+                var storageLocations = await _storageLocationDataService.GetAll();
+
+                if (storageLocations.Code == ResponseCode.Success)
+                {
+                    storageLocations.Data.ForEach(x => _storageLocations.Add(x));
+                }
             }
 
             if (_filterOptions != PcbFilterOptions.None && _filterOptions != PcbFilterOptions.FilterStorageLocation)
@@ -181,8 +184,6 @@ namespace App.ViewModels
                     ObservableCollection<Pcb> copy = new();
                     pcbsPaginated.ForEach(x => copy.Add(x));
                     Pcbs = copy;
-                    
-
                 }
             }
             else if (_filterOptions != PcbFilterOptions.None && _filterOptions == PcbFilterOptions.FilterStorageLocation)
@@ -209,14 +210,31 @@ namespace App.ViewModels
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
                         break;
                     case PcbFilterOptions.FilterStorageLocation:
-                        Expression<Func<Pcb, bool>> where4 = x => x.Transfers.LastOrDefault().StorageLocation.Id == _selectedComboBox.Id;
-                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where4);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where4);
+                        
+                        maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);
+                        pcbs = await _pcbDataService.GetWithFilterStorageLocation(pageIndex, pageSize, SelectedComboBox.Id);
                         break;
                     default:
                         maxEntries = await _pcbDataService.MaxEntries();
                         pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
                         break;
+                }
+
+                if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
+                {
+                    PaginatedList<Pcb> pcbsPaginated = await PaginatedList<Pcb>.CreateAsync(
+                        pcbs.Data,
+                        pageIndex,
+                        pageSize,
+                        maxEntries.Data
+                    );
+
+                    PageNumber = pcbsPaginated.PageIndex;
+                    PageCount = pcbsPaginated.PageCount;
+
+                    ObservableCollection<Pcb> copy = new();
+                    pcbsPaginated.ForEach(x => copy.Add(x));
+                    Pcbs = copy;
                 }
             }
             else

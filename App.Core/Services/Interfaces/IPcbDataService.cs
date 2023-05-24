@@ -17,6 +17,8 @@ namespace App.Core.Services.Interfaces
 
         public Task<Response<int>> MaxEntriesFiltered(Expression<Func<T, bool>> where);
 
+        public Task<Response<int>> MaxEntriesByStorageLocation(int storageLocationId);
+
         public Task<Response<int>> MaxEntriesSearch(string queryText);
 
         public Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
@@ -24,6 +26,8 @@ namespace App.Core.Services.Interfaces
         public Task<Response<List<T>>> Like(int pageIndex, int pageSize, string queryText);
 
         public Task<Response<List<T>>> GetWithFilter(int pageIndex, int pageSize, Expression<Func<T, bool>> where);
+
+        public Task<Response<List<T>>> GetWithFilterStorageLocation(int pageIndex, int pageSize, int storageLocationId);
 
     }
 }
