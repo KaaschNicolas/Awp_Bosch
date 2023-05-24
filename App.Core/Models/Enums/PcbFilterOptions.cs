@@ -12,6 +12,7 @@ namespace App.Core.Models.Enums
         Search,
         Filter1,
         Filter2,
-        Filter3
+        Filter3,
+        FilterStorageLocation
     }
 }

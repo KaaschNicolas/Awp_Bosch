@@ -63,6 +63,7 @@ namespace App.Views
             ViewModel.FilterOptions = PcbFilterOptions.None;
             ViewModel.SortBy = DataGrid.Columns[0].Tag.ToString();
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
+            ComboBox.SelectionChanged += ComboBox_SelectionChanged;
         }
 
         private DataGridDisplayMode _displayMode = DataGridDisplayMode.Default;
@@ -107,8 +108,7 @@ namespace App.Views
                 if (e.AddedItems.First() is not null)
                 {
                     ViewModel.SelectedComboBox = e.AddedItems.First() as StorageLocation;
-
-                    ViewModel.IsFilteredByStorageLocation = true;
+                    ViewModel.FilterOptions = PcbFilterOptions.FilterStorageLocation;
                 }
             }
         }

@@ -96,9 +96,6 @@ namespace App.ViewModels
         private bool _isSortingAscending;
 
         [ObservableProperty]
-        private bool _isFilteredByStorageLocation;
-
-        [ObservableProperty]
         private PcbFilterOptions _filterOptions;
 
         [ObservableProperty]
@@ -140,7 +137,7 @@ namespace App.ViewModels
                 storageLocations.Data.ForEach(x => _storageLocations.Add(x));
             }
 
-            if (_filterOptions != PcbFilterOptions.None && _isFilteredByStorageLocation is not true)
+            if (_filterOptions != PcbFilterOptions.None && _filterOptions != PcbFilterOptions.FilterStorageLocation)
             {
                 switch (_filterOptions)
                 {
@@ -188,7 +185,7 @@ namespace App.ViewModels
 
                 }
             }
-            else if (_filterOptions != PcbFilterOptions.None && _isFilteredByStorageLocation is true)
+            else if (_filterOptions != PcbFilterOptions.None && _filterOptions == PcbFilterOptions.FilterStorageLocation)
             {
                 switch (_filterOptions)
                 {
@@ -197,19 +194,24 @@ namespace App.ViewModels
                         pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
                         break;
                     case PcbFilterOptions.Filter1:
-                        Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true && x.Transfers.LastOrDefault().StorageLocation == _selectedComboBox;
+                        Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true && x.Transfers.LastOrDefault().StorageLocation.Id == _selectedComboBox.Id;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where1);
                         break;
                     case PcbFilterOptions.Filter2:
-                        Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.Now.Date && x.Transfers.LastOrDefault().StorageLocation == _selectedComboBox;
+                        Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.Now.Date && x.Transfers.LastOrDefault().StorageLocation.Id == _selectedComboBox.Id;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where2);
                         break;
                     case PcbFilterOptions.Filter3:
-                        Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0 && x.Transfers.LastOrDefault().StorageLocation == _selectedComboBox;
+                        Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0 && x.Transfers.LastOrDefault().StorageLocation.Id == _selectedComboBox.Id;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where3);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
+                        break;
+                    case PcbFilterOptions.FilterStorageLocation:
+                        Expression<Func<Pcb, bool>> where4 = x => x.Transfers.LastOrDefault().StorageLocation.Id == _selectedComboBox.Id;
+                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where4);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where4);
                         break;
                     default:
                         maxEntries = await _pcbDataService.MaxEntries();
