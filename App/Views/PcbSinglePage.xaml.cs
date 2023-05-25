@@ -51,6 +51,11 @@ public sealed partial class PcbSinglePage : Page
         await printSerivce.Print(PcbSinglePageContent); //Test
     }
 
+    private void DeleteClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.DeleteCommand.Execute(null);
+    }
+
     private void GenerateBarcode()
     {
         IDataMatrixService dms = new DataMatrixService();
