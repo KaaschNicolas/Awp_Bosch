@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.Core.Models
@@ -63,7 +62,13 @@ namespace App.Core.Models
         {
             get; set;
         }
-
-
+        /*[ForeignKey("StorageLocationId")]
+        public StorageLocation? StorageLocation {
+            get; set;
+        }
+        public int? StorageLocationId
+        {
+            get; set;
+        }*/
     }
 }

@@ -21,7 +21,7 @@ public sealed partial class CreateStorageLocationPage : Page
         SetBinding(NavigationViewHeaderBehavior.HeaderContextProperty, new Binding
         {
             Source = ViewModel,
-            Mode = BindingMode.OneWay
+            Mode = BindingMode.TwoWay
         });
         DataContext = ViewModel;
     }

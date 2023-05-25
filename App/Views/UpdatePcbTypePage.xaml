@@ -24,11 +24,11 @@
                 <TextBox
                     Header="Sachnummer"
                     PlaceholderText="10-stellige Sachnummer"
-                    Text="{x:Bind Path=ViewModel.PcbPartNumber, Mode=TwoWay}" />
+                    Text="{x:Bind Path=ViewModel._pcbType.PcbPartNumber, Mode=TwoWay}" />
                 <TextBox
                     Header="Bezeichnung"
                     PlaceholderText="Bezeichnung eingeben"
-                    Text="{x:Bind Path=ViewModel.Description, Mode=TwoWay}" />
+                    Text="{x:Bind Path=ViewModel._pcbType.Description, Mode=TwoWay}" />
                 <NumberBox
                     x:Name="NumberBoxSpinButtonPlacementExample"
                     Header="Maximale Anzahl an Weitergaben"

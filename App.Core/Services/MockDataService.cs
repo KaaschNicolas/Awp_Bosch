@@ -13,14 +13,14 @@ public class MockDataService : IMockDataService
     public MockDataService(BoschContext boschContext)
     {
         _boschContext = boschContext;
-        SeedMockData();
+        //SeedMockData();
         //fill where "Kreisläufer" Excel is located 
         //SeedFromExcel("");
     }
 
     public async void SeedMockData()
     {
-        var prepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).Split("App")[0], @"App.Core\Services\mockData");
+        /*var prepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).Split("App")[0], @"App.Core\Services\mockData");
         //Mocking of ErrorType Data
         var count = await _boschContext.ErrorTypes.CountAsync();
         if (count.Equals(0)) {
@@ -67,7 +67,7 @@ public class MockDataService : IMockDataService
             Console.WriteLine(mockData);
 
             _boschContext.SaveChanges();
-        }
+        }*/
 
     }
     public void SeedFromExcel(string path)
