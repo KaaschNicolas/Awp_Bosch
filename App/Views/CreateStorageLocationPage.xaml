@@ -10,7 +10,7 @@
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
         <DataTemplate x:DataType="viewModels:StorageLocationViewModel">
-            <TextBlock Text="Lagerort hinzufügen"/>
+            <TextBlock Text="Lagerort hinzufügen" />
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
     

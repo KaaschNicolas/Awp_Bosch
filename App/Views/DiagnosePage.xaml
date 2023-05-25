@@ -35,7 +35,7 @@
                     <AppBarButton
                         Click="NavigateCreateDiagnose"
                         Icon="Add"
-                        Label="Hinzufügen"/>
+                        Label="Hinzufügen" />
                     <AppBarButton Icon="Refresh" Label="Neu Laden" />
 
                 </CommandBar>
@@ -95,7 +95,7 @@
                                         <MenuFlyoutItem
                                             Click="deleteClick"
                                             Icon="Delete"
-                                            Text="Löschen"/>
+                                            Text="Löschen" />
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>

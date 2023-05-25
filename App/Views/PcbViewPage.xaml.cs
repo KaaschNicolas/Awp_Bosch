@@ -66,8 +66,6 @@ namespace App.Views
             ViewModel.FilterOptions = PcbFilterOptions.None;
         }
 
-        
-
         private void Page_Unload(object sender, RoutedEventArgs e)
         {
             DataGrid.SelectionChanged -= DataGrid_SelectionChanged;
@@ -154,7 +152,7 @@ namespace App.Views
 
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(CreatePcbPage));
+            Frame.Navigate(typeof(PcbSinglePage));
         }
 
         private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)

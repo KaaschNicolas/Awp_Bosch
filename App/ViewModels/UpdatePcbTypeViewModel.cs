@@ -27,7 +27,7 @@ public partial class UpdatePcbTypeViewModel : ObservableValidator, INavigationAw
 
     private int _id;
 
-    public PcbType _pcbType;
+    private PcbType _pcbType;
 
     private readonly ICrudService<PcbType> _crudService;
     private readonly IInfoBarService _infoBarService;

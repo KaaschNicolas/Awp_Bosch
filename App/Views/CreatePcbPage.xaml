@@ -10,14 +10,14 @@
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
         <DataTemplate x:DataType="viewModels:PcbTypeViewModel">
-            <TextBlock Text="Leiterplatte hinzufügen"/>
+            <TextBlock Text="Leiterplatte hinzufügen" />
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
     <Grid x:Name="ContentArea">
         <ScrollViewer>
             <Grid
-                Padding="0,0,-100,20"
+                Padding="0,0,20,20"
                 ColumnSpacing="20"
                 RowSpacing="20">
 
@@ -53,16 +53,18 @@
                     PlaceholderText="Benutzername"
                     Text="{x:Bind ViewModel.User.Name, Mode=OneWay}" />
 
-                <ComboBox
+                <AutoSuggestBox
                     x:Name="PcbPartNumber"
                     Grid.Row="1"
                     Grid.Column="0"
                     DisplayMemberPath="PcbPartNumber"
                     Header="Sachnummer"
                     ItemsSource="{x:Bind ViewModel.PcbTypes}"
-                    PlaceholderText="Sachnummer auswählen"
-                    SelectedItem="{x:Bind ViewModel.SelectedPcbType, Mode=TwoWay}"
-                    SelectedValuePath="ID" />
+                    PlaceholderText="10-Stellige Sachnummer"
+                    SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                    Text="{x:Bind ViewModel.SelectedPcbType}"
+                    TextChanged="AutoSuggestBox_TextChanged"
+                    TextMemberPath="PcbPartNumber" />
 
 
                 <TextBox

@@ -33,8 +33,8 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
         }
     }
 
-    private string _dwellTimeYellow = "0";
-    public string DwellTimeYellow
+    private int _dwellTimeYellow = 0;
+    public int DwellTimeYellow
     {
         get => _dwellTimeYellow;
         set
@@ -49,8 +49,8 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
         }
     }
 
-    private string _dwellTimeRed = "0";
-    public string DwellTimeRed
+    private int _dwellTimeRed = 0;
+    public int DwellTimeRed
     {
         get => _dwellTimeRed;
         set

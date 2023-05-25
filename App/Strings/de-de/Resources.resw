@@ -218,7 +218,4 @@
   <data name="Shell_StorageLocations.Content" xml:space="preserve">
     <value>Pagination (Lagerorte)</value>
   </data>
-  <data name="Shell_CreatePcb.Content" xml:space="preserve">
-    <value>LeiterplatteABC</value>
-  </data>
 </root>

@@ -14,8 +14,6 @@
     Background="Transparent"
     mc:Ignorable="d">
 
-    
-
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
         <DataTemplate x:DataType="viewModels:PcbPaginationViewModel">
             <Grid Margin="0,0,50,0">
@@ -40,7 +38,7 @@
                     <AppBarButton
                         Click="CreatePcbButton_Click"
                         Icon="Add"
-                        Label="Hinzufügen"/>
+                        Label="Hinzufügen" />
                     <AppBarButton Icon="Refresh" Label="Neu Laden" />
 
                 </CommandBar>
@@ -70,10 +68,6 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -90,7 +84,7 @@
                         HorizontalAlignment="Right"
                         Text="{Binding ErrorDescription}" />
                     <TextBlock
-                        Grid.Row="3"
+                        Grid.Row="2"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         Text="{Binding Finalized}" />
@@ -223,26 +217,14 @@
                 <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
             </ctWinUI:DataGrid.Resources>
             <ctWinUI:DataGrid.Columns>
-                <!--<ctWinUI:DataGridTextColumn
-                    Binding="{Binding PcbType.PcbPartNumber}"
-                    Header="Sachnummer"
-                    Tag="PcbPartNumber"/-->
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding SerialNumber}"
-                    Header="Seriennummer"
-                    Tag="SerialNumber"/>
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding CreatedDate}"
-                    Header="Angelegt am"
-                    Tag="CreatedDate"/>
+                    Header="SerialNumber"
+                    Tag="SerialNumber" />
                 <ctWinUI:DataGridComboBoxColumn
                     Binding="{Binding ErrorDescription}"
                     Header="Fehler Beschreibung"
                     Tag="ErrorDescription" />
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding Transfers.Count}"
-                    Header="Anz. Weitergaben"
-                    Tag="Transfers" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding Finalized}"
                     Header="Abgeschlossen"
@@ -269,7 +251,8 @@
                                         <MenuFlyoutItem
                                             Click="DeleteClick"
                                             Icon="Delete"
-                                            Text="Löschen"/>
+                                            Text="Löschen" />
+
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>

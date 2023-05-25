@@ -255,11 +255,11 @@ namespace App.Core.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DwellTimeRed")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DwellTimeRed")
+                        .HasColumnType("int");
 
-                    b.Property<string>("DwellTimeYellow")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DwellTimeYellow")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsFinalDestination")
                         .HasColumnType("bit");
