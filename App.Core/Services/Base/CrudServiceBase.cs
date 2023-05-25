@@ -84,8 +84,16 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
             _loggingService.Log(LogLevel.Debug, $"GetAll()");
 
             var list = await _boschContext.Set<T>().ToListAsync();
+            var res = new List<T>();
+            foreach (var item in list)
+            {
+                if (item.DeletedDate < new DateTime(2000, 01, 01))
+                {
+                    res.Add(item);
+                }
+            }
 
-            return new Response<List<T>>(ResponseCode.Success, data: list);
+            return new Response<List<T>>(ResponseCode.Success, data: res);
         }
         catch (DbUpdateException)
         {

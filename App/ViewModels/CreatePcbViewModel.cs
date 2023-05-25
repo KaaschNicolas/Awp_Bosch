@@ -63,7 +63,6 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
         _infoBarService = infoBarService;
         _navigationService = navigationService;
         _authenticationService = authenticationService;
-
         _storageLocations = new ObservableCollection<StorageLocation>();
         _pcbTypes = new ObservableCollection<PcbType>();
     }
@@ -82,15 +81,15 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
         
         Pcb pcb = new Pcb
         {
-            SerialNumber = _serialNumber,
+            SerialNumber = _serialNumber.Substring(0, 10),
             Finalized = false,
             PcbTypeId = _selectedPcbType.Id,
             Transfers = transfers,
             Restriction = restriction,
             ErrorTypes = errorTypes,
+            ErrorDescription = _errorDescription1,
         };
         var response = await _pcbCrudService.Create(pcb);
-
 
         if (response != null)
         {
@@ -99,6 +98,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
                 _infoBarService.showMessage("Leiterplatte erfolgreich erstellt", "Erfolg");
                 // TODO: when List View exists, navigate to it after successfull creation of Pcb
                 // _navigationService.NavigateTo("App.ViewModels.ListPcbViewModel");
+                _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
             }
             else
             {

@@ -49,18 +49,13 @@
 						Label="Drucken"/><!--Click="OnPrintButtonClicked"-->
                 </CommandBar>
                 <StackPanel
-                        Grid.Column="2"
-					    Grid.Row="1"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Right">
-                    <CommandBar
-                            DefaultLabelPosition="Right">
-                        <AppBarButton
-                                Icon="Edit"
-                                Label="Beareiten"/>
-                        <AppBarButton
-                                Icon="Delete"
-                                Label="Löschen"/>
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <CommandBar DefaultLabelPosition="Right">
+                        <AppBarButton Icon="Edit" Label="Bearbeiten" />
+                        <AppBarButton Icon="Delete" Label="Löschen"/>
                     </CommandBar>
                 </StackPanel>
             </Grid>
