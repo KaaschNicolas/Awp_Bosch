@@ -50,7 +50,7 @@
                     Orientation="Horizontal">
                     <CommandBar DefaultLabelPosition="Right">
                         <AppBarButton Icon="Edit" Label="Bearbeiten" />
-                        <AppBarButton Icon="Delete" Label="Löschen"/>
+                        <AppBarButton Icon="Delete" Label="Löschen" Click="DeleteClick" />
                     </CommandBar>
                 </StackPanel>
             </Grid>
