@@ -76,16 +76,6 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [Required]
     private string _secondErrorDescription;
 
-    /*[ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
-    private string _code;
-
-    [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
-    private string _errorDescription2;*/
-
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
@@ -294,7 +284,6 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         PcbType = _pcb.PcbType;
         Comment = _pcb.Comment;
         Diagnose = _pcb.Diagnose;
-        //NotedBy = _pcb.NotedBy;
 
         InCirculationDays = (int)Math.Round((DateTime.Now - _pcb.CreatedDate).TotalDays);
         if(InCirculationDays > 5) 
@@ -315,21 +304,13 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         //_transfers = new ObservableCollection<Transfer>();
         if (transfers.Code == ResponseCode.Success)
         {
-            for (int i = 0; i < (transfers.Data).Count; i++)//each (var transfer in transfers.Data)
+            for (int i = 0; i < (transfers.Data).Count; i++)
             {
                 var transfer = (transfers.Data)[i];
                 transfer.Id = i + 1;
-                //if (transfer == (transfers.Data)[0])
-                //{
-                //    transfer.Id = 1;
-                //}
-                //else
-                //{
-                    
-                //}
                 NotedBy = transfer.NotedBy.Name;
                 Storage= transfer.StorageLocation.StorageName;
-                _transfers.Add(transfer);
+                Transfers.Add(transfer);
 
                 if(transfer == transfers.Data[transfers.Data.Count - 1])
                 {

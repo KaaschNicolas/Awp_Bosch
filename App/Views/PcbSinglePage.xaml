@@ -227,7 +227,7 @@
                 <Grid Margin="0,60,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <TextBlock Text="Umlauf-Historie" VerticalAlignment="Center" Margin="5,0" Style="{ThemeResource SubtitleTextBlockStyle}"/>
                     <controls:DataGrid
