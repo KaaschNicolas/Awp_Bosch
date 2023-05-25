@@ -145,12 +145,12 @@ namespace App.Views
             ViewModel.DeleteCommand.Execute(null);
         }
 
-        void NavigateToUpdate(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        void EditClick(object sender, RoutedEventArgs e)
         {
             ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
         }
 
-        private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private void CreatePcbButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(PcbSinglePage));
         }

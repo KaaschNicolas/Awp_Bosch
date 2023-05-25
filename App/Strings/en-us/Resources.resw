@@ -236,4 +236,7 @@
   <data name="Shell_CreatePcb.Content" xml:space="preserve">
     <value>CreatePcb</value>
   </data>
+  <data name="Shell_UpdatePcb.Content" xml:space="preserve">
+    <value>UpdatePcb</value>
+  </data>
 </root>

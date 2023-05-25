@@ -251,7 +251,7 @@ namespace App.ViewModels
         [RelayCommand]
         public void NavigateToUpdate(Pcb pcb)
         {
-            _navigationService.NavigateTo("App.ViewModels.PcbSingleViewModel", pcb);
+            _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", pcb);
         }
 
         private void Refresh()

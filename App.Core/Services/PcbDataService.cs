@@ -136,4 +136,24 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
         }
     }
+
+    public async Task<Response<T>> GetByIdEager(int id)
+    {
+        try
+        {
+            var entity = await _boschContext.Set<T>()
+                .Include(T => T.Transfers)
+                .ThenInclude(transfer => transfer.NotedBy)
+                .Include(T => T.Restriction)
+                .Include(T => T.Diagnose)
+                .Include(T => T.PcbType)
+                .Include(T => T.ErrorTypes)
+                .FirstAsync(x => x.Id == id);
+            return new Response<T>(ResponseCode.Success, entity);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
+        }
+    }
 }

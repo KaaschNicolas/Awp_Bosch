@@ -18,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
 using Serilog;
+
 namespace App;
 
 // To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
@@ -94,6 +95,8 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<UpdatePcbViewModel>();
+            services.AddTransient<UpdatePcbPage>();
             services.AddTransient<CreatePcbViewModel>();
             services.AddTransient<CreatePcbPage>();
             services.AddTransient<TransfersViewModel>();

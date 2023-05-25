@@ -245,7 +245,7 @@
                                             Icon="RepeatAll"
                                             Text="Weitergabe" />
                                         <MenuFlyoutItem
-                                            Click="NavigateToUpdate"
+                                            Click="EditClick"
                                             Icon="Edit"
                                             Text="Bearbeiten" />
                                         <MenuFlyoutItem
