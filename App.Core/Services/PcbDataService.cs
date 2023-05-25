@@ -5,6 +5,7 @@ using App.Core.Models;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
@@ -134,6 +135,42 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         catch (DbUpdateException)
         {
             return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
+        }
+    }
+
+    new public async Task<Response<T>> Delete(T entity)
+    {
+        try
+        {
+            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {entity.Id} erfolgreich gelöscht.", null);
+            //setzt alle DeletedDate der anhängenden Objekte null, die es auch nur für diese Leiterplatte gibt.
+            
+            Pcb pcb = _boschContext.Set<T>().Where(x => x.Id.Equals(entity.Id)).Include(pcb => pcb.Restriction)
+               
+                      .Include(etp => etp.ErrorTypes)
+                      .Include(pcb => pcb.Transfers)
+                .First();
+            if (!(pcb is null)) {
+                pcb.DeletedDate = DateTime.Now;
+                if (!(pcb.Restriction is null)) {
+                    pcb.Restriction.DeletedDate = DateTime.Now; 
+                }
+                if (!(pcb.ErrorTypes is null))
+                {
+                    pcb.ErrorTypes.ForEach(et => et.DeletedDate = DateTime.Now);
+                }
+                if (!(pcb.ErrorTypes is null))
+                {
+                    pcb.Transfers.ForEach(t => t.DeletedDate = DateTime.Now);
+                }
+            await _boschContext.SaveChangesAsync();
+            }
+            return new Response<T>(ResponseCode.Success, $"{typeof(T)} erfolgreich gelöscht.");
+        }
+        catch (DbUpdateException)
+        {
+            _loggingService.Audit(LogLevel.Error, $"Fehler beim Löschen von {typeof(T)} mit der ID {entity.Id}", null);
+            return new Response<T>(ResponseCode.Error, error: $"Fehler beim Löschen von {typeof(T)} mit der ID {entity.Id}");
         }
     }
 }
