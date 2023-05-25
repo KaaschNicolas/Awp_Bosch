@@ -1,4 +1,4 @@
-﻿<Page
+﻿+<Page
         x:Class="App.Views.PcbSinglePage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -44,8 +44,9 @@
 					    DefaultLabelPosition="Right"
 					    HorizontalAlignment="Center">
                     <AppBarButton
-					        Icon="Print"
-						    Label="Drucken"/>
+                        Click="OnPrintButtonClicked"
+					    Icon="Print"
+						Label="Drucken"/>
                 </CommandBar>
                 <StackPanel
                         Grid.Column="2"
@@ -299,47 +300,6 @@
                         </controls:DataGrid.Columns>
                     </controls:DataGrid>
                 </Grid>
-
-                <!-- Hard-coded Umlauf -->
-                <!--<TextBlock
-                    Margin="0,20,0,0"
-                    FontWeight="Bold"
-                    FontSize="20"
-                    FontStyle="Normal"
-                    Text="Umlauf-Historie"/>
-                <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
-                    <Grid Width="40" Height="40" VerticalAlignment="Top">
-                        <Ellipse Fill="Black" Stroke="White" StrokeThickness="2" />
-                        <TextBlock Text="1" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Grid>
-                    <Expander
-				    Margin="10,0,0,0"
-				    IsExpanded="True"
-				    ExpandDirection="Down"
-				    VerticalAlignment="Top"
-				    HorizontalAlignment="Stretch"
-				    HorizontalContentAlignment="Stretch"
-				    Width="600"
-				    Header="PVB-Labor"
-				    Content="Anmerkung: kann Fehler nicht nachvollziehen"/>
-                </StackPanel>
-                <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
-                    <Grid Width="40" Height="40" VerticalAlignment="Top">
-                        <Ellipse Fill="Gray" Stroke="White" StrokeThickness="2" />
-                        <TextBlock Text="2" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Grid>
-                    <Expander
-				    Margin="10,0,0,50"
-				    IsExpanded="True"
-				    ExpandDirection="Down"
-				    VerticalAlignment="Top"
-				    HorizontalAlignment="Stretch"
-				    HorizontalContentAlignment="Stretch"
-				    Width="600"
-				    Header="PVB-Labor"
-				    Content="Anmerkung: kann Fehler nicht nachvollziehen"/>
-                </StackPanel>-->
-
             </StackPanel>
 
 
