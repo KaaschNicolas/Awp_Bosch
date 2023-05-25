@@ -106,16 +106,33 @@
                     <TextBlock
 					    Margin="0,5,0,0"
 					    Text="Ausgefallen am:" />
-                    <CalendarDatePicker
+                    <StackPanel
+                        Margin="5,5,25,0"
+                        VerticalAlignment="Top"
+                        Orientation="Horizontal">
+                        <TextBlock Text="{x:Bind Path=ViewModel.CreatedDate.Day, Mode=OneWay}" FontWeight="Bold"/>
+                        <TextBlock Text="." FontWeight="Bold"/>
+                        <TextBlock Text="{x:Bind Path=ViewModel.CreatedDate.Month, Mode=OneWay}" FontWeight="Bold"/>
+                        <TextBlock Text="." FontWeight="Bold"/>
+                        <TextBlock Text="{x:Bind Path=ViewModel.CreatedDate.Year, Mode=OneWay}" FontWeight="Bold"/>
+                    </StackPanel>
+                    <!--<TextBlock
+                        Text="{x:Bind Path=ViewModel.CreatedDate.Date, Mode=OneWay}"/>-->
+                    <!--Text="{x:Bind Path=ViewModel.CreatedDate.Day, Mode=OneWay}
+                        Text="."
+                        Text="{x:Bind Path=ViewModel.CreatedDate.Month, Mode=OneWay}"
+                        Text="."
+                        Text="{x:Bind Path=ViewModel.CreatedDate.Year, Mode=OneWay}"/>-->
+                    <!--<CalendarDatePicker
 					    x:Name="dateOfFailure"
 					    Margin="5,0,25,0"
 					    VerticalAlignment="Top"
 					    PlaceholderText="Pick a date"
-					    IsHitTestVisible="false"/>
+					    IsHitTestVisible="false"/>-->
                     <!--="{x:Bind Path=ViewModel.CreatedDate}"/>-->
                     <TextBlock
 					    Margin="0,5,0,0"
-					    Text="Aufgenommenen von:"/>
+					    Text="Aufgenommenen von: "/>
                     <TextBlock
 					    Margin="0,5,0,0"
 					    Text="{x:Bind Path=ViewModel.NotedBy, Mode=OneWay}" FontWeight="Bold"/>

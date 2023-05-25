@@ -19,7 +19,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private string _serialNumber;
     public string SerialNumber
     {
-        get => _serialNumber; //"0000652125";
+        get => _serialNumber; 
         set
         { 
             _serialNumber = value;
@@ -30,10 +30,10 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [ObservableProperty]
     private Pcb _selectedItem;
 
-    /*[ObservableProperty]
+    [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    private DateTime _createdDate;*/
+    private DateTime _createdDate;
 
     //[ObservableProperty]
     //[NotifyDataErrorInfo]
@@ -247,7 +247,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         //}
 
         SerialNumber = _pcb.SerialNumber;
-        //_createdDate = response.Data.CreatedDate;
+        CreatedDate = _pcb.CreatedDate;
         Restriction = _pcb.Restriction;
         ErrorDescription = _pcb.ErrorDescription;
         ErrorTypes = _pcb.ErrorTypes;
