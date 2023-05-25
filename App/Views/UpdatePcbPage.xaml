@@ -84,49 +84,34 @@
                     Text="Aufnahme Fehler" />
 
 
+                <ItemsControl Grid.Row="4" ItemsSource="{x:Bind ViewModel.ErrorTypes}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Padding="20"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Orientation="Vertical">
+                                <TextBlock Text="Fehlerbeschreibung" />
+                                <TextBox
+                                    Header="Fehler ID"
+                                    PlaceholderText="M1.."
+                                    Text="{Binding Code, Mode=TwoWay}" />
+                                <TextBox
+                                    Header="Fehlerbeschreibung"
+                                    PlaceholderText="Fehlerbeschreibung eintragen"
+                                    Text="{Binding ErrorDescription, Mode=TwoWay}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-                <StackPanel
-                    Grid.Row="4"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Padding="20"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Orientation="Vertical">
-                    <TextBlock Text="Fehlerbeschreibung Teil 1" />
-                    <TextBox
-                        Header="Fehler ID"
-                        PlaceholderText="M1.."
-                        Text="{x:Bind ViewModel.ErrorCode1, Mode=TwoWay}" />
-                    <TextBox
-                        Header="Fehlerbeschreibung"
-                        PlaceholderText="Fehlerbeschreibung eintragen"
-                        Text="{x:Bind ViewModel.ErrorDescription1, Mode=TwoWay}" />
-                </StackPanel>
-                <StackPanel
-                    Grid.Row="4"
-                    Grid.Column="2"
-                    Grid.ColumnSpan="2"
-                    Padding="20"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Spacing="10">
-                    <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <TextBlock Text="Fehlerbeschreibung Teil 2" />
-                        <TextBox
-                            Header="Fehler ID"
-                            PlaceholderText="M1.."
-                            Text="{x:Bind ViewModel.ErrorCode2, Mode=TwoWay}" />
-                        <TextBox
-                            Header="Fehlerbeschreibung"
-                            PlaceholderText="Fehlerbeschreibung eintragen"
-                            Text="{x:Bind ViewModel.ErrorDescription2, Mode=TwoWay}" />
-                    </StackPanel>
-                </StackPanel>
+
 
                 <TextBox
                     Grid.Row="5"
@@ -144,6 +129,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid
+                                x:Name="tranferData"
                                 Grid.Row="7"
                                 Grid.Column="0"
                                 Grid.ColumnSpan="2"
@@ -173,9 +159,11 @@
                                     Grid.Column="1"
                                     DisplayMemberPath="StorageName"
                                     Header="Lagerot"
+                                    IsSynchronizedWithCurrentItem="False"
                                     ItemsSource="{Binding ViewModel.StorageLocations, ElementName=EditPcbPage}"
-                                    SelectedItem="{Binding StorageLocation, Mode=TwoWay}"
-                                    Text="{Binding StorageLocation, Mode=TwoWay}" />
+                                    SelectedValue="{Binding StorageLocation.StorageName}"
+                                    SelectedValuePath="StorageName"
+                                    Text="Hello" />
 
                                 <TextBox
                                     Grid.Row="1"
