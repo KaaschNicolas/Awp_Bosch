@@ -144,6 +144,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             var entity = await _boschContext.Set<T>()
                 .Include(T => T.Transfers)
                 .ThenInclude(transfer => transfer.NotedBy)
+                .Include(T => T.Transfers)
+                .ThenInclude(transfer => transfer.StorageLocation)
                 .Include(T => T.Restriction)
                 .Include(T => T.Diagnose)
                 .Include(T => T.PcbType)
