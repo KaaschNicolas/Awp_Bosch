@@ -44,9 +44,9 @@
 					    DefaultLabelPosition="Right"
 					    HorizontalAlignment="Center">
                     <AppBarButton
-                        Click="OnPrintButtonClicked"
+                        
 					    Icon="Print"
-						Label="Drucken"/>
+						Label="Drucken"/><!--Click="OnPrintButtonClicked"-->
                 </CommandBar>
                 <StackPanel
                         Grid.Column="2"
@@ -134,7 +134,7 @@
 					    Margin="0,5,0,0"
 					    Text="Aufgenommenen von: "/>
                     <TextBlock
-					    Margin="0,5,0,0"
+					    Margin="10,5,0,0"
 					    Text="{x:Bind Path=ViewModel.NotedBy, Mode=OneWay}" FontWeight="Bold"/>
                 </StackPanel>
             </StackPanel>
@@ -285,7 +285,7 @@
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding CreatedDate, Mode=TwoWay}"/>
-                                                    <TextBlock Text="{Binding NotedBy.Name, Mode=TwoWay}"/>
+                                                    <TextBlock Margin="10,0,0,0" Text="{Binding NotedBy.Name, Mode=TwoWay}"/>
                                                 </StackPanel>
                                                 <TextBlock Text="Beschreibung:"/>
                                                 <TextBlock Text="{Binding Comment, Mode=OneWay}"/>
@@ -311,6 +311,7 @@
 			    Orientation="Vertical"
                 ScrollViewer.VerticalScrollMode="Disabled">
                 <Button
+                    Click="TransferClick"
 				    HorizontalAlignment="Right"
 				    Height="60" Width="250"
 				    Style="{StaticResource AccentButtonStyle}"

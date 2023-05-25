@@ -72,28 +72,33 @@ public sealed partial class PcbSinglePage : Page
         }
     }
 
-//    private async void OnPrintButtonClicked(object sender, RoutedEventArgs e)
-//    {
-//        /*var data = new PageData(this, dataMatrixRectangle);
-//        var rect = (Rectangle)data.Rectangle.FindName("dataMatrixRectangle");
-//        rect.Fill = dataMatrixImageBrush;
-//        var page = data.Page;
-//        var pageTest = new Page();
-//        var layoutControl = new Grid();
-//        //layoutControl.Children.Add(uiElementGrid1);
-//        layoutControl.Children.Add(uiElementGrid2);
-//        pageTest.Content = layoutControl;*/
-        
-//        IPrintService printSerivce = new PrintService();
-//        await printSerivce.Print(PcbSinglePageContent); //Test
-//    }
+    void TransferClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.ShowTransferCommand.Execute(null);
+    }
 
-//    private void GenerateBarcode()
-//    {
-//        IDataMatrixService dms = new DataMatrixService();
-//        var dataMatrixImageSource = BitmapToBitmapImageConverter.GetBitmapImage(dms.GetDataMatrix(ViewModel.SerialNumber));
-//        ImageBrush dataMatrixImageBrush = new ImageBrush();
-//        dataMatrixImageBrush.ImageSource = dataMatrixImageSource;
-//        dataMatrixRectangle.Fill = dataMatrixImageBrush;
-//    }
+    //    private async void OnPrintButtonClicked(object sender, RoutedEventArgs e)
+    //    {
+    //        /*var data = new PageData(this, dataMatrixRectangle);
+    //        var rect = (Rectangle)data.Rectangle.FindName("dataMatrixRectangle");
+    //        rect.Fill = dataMatrixImageBrush;
+    //        var page = data.Page;
+    //        var pageTest = new Page();
+    //        var layoutControl = new Grid();
+    //        //layoutControl.Children.Add(uiElementGrid1);
+    //        layoutControl.Children.Add(uiElementGrid2);
+    //        pageTest.Content = layoutControl;*/
+
+    //        IPrintService printSerivce = new PrintService();
+    //        await printSerivce.Print(PcbSinglePageContent); //Test
+    //    }
+
+    //    private void GenerateBarcode()
+    //    {
+    //        IDataMatrixService dms = new DataMatrixService();
+    //        var dataMatrixImageSource = BitmapToBitmapImageConverter.GetBitmapImage(dms.GetDataMatrix(ViewModel.SerialNumber));
+    //        ImageBrush dataMatrixImageBrush = new ImageBrush();
+    //        dataMatrixImageBrush.ImageSource = dataMatrixImageSource;
+    //        dataMatrixRectangle.Fill = dataMatrixImageBrush;
+    //    }
 }

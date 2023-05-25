@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using static ZXing.QrCode.Internal.Version;
+using App.Core.Services;
 
 namespace App.ViewModels;
 
@@ -135,7 +136,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
 
     [ObservableProperty]
-    private int _id = 1;
+    private int _id;
 
 
     [ObservableProperty]
@@ -159,6 +160,10 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     private Pcb _pcb;
 
+
+    private readonly IAuthenticationService _authenticationService;
+    private readonly ICrudService<StorageLocation> _storageLocationCrudService;
+    private readonly ICrudService<Diagnose> _diagnoseCrudService;
     private readonly ICrudService<Pcb> _crudService;
     private readonly ICrudService<StorageLocation> _storageService;
     private readonly IDialogService _dialogService;
@@ -166,32 +171,20 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private readonly INavigationService _navigationService;
     private readonly ITransferDataService<Transfer> _transfersService;
 
-    public PcbSingleViewModel(ICrudService<Pcb> crudService, ICrudService<StorageLocation> storageService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, ITransferDataService<Transfer> transfersService)
+    public PcbSingleViewModel(ICrudService<Pcb> crudService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
     {
         try
         {
             _crudService = crudService;
+            _authenticationService = authenticationService;
+            _storageLocationCrudService = storageLocationCrudService;
+            _diagnoseCrudService = diagnoseCrudService;
             _storageService = storageService;
             _dialogService = dialogService;
             _infoBarService = infoBarService;
             _navigationService = navigationService;
             _transfersService = transfersService;
             _transfers = new ObservableCollection<Transfer>();
-            //mockData = new()
-            //{
-            //    Id = 1,
-            //    CreatedDate = DateTime.Now,
-            //    SerialNumber = "0000652125",
-            //    ErrorDescription = "ErrorMessage",
-            //    Restriction = null,
-            //    Finalized = false,
-
-            //    ErrorTypes = new List<ErrorType>()
-            //    {
-            //        new ErrorType(){Id=1, Code="M320", ErrorDescription="Beschreibung:Verbindung kann nicht hergestellt werden" }
-
-            //    }
-            //};
         }
         catch(Exception e)
         {
@@ -214,37 +207,51 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     Pcb mockData { get; set; }
 
+    [RelayCommand]
+    public async void ShowTransfer()
+    {
+        User currentUser = _authenticationService.currentUser();
+        var storageLocationsResponse = await _storageLocationCrudService.GetAll();
+        var storageLocations = new List<StorageLocation>();
+        if (storageLocationsResponse.Code == ResponseCode.Success)
+        {
+            storageLocations = storageLocationsResponse.Data;
+        }
+
+        var diagnoseResponse = await _diagnoseCrudService.GetAll();
+        var diagnoses = new List<Diagnose>();
+        if (diagnoseResponse.Code == ResponseCode.Success)
+        {
+            diagnoses = diagnoseResponse.Data;
+        }
+        var result = await _dialogService.ShowCreateTransferDialog("Weitergabe", currentUser, storageLocations, diagnoses);
+        if (result != null)
+        {
+            Transfer transfer = result.Item1;
+            int diagnoseId = result.Item2;
+
+            transfer.PcbId = _selectedItem.Id;
+
+            var response = await _transfersService.CreateTransfer(transfer, diagnoseId);
+            if (response == ResponseCode.Success)
+            {
+                _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
+            }
+            else
+            {
+                _infoBarService.showError("Fehler bei der Weitergabe", "Error");
+
+            }
+
+
+        }
+
+
+    }
+
     public async void OnNavigatedTo(object parameter)
     {
         _pcb = (Pcb)parameter; 
-
-        //var response = await _crudService.GetById(1);
-        //if (response.Code == ResponseCode.Success)
-        //{
-        //    _pcb = response.Data as Pcb;
-            
-        //    SerialNumber = response.Data.SerialNumber;
-        //    //_createdDate = response.Data.CreatedDate;
-        //    Restriction = response.Data.Restriction;
-        //    ErrorDescription = response.Data.ErrorDescription;
-        //    ErrorTypes = response.Data.ErrorTypes;
-        //    Finalized = response.Data.Finalized;
-        //    if (!Finalized)
-        //    {
-        //        Status = "offen";
-        //    }
-        //    else
-        //    {
-        //        Status = "abgeschlossen";
-        //    }
-        //    PcbType = response.Data.PcbType;
-        //    Comment = response.Data.Comment;
-        //    Diagnose = response.Data.Diagnose;
-        //}
-        //else
-        //{
-        //    _infoBarService.showError("ErrorMessage", "ErrorTitle");
-        //}
 
         SerialNumber = _pcb.SerialNumber;
         CreatedDate = _pcb.CreatedDate;
@@ -308,14 +315,21 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         //_transfers = new ObservableCollection<Transfer>();
         if (transfers.Code == ResponseCode.Success)
         {
-            
-            foreach (var transfer in transfers.Data)
+            for (int i = 0; i < (transfers.Data).Count; i++)//each (var transfer in transfers.Data)
             {
-                transfer.Id = 1;
+                var transfer = (transfers.Data)[i];
+                transfer.Id = i + 1;
+                //if (transfer == (transfers.Data)[0])
+                //{
+                //    transfer.Id = 1;
+                //}
+                //else
+                //{
+                    
+                //}
                 NotedBy = transfer.NotedBy.Name;
                 Storage= transfer.StorageLocation.StorageName;
                 _transfers.Add(transfer);
-                transfer.Id += 1;
 
                 if(transfer == transfers.Data[transfers.Data.Count - 1])
                 {
