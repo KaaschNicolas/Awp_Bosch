@@ -17,6 +17,9 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     private readonly INavigationService _navigationService;
     private readonly IAuthenticationService _authenticationService;
 
+    private int _pcbId;
+    private Pcb _pcbToEdit;
+
     [ObservableProperty]
     private DateTime _createdAt;
 
@@ -81,56 +84,59 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     [RelayCommand]
     public async Task Save()
     {
-        /*        Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = User.Id };
-                ErrorType errorType1 = new ErrorType { Code = _errorCode1, ErrorDescription = _errorDescription1 };
-                ErrorType errorType2 = new ErrorType { Code = _errorCode2, ErrorDescription = _errorDescription2 };
-                Device restriction = new Device { Name = _restriction };
-                var errorTypes = new List<ErrorType> { errorType1, errorType2 };
+        bool isFinalized = false;
 
-                var transfers = new List<Transfer>() { transfer };
-
-                Pcb pcb = new Pcb
-                {
-                    SerialNumber = _serialNumber,
-                    Finalized = false,
-                    PcbTypeId = _selectedPcbType.Id,
-                    Transfers = transfers,
-                    Restriction = restriction,
-                    ErrorTypes = errorTypes,
-                };
-                var response = await _pcbCrudService.Update(pcb);
+        foreach (var transfer in _transfers)
+        {
+            if (transfer.StorageLocation.IsFinalDestination)
+            {
+                isFinalized = true;
+            }
+        }
 
 
-                if (response != null)
-                {
-                    if (response.Code == ResponseCode.Success)
-                    {
-                        _infoBarService.showMessage("Leiterplatte erfolgreich erstellt", "Erfolg");
-                        // TODO: when List View exists, navigate to it after successfull creation of Pcb
-                        // _navigationService.NavigateTo("App.ViewModels.ListPcbViewModel");
-                    }
-                    else
-                    {
-                        _infoBarService.showError("Leiterplatte konnte nicht erstellt werden", "Error");
-                    }
-                }
-                else
-                {
-                    _infoBarService.showError("Leiterplatte konnte nicht erstellt werden", "Error");
-                }*/
+        _pcbToEdit.SerialNumber = _serialNumber;
+        _pcbToEdit.Finalized = isFinalized;
+        _pcbToEdit.PcbTypeId = _selectedPcbType.Id;
+        _pcbToEdit.Transfers = new List<Transfer>(_transfers);
+        _pcbToEdit.Restriction.Name = _restriction;
+        _pcbToEdit.ErrorTypes = new List<ErrorType>(_errorTypes);
+
+        var response = await _pcbDataService.Update(_pcbId, _pcbToEdit);
+
+
+        if (response != null)
+        {
+            if (response.Code == ResponseCode.Success)
+            {
+                _infoBarService.showMessage("Leiterplatte erfolgreich gespeichert", "Erfolg");
+
+                _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
+            }
+            else
+            {
+                _infoBarService.showError("Leiterplatte konnte nicht gespeichert werden", "Error");
+            }
+        }
+        else
+        {
+            _infoBarService.showError("Leiterplatte konnte nicht gespeichert werden", "Error");
+        }
     }
 
     public async void OnNavigatedTo(object parameter)
     {
-        Pcb pcbToEdit = (Pcb)parameter;
+        _pcbToEdit = (Pcb)parameter;
+        _pcbId = _pcbToEdit.Id;
 
-        var result = await _pcbDataService.GetByIdEager(pcbToEdit.Id);
-        Pcb pcb = result.Data;
-        SerialNumber = pcb.SerialNumber;
-        CreatedAt = pcb.CreatedDate;
-        User = pcb.Transfers[0].NotedBy;
-        Restriction = pcb.Restriction.Name;
-        SelectedPcbType = pcb.PcbType;
+        var result = await _pcbDataService.GetByIdEager(_pcbId);
+
+        _pcbToEdit = result.Data;
+        SerialNumber = _pcbToEdit.SerialNumber;
+        CreatedAt = _pcbToEdit.CreatedDate;
+        User = _pcbToEdit.Transfers[0].NotedBy;
+        Restriction = _pcbToEdit.Restriction.Name;
+        SelectedPcbType = _pcbToEdit.PcbType;
 
         var storageLocationResponse = await _storageLocationCrudService.GetAll();
         if (storageLocationResponse != null)
@@ -150,8 +156,8 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
             }
         }
 
-        pcb.ErrorTypes.ForEach(x => _errorTypes.Add(x));
-        pcb.Transfers.ForEach(x => _transfers.Add(x));
+        _pcbToEdit.ErrorTypes.ForEach(x => _errorTypes.Add(x));
+        _pcbToEdit.Transfers.ForEach(x => _transfers.Add(x));
 
 
 

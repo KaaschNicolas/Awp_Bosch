@@ -40,6 +40,10 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
                 <TextBox
@@ -48,11 +52,11 @@
                     Header="Seriennummer"
                     Text="{x:Bind ViewModel.SerialNumber, Mode=TwoWay}" />
 
-                <TextBox
+                <CalendarDatePicker
                     Grid.Row="1"
                     Grid.Column="0"
-                    Header="Ausgefallen am"
-                    Text="{x:Bind ViewModel.CreatedAt, Mode=TwoWay}" />
+                    Date="{Binding ViewModel.CreatedAt.Date, Mode=TwoWay}"
+                    Header="Ausgefallen am" />
 
                 <TextBox
                     Grid.Row="1"
@@ -75,64 +79,78 @@
                     TextChanged="AutoSuggestBox_TextChanged"
                     TextMemberPath="PcbPartNumber" />
 
-
-
-
                 <TextBlock
                     Grid.Row="3"
                     FontSize="20"
-                    Text="Aufnahme Fehler" />
+                    Text="Fehler bearbeiten" />
 
-
-                <ItemsControl Grid.Row="4" ItemsSource="{x:Bind ViewModel.ErrorTypes}">
+                <ItemsControl
+                    Grid.Row="4"
+                    Grid.ColumnSpan="8"
+                    ItemsSource="{x:Bind ViewModel.ErrorTypes}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="20" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel
-                                Grid.Row="4"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="2"
+                            <Grid
+                                MinWidth="400"
                                 Padding="20"
                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                 BorderThickness="1"
                                 CornerRadius="8"
-                                Orientation="Vertical">
-                                <TextBlock Text="Fehlerbeschreibung" />
+                                RowSpacing="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    FontSize="16"
+                                    Text="Fehlerbeschreibung" />
                                 <TextBox
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="1"
                                     Header="Fehler ID"
                                     PlaceholderText="M1.."
                                     Text="{Binding Code, Mode=TwoWay}" />
                                 <TextBox
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="2"
                                     Header="Fehlerbeschreibung"
                                     PlaceholderText="Fehlerbeschreibung eintragen"
                                     Text="{Binding ErrorDescription, Mode=TwoWay}" />
-                            </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-
-
                 <TextBox
                     Grid.Row="5"
+                    Grid.ColumnSpan="2"
                     Header="Einschränkung"
                     Text="{x:Bind ViewModel.Restriction, Mode=TwoWay}" />
                 <TextBlock
                     Grid.Row="6"
                     FontSize="20"
-                    Text="Weitergabe" />
+                    Text="Umlauf-Historie" />
 
                 <ItemsControl
                     Grid.Row="7"
-                    Grid.ColumnSpan="2"
+                    Grid.ColumnSpan="3"
                     ItemsSource="{x:Bind ViewModel.Transfers}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid
                                 x:Name="tranferData"
-                                Grid.Row="7"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="2"
                                 Margin="0,0,0,20"
                                 Padding="20"
                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -146,17 +164,26 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <TextBox
+                                <CalendarDatePicker
                                     Grid.Row="0"
                                     Grid.Column="0"
-                                    Header="Am"
-                                    Text="{Binding CreatedDate, Mode=TwoWay}" />
+                                    Grid.ColumnSpan="2"
+                                    Date="{Binding CreatedDate.Date, Mode=TwoWay}"
+                                    Header="Am" />
+
                                 <ComboBox
                                     Grid.Row="0"
-                                    Grid.Column="1"
+                                    Grid.Column="2"
+                                    Grid.ColumnSpan="3"
                                     DisplayMemberPath="StorageName"
                                     Header="Lagerot"
                                     IsSynchronizedWithCurrentItem="False"
@@ -166,8 +193,15 @@
                                     Text="Hello" />
 
                                 <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="5"
+                                    Grid.ColumnSpan="8"
+                                    Header="weitergegeben von"
+                                    Text="{Binding NotedBy.Name, Mode=TwoWay}" />
+
+                                <TextBox
                                     Grid.Row="1"
-                                    Grid.ColumnSpan="2"
+                                    Grid.ColumnSpan="8"
                                     Header="Anmerkung"
                                     Text="{Binding Comment, Mode=TwoWay}" />
 
@@ -175,14 +209,16 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+
                 <StackPanel
                     Grid.Row="8"
+                    Grid.ColumnSpan="8"
                     Margin="0,10,0,0"
                     Orientation="Horizontal"
                     Spacing="10">
                     <Button
                         Command="{x:Bind ViewModel.SaveCommand}"
-                        Content="Hinzufügen"
+                        Content="Speichern"
                         Style="{StaticResource AccentButtonStyle}" />
                     <Button Content="Abbrechen" />
                 </StackPanel>
