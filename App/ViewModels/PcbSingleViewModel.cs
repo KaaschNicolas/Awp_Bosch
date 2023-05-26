@@ -10,6 +10,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using static ZXing.QrCode.Internal.Version;
 using App.Core.Services;
+using Microsoft.UI.Xaml.Media;
+using System.Reflection.Metadata;
+using System.Security.Cryptography.X509Certificates;
 
 namespace App.ViewModels;
 
@@ -150,6 +153,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     private Pcb _pcb;
 
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private ObservableCollection<Pcb> _pcbs;
+
 
     private readonly IAuthenticationService _authenticationService;
     private readonly ICrudService<StorageLocation> _storageLocationCrudService;
@@ -160,6 +168,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
     private readonly ITransferDataService<Transfer> _transfersService;
+
+    public IAsyncRelayCommand FirstAsyncCommand { get; }
 
     public PcbSingleViewModel(ICrudService<Pcb> crudService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
     {
@@ -185,13 +195,23 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [RelayCommand]
     public async void Delete()
     {
+        //var pcbResponse = await _crudService.GetAll();
+        //if (pcbResponse.Code == ResponseCode.Success)
+        //{
+        //    foreach (var pcb in pcbResponse)
+        //    {
+        //        Pcbs.Add(pcb);
+        //    }
+        //}
+
         var result = await _dialogService.ConfirmDeleteDialogAsync("Leiterplatte Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?");
         if (result != null && result == true)
         {
-            //Pcb pcbToRemove = _selectedItem;
-            //_pcb.Remove(pcbToRemove);
+            //Pcb pcbToRemove = SelectedItem;
+            //Pcbs.Remove(pcbToRemove);
             //await _crudService.Delete(pcbToRemove);
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
+            //NavigateToPcbs();
         }
     }
 
@@ -220,28 +240,30 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             Transfer transfer = result.Item1;
             int diagnoseId = result.Item2;
 
-            transfer.PcbId = _selectedItem.Id;
+            transfer.PcbId = _pcb.Id;
 
             var response = await _transfersService.CreateTransfer(transfer, diagnoseId);
             if (response == ResponseCode.Success)
             {
+                Refresh(_pcb);
                 _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
             }
             else
             {
                 _infoBarService.showError("Fehler bei der Weitergabe", "Error");
-
             }
-
-
         }
+    }
 
+    private void Refresh(object parameter)
+    {
+        
 
     }
 
     public async void OnNavigatedTo(object parameter)
     {
-        _pcb = (Pcb)parameter; 
+        _pcb = (Pcb)parameter;
 
         SerialNumber = _pcb.SerialNumber;
         CreatedDate = _pcb.CreatedDate;
@@ -255,13 +277,13 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
             if (ErrorTypes[1] != null)
             {
-               SecondErrorCode = ErrorTypes[1].Code;
-               SecondErrorDescription = ErrorTypes[1].ErrorDescription;
+                SecondErrorCode = ErrorTypes[1].Code;
+                SecondErrorDescription = ErrorTypes[1].ErrorDescription;
             }
             else
             {
-               SecondErrorCode = " nicht vorhanden";
-               SecondErrorDescription = " nicht vorhanden";
+                SecondErrorCode = " nicht vorhanden";
+                SecondErrorDescription = " nicht vorhanden";
             }
         }
         else
@@ -271,7 +293,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             SecondErrorCode = " nicht vorhanden";
             SecondErrorDescription = " nicht vorhanden";
         }
-        
+
         Finalized = _pcb.Finalized;
         if (!Finalized)
         {
@@ -286,7 +308,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         Diagnose = _pcb.Diagnose;
 
         InCirculationDays = (int)Math.Round((DateTime.Now - _pcb.CreatedDate).TotalDays);
-        if(InCirculationDays > 5) 
+        if (InCirculationDays > 5)
         {
             ColorDays = "yellow";
         }
@@ -296,11 +318,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         }
         else
         {
-            ColorDays="green";
+            ColorDays = "green";
         }
 
         var transfers = await _transfersService.GetTransfersByPcb(_pcb.Id);
-        
+
         //_transfers = new ObservableCollection<Transfer>();
         if (transfers.Code == ResponseCode.Success)
         {
@@ -309,17 +331,17 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                 var transfer = (transfers.Data)[i];
                 transfer.Id = i + 1;
                 NotedBy = transfer.NotedBy.Name;
-                Storage= transfer.StorageLocation.StorageName;
+                Storage = transfer.StorageLocation.StorageName;
                 Transfers.Add(transfer);
 
-                if(transfer == transfers.Data[transfers.Data.Count - 1])
+                if (transfer == transfers.Data[transfers.Data.Count - 1])
                 {
                     var AtLocationDays = (int)Math.Round((transfer.CreatedDate - DateTime.Now).TotalDays);
-                    if(AtLocationDays > transfer.StorageLocation.DwellTimeYellow)
+                    if (AtLocationDays > transfer.StorageLocation.DwellTimeYellow)
                     {
                         ColorTransferDays = "yellow";
                     }
-                    else if(AtLocationDays > transfer.StorageLocation.DwellTimeRed)
+                    else if (AtLocationDays > transfer.StorageLocation.DwellTimeRed)
                     {
                         ColorTransferDays = "red";
                     }
@@ -334,10 +356,15 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         {
             _infoBarService.showError("Couldn't load transfer list", "Transfer List");
         }
-        
+
     }
 
     public void OnNavigatedFrom()
     {
+    }
+
+    private void NavigateToPcbs()
+    {
+        _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
     }
 }
