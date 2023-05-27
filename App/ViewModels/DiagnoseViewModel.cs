@@ -52,6 +52,12 @@ public partial class DiagnoseViewModel : ObservableObject, INavigationAware
 
     }
 
+    [RelayCommand]
+    public void RefreshDiagnose()
+    {
+        OnNavigatedTo(null);
+    }
+
     public async void OnNavigatedTo(object parameter)
     {
         _diagnoses.Clear();

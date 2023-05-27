@@ -26,6 +26,11 @@ public sealed partial class DiagnosePage : Page
         ViewModel.DeleteCommand.Execute(null);
     }
 
+    void RefreshDiagnose(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) 
+    {
+        ViewModel.RefreshDiagnoseCommand.Execute(null);
+    }
+
     void NavigateToUpdateClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
