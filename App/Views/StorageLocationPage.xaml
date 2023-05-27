@@ -39,7 +39,8 @@
                             Click="CreateStorageLocationButton_Click"/>
                         <AppBarButton 
                             Icon="Refresh" 
-                            Label="Neu laden"/>
+                            Label="Neu laden"
+                            Click="RefreshStorageLocationButton_Click"/>
                     </CommandBar>
                     <AutoSuggestBox
                             MinWidth="304"
