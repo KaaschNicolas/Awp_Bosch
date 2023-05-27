@@ -312,6 +312,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         Comment = _pcb.Comment;
         Diagnose = _pcb.Diagnose;
         //NotedBy = (_pcb.Transfers.Last()).NotedBy.Name;
+        AtLocationDays = 5;
 
         InCirculationDays = (int)Math.Round((DateTime.Now - _pcb.CreatedDate).TotalDays);
         if (InCirculationDays > 5)
@@ -327,6 +328,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             ColorDays = "green";
         }
 
+
         var transfers = await _transfersService.GetTransfersByPcb(_pcb.Id);
 
         //_transfers = new ObservableCollection<Transfer>();
@@ -340,9 +342,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                 Storage = transfer.StorageLocation.StorageName;
                 Transfers.Add(transfer);
 
+                AtLocationDays = (int)Math.Round((DateTime.Now - transfer.CreatedDate).TotalDays);
+
                 if (transfer == transfers.Data[transfers.Data.Count - 1])
                 {
-                    var AtLocationDays = (int)Math.Round((transfer.CreatedDate - DateTime.Now).TotalDays);
+                    AtLocationDays = (int)Math.Round((DateTime.Now - transfer.CreatedDate).TotalDays);
                     if (AtLocationDays > transfer.StorageLocation.DwellTimeYellow)
                     {
                         ColorTransferDays = "yellow";

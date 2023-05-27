@@ -379,7 +379,7 @@
                             <Border 
                                 x:Name="StorageDuration"
                                 Margin="20,20,0,0" CornerRadius="5,0,0,5">
-                                <TextBlock FontWeight="SemiBold" Margin="10,0,0,0" Text="{Binding AtLocationDays}"/>
+                                <TextBlock FontWeight="SemiBold" Margin="10,0,0,0" Text="{Binding AtLocationDays, Mode=OneWay}"/>
                             </Border>
                             <Border 
                                 x:Name="DurationDays"
