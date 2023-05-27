@@ -89,21 +89,7 @@
                         <NavigationViewItem x:Uid="Shell_MD_ErrorCategory" helpers:NavigationHelper.NavigateTo="App.ViewModels.DiagnoseViewModel" />
                     </NavigationViewItem.MenuItems>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_PcbSingle" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbSingleViewModel">
-                    <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_Transfers" helpers:NavigationHelper.NavigateTo="App.ViewModels.TransfersViewModel">
-                    <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_CreatePcb" helpers:NavigationHelper.NavigateTo="App.ViewModels.CreatePcbViewModel">
-                    <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                
             </NavigationView.MenuItems>
             <NavigationView.HeaderTemplate>
                 <DataTemplate>
