@@ -35,8 +35,8 @@
                     <AppBarButton
                         Click="NavigateCreateDiagnose"
                         Icon="Add"
-                        Label="Hinzufügen" />
-                    <AppBarButton Icon="Refresh" Label="Neu Laden" />
+                        Label="Hinzufügen"/>
+                    <AppBarButton Icon="Refresh" Label="Neu Laden"  Click="RefreshDiagnose"/>
 
                 </CommandBar>
                 <StackPanel
