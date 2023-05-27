@@ -66,13 +66,17 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
 
-            var lastTransfer = await _boschContext
-                .Set<Transfer>()
-                .GroupBy(x => x.Pcb)
-                .Select(x => x.OrderByDescending(y => y.CreatedDate).First())
-                .Where(x => x.StorageLocationId == storageLocationId)
-                .CountAsync();
-                
+            var pcbs = _boschContext.Transfers.Include(t => t.Pcb).GroupBy(x => x, (x, y) => new
+            {
+                CreatedDate = y.Max(z => z.CreatedDate),
+                PcbId = x.Pcb.Id,
+                TransferId = x.Id
+            }).ToList();
+
+            List<int> list = new();
+            pcbs.ForEach(x => list.Add(x.TransferId));
+            var lastTransfer = _boschContext.Transfers.Include(t => t.Pcb).Where(t => t.StorageLocationId == storageLocationId).Where(t => list.Contains(t.Id) ).Count();
+            
             return new Response<int>(ResponseCode.Success, data: lastTransfer);
         }
         catch (DbUpdateException)
