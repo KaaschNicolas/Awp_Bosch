@@ -1,10 +1,8 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using App.Core.Models;
 using App.Core.Models.Enums;
 using App.ViewModels;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -152,11 +150,6 @@ namespace App.Views
             ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
         }
 
-        private void NavigateToDetails(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            ViewModel.NavigateToDetailsCommand.Execute(ViewModel.SelectedItem);
-        }
-
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             Frame.Navigate(typeof(PcbSinglePage));
@@ -200,7 +193,5 @@ namespace App.Views
         {
             ViewModel.ShowTransferCommand.Execute(null);
         }
-
-        
     }
 }

@@ -8,9 +8,28 @@
 	xmlns:viewModels="using:App.ViewModels"
     mc:Ignorable="d">
 
-    <UserControl.DataContext>
-        <viewModels:TransfersViewModel/>
-    </UserControl.DataContext>
+	<behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+		<DataTemplate x:DataType="viewModels:TransfersViewModel">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width ="*"/>
+				</Grid.ColumnDefinitions>
+
+				<CommandBar
+                    Grid.Column="0"
+                    Padding="0"
+                    Background="Transparent"
+                    DefaultLabelPosition="Right"
+                    IsOpen="False">
+					<CommandBar.Content>
+						<!--  Get MainPageTitle.Text from localizx:ed resources  -->
+						<TextBlock Text="Umlauf-Historie" />
+					</CommandBar.Content>
+				</CommandBar>
+			</Grid>
+		</DataTemplate>
+	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 	
 	<Grid x:Name="ContentArea">
 		<Grid.ColumnDefinitions>
