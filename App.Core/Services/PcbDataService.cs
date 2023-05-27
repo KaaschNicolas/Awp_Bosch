@@ -66,18 +66,22 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
 
-            var pcbs = _boschContext.Transfers.Include(t => t.Pcb).GroupBy(x => x, (x, y) => new
-            {
-                CreatedDate = y.Max(z => z.CreatedDate),
-                PcbId = x.Pcb.Id,
-                TransferId = x.Id
-            }).ToList();
+            //var pcbs = _boschContext.Transfers.Include(t => t.Pcb).GroupBy(x => x, (x, y) => new
+            //{
+            //    CreatedDate = y.Max(z => z.CreatedDate),
+            //    PcbId = x.Pcb.Id,
+            //    TransferId = x.Id
+            //}).ToList();
 
-            List<int> list = new();
-            pcbs.ForEach(x => list.Add(x.TransferId));
-            var lastTransfer = _boschContext.Transfers.Include(t => t.Pcb).Where(t => t.StorageLocationId == storageLocationId).Where(t => list.Contains(t.Id) ).Count();
+            var dynamicList =  _boschContext
+                .Pcbs
+                .FromSqlRaw($"SELECT MAX(T.CreatedDate) AS 'CreatedAt', T.PcbId FROM Pcbs  AS P JOIN Transfers AS T ON P.Id = T.PcbId WHERE T.StorageLocationId = '4'  GROUP BY T.PcbId").AsEnumerable().Count();
+
+            //List<int> list = new();
+            //pcbs.ForEach(x => list.Add(x.TransferId));
+            //var lastTransfer = _boschContext.Transfers.Include(t => t.Pcb).Where(t => t.StorageLocationId == storageLocationId).Where(t => list.Contains(t.Id) ).Count();
             
-            return new Response<int>(ResponseCode.Success, data: lastTransfer);
+            return new Response<int>(ResponseCode.Success, data: dynamicList);
         }
         catch (DbUpdateException)
         {
