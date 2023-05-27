@@ -111,6 +111,11 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         get;
     }
 
+    public ICommand RefreshStorageLocationCommand
+    {
+        get;
+    }
+
     private StorageLocation _selectedItem;
     public StorageLocation SelectedItem
     {
@@ -156,6 +161,7 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         NavigateToUpdateStorageLocationCommand = new RelayCommand<StorageLocation>(NavigateToUpdateStorageLocation);
         CreateSL = new RelayCommand(CreateStorageLocation);
         DeleteSL = new RelayCommand(DeleteStorageLocation);
+        RefreshStorageLocationCommand = new RelayCommand(RefreshStorageLocation);
         StorageLocations = new ObservableCollection<StorageLocation>();
     }
 
@@ -193,6 +199,11 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
     private void NavigateToUpdateStorageLocation(StorageLocation storageLocation)
     {
         _navigationService.NavigateTo("App.ViewModels.UpdateStorageLocationViewModel", storageLocation);
+    }
+
+    public async void RefreshStorageLocation() 
+    {
+         OnNavigatedTo(new { });
     }
 
     public async void OnNavigatedTo(object parameter)
