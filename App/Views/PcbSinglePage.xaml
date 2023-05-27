@@ -168,7 +168,7 @@
                 Grid.RowSpan="2">
                 <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
                     <TextBlock Text="Sachnummer:"/>
-                    <TextBlock Text="{x:Bind Path=ViewModel.PcbType, Mode=TwoWay}"/>
+                    <TextBlock Text="{x:Bind Path=ViewModel.PcbType.PcbPartNumber, Mode=TwoWay}" Margin="10,0,0,0" FontWeight="Bold"/>
                     <!--<TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="1688 400 628 - VCI-Renault mit Display"/>-->
                 </StackPanel>
                 <StackPanel
@@ -225,6 +225,12 @@
                 <!-- Umlauf-Historie -->
 
                 <Grid Margin="0,60,0,0">
+                    <Grid.Resources>
+                        <Style TargetType="controls:DataGrid">
+                            <Setter Property="Background" Value="Transparent" />
+                            <!-- Hintergrundfarbe der selektierten Zeile -->
+                        </Style>
+                    </Grid.Resources>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -255,7 +261,7 @@
             RowDetailsVisibilityMode="VisibleWhenSelected"
             SelectionMode="Extended"
             RowGroupHeaderPropertyNameAlternative="Range"
-            ItemsSource="{Binding Transfers}"
+            ItemsSource="{Binding SortedData}"
             SelectedItem="{Binding Transfer, Mode=TwoWay}">
                         <!--RowDetailsTemplate="{StaticResource RowDetailsTemplate}"-->
                         <controls:DataGrid.Columns>
@@ -264,7 +270,7 @@
                                 <controls:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid Width="40" Height="40" VerticalAlignment="top">
-                                            <Ellipse Fill="black" Stroke="white" StrokeThickness="2" />
+                                            <Ellipse x:Name="EllipseColor" Fill="Black" Stroke="white" StrokeThickness="2" />
                                             <TextBlock Text="{Binding Id, Mode=OneWay}" Foreground="white" FontWeight="Bold" HorizontalAlignment="center" VerticalAlignment="center" />
                                         </Grid>
                                     </DataTemplate>
@@ -384,6 +390,8 @@
                     <StackPanel
                             Orientation="Horizontal">
                         <TextBlock Margin="20,20,0,0" Text="letzte Bearbeitung:"/>
+                        <TextBlock Margin="20,20,0,0" FontWeight="Bold" 
+                                       Text="{Binding NotedBy}"/>
                     </StackPanel>
                 </StackPanel>
                 <!-- Anmerkungs-Panel -->

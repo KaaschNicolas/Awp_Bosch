@@ -19,6 +19,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
                 .OrderBy(orderByProperty, isAscending)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
+                .Include("PcbType")
                 .ToListAsync();
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }

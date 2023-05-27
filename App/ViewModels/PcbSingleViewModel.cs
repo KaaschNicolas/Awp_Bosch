@@ -112,6 +112,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
+    private List<Transfer> _sortedData;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
     private Transfer _transfer;
 
     [ObservableProperty]
@@ -306,6 +311,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         PcbType = _pcb.PcbType;
         Comment = _pcb.Comment;
         Diagnose = _pcb.Diagnose;
+        //NotedBy = (_pcb.Transfers.Last()).NotedBy.Name;
 
         InCirculationDays = (int)Math.Round((DateTime.Now - _pcb.CreatedDate).TotalDays);
         if (InCirculationDays > 5)
@@ -351,6 +357,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                     }
                 }
             }
+            SortedData = transfers.Data.ToList();
+            SortedData.Reverse();
         }
         else
         {
