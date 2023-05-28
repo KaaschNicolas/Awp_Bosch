@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
+using App.Core.Models;
 using App.Core.Models.Enums;
 using App.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
@@ -170,7 +171,7 @@ namespace App.Views
 
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(PcbSinglePage));
+            Frame.Navigate(typeof(CreatePcbPage));
         }
 
         private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)
@@ -205,11 +206,6 @@ namespace App.Views
                 SearchIndicator.Visibility = Visibility.Visible;
             }
 
-        }
-
-        void TransferClick(object sender, RoutedEventArgs e)
-        {
-            ViewModel.ShowTransferCommand.Execute(null);
         }
     }
 }

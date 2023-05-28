@@ -31,17 +31,7 @@ namespace App.Core.Models
             get; set;
         }
 
-
-        public int PcbId
-        {
-            get; set;
-        }
-        [ForeignKey(nameof(PcbId))]
-        public Pcb Pcb
-        {
-            get; set;
-        }
-
+               
         [ForeignKey(nameof(PcbId))]
         public int PcbId { get; set; }
     }
