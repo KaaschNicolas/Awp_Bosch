@@ -241,10 +241,6 @@
                                 <AppBarButton.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
                                         <MenuFlyoutItem
-                                            Click="NavigateToDetails"
-                                            Icon="OpenWith"
-                                            Text="Detailansicht" />
-                                        <MenuFlyoutItem
                                             Click="TransferClick"
                                             Icon="RepeatAll"
                                             Text="Weitergabe" />

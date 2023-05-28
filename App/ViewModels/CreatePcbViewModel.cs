@@ -79,7 +79,6 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
 
         var transfers = new List<Transfer>() { transfer };
 
-        
         Pcb pcb = new Pcb
         {
             SerialNumber = _serialNumber,
