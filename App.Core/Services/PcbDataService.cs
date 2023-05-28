@@ -210,13 +210,29 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext
-                .Set<T>()
-                .Include(e => e.Transfers.LastOrDefault().StorageLocationId == storageLocationId)
+            List<Transfer> lastTransfers = new();
+
+            await _boschContext.Pcbs.Include(x => x.Transfers).ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
+
+            List<T> pcbs = new();
+
+            foreach (var transfers in lastTransfers)
+            {
+                if (transfers.StorageLocationId == storageLocationId)
+                {
+                    var res = await GetById(transfers.PcbId);
+                    if (res.Code == ResponseCode.Success)
+                    {
+                        pcbs.Add(res.Data);
+                    }
+                }
+            }
+
+            var pcbsPaginated = pcbs
                 .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-            return new Response<List<T>>(ResponseCode.Success, data: data);
+                .Take(pageSize);
+
+            return new Response<List<T>>(ResponseCode.Success, data: pcbsPaginated.ToList());
         }
         catch (DbUpdateException)
         {

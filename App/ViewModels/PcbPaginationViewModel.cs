@@ -210,7 +210,6 @@ namespace App.ViewModels
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
                         break;
                     case PcbFilterOptions.FilterStorageLocation:
-                        
                         maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);
                         pcbs = await _pcbDataService.GetWithFilterStorageLocation(pageIndex, pageSize, SelectedComboBox.Id);
                         break;
