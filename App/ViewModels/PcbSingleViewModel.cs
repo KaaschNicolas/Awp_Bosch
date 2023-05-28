@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using static ZXing.QrCode.Internal.Version;
 
 namespace App.ViewModels;
 
@@ -76,7 +77,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
 
-    public PcbSingleViewModel(ICrudService<Pcb> crudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService)
+    public PcbSingleViewModel(IPcbDataService<Pcb> crudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService)
     {
         _crudService = crudService;
         _dialogService = dialogService;
@@ -103,10 +104,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         var result = await _dialogService.ConfirmDeleteDialogAsync("Leiterplatte Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?");
         if (result != null && result == true)
         {
+            //TODO: entkommentieren wenn einzel Ansicht passt
             //Pcb pcbToRemove = _selectedItem;
             //_pcb.Remove(pcbToRemove);
-            //await _crudService.Delete(pcbToRemove);
+            //await _crudService.Delete(_pcb);
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
+            _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
 
         }
     }
