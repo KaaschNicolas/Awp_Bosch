@@ -35,8 +35,8 @@
                     <AppBarButton
                         Click="CreatPartNumberButton_Click"
                         Icon="Add"
-                        Label="Hinzufügen" />
-                    <AppBarButton Icon="Refresh" Label="Neu Laden" />
+                        Label="Hinzufügen"/>
+                    <AppBarButton Icon="Refresh" Label="Neu Laden" Click="RefreshPartNumberButton_Click"/>
 
                 </CommandBar>
                 <StackPanel

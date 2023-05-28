@@ -10,10 +10,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.ViewModels
 {
@@ -35,8 +32,8 @@ namespace App.ViewModels
             );
 
             PreviousAsyncCommand = new AsyncRelayCommand(
-                async () => await GetPcbs(_pageNumber -1, _pageSize, _isSortingAscending),
-                () => _pageNumber > 1 
+                async () => await GetPcbs(_pageNumber - 1, _pageSize, _isSortingAscending),
+                () => _pageNumber > 1
             );
 
             NextAsyncCommand = new AsyncRelayCommand(
@@ -290,5 +287,6 @@ namespace App.ViewModels
             _pageNumber = 0;
             FirstAsyncCommand.ExecuteAsync(null);
         }
+
     }
 }

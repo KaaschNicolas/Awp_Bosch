@@ -54,10 +54,16 @@ namespace App.Core.Models
         {
             get; set;
         }
-        public Diagnose Diagnose
+        [ForeignKey("DiagnoseId")]
+        public Diagnose? Diagnose
         {
             get; set;
         }
+        public int? DiagnoseId
+        {
+            get; set;
+        }
+
 
     }
 }

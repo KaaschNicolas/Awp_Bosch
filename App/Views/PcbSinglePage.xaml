@@ -1,188 +1,185 @@
 ﻿<Page
     x:Class="App.Views.PcbSinglePage"
-	x:Name="PcbSinglePageContent"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:App.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:in="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:in="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:viewModels="using:App.ViewModels"
+    xmlns:viewModels="using:App.ViewModels"
+    x:Name="PcbSinglePageContent"
     mc:Ignorable="d">
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-		<DataTemplate x:DataType="viewModels:PcbSingleViewModel">
+        <DataTemplate x:DataType="viewModels:PcbSingleViewModel">
             <Grid x:Name="uiElementGrid1" Margin="0,0,50,0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="2*"/>
-					<ColumnDefinition Width="2,5*"/>
-					<ColumnDefinition Width="*"/>
-				</Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2,5*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-				<StackPanel
-					Grid.Column="0"
-					Orientation="Horizontal"
-					HorizontalAlignment="Left">
-					<CommandBar
-						Background="Transparent"
-						IsOpen="False"
-						DefaultLabelPosition="Right">
-						<CommandBar.Content >
-							<TextBlock Text="Leiterplatte"/>
-						</CommandBar.Content>
-					</CommandBar>
-					<TextBlock
-						Text="{ x:Bind Path=ViewModel.SerialNumber }"
-						FontWeight="Bold"/>
-				</StackPanel>
-				<CommandBar
-					Grid.Column="1"
-					Background="Transparent"
-					IsOpen="False"
-					DefaultLabelPosition="Right"
-					HorizontalAlignment="Center">
-					<AppBarButton
-					    Icon="Print"
-						Label="Drucken"
-                        Click="OnPrintButtonClicked"/>
-				</CommandBar>
-				<StackPanel
+                <StackPanel
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
+                    <CommandBar
+                        Background="Transparent"
+                        DefaultLabelPosition="Right"
+                        IsOpen="False">
+                        <CommandBar.Content>
+                            <TextBlock Text="Leiterplatte" />
+                        </CommandBar.Content>
+                    </CommandBar>
+                    <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.SerialNumber}" />
+                </StackPanel>
+                <CommandBar
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    Background="Transparent"
+                    DefaultLabelPosition="Right"
+                    IsOpen="False">
+                    <AppBarButton
+                        Click="OnPrintButtonClicked"
+                        Icon="Print"
+                        Label="Drucken" />
+                </CommandBar>
+                <StackPanel
+                    Grid.Row="1"
                     Grid.Column="2"
-					Grid.Row="1"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right">
-					<CommandBar
-                        DefaultLabelPosition="Right">
-						<AppBarButton
-                            Icon="Edit"
-                            Label="Bearbeiten"/>
-						<AppBarButton
-                            Icon="Delete"
-                            Label="Löschen"/>
-					</CommandBar>
-				</StackPanel>
-			</Grid>
-		</DataTemplate>
-	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <CommandBar DefaultLabelPosition="Right">
+                        <AppBarButton Icon="Edit" Label="Bearbeiten" />
+                        <AppBarButton Icon="Delete" Label="Löschen" Click="DeleteClick" />
+                    </CommandBar>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
-       
-            <Grid>
-		<Grid.Resources>
-			<CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
-		</Grid.Resources>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="2*" />
-			<ColumnDefinition Width="0,5*"/>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
 
-        <StackPanel 
-                    Grid.Column="0"
-                    Grid.Row="0"
-                    Orientation="Vertical">
-			<StackPanel
-				Margin="0,0,0,15"
-				Orientation="Horizontal">
-				<TextBlock FontSize="18"
-						   Text="Seriennummer:"/>
-				<TextBlock Margin="5,0,0,0" FontWeight="Bold" FontSize="18"
-						   Text="{Binding SerialNumber}"/>
-			</StackPanel>
-			<StackPanel
-				Margin="0,15,0,0"
-				Orientation="Horizontal"
-				VerticalAlignment="Center">
-				<TextBlock
-					Margin="0,5,0,0"
-					Text="Ausgefallen am:" />
-				<CalendarDatePicker
-					x:Name="dateOfFailure"
-					Margin="5,0,25,0"
-					VerticalAlignment="Top"
-					PlaceholderText="Pick a date"
-					IsHitTestVisible="false"/>
-				<!--DateChanded="CalendarDatePicker_DateChanged"/>-->
-				<TextBlock
-					Margin="0,5,0,0"
-					Text="Aufgenommenen von:"/>
-				<TextBlock
-					Margin="0,5,0,0"
-					Text="Tester_1" FontWeight="Bold"/>
-			</StackPanel>
-		</StackPanel>
-		<InfoBar
-				Grid.Column="0"
-				Grid.Row="1"
-				Grid.ColumnSpan="1"
-				HorizontalAlignment="Right"
-				IsOpen="True"
-				IsIconVisible="True"
-				Severity="Warning"
-				IsClosable="False"
-				Margin="0,0,0,0"
-				Title="Einschränkung"
-				Message="{Binding Device}" />
+    <Grid>
+        <Grid.Resources>
+            <CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="0,5*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
         <StackPanel
-                    Grid.Column="0"
-                    Grid.Row="1">
-			<StackPanel Margin="0,15,0,0" Orientation="Horizontal">
-				<TextBlock Text="Sachnummer:"/>
-				<TextBlock Text="{Binding PcbType}"/>
-				<TextBlock Margin="5,0,0,0" FontWeight="Bold"
-					Text="1688 400 628 - VCI-Renault mit Display"/>
-			</StackPanel>
-			<StackPanel
-				Margin="0,30,0,0"
-				Orientation="Horizontal">
-				<TextBlock Text="Fehlerkategorie:"/>
-				<TextBlock Text="{Binding Diagnose}"/>
-				<TextBlock Margin="5,0,0,0" FontWeight="Bold"
-					Text="Hardware"/>
-			</StackPanel>
+            Grid.Row="0"
+            Grid.Column="0"
+            Orientation="Vertical">
+            <StackPanel Margin="0,0,0,15" Orientation="Horizontal">
+                <TextBlock FontSize="18" Text="Seriennummer:" />
+                <TextBlock
+                    Margin="5,0,0,0"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    Text="{Binding SerialNumber}" />
+            </StackPanel>
+            <StackPanel
+                Margin="0,15,0,0"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <TextBlock Margin="0,5,0,0" Text="Ausgefallen am:" />
+                <CalendarDatePicker
+                    x:Name="dateOfFailure"
+                    Margin="5,0,25,0"
+                    VerticalAlignment="Top"
+                    IsHitTestVisible="false"
+                    PlaceholderText="Pick a date" />
+                <!--  DateChanded="CalendarDatePicker_DateChanged"/>  -->
+                <TextBlock Margin="0,5,0,0" Text="Aufgenommenen von:" />
+                <TextBlock
+                    Margin="0,5,0,0"
+                    FontWeight="Bold"
+                    Text="Tester_1" />
+            </StackPanel>
+        </StackPanel>
+        <InfoBar
+            Title="Einschränkung"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="1"
+            Margin="0,0,0,0"
+            HorizontalAlignment="Right"
+            IsClosable="False"
+            IsIconVisible="True"
+            IsOpen="True"
+            Message="{Binding Device}"
+            Severity="Warning" />
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
+                <TextBlock Text="Sachnummer:" />
+                <TextBlock Text="{Binding PcbType}" />
+                <TextBlock
+                    Margin="5,0,0,0"
+                    FontWeight="Bold"
+                    Text="1688 400 628 - VCI-Renault mit Display" />
+            </StackPanel>
+            <StackPanel Margin="0,30,0,0" Orientation="Horizontal">
+                <TextBlock Text="Fehlerkategorie:" />
+                <TextBlock Text="{Binding Diagnose}" />
+                <TextBlock
+                    Margin="5,0,0,0"
+                    FontWeight="Bold"
+                    Text="Hardware" />
+            </StackPanel>
 
-			<Expander
-				Margin="0,20,0,0"
-				IsExpanded="True"
-				ExpandDirection="Down"
-				HorizontalAlignment="Stretch"
-				HorizontalContentAlignment="Stretch"
-				Header="Fehler: M320"
-				Content="Beschreibung: Fehler nicht gefunden"/>
-			<Expander
-				Margin="0,20,0,0"
-				IsExpanded="True"
-				ExpandDirection="Down"
-				HorizontalAlignment="Stretch"
-				HorizontalContentAlignment="Stretch" 
-				Header="Fehler: 010"
-				Content="Beschreibung: Verbindung herstellen"/>
+            <Expander
+                Margin="0,20,0,0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Content="Beschreibung: Fehler nicht gefunden"
+                ExpandDirection="Down"
+                Header="Fehler: M320"
+                IsExpanded="True" />
+            <Expander
+                Margin="0,20,0,0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Content="Beschreibung: Verbindung herstellen"
+                ExpandDirection="Down"
+                Header="Fehler: 010"
+                IsExpanded="True" />
         </StackPanel>
 
-        <StackPanel x:Name="Test"
+        <StackPanel
+            x:Name="Test"
+            Grid.Row="0"
+            Grid.RowSpan="2"
             Grid.Column="2"
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Margin="0,30,0,0"
-                    Orientation="Vertical">
+            Margin="0,30,0,0"
+            Orientation="Vertical">
             <Rectangle
-				x:Name="dataMatrixRectangle"
-                Stroke="LightGray" StrokeThickness="0.5"
-				Height="250" Width="280"
-				RadiusX="4" RadiusY="4"
-				HorizontalAlignment="Right"
-                />
-            
+                x:Name="dataMatrixRectangle"
+                Width="280"
+                Height="250"
+                HorizontalAlignment="Right"
+                RadiusX="4"
+                RadiusY="4"
+                Stroke="LightGray"
+                StrokeThickness="0.5" />
+
             <Rectangle
-				Fill="White" Stroke="LightGray" StrokeThickness="0.5"
-				Height="100" Width="280"
-				RadiusX="4" RadiusY="4"
-				Margin="0,20,0,0"
-				HorizontalAlignment="Right"/>
-		</StackPanel>
+                Width="280"
+                Height="100"
+                Margin="0,20,0,0"
+                HorizontalAlignment="Right"
+                Fill="White"
+                RadiusX="4"
+                RadiusY="4"
+                Stroke="LightGray"
+                StrokeThickness="0.5" />
+        </StackPanel>
         <!--<ContentPresenter x:Name="ContentPresenter" Content="{TemplateBindingTransfersViewModel}" />-->
-        </Grid>
+    </Grid>
 </Page>
