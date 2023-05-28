@@ -64,6 +64,65 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    public async Task<Response<int>> MaxEntriesByStorageLocation(int storageLocationId)
+    {
+        try
+        {
+            List<Transfer> lastTransfers = new();
+
+            await _boschContext.Pcbs.Include(x => x.Transfers).ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
+
+            List<Pcb> pcbs = new();
+
+            //lastTransfers.ForEach(async x =>
+            //{
+            //    if (x.StorageLocationId == storageLocationId)
+            //    {
+            //        var res = await GetById(x.PcbId);
+            //        if (res.Code == ResponseCode.Success)
+            //        {
+            //            pcbs.Add(res.Data);
+            //        }
+            //    }
+            //});
+            foreach (var transfers in lastTransfers)
+            {
+                if (transfers.StorageLocationId == storageLocationId)
+                {
+                    var res = await GetById(transfers.PcbId);
+                    if (res.Code == ResponseCode.Success)
+                    {
+                        pcbs.Add(res.Data);
+                    }
+                }
+            }
+
+            var count = pcbs.Count;
+            //var test = from p in _boschContext.Pcbs
+            //           join t in _boschContext.Transfers on p.Id equals t.PcbId
+            //           group t by p.Id into grp
+            //           select grp.OrderByDescending(x => x.Id).First() into grpOldest
+            //           where grpOldest.StorageLocationId == storageLocationId 
+            //           select new { PcbId = grpOldest.PcbId };
+
+
+
+            //var dynamicList =  _boschContext
+            //    .Pcbs
+            //    .FromSqlRaw($"SELECT MAX(T.CreatedDate) AS 'CreatedAt', T.PcbId FROM Pcbs  AS P JOIN Transfers AS T ON P.Id = T.PcbId WHERE T.StorageLocationId = '4'  GROUP BY T.PcbId").AsEnumerable().Count();
+
+            //List<int> list = new();
+            //pcbs.ForEach(x => list.Add(x.TransferId));
+            //var lastTransfer = _boschContext.Transfers.Include(t => t.Pcb).Where(t => t.StorageLocationId == storageLocationId).Where(t => list.Contains(t.Id) ).Count();
+
+            return new Response<int>(ResponseCode.Success, data: count);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
+        }
+    }
+
     public async Task<Response<int>> MaxEntriesSearch(string queryText)
     {
         try
@@ -142,6 +201,40 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
                 .Take(pageSize)
                 .ToListAsync();
             return new Response<List<T>>(ResponseCode.Success, data: data);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
+        }
+    }
+
+    public async Task<Response<List<T>>> GetWithFilterStorageLocation(int pageIndex, int pageSize, int storageLocationId)
+    {
+        try
+        {
+            List<Transfer> lastTransfers = new();
+
+            await _boschContext.Pcbs.Include(x => x.Transfers).ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
+
+            List<T> pcbs = new();
+
+            foreach (var transfers in lastTransfers)
+            {
+                if (transfers.StorageLocationId == storageLocationId)
+                {
+                    var res = await GetById(transfers.PcbId);
+                    if (res.Code == ResponseCode.Success)
+                    {
+                        pcbs.Add(res.Data);
+                    }
+                }
+            }
+
+            var pcbsPaginated = pcbs
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
+
+            return new Response<List<T>>(ResponseCode.Success, data: pcbsPaginated.ToList());
         }
         catch (DbUpdateException)
         {

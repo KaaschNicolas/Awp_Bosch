@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
-
+using App.Core.Models;
 using App.Core.Models.Enums;
 using App.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
@@ -77,6 +77,19 @@ namespace App.Views
             DataGrid.RowDetailsVisibilityMode = ctWinUI.DataGridRowDetailsVisibilityMode.Collapsed;
         }
 
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                if (e.AddedItems.First() is not null)
+                {
+                    ViewModel.FilterOptions = PcbFilterOptions.FilterStorageLocation;
+                    ViewModel.SelectedComboBox = ComboBox.SelectedItem as StorageLocation;
+                    ViewModel.FilterItems.ExecuteAsync(null);
+                }
+            }
+        }
+
         private async void DataGrid_Sorting(object sender, ctWinUI.DataGridColumnEventArgs e)
         {
             _displayMode = DataGridDisplayMode.UserSorted;
@@ -89,7 +102,10 @@ namespace App.Views
                 : e.Column.SortDirection = ctWinUI.DataGridSortDirection.Descending;
             _actualSortedColumn = e.Column;
 
-            ViewModel.SortBy = e.Column.Tag.ToString();
+            if (e.Column.Tag is not null)
+            {
+                ViewModel.SortBy = e.Column.Tag.ToString();
+            }
             bool isAscending = e.Column.SortDirection is null or (ctWinUI.DataGridSortDirection?)ctWinUI.DataGridSortDirection.Descending;
 
             await ViewModel.SortByCommand.ExecuteAsync(null); //hier nochmal schauen
@@ -152,7 +168,7 @@ namespace App.Views
 
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(PcbSinglePage));
+            Frame.Navigate(typeof(CreatePcbPage));
         }
 
         private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)
