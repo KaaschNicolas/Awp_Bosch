@@ -58,7 +58,7 @@
                             DefaultLabelPosition="Right">
                         <AppBarButton
                                 Icon="Edit"
-                                Label="Beareiten"/>
+                                Label="Bearbeiten"/>
                         <AppBarButton
                                 Icon="Delete"
                                 Label="Löschen"/>

@@ -173,11 +173,23 @@
                     Margin="0,10,0,0"
                     Orientation="Horizontal"
                     Spacing="10">
-                    <Button
+                    <Button 
+                        Margin="0,12,4,12" 
                         Command="{x:Bind ViewModel.SaveCommand}"
-                        Content="Hinzufügen"
-                        Style="{StaticResource AccentButtonStyle}" />
-                    <Button Content="Abbrechen" />
+                        Style="{StaticResource AccentButtonStyle}" >
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" FontSize="18"/>
+                            <TextBlock Padding="8,0,0,0">Hinzufügen</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button 
+                        Margin="0,12,4,12" 
+                        Command="{x:Bind ViewModel.CancelCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;" FontSize="18"/>
+                            <TextBlock Padding="8,0,0,0" >Abbrechen</TextBlock>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
             </Grid>

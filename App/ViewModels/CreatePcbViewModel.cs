@@ -55,6 +55,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
 
     [ObservableProperty]
     private ObservableCollection<PcbType> _pcbTypes;
+
     public CreatePcbViewModel(ICrudService<Pcb> pcbCrudService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<PcbType> pcbTypesCrudService, IInfoBarService infoBarService, INavigationService navigationService, IAuthenticationService authenticationService)
     {
         _pcbCrudService = pcbCrudService;
@@ -71,7 +72,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     [RelayCommand]
     public async Task Save()
     {
-        Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = User.Id };
+        Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = _user.Id };
         ErrorType errorType1 = new ErrorType { Code = _errorCode1, ErrorDescription = _errorDescription1 };
         ErrorType errorType2 = new ErrorType { Code = _errorCode2, ErrorDescription = _errorDescription2 };
         Device restriction = new Device { Name = _restriction };
@@ -81,12 +82,13 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
 
         Pcb pcb = new Pcb
         {
-            SerialNumber = _serialNumber,
+            SerialNumber = _serialNumber.Substring(0, 10),
             Finalized = false,
             PcbTypeId = _selectedPcbType.Id,
             Transfers = transfers,
             Restriction = restriction,
             ErrorTypes = errorTypes,
+            ErrorDescription = _errorDescription1,
         };
         var response = await _pcbCrudService.Create(pcb);
 
@@ -97,7 +99,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
             {
                 _infoBarService.showMessage("Leiterplatte erfolgreich erstellt", "Erfolg");
                 // TODO: when List View exists, navigate to it after successfull creation of Pcb
-                // _navigationService.NavigateTo("App.ViewModels.ListPcbViewModel");
+                _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
             }
             else
             {
@@ -108,6 +110,12 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
         {
             _infoBarService.showError("Leiterplatte konnte nicht erstellt werden", "Error");
         }
+    }
+
+    [RelayCommand]
+    public void Cancel()
+    {
+        _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
     }
 
     public async void OnNavigatedTo(object parameter)

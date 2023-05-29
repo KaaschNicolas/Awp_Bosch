@@ -352,11 +352,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                     if (transfer == transfers.Data[transfers.Data.Count - 1])
                     {
                         AtLocationDays = (int)Math.Round((DateTime.Now - transfer.CreatedDate).TotalDays);
-                        if (AtLocationDays > transfer.StorageLocation.DwellTimeYellow)
+                        if (AtLocationDays > int.Parse(transfer.StorageLocation.DwellTimeYellow))
                         {
                             ColorTransferDays = "yellow";
                         }
-                        else if (AtLocationDays > transfer.StorageLocation.DwellTimeRed)
+                        else if (AtLocationDays > int.Parse(transfer.StorageLocation.DwellTimeRed))
                         {
                             ColorTransferDays = "red";
                         }

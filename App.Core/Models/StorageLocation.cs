@@ -12,11 +12,11 @@ namespace App.Core.Models
         {
             get; set;
         }
-        public int DwellTimeYellow
+        public string DwellTimeYellow
         {
             get; set;
         }
-        public int DwellTimeRed
+        public string DwellTimeRed
         {
             get; set;
         }
