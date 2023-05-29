@@ -39,7 +39,7 @@
                     <AppBarButton
                         Click="CreatePcbButton_Click"
                         Icon="Add"
-                        Label="Hinzufügen" />
+                        Label="Hinzufï¿½gen" />
                     <AppBarButton Icon="Refresh" Label="Neu Laden" />
 
                 </CommandBar>
@@ -123,7 +123,7 @@
                     Label="Filter">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Einträge" />
+                            <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Eintrï¿½ge" />
                             <MenuFlyoutItem Click="Filter2_Click" Text="Heute erstellt" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
@@ -264,13 +264,13 @@
                                             Icon="RepeatAll"
                                             Text="Weitergabe" />
                                         <MenuFlyoutItem
-                                            Click="NavigateToUpdate"
+                                            Click="EditClick"
                                             Icon="Edit"
                                             Text="Bearbeiten" />
                                         <MenuFlyoutItem
                                             Click="DeleteClick"
                                             Icon="Delete"
-                                            Text="Löschen" />
+                                            Text="LÃ¶schen" />
 
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>

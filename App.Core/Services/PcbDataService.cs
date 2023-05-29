@@ -11,11 +11,15 @@ using System.Linq.Expressions;
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
 {
     private DateTime deleteCheckDate;
-    public PcbDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) { 
-        deleteCheckDate = new DateTime(2000, 01, 01); 
+
+    public PcbDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext,
+        loggingService)
+    {
+        deleteCheckDate = new DateTime(2000, 01, 01);
     }
 
-    public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty, bool isAscending)
+    public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty,
+        bool isAscending)
     {
         try
         {
@@ -139,7 +143,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    public async Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize, string orderByProperty, bool isAscending)
+    public async Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize, string orderByProperty,
+        bool isAscending)
     {
         try
         {
@@ -167,21 +172,22 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             if (pageIndex == 0)
             {
                 data = await _boschContext.Set<T>()
-                .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
-                .Where(pcb => (pcb.DeletedDate < deleteCheckDate))
-                .Skip((pageIndex) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+                    .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
+                    .Where(pcb => (pcb.DeletedDate < deleteCheckDate))
+                    .Skip((pageIndex) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
             }
             else
             {
                 data = await _boschContext.Set<T>()
                     .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
-                    .Where(pcb =>(pcb.DeletedDate < deleteCheckDate))
+                    .Where(pcb => (pcb.DeletedDate < deleteCheckDate))
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
             }
+
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
@@ -209,7 +215,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    public async Task<Response<List<T>>> GetWithFilterStorageLocation(int pageIndex, int pageSize, int storageLocationId)
+    public async Task<Response<List<T>>> GetWithFilterStorageLocation(int pageIndex, int pageSize,
+        int storageLocationId)
     {
         try
         {
@@ -247,35 +254,65 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {entity.Id} erfolgreich gelöscht.", null);
+            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {entity.Id} erfolgreich gelöscht.",
+                null);
             //setzt alle DeletedDate der anhängenden Objekte null, die es auch nur für diese Leiterplatte gibt.
-            
+
             Pcb pcb = _boschContext.Set<T>().Where(x => x.Id.Equals(entity.Id))
                 .Include(pcb => pcb.Restriction)
                 .Include(etp => etp.ErrorTypes)
                 .Include(pcb => pcb.Transfers)
                 .First();
-            if (!(pcb is null)) {
+            if (!(pcb is null))
+            {
                 pcb.DeletedDate = DateTime.Now;
-                if (!(pcb.Restriction is null)) {
-                    pcb.Restriction.DeletedDate = DateTime.Now; 
+                if (!(pcb.Restriction is null))
+                {
+                    pcb.Restriction.DeletedDate = DateTime.Now;
                 }
+
                 if (!(pcb.ErrorTypes is null))
                 {
                     pcb.ErrorTypes.ForEach(et => et.DeletedDate = DateTime.Now);
                 }
+
                 if (!(pcb.ErrorTypes is null))
                 {
                     pcb.Transfers.ForEach(t => t.DeletedDate = DateTime.Now);
                 }
-            await _boschContext.SaveChangesAsync();
+
+                await _boschContext.SaveChangesAsync();
             }
+
             return new Response<T>(ResponseCode.Success, $"{typeof(T)} erfolgreich gelöscht.");
         }
         catch (DbUpdateException)
         {
             _loggingService.Audit(LogLevel.Error, $"Fehler beim Löschen von {typeof(T)} mit der ID {entity.Id}", null);
-            return new Response<T>(ResponseCode.Error, error: $"Fehler beim Löschen von {typeof(T)} mit der ID {entity.Id}");
+            return new Response<T>(ResponseCode.Error,
+                error: $"Fehler beim Löschen von {typeof(T)} mit der ID {entity.Id}");
+        }
+    }
+
+    public async Task<Response<T>> GetByIdEager(int id)
+    {
+        try
+        {
+            var entity = await _boschContext.Set<T>()
+                .Include(T => T.Transfers)
+                .ThenInclude(transfer => transfer.NotedBy)
+                .Include(T => T.Transfers)
+                .ThenInclude(transfer => transfer.StorageLocation)
+                .Include(T => T.Restriction)
+                .Include(T => T.Diagnose)
+                .Include(T => T.PcbType)
+                .Include(T => T.ErrorTypes)
+                .FirstAsync(x => x.Id == id);
+            return new Response<T>(ResponseCode.Success, entity);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
         }
     }
 }

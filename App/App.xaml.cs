@@ -94,6 +94,8 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<UpdatePcbViewModel>();
+            services.AddTransient<UpdatePcbPage>();
             services.AddTransient<CreatePcbViewModel>();
             services.AddTransient<CreatePcbPage>();
             services.AddTransient<TransfersViewModel>();

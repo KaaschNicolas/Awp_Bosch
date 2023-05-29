@@ -156,12 +156,12 @@ namespace App.Views
             await ViewModel.FilterItems.ExecuteAsync(null);
         }
 
-        private void DeleteClick(object sender, RoutedEventArgs e)
+        private void DeleteClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.DeleteCommand.Execute(null);
         }
 
-        void NavigateToUpdate(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        void EditClick(object sender, RoutedEventArgs e)
         {
             ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
         }
