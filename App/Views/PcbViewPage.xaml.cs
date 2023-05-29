@@ -166,6 +166,11 @@ namespace App.Views
             ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
         }
 
+        private void NavigateToDetails(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.NavigateToDetailsCommand.Execute(ViewModel.SelectedItem);
+        }
+
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             Frame.Navigate(typeof(CreatePcbPage));
