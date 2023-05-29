@@ -4,10 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:App.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:App.Converters"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:App.ViewModels"
     x:Name="EditPcbPage"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <local:TimeConverter x:Key="TimeConverter" />
+    </Page.Resources>
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
         <DataTemplate x:DataType="viewModels:DiagnoseViewModel">
@@ -43,7 +48,8 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
-                    <ColumnDefinition />
+
+
                 </Grid.ColumnDefinitions>
 
                 <TextBox
@@ -55,13 +61,15 @@
                 <CalendarDatePicker
                     Grid.Row="1"
                     Grid.Column="0"
-                    Date="{Binding ViewModel.CreatedAt.Date, Mode=TwoWay}"
+                    Date="{x:Bind ViewModel.CreatedAt, Mode=TwoWay, Converter={StaticResource TimeConverter}}"
+                    DateFormat="{}{day.integer}.{month.integer}.{year.full}"
                     Header="Ausgefallen am" />
 
                 <TextBox
                     Grid.Row="1"
                     Grid.Column="1"
                     Header="Aufgenommen von"
+                    IsEnabled="False"
                     IsReadOnly="True"
                     PlaceholderText="Benutzername"
                     Text="{x:Bind ViewModel.User.Name, Mode=OneWay}" />
@@ -140,12 +148,15 @@
                     Text="{x:Bind ViewModel.Restriction, Mode=TwoWay}" />
                 <TextBlock
                     Grid.Row="6"
+                    Grid.ColumnSpan="3"
                     FontSize="20"
                     Text="Umlauf-Historie" />
 
                 <ItemsControl
                     Grid.Row="7"
                     Grid.ColumnSpan="3"
+                    MaxWidth="700"
+                    HorizontalAlignment="Left"
                     ItemsSource="{x:Bind ViewModel.Transfers}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -177,7 +188,8 @@
                                     Grid.Row="0"
                                     Grid.Column="0"
                                     Grid.ColumnSpan="2"
-                                    Date="{Binding CreatedDate.Date, Mode=TwoWay}"
+                                    Date="{Binding CreatedDate, Mode=TwoWay, Converter={StaticResource TimeConverter}}"
+                                    DateFormat="{}{day.integer}.{month.integer}.{year.full}"
                                     Header="Am" />
 
                                 <ComboBox
@@ -196,7 +208,9 @@
                                     Grid.Row="0"
                                     Grid.Column="5"
                                     Grid.ColumnSpan="8"
-                                    Header="weitergegeben von"
+                                    Header="Weitergegeben von"
+                                    IsEnabled="False"
+                                    IsReadOnly="True"
                                     Text="{Binding NotedBy.Name, Mode=TwoWay}" />
 
                                 <TextBox

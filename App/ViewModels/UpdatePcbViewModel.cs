@@ -94,7 +94,7 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
             }
         }
 
-
+        _pcbToEdit.CreatedDate = _createdAt;
         _pcbToEdit.SerialNumber = _serialNumber;
         _pcbToEdit.Finalized = isFinalized;
         _pcbToEdit.PcbTypeId = _selectedPcbType.Id;
@@ -103,7 +103,6 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         _pcbToEdit.ErrorTypes = new List<ErrorType>(_errorTypes);
 
         var response = await _pcbDataService.Update(_pcbId, _pcbToEdit);
-
 
         if (response != null)
         {
@@ -158,10 +157,6 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
 
         _pcbToEdit.ErrorTypes.ForEach(x => _errorTypes.Add(x));
         _pcbToEdit.Transfers.ForEach(x => _transfers.Add(x));
-
-
-
-
     }
 
     public void OnNavigatedFrom()
