@@ -107,6 +107,11 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
     {
         _storageLocation.Id = _id;
         _storageLocation.StorageName = _storageName;
+        if (IsFinalDestination)
+        {
+            _dwellTimeRed = "--";
+            _dwellTimeYellow = "--";
+        }
         _storageLocation.DwellTimeYellow = _dwellTimeYellow;
         _storageLocation.DwellTimeRed = _dwellTimeRed;
         _storageLocation.IsFinalDestination = _isFinalDestination;
