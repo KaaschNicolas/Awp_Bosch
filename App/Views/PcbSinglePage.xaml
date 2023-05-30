@@ -8,11 +8,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
 	    xmlns:viewModels="using:App.ViewModels"
+        xmlns:xaml="using:Microsoft.UI.Xaml"
+        xmlns:visconverter="using:Microsoft.UI.Xaml.Data"
         xmlns:local="using:App.Views" 
         xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
         mc:Ignorable="d">
 
     <!--<Page.Resources> <DataTemplate x:Key="TransfersPageTemplate"> <local:TransfersPage/> </DataTemplate> </Page.Resources>-->
+    <!--<Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Page.Resources>-->
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
         <DataTemplate x:DataType="viewModels:PcbSingleViewModel">
@@ -75,7 +80,6 @@
             <Grid.Resources>
                 <CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
                 <!--<DataTemplate x:Key="TransfersPageTemplate"> <local:TransfersPage/> </DataTemplate>-->
-
             </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
@@ -193,13 +197,13 @@
                         <StackPanel
                             Orientation="Horizontal">
                             <TextBlock Text="Fehler:"/>
-                            <TextBlock Text="{x:Bind Path=ViewModel.FirstErrorCode, Mode=OneWay}"/>
+                            <TextBlock Text="{x:Bind Path=ViewModel.FirstErrorCode, Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold"/>
                         </StackPanel>
                     </Expander.Header>
                     <StackPanel
                         Orientation="Horizontal">
                         <TextBlock Text="Beschreibung:"/>
-                        <TextBlock Text="{x:Bind Path=ViewModel.FirstErrorDescription, Mode=OneWay}"/>
+                        <TextBlock Text="{x:Bind Path=ViewModel.FirstErrorDescription, Mode=OneWay}" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Expander>
 
@@ -213,13 +217,13 @@
                         <StackPanel
                             Orientation="Horizontal">
                             <TextBlock Text="Fehler:"/>
-                            <TextBlock Text="{x:Bind Path=ViewModel.SecondErrorCode, Mode=OneWay}"/>
+                            <TextBlock Text="{x:Bind Path=ViewModel.SecondErrorCode, Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold"/>
                         </StackPanel>
                     </Expander.Header>
                     <StackPanel
                         Orientation="Horizontal">
                         <TextBlock Text="Beschreibung:"/>
-                        <TextBlock Text="{x:Bind Path=ViewModel.SecondErrorDescription, Mode=OneWay}"/>
+                        <TextBlock Text="{x:Bind Path=ViewModel.SecondErrorDescription, Mode=OneWay}" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Expander>
 
@@ -415,6 +419,7 @@
                     </StackPanel>
                     <TextBlock 
                             Margin="20,10,0,20"
+                            TextWrapping="Wrap"
                             Text="{Binding ErrorDescription, Mode=OneWay}"/>
                 </StackPanel>
             </StackPanel>

@@ -16,7 +16,7 @@ namespace App.Core.Services
             {
                 var data = await _boschContext
                     .Set<T>()
-                    .Where(x => x.Id == pcbId)
+                    .Where(x => x.PcbId == pcbId)
                     .Include("Pcb")
                     .Include("StorageLocation")
                     .Include("NotedBy")

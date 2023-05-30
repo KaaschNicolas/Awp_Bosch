@@ -52,6 +52,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [Required]
     private Device _restriction;
 
+/*    [ObservableProperty]
+    private bool _isButtonVisible;
+
+    [ObservableProperty]
+    private string _restrictionVisibility;*/
+
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
@@ -176,10 +182,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
     private readonly ITransferDataService<Transfer> _transfersService;
+    private readonly IPcbDataService<Pcb> _pcbDataService;
 
     public IAsyncRelayCommand FirstAsyncCommand { get; }
 
-    public PcbSingleViewModel(ICrudService<Pcb> crudService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
+    public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<Pcb> crudService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
     {
         try
         {
@@ -192,6 +199,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _infoBarService = infoBarService;
             _navigationService = navigationService;
             _transfersService = transfersService;
+            _pcbDataService = pcbDataService;
             _transfers = new ObservableCollection<Transfer>();
         }
         catch (Exception e)
@@ -302,10 +310,26 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         {
             _pcb = (Pcb)parameter;
             _selectedItem = _pcb;
+            Id = _pcb.Id;
+
+            var result = await _pcbDataService.GetByIdEager(Id);
+
+            _pcb = result.Data;
 
             SerialNumber = _pcb.SerialNumber;
             CreatedDate = _pcb.CreatedDate;
             Restriction = _pcb.Restriction;
+            /*
+            if(Restriction == null)
+            {
+                IsButtonVisible = true;
+                RestrictionVisibility = "Visible";
+            }
+            else
+            {
+                IsButtonVisible = false;
+                RestrictionVisibility = "Collapsed";
+            }*/
             ErrorDescription = _pcb.ErrorDescription;
             ErrorTypes = _pcb.ErrorTypes;
             if (ErrorTypes != null)
