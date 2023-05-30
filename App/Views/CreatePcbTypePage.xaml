@@ -38,11 +38,23 @@
                     SpinButtonPlacementMode="Compact"
                     Value="{x:Bind ViewModel.MaxTransfer, Mode=TwoWay}" />
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button
+                    <Button 
+                        Margin="0,12,4,12" 
                         Command="{x:Bind ViewModel.SaveCommand}"
-                        Content="Hinzufügen"
-                        Style="{StaticResource AccentButtonStyle}" />
-                    <Button Command="{x:Bind ViewModel.CancelCommand}" Content="Abbrechen" />
+                        Style="{StaticResource AccentButtonStyle}" >
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" FontSize="18"/>
+                            <TextBlock Padding="8,0,0,0">Hinzufügen</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button 
+                        Margin="0,12,4,12" 
+                        Command="{x:Bind ViewModel.CancelCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;" FontSize="18"/>
+                            <TextBlock Padding="8,0,0,0" >Abbrechen</TextBlock>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
             </StackPanel>

@@ -17,12 +17,12 @@ public partial class CreateStorageLocationViewModel : ObservableValidator
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    private int _dwellTimeYellow;
+    private string _dwellTimeYellow;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    private int _dwellTimeRed;
+    private string _dwellTimeRed;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]

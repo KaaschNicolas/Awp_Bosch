@@ -17,6 +17,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     protected BoschContext _boschContext;
 
     protected ILoggingService _loggingService;
+    private DateTime checkDeletedDate = new DateTime(2004, 01, 01);
     public CrudServiceBase(BoschContext boschContext, ILoggingService loggingService)
     {
         _boschContext = boschContext;
@@ -84,8 +85,16 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
             _loggingService.Log(LogLevel.Debug, $"GetAll()");
 
             var list = await _boschContext.Set<T>().ToListAsync();
+            var res = new List<T>();
+            foreach (var item in list)
+            {
+                if (item.DeletedDate < checkDeletedDate)
+                {
+                    res.Add(item);
+                }
+            }
 
-            return new Response<List<T>>(ResponseCode.Success, data: list);
+            return new Response<List<T>>(ResponseCode.Success, data: res);
         }
         catch (DbUpdateException)
         {

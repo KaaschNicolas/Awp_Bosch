@@ -119,22 +119,22 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
             switch (_filterOptions)
             {
                 case StorageLocationFilterOptions.DwellTimeYellowLow:
-                    Expression<Func<StorageLocation, bool>> whereDTYLow = x => x.DwellTimeYellow < 5;
+                    Expression<Func<StorageLocation, bool>> whereDTYLow = x => int.Parse(x.DwellTimeYellow) < 5;
                     maxEntries = await _crudService.MaxEntriesFiltered(whereDTYLow);
                     storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTYLow);
                     break;
                 case StorageLocationFilterOptions.DwellTimeYellowHigh:
-                    Expression<Func<StorageLocation, bool>> whereDTYHigh = x => x.DwellTimeYellow >= 5;
+                    Expression<Func<StorageLocation, bool>> whereDTYHigh = x => int.Parse(x.DwellTimeYellow) >= 5;
                     maxEntries = await _crudService.MaxEntriesFiltered(whereDTYHigh);
                     storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTYHigh);
                     break;
                 case StorageLocationFilterOptions.DwellTimeRedLow:
-                    Expression<Func<StorageLocation, bool>> whereDTRLow = x => x.DwellTimeRed < 5;
+                    Expression<Func<StorageLocation, bool>> whereDTRLow = x => int.Parse(x.DwellTimeRed) < 5;
                     maxEntries = await _crudService.MaxEntriesFiltered(whereDTRLow);
                     storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTRLow);
                     break;
                 case StorageLocationFilterOptions.DwellTimeRedHigh:
-                    Expression<Func<StorageLocation, bool>> whereDTRHigh = x => x.DwellTimeRed >= 5;
+                    Expression<Func<StorageLocation, bool>> whereDTRHigh = x => int.Parse(x.DwellTimeRed) >= 5;
                     maxEntries = await _crudService.MaxEntriesFiltered(whereDTRHigh);
                     storageLocations = await _crudService.GetWithFilter(pageIndex, pageSize, whereDTRHigh);
                     break;

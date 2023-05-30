@@ -1,4 +1,5 @@
-<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+﻿<?xml version="1.0" encoding="UTF-8"?>
+    <!--  Copyright (c) Microsoft Corporation and Contributors.  -->
 <!--  Licensed under the MIT License.  -->
 
 <Page
@@ -38,7 +39,7 @@
                     <AppBarButton
                         Click="CreatePcbButton_Click"
                         Icon="Add"
-                        Label="Hinzuf�gen" />
+                        Label="Hinzufügen" />
                     <AppBarButton Icon="Refresh" Label="Neu Laden" />
 
                 </CommandBar>
@@ -47,11 +48,13 @@
                     VerticalAlignment="Center"
                     Background="{ThemeResource CommandBarBackground}">
                     <AutoSuggestBox
-                        x:Name="search_box"
-                        Width="200px"
-                        BorderThickness="0"
-                        PlaceholderText="Search"
-                        QueryIcon="Find" />
+                        MinWidth="304"
+                        MaxWidth="320"
+                        Margin="0,8,0,12"
+                        HorizontalAlignment="Left"
+                        PlaceholderText="Suche"
+                        FontWeight="Normal"
+                        QueryIcon="Find"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -102,13 +105,27 @@
                 Background="Transparent"
                 DefaultLabelPosition="Right"
                 OverflowButtonVisibility="Collapsed">
+                <AppBarElementContainer VerticalContentAlignment="Center">
+                    <ComboBox x:Name="ComboBox" 
+                              ItemsSource="{x:Bind ViewModel.StorageLocations}"
+                              SelectedItem="{x:Bind ViewModel.SelectedComboBox}"
+                              SelectionChanged="ComboBox_SelectionChanged"
+                              PlaceholderText="Alles"
+                    >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StorageName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </AppBarElementContainer>
                 <AppBarButton
                     Width="80"
                     Icon="Filter"
                     Label="Filter">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Eintr�ge" />
+                            <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Einträge" />
                             <MenuFlyoutItem Click="Filter2_Click" Text="Heute erstellt" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem
@@ -141,13 +158,13 @@
                     Icon="Back"
                     ToolTipService.ToolTip="Previous" />
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <TextBlock Margin="12,0,8,0" Text="Page" />
+                    <TextBlock Margin="12,0,8,0" Text="Seite" />
                 </AppBarElementContainer>
                 <AppBarElementContainer VerticalContentAlignment="Center">
                     <TextBlock Text="{x:Bind ViewModel.PageNumber, Mode=OneWay}" />
                 </AppBarElementContainer>
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <TextBlock Margin="8,0" Text="of" />
+                    <TextBlock Margin="8,0" Text="von" />
                 </AppBarElementContainer>
                 <AppBarElementContainer VerticalContentAlignment="Center">
                     <TextBlock Margin="0,0,12,0" Text="{x:Bind ViewModel.PageCount, Mode=OneWay}" />
@@ -167,7 +184,7 @@
                     <ComboBox ItemsSource="{x:Bind ViewModel.PageSizes}" SelectedItem="{x:Bind ViewModel.PageSize, Mode=TwoWay}" />
                 </AppBarElementContainer>
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <TextBlock Margin="8,0" Text="rows per page" />
+                    <TextBlock Margin="8,0" Text="Einträge je Seite" />
                 </AppBarElementContainer>
             </CommandBar>
             <AutoSuggestBox
@@ -183,7 +200,7 @@
                 VerticalAlignment="Center"
                 Background="Transparent"
                 DefaultLabelPosition="Right">
-                <AppBarButton Click="SearchBox_QueryClick" Label="Search" />
+                <AppBarButton Click="SearchBox_QueryClick" Label="Suchen" />
                 <AppBarElementContainer
                     x:Name="SearchIndicator"
                     Margin="-16,0,0,0"
@@ -197,7 +214,7 @@
                 <AppBarButton
                     Click="FilterClear_Click"
                     Icon="Refresh"
-                    Label="Reset" />
+                    Label="Zurücksetzen" />
             </CommandBar>
         </StackPanel>
         <ctWinUI:DataGrid
@@ -241,17 +258,21 @@
                                 <AppBarButton.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
                                         <MenuFlyoutItem
+                                            Click="NavigateToDetails"
+                                            Icon="OpenWith"
+                                            Text="Detailansicht" />
+                                        <MenuFlyoutItem
                                             Click="TransferClick"
                                             Icon="RepeatAll"
                                             Text="Weitergabe" />
                                         <MenuFlyoutItem
-                                            Click="NavigateToUpdate"
+                                            Click="EditClick"
                                             Icon="Edit"
                                             Text="Bearbeiten" />
                                         <MenuFlyoutItem
                                             Click="DeleteClick"
                                             Icon="Delete"
-                                            Text="L�schen" />
+                                            Text="Löschen" />
 
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>

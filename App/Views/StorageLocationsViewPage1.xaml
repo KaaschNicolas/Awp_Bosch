@@ -1,4 +1,4 @@
-<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+﻿<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
 <!--  Licensed under the MIT License.  -->
 
 <Page
@@ -38,7 +38,7 @@
                     <AppBarButton
                         Click="CreatStorageLocationButton_Click"
                         Icon="Add"
-                        Label="Hinzuf�gen" />
+                        Label="Hinzufügen" />
                     <AppBarButton Icon="Refresh" Label="Neu Laden" />
 
                 </CommandBar>
@@ -47,11 +47,13 @@
                     VerticalAlignment="Center"
                     Background="{ThemeResource CommandBarBackground}">
                     <AutoSuggestBox
-                        x:Name="search_box"
-                        Width="200px"
-                        BorderThickness="0"
-                        PlaceholderText="Search"
-                        QueryIcon="Find" />
+                        MinWidth="304"
+                        MaxWidth="320"
+                        Margin="0,8,0,12"
+                        HorizontalAlignment="Left"
+                        PlaceholderText="Suche"
+                        FontWeight="Normal"
+                        QueryIcon="Find"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -142,13 +144,13 @@
                     Icon="Back"
                     ToolTipService.ToolTip="Previous" />
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <TextBlock Margin="12,0,8,0" Text="Page" />
+                    <TextBlock Margin="12,0,8,0" Text="Seite" />
                 </AppBarElementContainer>
                 <AppBarElementContainer VerticalContentAlignment="Center">
                     <TextBlock Text="{x:Bind ViewModel.PageNumber, Mode=OneWay}" />
                 </AppBarElementContainer>
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <TextBlock Margin="8,0" Text="of" />
+                    <TextBlock Margin="8,0" Text="von" />
                 </AppBarElementContainer>
                 <AppBarElementContainer VerticalContentAlignment="Center">
                     <TextBlock Margin="0,0,12,0" Text="{x:Bind ViewModel.PageCount, Mode=OneWay}" />
@@ -168,7 +170,7 @@
                     <ComboBox ItemsSource="{x:Bind ViewModel.PageSizes}" SelectedItem="{x:Bind ViewModel.PageSize, Mode=TwoWay}" />
                 </AppBarElementContainer>
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <TextBlock Margin="8,0" Text="rows per page" />
+                    <TextBlock Margin="8,0" Text="Einträge je Seite" />
                 </AppBarElementContainer>
             </CommandBar>
             <AutoSuggestBox
@@ -184,7 +186,7 @@
                 VerticalAlignment="Center"
                 Background="Transparent"
                 DefaultLabelPosition="Right">
-                <AppBarButton Click="SearchBox_QueryClick" Label="Search" />
+                <AppBarButton Click="SearchBox_QueryClick" Label="Suchen" />
                 <AppBarElementContainer
                     x:Name="SearchIndicator"
                     Margin="-16,0,0,0"
@@ -198,7 +200,7 @@
                 <AppBarButton
                     Click="FilterClear_Click"
                     Icon="Refresh"
-                    Label="Reset" />
+                    Label="Zurücksetzen" />
             </CommandBar>
         </StackPanel>
         <ctWinUI:DataGrid
@@ -248,7 +250,7 @@
                                         <MenuFlyoutItem
                                             Click="DeleteClick"
                                             Icon="Delete"
-                                            Text="L�schen" />
+                                            Text="Löschen" />
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
