@@ -48,8 +48,6 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
-
-
                 </Grid.ColumnDefinitions>
 
                 <TextBox
@@ -63,7 +61,8 @@
                     Grid.Column="0"
                     Date="{x:Bind ViewModel.CreatedAt, Mode=TwoWay, Converter={StaticResource TimeConverter}}"
                     DateFormat="{}{day.integer}.{month.integer}.{year.full}"
-                    Header="Ausgefallen am" />
+                    Header="Ausgefallen am"
+                    MaxDate="{x:Bind ViewModel.MaxDate, Mode=OneWay, Converter={StaticResource TimeConverter}}" />
 
                 <TextBox
                     Grid.Row="1"
@@ -89,6 +88,7 @@
 
                 <TextBlock
                     Grid.Row="3"
+                    Grid.ColumnSpan="5"
                     FontSize="20"
                     Text="Fehler bearbeiten" />
 
@@ -154,7 +154,7 @@
 
                 <ItemsControl
                     Grid.Row="7"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="4"
                     MaxWidth="700"
                     HorizontalAlignment="Left"
                     ItemsSource="{x:Bind ViewModel.Transfers}">
@@ -190,7 +190,8 @@
                                     Grid.ColumnSpan="2"
                                     Date="{Binding CreatedDate, Mode=TwoWay, Converter={StaticResource TimeConverter}}"
                                     DateFormat="{}{day.integer}.{month.integer}.{year.full}"
-                                    Header="Am" />
+                                    Header="Am"
+                                    MaxDate="{Binding ViewModel.MaxDate, Mode=OneWay, ElementName=EditPcbPage, Converter={StaticResource TimeConverter}}" />
 
                                 <ComboBox
                                     Grid.Row="0"
@@ -230,25 +231,28 @@
                     Margin="0,10,0,0"
                     Orientation="Horizontal"
                     Spacing="10">
-                    <Button 
-                        Margin="0,12,4,12" 
+                    <Button
+                        Margin="0,12,4,12"
                         Command="{x:Bind ViewModel.SaveCommand}"
-                        Style="{StaticResource AccentButtonStyle}" >
+                        Style="{StaticResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" FontSize="18"/>
+                            <FontIcon
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="18"
+                                Glyph="&#xE74E;" />
                             <TextBlock Padding="8,0,0,0">Speichern</TextBlock>
                         </StackPanel>
                     </Button>
-                    <Button 
-                        Margin="0,12,4,12" 
-                        Command="{x:Bind ViewModel.CancelCommand}">
+                    <Button Margin="0,12,4,12" Command="{x:Bind ViewModel.CancelCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;" FontSize="18"/>
-                            <TextBlock Padding="8,0,0,0" >Abbrechen</TextBlock>
+                            <FontIcon
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="18"
+                                Glyph="&#xE711;" />
+                            <TextBlock Padding="8,0,0,0">Abbrechen</TextBlock>
                         </StackPanel>
                     </Button>
                 </StackPanel>
-
             </Grid>
         </ScrollViewer>
     </Grid>

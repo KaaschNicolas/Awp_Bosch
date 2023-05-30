@@ -20,6 +20,7 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
 
     private int _pcbId;
     private Pcb _pcbToEdit;
+    public DateTime MaxDate { get; private set; } = DateTime.Now;
 
     [ObservableProperty]
     private DateTime _createdAt;
