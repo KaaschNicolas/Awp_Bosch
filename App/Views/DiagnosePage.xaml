@@ -87,7 +87,8 @@
                                 VerticalAlignment="Center"
                                 Background="Transparent"
                                 Icon="More"
-                                LabelPosition="Collapsed">
+                                LabelPosition="Collapsed"
+                                AllowFocusOnInteraction="True">
                                 <AppBarButton.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
                                         <MenuFlyoutItem

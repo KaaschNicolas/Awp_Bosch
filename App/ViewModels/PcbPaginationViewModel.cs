@@ -323,8 +323,6 @@ namespace App.ViewModels
         [RelayCommand]
         public void NavigateToDetails(Pcb pcb)
         {
-            var test = pcb;
-            var str = pcb.SerialNumber;
             _navigationService.NavigateTo("App.ViewModels.PcbSingleViewModel", pcb);
         }
 

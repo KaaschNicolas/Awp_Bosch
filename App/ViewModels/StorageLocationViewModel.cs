@@ -211,10 +211,7 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         if (response.Code == ResponseCode.Success) { 
             foreach (var item in response.Data)
             {
-                if (item.DeletedDate < new DateTime(2000,01,01))
-                {
-                    StorageLocations.Add(item);
-                }
+                StorageLocations.Add(item);
             }
         }
         else

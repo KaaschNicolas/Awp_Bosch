@@ -39,7 +39,7 @@ public sealed partial class PcbSinglePage : Page
         //colorDaysInCirculation();
     }
 
-    public void showRestrictionButton()
+    /*public void showRestrictionButton()
     {
         if (ViewModel.Restriction == null)
         {
@@ -51,7 +51,7 @@ public sealed partial class PcbSinglePage : Page
             RestrictionInfoBar.Visibility = Visibility.Visible;
             RestrictionButton.Visibility = Visibility.Collapsed;
         }
-    }
+    }*/
 
     public void colorDaysInCirculation()
     {

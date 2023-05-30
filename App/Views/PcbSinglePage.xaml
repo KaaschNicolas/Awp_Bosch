@@ -146,6 +146,7 @@
             </StackPanel>
             <Button
 				x:Name="RestrictionButton"
+                Visibility="{x:Bind Path=ViewModel.RestrictionButtonVisibility, Mode=TwoWay}"
 				Grid.Column="0"
 				Grid.Row="1"
 				Grid.ColumnSpan="1"
@@ -166,6 +167,7 @@
 				IsClosable="False"
 				Margin="0,0,0,0"
 				Title="Einschränkung"
+                Visibility="{x:Bind Path=ViewModel.RestrictionInfoBarVisibility, Mode=TwoWay}"
 				Message="{x:Bind Path=ViewModel.Restriction.Name, Mode=TwoWay}" />
 
             <StackPanel
