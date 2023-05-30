@@ -12,6 +12,7 @@ using static ZXing.QrCode.Internal.Version;
 using App.Core.Services;
 using App.Services.PrintService;
 using App.Services.PrintService.impl;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Reflection.Metadata;
@@ -33,6 +34,9 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             OnPropertyChanged(nameof(SerialNumber));
         }
     }
+
+    public Visibility RestrictionButtonVisibility;
+    public Visibility RestrictionInfoBarVisibility;
 
     [ObservableProperty]
     private Pcb _selectedItem;
@@ -290,8 +294,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             Pcb pcbToRemove = _selectedItem;
             _pcbs.Remove(pcbToRemove);
             await _crudService.Delete(pcbToRemove);
-            _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
             _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
+            _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
         }
         _infoBarService.showError("Leiterplatte konnte nicht gelöscht werden", "Fehler");
     }
@@ -302,6 +306,15 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         {
             _pcb = (Pcb)parameter;
             _selectedItem = _pcb;
+
+            if (_pcb.Restriction == null){
+                RestrictionInfoBarVisibility = Visibility.Collapsed;
+                RestrictionButtonVisibility = Visibility.Visible;
+            }else
+            {
+                RestrictionInfoBarVisibility = Visibility.Visible;
+                RestrictionButtonVisibility = Visibility.Collapsed;
+            }
 
             SerialNumber = _pcb.SerialNumber;
             CreatedDate = _pcb.CreatedDate;

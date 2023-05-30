@@ -35,11 +35,11 @@ public sealed partial class PcbSinglePage : Page
         DataContext = ViewModel;
         //dateOfFailure.Date = new DateTime(2023, 04, 23);
         // GenerateBarcode();
-        showRestrictionButton();
+        //showRestrictionButton();
         //colorDaysInCirculation();
     }
 
-    public void showRestrictionButton()
+    /*public void showRestrictionButton()
     {
         if (ViewModel.Restriction == null)
         {
@@ -51,7 +51,7 @@ public sealed partial class PcbSinglePage : Page
             RestrictionInfoBar.Visibility = Visibility.Visible;
             RestrictionButton.Visibility = Visibility.Collapsed;
         }
-    }
+    }*/
 
     public void colorDaysInCirculation()
     {
