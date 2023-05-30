@@ -166,15 +166,13 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private Pcb _pcb;
 
     [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
     private ObservableCollection<Pcb> _pcbs;
 
 
     private readonly IAuthenticationService _authenticationService;
     private readonly ICrudService<StorageLocation> _storageLocationCrudService;
     private readonly ICrudService<Diagnose> _diagnoseCrudService;
-    private readonly ICrudService<Pcb> _crudService;
+    private readonly IPcbDataService<Pcb> _pcbDataService;
     private readonly ICrudService<StorageLocation> _storageService;
     private readonly IDialogService _dialogService;
     private readonly IInfoBarService _infoBarService;
@@ -183,11 +181,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     public IAsyncRelayCommand FirstAsyncCommand { get; }
 
-    public PcbSingleViewModel(ICrudService<Pcb> crudService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
+    public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
     {
         try
         {
-            _crudService = crudService;
+            _pcbDataService = pcbDataService;
             _authenticationService = authenticationService;
             _storageLocationCrudService = storageLocationCrudService;
             _diagnoseCrudService = diagnoseCrudService;
@@ -197,6 +195,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _navigationService = navigationService;
             _transfersService = transfersService;
             _transfers = new ObservableCollection<Transfer>();
+            _pcbs = new ObservableCollection<Pcb>();
         }
         catch (Exception e)
         {
@@ -207,7 +206,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     /*[RelayCommand]
     public async void Delete()
     {
-        //var pcbResponse = await _crudService.GetAll();
+        //var pcbResponse = await _pcbDataService.GetAll();
         //if (pcbResponse.Code == ResponseCode.Success)
         //{
         //    foreach (var pcb in pcbResponse)
@@ -221,7 +220,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         {
             //Pcb pcbToRemove = SelectedItem;
             //Pcbs.Remove(pcbToRemove);
-            //await _crudService.Delete(pcbToRemove);
+            //await _pcbDataService.Delete(pcbToRemove);
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
             //NavigateToPcbs();
         }
@@ -293,11 +292,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         {
             Pcb pcbToRemove = _selectedItem;
             _pcbs.Remove(pcbToRemove);
-            await _crudService.Delete(pcbToRemove);
+            await _pcbDataService.Delete(pcbToRemove);
             _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
-        }
+        } else {
         _infoBarService.showError("Leiterplatte konnte nicht gelöscht werden", "Fehler");
+        }
     }
 
     public async void OnNavigatedTo(object parameter)
@@ -305,6 +305,16 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         try
         {
             _pcb = (Pcb)parameter;
+
+            var pcbResponse = await _pcbDataService.GetAll();
+            if (pcbResponse.Data != null)
+            {
+                foreach (var item in pcbResponse.Data)
+                {
+                    _pcbs.Add(item);
+                }
+            }
+
             _selectedItem = _pcb;
 
             if (_pcb.Restriction == null){
