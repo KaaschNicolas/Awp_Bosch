@@ -131,6 +131,12 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         }
     }
 
+    [RelayCommand]
+    public void Cancel()
+    {
+        _navigationService.GoBack();
+    }
+
     public async void OnNavigatedTo(object parameter)
     {
         try

@@ -30,7 +30,15 @@
 
                 </CommandBar>
                 <StackPanel Grid.Column="1" Background="{ThemeResource CommandBarBackground}" VerticalAlignment="Center">
-                    <AutoSuggestBox PlaceholderText="Search" QueryIcon="Find" Width="200px" BorderThickness="0" x:Name="search_box"/>
+                    <AutoSuggestBox
+                        MinWidth="304"
+                        MaxWidth="320"
+                        Margin="0,8,0,12"
+                        HorizontalAlignment="Left"
+                        PlaceholderText="Suche"
+                        FontWeight="Normal"
+                        QueryIcon="Find"
+                        x:Name="search_box"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>

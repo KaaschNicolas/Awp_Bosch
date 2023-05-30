@@ -72,6 +72,16 @@ public sealed partial class PcbSinglePage : Page
         }
     }
 
+    private void EditClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.EditCommand.Execute(null);
+    }
+
+    private void DeleteClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        ViewModel.DeleteCommand.Execute(null);
+    }
+
     void TransferClick(object sender, RoutedEventArgs e)
     {
         ViewModel.ShowTransferCommand.Execute(null);

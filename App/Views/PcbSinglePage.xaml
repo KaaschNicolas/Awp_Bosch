@@ -57,9 +57,11 @@
                     <CommandBar
                             DefaultLabelPosition="Right">
                         <AppBarButton
+                            Click="EditClick"
                             Icon="Edit"
                                 Label="Bearbeiten"/>
                         <AppBarButton
+                            Click="DeleteClick"
                                 Icon="Delete"
                                 Label="Löschen"/>
                     </CommandBar>

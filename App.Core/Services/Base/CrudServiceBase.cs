@@ -17,7 +17,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     protected BoschContext _boschContext;
 
     protected ILoggingService _loggingService;
-    private DateTime checkDeletedDate = new DateTime(1998, 01, 01);
+    private DateTime checkDeletedDate = new DateTime(2004, 01, 01);
     public CrudServiceBase(BoschContext boschContext, ILoggingService loggingService)
     {
         _boschContext = boschContext;

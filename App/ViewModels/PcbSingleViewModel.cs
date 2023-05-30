@@ -197,7 +197,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         }
     }
 
-    [RelayCommand]
+    /*[RelayCommand]
     public async void Delete()
     {
         //var pcbResponse = await _crudService.GetAll();
@@ -218,7 +218,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
             //NavigateToPcbs();
         }
-    }
+    }*/
 
     Pcb mockData { get; set; }
 
@@ -263,7 +263,28 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private void Refresh(object parameter)
     {
 
+    }
 
+    [RelayCommand]
+    public void Edit()
+    {
+        Pcb pcbToEdit = _selectedItem;
+        _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", pcbToEdit);
+    }
+
+    [RelayCommand]
+    public async void Delete()
+    {
+        var result = await _dialogService.ConfirmDeleteDialogAsync("Leiterplatte Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?");
+        if (result != null && result == true)
+        {
+            Pcb pcbToRemove = _selectedItem;
+            _pcbs.Remove(pcbToRemove);
+            await _crudService.Delete(pcbToRemove);
+            _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
+            _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
+        }
+        _infoBarService.showError("Leiterplatte konnte nicht gelöscht werden", "Fehler");
     }
 
     public async void OnNavigatedTo(object parameter)
