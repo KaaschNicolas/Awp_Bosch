@@ -117,8 +117,8 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
             if (response.Code == ResponseCode.Success)
             {
                 _infoBarService.showMessage("Leiterplatte erfolgreich gespeichert", "Erfolg");
-
-                _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
+                //_navigationService.NavigateTo("App.ViewModels.SinglePcbViewModel", _pcbToEdit);
+                _navigationService.GoBack();
             }
             else
             {

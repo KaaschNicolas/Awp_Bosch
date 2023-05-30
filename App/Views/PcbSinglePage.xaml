@@ -1,4 +1,4 @@
-﻿<Page
+﻿<Page   x:Name="SinglePage"
         x:Class="App.Views.PcbSinglePage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -44,10 +44,9 @@
 					    DefaultLabelPosition="Right"
 					    HorizontalAlignment="Center">
                     <AppBarButton
-                        
-					    Icon="Print"
-						Label="Drucken"/>
-                    <!--Click="OnPrintButtonClicked"-->
+                        Icon="Print"
+						Label="Drucken"
+                        Click="PrintClick"/>
                 </CommandBar>
                 <StackPanel
                         Grid.Column="2"

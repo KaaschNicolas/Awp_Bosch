@@ -10,6 +10,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using static ZXing.QrCode.Internal.Version;
 using App.Core.Services;
+using App.Services.PrintService;
+using App.Services.PrintService.impl;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
@@ -262,14 +265,20 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     private void Refresh(object parameter)
     {
-
+        _navigationService.NavigateTo("App.ViewModels.SinglePcbViewModel", _selectedItem);
     }
 
     [RelayCommand]
     public void Edit()
     {
-        Pcb pcbToEdit = _selectedItem;
-        _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", pcbToEdit);
+        _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", _selectedItem);
+    }
+
+    [RelayCommand]
+    public async void Print(Page page)
+    {
+        var _printService = new PrintService();
+        await _printService.Print(page);
     }
 
     [RelayCommand]
@@ -291,9 +300,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     {
         try
         {
-
-
             _pcb = (Pcb)parameter;
+            _selectedItem = _pcb;
 
             SerialNumber = _pcb.SerialNumber;
             CreatedDate = _pcb.CreatedDate;

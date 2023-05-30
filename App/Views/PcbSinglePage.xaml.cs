@@ -82,6 +82,12 @@ public sealed partial class PcbSinglePage : Page
         ViewModel.DeleteCommand.Execute(null);
     }
 
+    private void PrintClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        ViewModel.PrintCommand.Execute(SinglePage);
+
+    }
+
     void TransferClick(object sender, RoutedEventArgs e)
     {
         ViewModel.ShowTransferCommand.Execute(null);
