@@ -91,6 +91,11 @@
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         Text="{Binding Finalized}" />
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Transfers.Count}" />
                 </Grid>
             </DataTemplate>
         </Grid.Resources>
@@ -246,7 +251,12 @@
                     Binding="{Binding Finalized}"
                     Header="Abgeschlossen"
                     Tag="Finalized" />
-                <controls:DataGridTemplateColumn Width="100" Header="Aktion">
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding Transfer.Count}"
+                    Header="Letzter Lagerort"
+                    Tag="LastStorageLocation" 
+                    CanUserSort="False" />
+                <controls:DataGridTemplateColumn Width="100" Header="Aktion" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <AppBarButton
