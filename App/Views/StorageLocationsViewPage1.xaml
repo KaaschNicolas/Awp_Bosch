@@ -1,4 +1,4 @@
-<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+ï»¿<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
 <!--  Licensed under the MIT License.  -->
 
 <Page
@@ -38,7 +38,7 @@
                     <AppBarButton
                         Click="CreatStorageLocationButton_Click"
                         Icon="Add"
-                        Label="Hinzufügen" />
+                        Label="HinzufÃ¼gen" />
                     <AppBarButton Icon="Refresh" Label="Neu Laden" />
 
                 </CommandBar>
@@ -248,7 +248,7 @@
                                         <MenuFlyoutItem
                                             Click="DeleteClick"
                                             Icon="Delete"
-                                            Text="Löschen" />
+                                            Text="LÃ¶schen" />
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>

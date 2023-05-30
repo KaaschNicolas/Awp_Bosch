@@ -57,7 +57,7 @@
                     <CommandBar
                             DefaultLabelPosition="Right">
                         <AppBarButton
-                                Icon="Edit"
+                            Icon="Edit"
                                 Label="Bearbeiten"/>
                         <AppBarButton
                                 Icon="Delete"

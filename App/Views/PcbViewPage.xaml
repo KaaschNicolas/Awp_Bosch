@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
     <!--  Copyright (c) Microsoft Corporation and Contributors.  -->
 <!--  Licensed under the MIT License.  -->
 
@@ -39,7 +39,7 @@
                     <AppBarButton
                         Click="CreatePcbButton_Click"
                         Icon="Add"
-                        Label="Hinzuf�gen" />
+                        Label="Hinzufügen" />
                     <AppBarButton Icon="Refresh" Label="Neu Laden" />
 
                 </CommandBar>
@@ -123,7 +123,7 @@
                     Label="Filter">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Eintr�ge" />
+                            <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Einträge" />
                             <MenuFlyoutItem Click="Filter2_Click" Text="Heute erstellt" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem

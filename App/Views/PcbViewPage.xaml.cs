@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation and Contributors.
+﻿// Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 using App.Core.Models;
 using App.Core.Models.Enums;
@@ -60,7 +60,7 @@ namespace App.Views
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             _displayMode = DataGridDisplayMode.Default;
-            DataGrid.ItemsSource = ViewModel.Pcbs; //n�tig? weil schon in Xaml gebunden
+            DataGrid.ItemsSource = ViewModel.Pcbs; //nötig? weil schon in Xaml gebunden
             DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Ascending;
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
             ViewModel.FilterOptions = PcbFilterOptions.None;
@@ -161,7 +161,7 @@ namespace App.Views
             ViewModel.DeleteCommand.Execute(null);
         }
 
-        void EditClick(object sender, RoutedEventArgs e)
+        void EditClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
         }
