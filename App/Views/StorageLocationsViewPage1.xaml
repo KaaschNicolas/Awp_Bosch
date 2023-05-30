@@ -107,7 +107,8 @@
                 <AppBarButton
                     Width="80"
                     Icon="Filter"
-                    Label="Filter">
+                    Label="Filter"
+                    AllowFocusOnInteraction="True">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
                             <MenuFlyoutItem Click="FilterDTYLow_Click" Text="Liegezeit Gelb &lt; 5" />
@@ -240,7 +241,8 @@
                                 VerticalAlignment="Center"
                                 Background="Transparent"
                                 Icon="More"
-                                LabelPosition="Collapsed">
+                                LabelPosition="Collapsed"
+                                AllowFocusOnInteraction="True">
                                 <AppBarButton.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
                                         <MenuFlyoutItem

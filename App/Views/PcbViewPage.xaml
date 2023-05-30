@@ -110,8 +110,7 @@
                               ItemsSource="{x:Bind ViewModel.StorageLocations}"
                               SelectedItem="{x:Bind ViewModel.SelectedComboBox}"
                               SelectionChanged="ComboBox_SelectionChanged"
-                              PlaceholderText="Alles"
-                    >
+                              PlaceholderText="Alles">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding StorageName}"/>
@@ -122,7 +121,8 @@
                 <AppBarButton
                     Width="80"
                     Icon="Filter"
-                    Label="Filter">
+                    Label="Filter"
+                    AllowFocusOnInteraction="True">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
                             <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Einträge" />
@@ -254,7 +254,8 @@
                                 VerticalAlignment="Center"
                                 Background="Transparent"
                                 Icon="More"
-                                LabelPosition="Collapsed">
+                                LabelPosition="Collapsed"
+                                AllowFocusOnInteraction="True">
                                 <AppBarButton.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
                                         <MenuFlyoutItem
