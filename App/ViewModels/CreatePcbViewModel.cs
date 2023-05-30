@@ -18,7 +18,9 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     private readonly IAuthenticationService _authenticationService;
 
     [ObservableProperty]
-    private DateTime createdAt = DateTime.Now;
+    private DateTime _createdAt = DateTime.Now;
+
+    public DateTime MaxDate { get; private set; } = DateTime.Now;
 
     [ObservableProperty]
     private User _user;
@@ -72,7 +74,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     [RelayCommand]
     public async Task Save()
     {
-        Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = _user.Id };
+        Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = _user.Id, CreatedDate = _createdAt };
         ErrorType errorType1 = new ErrorType { Code = _errorCode1, ErrorDescription = _errorDescription1 };
         ErrorType errorType2 = new ErrorType { Code = _errorCode2, ErrorDescription = _errorDescription2 };
         Device restriction = new Device { Name = _restriction };
@@ -82,7 +84,8 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
 
         Pcb pcb = new Pcb
         {
-            SerialNumber = _serialNumber.Substring(0, 10),
+            CreatedDate = _createdAt,
+            SerialNumber = _serialNumber.Substring(0, 10), // TODO: Validation -> Unhandle Exception when lenght < 10
             Finalized = false,
             PcbTypeId = _selectedPcbType.Id,
             Transfers = transfers,
@@ -98,7 +101,6 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
             if (response.Code == ResponseCode.Success)
             {
                 _infoBarService.showMessage("Leiterplatte erfolgreich erstellt", "Erfolg");
-                // TODO: when List View exists, navigate to it after successfull creation of Pcb
                 _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
             }
             else
