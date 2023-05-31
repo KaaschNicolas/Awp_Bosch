@@ -1,14 +1,16 @@
 ﻿using App.Contracts.Services;
 using App.Contracts.ViewModels;
+using App.Controls;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels;
 
-public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
+public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
 {
     private readonly ICrudService<Pcb> _pcbCrudService;
     private readonly ICrudService<PcbType> _pcbTypeCrudService;
@@ -29,6 +31,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     private PcbType _selectedPcbType;
 
     [ObservableProperty]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
     private string _serialNumber;
 
     [ObservableProperty]
@@ -74,43 +77,47 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     [RelayCommand]
     public async Task Save()
     {
-        Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = _user.Id, CreatedDate = _createdAt };
-        ErrorType errorType1 = new ErrorType { Code = _errorCode1, ErrorDescription = _errorDescription1 };
-        ErrorType errorType2 = new ErrorType { Code = _errorCode2, ErrorDescription = _errorDescription2 };
-        Device restriction = new Device { Name = _restriction };
-        var errorTypes = new List<ErrorType> { errorType1, errorType2 };
-
-        var transfers = new List<Transfer>() { transfer };
-
-        Pcb pcb = new Pcb
+        ValidateAllProperties();
+        if (!HasErrors)
         {
-            CreatedDate = _createdAt,
-            SerialNumber = _serialNumber.Substring(0, 10), // TODO: Validation -> Unhandle Exception when lenght < 10
-            Finalized = false,
-            PcbTypeId = _selectedPcbType.Id,
-            Transfers = transfers,
-            Restriction = restriction,
-            ErrorTypes = errorTypes,
-            ErrorDescription = _errorDescription1,
-        };
-        var response = await _pcbCrudService.Create(pcb);
+            Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = _user.Id, CreatedDate = _createdAt };
+            ErrorType errorType1 = new ErrorType { Code = _errorCode1, ErrorDescription = _errorDescription1 };
+            ErrorType errorType2 = new ErrorType { Code = _errorCode2, ErrorDescription = _errorDescription2 };
+            Device restriction = new Device { Name = _restriction };
+            var errorTypes = new List<ErrorType> { errorType1, errorType2 };
 
+            var transfers = new List<Transfer>() { transfer };
 
-        if (response != null)
-        {
-            if (response.Code == ResponseCode.Success)
+            Pcb pcb = new Pcb
             {
-                _infoBarService.showMessage("Leiterplatte erfolgreich erstellt", "Erfolg");
-                _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
+                CreatedDate = _createdAt,
+                SerialNumber = _serialNumber.Substring(0, 10), // TODO: Validation -> Unhandle Exception when lenght < 10
+                Finalized = false,
+                PcbTypeId = _selectedPcbType.Id,
+                Transfers = transfers,
+                Restriction = restriction,
+                ErrorTypes = errorTypes,
+                ErrorDescription = _errorDescription1,
+            };
+            var response = await _pcbCrudService.Create(pcb);
+
+
+            if (response != null)
+            {
+                if (response.Code == ResponseCode.Success)
+                {
+                    _infoBarService.showMessage("Leiterplatte erfolgreich erstellt", "Erfolg");
+                    _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
+                }
+                else
+                {
+                    _infoBarService.showError("Leiterplatte konnte nicht erstellt werden", "Error");
+                }
             }
             else
             {
                 _infoBarService.showError("Leiterplatte konnte nicht erstellt werden", "Error");
             }
-        }
-        else
-        {
-            _infoBarService.showError("Leiterplatte konnte nicht erstellt werden", "Error");
         }
     }
 

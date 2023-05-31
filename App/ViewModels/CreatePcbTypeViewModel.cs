@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using App.Contracts.Services;
+﻿using App.Contracts.Services;
+using App.Controls;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels;
 
@@ -11,23 +12,24 @@ public partial class CreatePcbTypeViewModel : ObservableValidator
 {
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
+    [RegularExpression(@"^[0-9]{10}$")]
+    [MinLength(10, ErrorMessage = ValidationErrorMessage.MinLength)]
     private string _pcbPartNumber;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength)]
     private string _description;
 
     [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
     private double _maxTransfer;
 
     private readonly ICrudService<PcbType> _crudService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
-    public CreatePcbTypeViewModel( ICrudService<PcbType> crudService, IInfoBarService infoBarService, INavigationService navigationService)
+    public CreatePcbTypeViewModel(ICrudService<PcbType> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
         _infoBarService = infoBarService;
@@ -60,7 +62,7 @@ public partial class CreatePcbTypeViewModel : ObservableValidator
                 _infoBarService.showError("Sachnummer konnte nicht erstellt werden", "Error");
             }
         }
-        
+
     }
 
     [RelayCommand]

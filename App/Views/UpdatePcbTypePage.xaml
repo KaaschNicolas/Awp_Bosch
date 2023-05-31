@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:App.Behaviors"
+    xmlns:controls="using:App.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:App.ViewModels"
@@ -21,9 +22,10 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Spacing="20">
-                <TextBox
-                    Header="Sachnummer"
+                <controls:ValidationTextBox
+                    HeaderText="Sachnummer"
                     PlaceholderText="10-stellige Sachnummer"
+                    PropertyName="PcbPartNumber"
                     Text="{x:Bind Path=ViewModel.PcbPartNumber, Mode=TwoWay}" />
                 <TextBox
                     Header="Bezeichnung"
@@ -38,21 +40,25 @@
                     SpinButtonPlacementMode="Compact"
                     Value="{x:Bind ViewModel.MaxTransfer, Mode=TwoWay}" />
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button 
-                        Margin="0,12,4,12" 
+                    <Button
+                        Margin="0,12,4,12"
                         Command="{x:Bind ViewModel.SaveCommand}"
-                        Style="{StaticResource AccentButtonStyle}" >
+                        Style="{StaticResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" FontSize="18"/>
+                            <FontIcon
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="18"
+                                Glyph="&#xE74E;" />
                             <TextBlock Padding="8,0,0,0">Speichern</TextBlock>
                         </StackPanel>
                     </Button>
-                    <Button 
-                        Margin="0,12,4,12" 
-                        Command="{x:Bind ViewModel.CancelCommand}">
+                    <Button Margin="0,12,4,12" Command="{x:Bind ViewModel.CancelCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;" FontSize="18"/>
-                            <TextBlock Padding="8,0,0,0" >Abbrechen</TextBlock>
+                            <FontIcon
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="18"
+                                Glyph="&#xE711;" />
+                            <TextBlock Padding="8,0,0,0">Abbrechen</TextBlock>
                         </StackPanel>
                     </Button>
                 </StackPanel>

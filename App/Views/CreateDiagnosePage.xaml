@@ -28,24 +28,28 @@
                     PropertyName="Name"
                     Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button 
-                        Margin="0,12,4,12" 
+                    <Button
+                        Margin="0,12,4,12"
                         Command="{x:Bind ViewModel.SaveCommand}"
-                        Style="{StaticResource AccentButtonStyle}" >
+                        Style="{StaticResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal">
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" FontSize="18"/>
-                        <TextBlock Padding="8,0,0,0">Hinzufügen</TextBlock>
-                    </StackPanel>
+                            <FontIcon
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="18"
+                                Glyph="&#xE74E;" />
+                            <TextBlock Padding="8,0,0,0">Hinzufügen</TextBlock>
+                        </StackPanel>
                     </Button>
-                    <Button 
-                        Margin="0,12,4,12" 
-                        Command="{x:Bind ViewModel.CancelCommand}">
+                    <Button Margin="0,12,4,12" Command="{x:Bind ViewModel.CancelCommand}">
                         <StackPanel Orientation="Horizontal">
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;" FontSize="18"/>
-                        <TextBlock Padding="8,0,0,0" >Abbrechen</TextBlock>
-                    </StackPanel>
+                            <FontIcon
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                FontSize="18"
+                                Glyph="&#xE711;" />
+                            <TextBlock Padding="8,0,0,0">Abbrechen</TextBlock>
+                        </StackPanel>
                     </Button>
-            </StackPanel>
+                </StackPanel>
 
             </StackPanel>
         </Grid>

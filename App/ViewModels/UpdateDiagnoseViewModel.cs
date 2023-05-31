@@ -1,18 +1,19 @@
 ﻿
-using System.ComponentModel.DataAnnotations;
 using App.Contracts.Services;
 using App.Contracts.ViewModels;
+using App.Controls;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels;
-public partial class UpdateDiagnoseViewModel: ObservableValidator, INavigationAware
+public partial class UpdateDiagnoseViewModel : ObservableValidator, INavigationAware
 {
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
     private string _name;
 
     private int _id = 0;
@@ -29,7 +30,7 @@ public partial class UpdateDiagnoseViewModel: ObservableValidator, INavigationAw
     public UpdateDiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
-        _infoBarService = infoBarService;  
+        _infoBarService = infoBarService;
         _navigationService = navigationService;
     }
 

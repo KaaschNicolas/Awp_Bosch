@@ -10,14 +10,17 @@ namespace App.Core.Services
         private User _currentUser;
 
         private BoschContext _boschContext;
-        public AuthenticationService(BoschContext boschContext) {
+        public AuthenticationService(BoschContext boschContext)
+        {
             _boschContext = boschContext;
         }
-        private void authenticate() {
+        private void authenticate()
+        {
             var adUsername = Environment.UserName;
-            // TODO: Causes UnhandleException when not connected to database -> else show dialog 
+            // TODO: Causes UnhandleException when not connected to database -> if not connected show dialog 
             var result = _boschContext.Users.Where(u => u.AdUsername.Equals(adUsername)).ToList();
-            if (result.Count != 0 && result[0] != null) { 
+            if (result.Count != 0 && result[0] != null)
+            {
                 _isAuthenticated = true;
                 _currentUser = result[0];
             }
@@ -27,7 +30,7 @@ namespace App.Core.Services
         {
             if (_currentUser == null)
             {
-               authenticate();
+                authenticate();
             }
             return _isAuthenticated;
         }
@@ -36,7 +39,7 @@ namespace App.Core.Services
         {
             if (_currentUser == null)
             {
-               authenticate();
+                authenticate();
             }
             return _currentUser;
         }

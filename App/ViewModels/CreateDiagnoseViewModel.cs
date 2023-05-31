@@ -1,4 +1,5 @@
 ﻿using App.Contracts.Services;
+using App.Controls;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,7 +12,7 @@ public partial class CreateDiagnoseViewModel : ObservableValidator
 {
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
     private string _name;
 
     private readonly ICrudService<Diagnose> _crudService;
