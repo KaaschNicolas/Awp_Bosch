@@ -19,6 +19,8 @@ namespace App.Core.Services.Interfaces
 
         public Task<Response<int>> MaxEntriesByStorageLocation(int storageLocationId);
 
+        public Task<Response<List<Transfer>>> GetLastTransferByPcb(int pcbId);
+
         public Task<Response<int>> MaxEntriesSearch(string queryText);
 
         public Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize, string orderByProperty, bool isAscending);

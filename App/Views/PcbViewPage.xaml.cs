@@ -88,7 +88,7 @@ namespace App.Views
                 if (e.AddedItems.First() is not null)
                 {
                     ViewModel.FilterOptions = PcbFilterOptions.FilterStorageLocation;
-                    ViewModel.SelectedComboBox = ComboBox.SelectedItem as StorageLocation;
+                    ViewModel.SelectedComboBox = ComboBoxStorageLocation.SelectedItem as StorageLocation;
                     ViewModel.FilterItems.ExecuteAsync(null);
                 }
             }

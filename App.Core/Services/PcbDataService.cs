@@ -7,6 +7,7 @@ using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
 {
@@ -80,7 +81,10 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             List<Transfer> lastTransfers = new();
 
-            await _boschContext.Pcbs.Include(x => x.Transfers).ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
+            await _boschContext
+                .Pcbs
+                .Include(x => x.Transfers)
+                .ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
 
             List<Pcb> pcbs = new();
 
@@ -130,6 +134,25 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         catch (DbUpdateException)
         {
             return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
+        }
+    }
+
+    public async Task<Response<List<Transfer>>> GetLastTransferByPcb(int pcbId)
+    {
+        try
+        {
+            List<Transfer> lastTransfers = new();
+
+            await _boschContext
+                .Pcbs
+                .Include(x => x.Transfers)
+                .ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
+
+            return new Response<List<Transfer>>(ResponseCode.Success, data: lastTransfers);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<List<Transfer>>(ResponseCode.Error, error: "GetLastTransferByPcb() failed");   
         }
     }
 

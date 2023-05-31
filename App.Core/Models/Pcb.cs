@@ -65,9 +65,5 @@ namespace App.Core.Models
         {
             get; set;
         }
-
-        [NotMapped]
-        public string LastStorageLocation => Transfers.Last().StorageLocation.StorageName;
-
     }
 }
