@@ -15,6 +15,7 @@ namespace App.Core.Services
         }
         private void authenticate() {
             var adUsername = Environment.UserName;
+            // TODO: Causes UnhandleException when not connected to database -> else show dialog 
             var result = _boschContext.Users.Where(u => u.AdUsername.Equals(adUsername)).ToList();
             if (result.Count != 0 && result[0] != null) { 
                 _isAuthenticated = true;
