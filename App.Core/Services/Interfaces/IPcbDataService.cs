@@ -19,7 +19,7 @@ namespace App.Core.Services.Interfaces
 
         public Task<Response<int>> MaxEntriesByStorageLocation(int storageLocationId);
 
-        public Task<Response<List<Transfer>>> GetLastTransferByPcb(int pcbId);
+        public Task<Response<List<Transfer>>> GetLastTransferByPcb();
 
         public Task<Response<int>> MaxEntriesSearch(string queryText);
 

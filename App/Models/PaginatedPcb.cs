@@ -71,7 +71,7 @@ namespace App.Models
         }
         public string LastStorageLocationName { get; set; }
 
-        public static async Task<PaginatedPcb> ToPaginatedPcb(Pcb pcb, Func<Pcb,Task<string>> lastStorageName)
+        public static PaginatedPcb ToPaginatedPcb(Pcb pcb, Transfer transfer, List<StorageLocation> storageLocations, Func<Transfer, List<StorageLocation>, string> storageLocation)
         {
             return new PaginatedPcb()
             {
@@ -89,7 +89,7 @@ namespace App.Models
                 Transfers = pcb.Transfers,
                 Diagnose = pcb.Diagnose,
                 DiagnoseId = pcb.DiagnoseId,
-                LastStorageLocationName = await lastStorageName.Invoke(pcb)
+                LastStorageLocationName = storageLocation.Invoke(transfer, storageLocations)
             };
         }
 

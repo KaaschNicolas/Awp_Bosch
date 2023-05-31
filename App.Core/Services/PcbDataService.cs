@@ -137,7 +137,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    public async Task<Response<List<Transfer>>> GetLastTransferByPcb(int pcbId)
+    public async Task<Response<List<Transfer>>> GetLastTransferByPcb()
     {
         try
         {

@@ -67,7 +67,7 @@ namespace App.ViewModels
         }
 
         private readonly IPcbDataService<Pcb> _pcbDataService;
-        private readonly ICrudService<StorageLocation> _storageLocationCrudService;
+        private readonly IStorageLocationDataService<StorageLocation> _storageLocationCrudService;
         private readonly ICrudService<Diagnose> _diagnoseCrudService;
         private readonly IInfoBarService _infoBarService;
         private readonly IDialogService _dialogService;
@@ -173,18 +173,27 @@ namespace App.ViewModels
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
                     List<PaginatedPcb> convertedPcbs = new();
-                    pcbs.Data.ForEach(async x => convertedPcbs.Add(await PaginatedPcb.ToPaginatedPcb(
+                    var lastTransfersList = await _pcbDataService.GetLastTransferByPcb();
+                    var storageLocationList = await _storageLocationCrudService.GetStorageLoactionByTransfer(lastTransfersList.Data);
+                    pcbs.Data.ForEach(async x => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(
                         x,
-                        async (x) =>
+                        lastTransfersList.Data.Where(e => e.PcbId == x.Id).First(),
+                        storageLocationList.Data,
+                        (x, y) =>
                         {
-                            var lastTransfers = await _pcbDataService.GetLastTransferByPcb(x.Id);
-                            if (lastTransfers.Code == ResponseCode.Success)
+                            string storageLocationName = String.Empty;
+
+                            foreach (var item in y)
                             {
-                                var lastTransfer = lastTransfers.Data.Where(e => e.PcbId == x.Id).Last();
-                                return lastTransfer.StorageLocation.StorageName;
+                                if (item.Id == x.StorageLocationId)
+                                {
+                                    storageLocationName = item.StorageName;
+                                }
                             }
-                            return "Keine Daten enthalten";
-                        })));
+                            
+                            return storageLocationName ?? "Keine Daten";
+                        }
+                    )));
 
                     PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
                         convertedPcbs,
@@ -245,18 +254,27 @@ namespace App.ViewModels
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
                     List<PaginatedPcb> convertedPcbs = new();
-                    pcbs.Data.ForEach(async x => convertedPcbs.Add(await PaginatedPcb.ToPaginatedPcb(
+                    var lastTransfersList = await _pcbDataService.GetLastTransferByPcb();
+                    var storageLocationList = await _storageLocationCrudService.GetStorageLoactionByTransfer(lastTransfersList.Data);
+                    pcbs.Data.ForEach(async x => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(
                         x,
-                        async (x) =>
+                        lastTransfersList.Data.Where(e => e.PcbId == x.Id).First(),
+                        storageLocationList.Data,
+                        (x, y) =>
                         {
-                            var lastTransfers = await _pcbDataService.GetLastTransferByPcb(x.Id);
-                            if (lastTransfers.Code == ResponseCode.Success)
+                            string storageLocationName = String.Empty;
+
+                            foreach (var item in y)
                             {
-                                var lastTransfer = lastTransfers.Data.Where(e => e.PcbId == x.Id).Last();
-                                return lastTransfer.StorageLocation.StorageName;
+                                if (item.Id == x.StorageLocationId)
+                                {
+                                    storageLocationName = item.StorageName;
+                                }
                             }
-                            return "Keine Daten enthalten";
-                        })));
+
+                            return storageLocationName ?? "Keine Daten";
+                        }
+                    )));
 
                     PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
                         convertedPcbs,
@@ -281,18 +299,27 @@ namespace App.ViewModels
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
                     List<PaginatedPcb> convertedPcbs = new();
-                    pcbs.Data.ForEach(async x => convertedPcbs.Add(await PaginatedPcb.ToPaginatedPcb(
+                    var lastTransfersList = await _pcbDataService.GetLastTransferByPcb();
+                    var storageLocationList = await _storageLocationCrudService.GetStorageLoactionByTransfer(lastTransfersList.Data);
+                    pcbs.Data.ForEach(async x => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(
                         x,
-                        async (x) =>
+                        lastTransfersList.Data.Where(e => e.PcbId == x.Id).First(),
+                        storageLocationList.Data,
+                        (x, y) =>
                         {
-                            var lastTransfers = await _pcbDataService.GetLastTransferByPcb(x.Id);
-                            if (lastTransfers.Code == ResponseCode.Success)
+                            string storageLocationName = String.Empty;
+
+                            foreach (var item in y)
                             {
-                                var lastTransfer = lastTransfers.Data.Where(e => e.PcbId == x.Id).Last();
-                                return lastTransfer.StorageLocation.StorageName;
+                                if (item.Id == x.StorageLocationId)
+                                {
+                                    storageLocationName = item.StorageName;
+                                }
                             }
-                            return "Keine Daten enthalten";
-                        })));
+
+                            return storageLocationName ?? "Keine Daten";
+                        }
+                    )));
 
                     PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
                         convertedPcbs,
