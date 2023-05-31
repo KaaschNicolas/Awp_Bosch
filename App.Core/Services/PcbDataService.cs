@@ -24,7 +24,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             if (pageIndex == 0)
             {
                 data = await _boschContext.Set<T>()
-                    .Where(pcb => pcb.DeletedDate < deleteCheckDate)
                     .OrderBy(orderByProperty, isAscending)
                     .Skip(pageIndex * pageSize)
                     .Take(pageSize)
@@ -33,7 +32,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             else
             {
                 data = await _boschContext.Set<T>()
-                    .Where(pcb => pcb.DeletedDate < deleteCheckDate)
                     .OrderBy(orderByProperty, isAscending)
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
@@ -159,7 +157,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             if (pageIndex == 0)
             {
                 data = await _boschContext.Set<T>()
-                    .Where(pcb => pcb.DeletedDate < deleteCheckDate)
                     .OrderBy(orderByProperty, isAscending)
                     .Skip(pageIndex * pageSize)
                     .Take(pageSize)
@@ -169,7 +166,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             else
             {
                 data = await _boschContext.Set<T>()
-                    .Where(pcb => pcb.DeletedDate < deleteCheckDate)
                     .OrderBy(orderByProperty, isAscending)
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
