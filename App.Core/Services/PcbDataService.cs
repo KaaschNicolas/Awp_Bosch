@@ -10,12 +10,9 @@ using System.Linq.Expressions;
 
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
 {
-    private DateTime deleteCheckDate;
-
     public PcbDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext,
         loggingService)
     {
-        deleteCheckDate = new DateTime(2000, 01, 01);
     }
 
     public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty,
@@ -24,7 +21,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var data = await _boschContext.Set<T>()
-                .Where(pcb => pcb.DeletedDate < deleteCheckDate)
                 .OrderBy(orderByProperty, isAscending)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -42,7 +38,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var data = await _boschContext.Set<T>()
-                .Where(pcb => pcb.DeletedDate < deleteCheckDate)
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
         }
@@ -58,7 +53,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             var data = await _boschContext.Set<T>()
                 .Where(where)
-                .Where(pcb => pcb.DeletedDate < deleteCheckDate)
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
         }
@@ -133,7 +127,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             var data = await _boschContext.Set<T>()
                 .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
-                .Where(pcb => (pcb.DeletedDate < deleteCheckDate))
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
         }
@@ -149,7 +142,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var data = await _boschContext.Set<T>()
-                .Where(pcb => pcb.DeletedDate < deleteCheckDate)
                 .OrderBy(orderByProperty, isAscending)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -173,7 +165,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             {
                 data = await _boschContext.Set<T>()
                     .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
-                    .Where(pcb => (pcb.DeletedDate < deleteCheckDate))
                     .Skip((pageIndex) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -182,7 +173,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             {
                 data = await _boschContext.Set<T>()
                     .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
-                    .Where(pcb => (pcb.DeletedDate < deleteCheckDate))
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -202,7 +192,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             var data = await _boschContext.Set<T>()
                 .Where(where)
-                .Where(pcb => pcb.DeletedDate < deleteCheckDate)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .Include("PcbType")
