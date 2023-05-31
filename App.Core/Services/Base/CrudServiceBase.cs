@@ -15,9 +15,7 @@ namespace App.Core.Services.Base;
 public abstract class CrudServiceBase<T> where T : BaseEntity
 {
     protected BoschContext _boschContext;
-
     protected ILoggingService _loggingService;
-    private DateTime checkDeletedDate = new DateTime(2004, 01, 01);
     public CrudServiceBase(BoschContext boschContext, ILoggingService loggingService)
     {
         _boschContext = boschContext;
@@ -88,7 +86,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
             var res = new List<T>();
             foreach (var item in list)
             {
-                if (item.DeletedDate < checkDeletedDate)
+                if (item.DeletedDate > item.CreatedDate)
                 {
                     res.Add(item);
                 }
