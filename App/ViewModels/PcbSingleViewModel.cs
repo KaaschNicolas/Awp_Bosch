@@ -175,6 +175,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private readonly IPcbDataService<Pcb> _pcbDataService;
     private readonly ICrudService<StorageLocation> _storageService;
     private readonly ICrudService<Comment> _commentService;
+    private readonly ICrudService<Device> _deviceService;
     private readonly IDialogService _dialogService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
@@ -182,7 +183,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     public IAsyncRelayCommand FirstAsyncCommand { get; }
 
-    public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, ICrudService<Comment> commentService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
+    public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, ICrudService<Comment> commentService, ICrudService<Device> deviceService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
     {
         try
         {
@@ -192,6 +193,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _diagnoseCrudService = diagnoseCrudService;
             _storageService = storageService;
             _commentService = commentService;
+            _deviceService = deviceService;
             _dialogService = dialogService;
             _infoBarService = infoBarService;
             _navigationService = navigationService;
@@ -328,8 +330,30 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             }
         }
 
-        
+    }
 
+    [RelayCommand]
+    public async void AddRestriction()
+    {
+        var result = await _dialogService.AddRestrictionDialog("Einschränkung hinzufügen");
+
+        if (result != null)
+        {
+            var deviceResult = await _deviceService.Create(result);
+            Device device = deviceResult.Data;
+            _pcb.Restriction = device;
+
+            var response = await _pcbDataService.Update(_pcb.Id, _pcb);
+            if (response.Code == ResponseCode.Success)
+            {
+                Restriction = response.Data.Restriction;
+                _infoBarService.showMessage("Anmerkung wurde hinzugefügt", "Erfolg");
+            }
+            else
+            {
+                _infoBarService.showMessage("Anmerkung konnte nicht hinzugefügt werden", "Fehler");
+            }
+        }
 
     }
 

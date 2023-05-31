@@ -154,6 +154,7 @@
 				HorizontalAlignment="Right" 
 				Height="50" Width="230"
 				Background="#f7e771"
+                Click="RestrictionClick"
 				FontWeight="SemiBold">Einschränkung hinzufügen</Button>
             <InfoBar
 				x:Name="RestrictionInfoBar"
@@ -419,13 +420,14 @@
                             IsColorFontEnabled="True" 
                             Text="bearbeitet von:"/>
                         <TextBlock 
-                            Margin="20,5,0,0"
+                            Margin="10,5,0,0"
+                            FontSize="12" 
                             Text="{Binding PanelComment.NotedBy.Name, Mode=OneWay}"/>
                     </StackPanel>
                     <TextBlock 
                             Margin="20,10,0,20"
                             TextWrapping="Wrap"
-                            Text="{Binding PanelComment.Comment, Mode=OneWay}"/>
+                            Text="{Binding PanelComment.Content, Mode=OneWay}"/>
                 </StackPanel>
             </StackPanel>
 

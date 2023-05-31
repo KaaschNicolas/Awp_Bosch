@@ -98,6 +98,11 @@ public sealed partial class PcbSinglePage : Page
         ViewModel.AddCommentCommand.Execute(null);
     }
 
+    void RestrictionClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.AddRestrictionCommand.Execute(null);
+    }
+
     //    private async void OnPrintButtonClicked(object sender, RoutedEventArgs e)
     //    {
     //        /*var data = new PageData(this, dataMatrixRectangle);

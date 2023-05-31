@@ -10,4 +10,6 @@ public interface IDialogService
     Task<Tuple<Transfer, int>?> ShowCreateTransferDialog(string title, User user, List<StorageLocation> storageLocations, List<Diagnose> diagnoses, string confirmButtonText = "Weitergeben", string cancelButtonText = "Abbrechen");
 
     Task<Comment> AddCommentDialog(string title, string confirmButtonText = "Speichern", string cancelButtonText = "Abbrechen");
+
+    Task<Device> AddRestrictionDialog(string title, string confirmButtonText = "Speichern", string cancelButtonText = "Abbrechen");
 }

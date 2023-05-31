@@ -191,6 +191,46 @@ public sealed class DialogService : IDialogService
         return null;
     }
 
+    public async Task<Device> AddRestrictionDialog(string title, string confirmButtonText, string cancelButtonText)
+    {
+        if (rootElement != null)
+        {
+            TextBox restriction = new TextBox
+            {
+                Header = "Einschränkung",
+                PlaceholderText = "Text eintragen"
+            };
+
+            var dialog = new ContentDialog
+            {
+                Title = title,
+                Content = restriction,
+                PrimaryButtonText = confirmButtonText,
+                DefaultButton = ContentDialogButton.Primary,
+                RequestedTheme = rootElement.RequestedTheme,
+                CloseButtonText = cancelButtonText,
+                XamlRoot = rootElement.XamlRoot
+
+            };
+            var result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.None)
+            {
+                return null;
+            }
+            if (result == ContentDialogResult.Primary)
+            {
+
+                return new Device
+                {
+                    Name = restriction.Text
+                };
+            }
+
+        }
+        return null;
+    }
+
     public async void UnAuthorizedDialogAsync(string title, string content, XamlRoot xamlRoot)
     {
 
