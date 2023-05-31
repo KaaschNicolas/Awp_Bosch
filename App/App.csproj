@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\ErrorCardUserControl.xaml" />
+    <None Remove="Controls\TransferDialog.xaml" />
     <None Remove="Views\CreateDiagnosePage.xaml" />
     <None Remove="Views\DiagnosePage.xaml" />
     <None Remove="Views\PcbViewPage.xaml" />
@@ -77,6 +78,12 @@
     <Compile Update="Views\UpdateDiagnosePage.xaml.cs">
       <Generator></Generator>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\TransferDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
