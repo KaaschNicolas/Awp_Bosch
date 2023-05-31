@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
+
+using ABI.Microsoft.UI.Xaml.Input;
 using App.Core.Models;
 using App.Core.Models.Enums;
 using App.ViewModels;
@@ -7,7 +9,9 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using System.Diagnostics;
 using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
+using System.Windows.Input;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -216,5 +220,12 @@ namespace App.Views
         {
             ViewModel.ShowTransferCommand.Execute(null);
         }
+
+        /*private void UIElement_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("ok");
+        }*/
+
+
     }
 }
