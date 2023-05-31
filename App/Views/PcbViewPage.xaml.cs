@@ -137,6 +137,7 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Default;
             ViewModel.FilterOptions = PcbFilterOptions.None;
+            
             await ViewModel.FirstAsyncCommand.ExecuteAsync(null);
         }
 
@@ -153,6 +154,7 @@ namespace App.Views
             _displayMode = DataGridDisplayMode.Search;
             ViewModel.FilterOptions = PcbFilterOptions.Search;
             ViewModel.QueryText = SearchBox.Text;
+            ComboBoxStorageLocation.SelectedItem = null;
             await ViewModel.FilterItems.ExecuteAsync(null);
         }
 

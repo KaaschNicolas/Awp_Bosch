@@ -54,16 +54,20 @@ namespace App.Core.Models
         {
             get; set;
         }
+
         [ForeignKey("DiagnoseId")]
         public Diagnose? Diagnose
         {
             get; set;
         }
+
         public int? DiagnoseId
         {
             get; set;
         }
 
+        [NotMapped]
+        public string LastStorageLocation => Transfers.Last().StorageLocation.StorageName;
 
     }
 }

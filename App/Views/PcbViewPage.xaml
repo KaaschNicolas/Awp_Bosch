@@ -95,7 +95,7 @@
                         Grid.Row="3"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
-                        Text="{Binding Transfers.Count}" />
+                        Text="{Binding LastStorageLocation}" />
                 </Grid>
             </DataTemplate>
         </Grid.Resources>
@@ -111,7 +111,7 @@
                 DefaultLabelPosition="Right"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <ComboBox x:Name="ComboBox" 
+                    <ComboBox x:Name="ComboBoxStorageLocation" 
                               ItemsSource="{x:Bind ViewModel.StorageLocations}"
                               SelectedItem="{x:Bind ViewModel.SelectedComboBox}"
                               SelectionChanged="ComboBox_SelectionChanged"
@@ -252,7 +252,7 @@
                     Header="Abgeschlossen"
                     Tag="Finalized" />
                 <ctWinUI:DataGridTextColumn
-                    Binding="{Binding Transfer.Count}"
+                    Binding="{Binding LastStorageLocation}"
                     Header="Letzter Lagerort"
                     Tag="LastStorageLocation" 
                     CanUserSort="False" />

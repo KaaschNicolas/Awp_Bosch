@@ -23,12 +23,25 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
-                .Where(pcb => pcb.DeletedDate < deleteCheckDate)
-                .OrderBy(orderByProperty, isAscending)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            List<T> data = new();
+            if (pageIndex == 0)
+            {
+                data = await _boschContext.Set<T>()
+                    .Where(pcb => pcb.DeletedDate < deleteCheckDate)
+                    .OrderBy(orderByProperty, isAscending)
+                    .Skip(pageIndex * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            } 
+            else
+            {
+                data = await _boschContext.Set<T>()
+                    .Where(pcb => pcb.DeletedDate < deleteCheckDate)
+                    .OrderBy(orderByProperty, isAscending)
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            }
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
@@ -148,13 +161,27 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
-                .Where(pcb => pcb.DeletedDate < deleteCheckDate)
-                .OrderBy(orderByProperty, isAscending)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .AsNoTracking()
-                .ToListAsync();
+            List<T> data = new();
+            if (pageIndex == 0)
+            {
+                data = await _boschContext.Set<T>()
+                    .Where(pcb => pcb.DeletedDate < deleteCheckDate)
+                    .OrderBy(orderByProperty, isAscending)
+                    .Skip(pageIndex * pageSize)
+                    .Take(pageSize)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            else
+            {
+                data = await _boschContext.Set<T>()
+                    .Where(pcb => pcb.DeletedDate < deleteCheckDate)
+                    .OrderBy(orderByProperty, isAscending)
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)

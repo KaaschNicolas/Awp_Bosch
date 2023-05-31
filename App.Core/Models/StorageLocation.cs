@@ -28,6 +28,5 @@ namespace App.Core.Models
         {
             get; set;
         }
-
     }
 }
