@@ -2,6 +2,7 @@
 using App.Core.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Security.Cryptography.X509Certificates;
 
 
 namespace App.Services;
@@ -144,6 +145,46 @@ public sealed class DialogService : IDialogService
                     StorageLocationId = ((StorageLocation)storageLocation.SelectedItem).Id,
                     Comment = comment.Text
                 }, ((Diagnose)diagnose.SelectedItem).Id);
+            }
+
+        }
+        return null;
+    }
+
+    public async Task<Comment> AddCommentDialog(string title, string confirmButtonText, string cancelButtonText)
+    {
+        if(rootElement != null)
+        {
+            TextBox comment = new TextBox
+            {
+                Header = "Anmerkung",
+                PlaceholderText = "Text eintragen"
+            };
+
+            var dialog = new ContentDialog
+            {
+                Title = title,
+                Content = comment,
+                PrimaryButtonText = confirmButtonText,
+                DefaultButton = ContentDialogButton.Primary,
+                RequestedTheme = rootElement.RequestedTheme,
+                CloseButtonText = cancelButtonText,
+                XamlRoot = rootElement.XamlRoot
+
+            };
+            var result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.None)
+            {
+                return null;
+            }
+            if (result == ContentDialogResult.Primary)
+            {
+
+                return new Comment
+                {
+                    Content = comment.Text
+                };
             }
 
         }

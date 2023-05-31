@@ -331,7 +331,8 @@
 				    Style="{StaticResource AccentButtonStyle}"
 				    FontWeight="Bold">Weitergeben</Button>
                 <Button
-				    Margin="0,15,0,0"
+				    Click="CommentClick"
+                    Margin="0,15,0,0"
 				    HorizontalAlignment="Right"
 				    Height="60"
 				    Width="250">Anmerkung hinzufügen</Button>
@@ -371,7 +372,7 @@
                         <Border 
                                 x:Name="Days"
                                 Margin="0,0,0,0" CornerRadius="0,5,5,0">
-                            <TextBlock Margin="0,0,10,3" Text=" Tage(e)"/>
+                            <TextBlock Margin="0,0,10,3" Text=" Tag(e)"/>
                         </Border>
 
                     </StackPanel>
@@ -392,7 +393,7 @@
                         <Border 
                                 x:Name="DurationDays"
                                 Margin="0,20,0,0" CornerRadius="0,5,5,0">
-                            <TextBlock Margin="0,0,10,3" Text=" Tage(e)"/>
+                            <TextBlock Margin="0,0,10,3" Text=" Tag(e)"/>
                         </Border>
                     </StackPanel>
                     <StackPanel
@@ -417,12 +418,14 @@
                             FontSize="12" 
                             IsColorFontEnabled="True" 
                             Text="bearbeitet von:"/>
-                        <TextBlock Text="{Binding NoteBy.Name, Mode=OneWay}"/>
+                        <TextBlock 
+                            Margin="20,5,0,0"
+                            Text="{Binding PanelComment.NotedBy.Name, Mode=OneWay}"/>
                     </StackPanel>
                     <TextBlock 
                             Margin="20,10,0,20"
                             TextWrapping="Wrap"
-                            Text="{Binding ErrorDescription, Mode=OneWay}"/>
+                            Text="{Binding PanelComment.Comment, Mode=OneWay}"/>
                 </StackPanel>
             </StackPanel>
 

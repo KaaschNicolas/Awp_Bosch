@@ -56,12 +56,6 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [Required]
     private Device _restriction;
 
-/*    [ObservableProperty]
-    private bool _isButtonVisible;
-
-    [ObservableProperty]
-    private string _restrictionVisibility;*/
-
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
@@ -110,7 +104,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    private Comment _comment;
+    private Comment _panelComment;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -180,15 +174,15 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private readonly ICrudService<Diagnose> _diagnoseCrudService;
     private readonly IPcbDataService<Pcb> _pcbDataService;
     private readonly ICrudService<StorageLocation> _storageService;
+    private readonly ICrudService<Comment> _commentService;
     private readonly IDialogService _dialogService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
     private readonly ITransferDataService<Transfer> _transfersService;
-    private readonly IPcbDataService<Pcb> _pcbDataService;
 
     public IAsyncRelayCommand FirstAsyncCommand { get; }
 
-    public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
+    public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, ICrudService<Comment> commentService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
     {
         try
         {
@@ -197,11 +191,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _storageLocationCrudService = storageLocationCrudService;
             _diagnoseCrudService = diagnoseCrudService;
             _storageService = storageService;
+            _commentService = commentService;
             _dialogService = dialogService;
             _infoBarService = infoBarService;
             _navigationService = navigationService;
             _transfersService = transfersService;
-            _pcbDataService = pcbDataService;
             _transfers = new ObservableCollection<Transfer>();
             _pcbs = new ObservableCollection<Pcb>();
         }
@@ -308,6 +302,37 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         }
     }
 
+    [RelayCommand]
+    public async void AddComment()
+    {
+        User currentUser = _authenticationService.currentUser();
+
+        var result = await _dialogService.AddCommentDialog("Anmerkung hinzufügen");
+
+        if(result != null)
+        {
+            result.NotedById = currentUser.Id;
+            var commentResult = await _commentService.Create(result);
+            Comment comment = commentResult.Data;
+            _pcb.Comment = comment;
+
+            var response = await _pcbDataService.Update(_pcb.Id, _pcb);
+            if (response.Code == ResponseCode.Success)
+            {
+                PanelComment = response.Data.Comment;
+                _infoBarService.showMessage("Anmerkung wurde hinzugefügt", "Erfolg");
+            }
+            else
+            {
+                _infoBarService.showMessage("Anmerkung konnte nicht hinzugefügt werden", "Fehler");
+            }
+        }
+
+        
+
+
+    }
+
     public async void OnNavigatedTo(object parameter)
     {
         try
@@ -390,7 +415,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             }
 
             PcbType = _pcb.PcbType;
-            Comment = _pcb.Comment;
+            PanelComment = _pcb.Comment;
             Diagnose = _pcb.Diagnose;
             NotedBy = (_pcb.Transfers.Last()).NotedBy.Name;
             AtLocationDays = 5;

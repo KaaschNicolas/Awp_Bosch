@@ -13,8 +13,13 @@ namespace App.Core.Models
         {
             get; set;
         }
-        [Required]
+        [Required] 
         public User NotedBy
+        {
+            get; set;
+        }
+
+        public int NotedById
         {
             get; set;
         }

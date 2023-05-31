@@ -304,6 +304,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
                 .Include(T => T.Transfers)
                 .ThenInclude(transfer => transfer.StorageLocation)
                 .Include(T => T.Restriction)
+                .Include(T => T.Comment)
                 .Include(T => T.Diagnose)
                 .Include(T => T.PcbType)
                 .Include(T => T.ErrorTypes)
