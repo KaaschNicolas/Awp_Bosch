@@ -3,8 +3,8 @@
     "Comment": "some comment",
     "StorageLocation": {
       "StorageName": "PVB320",
-      "DwellTimeYellow": 3,
-      "DwellTimeRed": 5,
+      "DwellTimeYellow": "3",
+      "DwellTimeRed": "5",
       "DeletedDate": "2023-10-08T18:25:43.511Z",
       "CreatedDate": "2013-07-06T18:25:43.511Z"
     },
@@ -52,8 +52,8 @@
     "Comment": "some comment",
     "StorageLocation": {
       "StorageName": "PVB-Labor",
-      "DwellTimeYellow": 1,
-      "DwellTimeRed": 3,
+      "DwellTimeYellow": "1",
+      "DwellTimeRed": "3",
       "DeletedDate": "2023-10-08T18:25:43.511Z",
       "CreatedDate": "2013-07-06T18:25:43.511Z"
     },
@@ -101,8 +101,8 @@
     "Comment": "some comment",
     "StorageLocation": {
       "StorageName": "PVB330",
-      "DwellTimeYellow": 3,
-      "DwellTimeRed": 4,
+      "DwellTimeYellow": "3",
+      "DwellTimeRed": "4",
       "DeletedDate": "2023-10-08T18:25:43.511Z",
       "CreatedDate": "2013-07-06T18:25:43.511Z"
     },
@@ -150,8 +150,8 @@
     "Comment": "some comment",
     "StorageLocation": {
       "StorageName": "PVB320-KRL",
-      "DwellTimeYellow": 7,
-      "DwellTimeRed": 14,
+      "DwellTimeYellow": "7",
+      "DwellTimeRed": "14",
       "DeletedDate": "2023-10-08T18:25:43.511Z",
       "CreatedDate": "2013-07-06T18:25:43.511Z"
     },
@@ -199,8 +199,8 @@
     "Comment": "some comment",
     "StorageLocation": {
       "StorageName": "PVB-Schrott",
-      "DwellTimeYellow": 5,
-      "DwellTimeRed": 10,
+      "DwellTimeYellow": "5",
+      "DwellTimeRed": "10",
       "DeletedDate": "2023-10-08T18:25:43.511Z",
       "CreatedDate": "2013-07-06T18:25:43.511Z"
     },
