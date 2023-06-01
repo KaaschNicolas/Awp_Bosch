@@ -136,25 +136,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    public async Task<Response<List<Transfer>>> GetLastTransferByPcb()
-    {
-        try
-        {
-            List<Transfer> lastTransfers = new();
-
-            await _boschContext
-                .Pcbs
-                .Include(x => x.Transfers)
-                .ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
-
-            return new Response<List<Transfer>>(ResponseCode.Success, data: lastTransfers);
-        }
-        catch (DbUpdateException)
-        {
-            return new Response<List<Transfer>>(ResponseCode.Error, error: "GetLastTransferByPcb() failed");
-        }
-    }
-
     public async Task<Response<int>> MaxEntriesSearch(string queryText)
     {
         try
@@ -352,7 +333,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    public async Task<Response<List<T>>> GetAllEager()
+    public async Task<Response<List<T>>> GetAllEager(int pageIndex, int pageSize)
     {
         try
         {
@@ -366,6 +347,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
                 .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
                 .ThenInclude(transfer => transfer.NotedBy)
                 .AsNoTracking()
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             return new Response<List<T>>(ResponseCode.Success, entity);

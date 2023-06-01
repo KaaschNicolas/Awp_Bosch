@@ -19,26 +19,6 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
 {
     public StorageLocationDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) { }
 
-    public async Task<Response<List<T>>> GetStorageLoactionByTransfer(List<Transfer> transferIds)
-    {
-        try
-        {
-            List<T> data = new();
-            foreach (var item in transferIds)
-            {
-                data.Add(_boschContext
-                    .Set<T>()
-                    .Where(x => x.Id == item.StorageLocationId)
-                    .ToList()
-                    .First());
-            }
-            return new Response<List<T>>(ResponseCode.Success, data: data);
-        }
-        catch (DbUpdateException)
-        {
-            return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationByTransfer() failed");
-        }
-    }
     public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty, bool isAscending)
     {
         try

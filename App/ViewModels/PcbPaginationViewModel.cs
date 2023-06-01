@@ -172,10 +172,9 @@ namespace App.ViewModels
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
                     List<PaginatedPcb> convertedPcbs = new();
-                    var lastTransfersList = await _pcbDataService.GetLastTransferByPcb();
-                    var storageLocationList = await _storageLocationCrudService.GetStorageLoactionByTransfer(lastTransfersList.Data);
+                    
                     // TODO: Error handling
-                    var resEager = await _pcbDataService.GetAllEager();
+                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize);
                     var newPcbs = new List<Pcb>();
                     foreach (var item in resEager.Data)
                     {
@@ -248,10 +247,8 @@ namespace App.ViewModels
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
                     List<PaginatedPcb> convertedPcbs = new();
-                    var lastTransfersList = await _pcbDataService.GetLastTransferByPcb();
-                    var storageLocationList = await _storageLocationCrudService.GetStorageLoactionByTransfer(lastTransfersList.Data);
                     // TODO: Error handling
-                    var resEager = await _pcbDataService.GetAllEager();
+                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize);
                     var newPcbs = new List<Pcb>();
                     foreach (var item in resEager.Data)
                     {
@@ -288,10 +285,8 @@ namespace App.ViewModels
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
                     List<PaginatedPcb> convertedPcbs = new();
-                    var lastTransfersList = await _pcbDataService.GetLastTransferByPcb();
-                    var storageLocationList = await _storageLocationCrudService.GetStorageLoactionByTransfer(lastTransfersList.Data);
                     // TODO: Error handling
-                    var resEager = await _pcbDataService.GetAllEager();
+                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize);
                     var newPcbs = new List<Pcb>();
                     foreach (var item in resEager.Data)
                     {
