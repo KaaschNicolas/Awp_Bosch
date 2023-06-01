@@ -13,6 +13,7 @@ namespace App.Core.Models
         {
             get; set;
         }
+
         [Required]
         public User NotedBy
         {

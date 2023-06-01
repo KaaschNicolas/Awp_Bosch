@@ -3,6 +3,7 @@ using App.Core.Models;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace App.Core.Services
 {
@@ -30,25 +31,26 @@ namespace App.Core.Services
         }
 
 
-        public async Task<ResponseCode> CreateTransfer(Transfer transfer, int diagnoseId)
+        public async Task<Response<T>> CreateTransfer(T transfer, int diagnoseId)
         {
             using (var transaction = await _boschContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    await _boschContext.Set<Transfer>().AddAsync(transfer);
+                    EntityEntry<T> entityEntry = await _boschContext.Set<T>().AddAsync(transfer);
                     var pcb = await _boschContext.Set<Pcb>().FirstOrDefaultAsync(x => x.Id == transfer.PcbId);
                     pcb.DiagnoseId = diagnoseId;
 
                     await _boschContext.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    return new Response<T>(ResponseCode.Success, (T)entityEntry.Entity);
 
                 }
                 catch (Exception)
                 {
-                    return ResponseCode.Error;
+                    return new Response<T>(ResponseCode.Error, error: $"Fehler beim Erstellen von {typeof(T)}");
                 }
-                return ResponseCode.Success;
+
             }
         }
     }
