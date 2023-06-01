@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:App.Converters"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="using:App.ViewModels"
+    xmlns:viewModels="using:App.ViewModels" xmlns:controls="using:App.Controls"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -83,11 +83,12 @@
                     TextMemberPath="PcbPartNumber" />
 
 
-                <TextBox
+                <controls:ValidationTextBox
                     Grid.Row="1"
                     Grid.Column="2"
                     Grid.ColumnSpan="2"
-                    Header="Seriennummer"
+                    HeaderText="Seriennummer"
+                    PropertyName="SerialNumber"
                     PlaceholderText="10-Stellige Seriennummer"
                     Text="{x:Bind ViewModel.SerialNumber, Mode=TwoWay}" />
 
