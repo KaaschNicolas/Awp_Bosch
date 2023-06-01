@@ -232,6 +232,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         if (result != null)
         {
             result.NotedById = currentUser.Id;
+            // TODO: Comment ID einfügen
             var commentResult = await _commentService.Create(result);
             _pcb.Comment = commentResult.Data;
 
