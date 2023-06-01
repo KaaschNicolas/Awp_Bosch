@@ -201,6 +201,5 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
 
     public void OnNavigatedFrom()
     {
-        var test = "";
     }
 }
