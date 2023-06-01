@@ -8,6 +8,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
 	    xmlns:viewModels="using:App.ViewModels"
+        xmlns:xaml="using:Microsoft.UI.Xaml"
+        xmlns:visconverter="using:Microsoft.UI.Xaml.Data"
         xmlns:local="using:App.Views" 
         xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
         mc:Ignorable="d">
@@ -142,6 +144,7 @@
             </StackPanel>
             <Button
 				x:Name="RestrictionButton"
+                Click="RestrictionClick"
                 Visibility="{x:Bind Path=ViewModel.RestrictionButtonVisibility, Mode=TwoWay}"
 				Grid.Column="0"
 				Grid.Row="1"
@@ -195,13 +198,13 @@
                         <StackPanel
                             Orientation="Horizontal">
                             <TextBlock Text="Fehler:"/>
-                            <TextBlock Text="{x:Bind Path=ViewModel.FirstErrorCode, Mode=OneWay}"/>
+                            <TextBlock Text="{x:Bind Path=ViewModel.FirstErrorCode, Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold"/>
                         </StackPanel>
                     </Expander.Header>
                     <StackPanel
                         Orientation="Horizontal">
                         <TextBlock Text="Beschreibung:"/>
-                        <TextBlock Text="{x:Bind Path=ViewModel.FirstErrorDescription, Mode=OneWay}"/>
+                        <TextBlock Text="{x:Bind Path=ViewModel.FirstErrorDescription, Mode=OneWay}" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Expander>
 
@@ -215,13 +218,13 @@
                         <StackPanel
                             Orientation="Horizontal">
                             <TextBlock Text="Fehler:"/>
-                            <TextBlock Text="{x:Bind Path=ViewModel.SecondErrorCode, Mode=OneWay}"/>
+                            <TextBlock Text="{x:Bind Path=ViewModel.SecondErrorCode, Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold"/>
                         </StackPanel>
                     </Expander.Header>
                     <StackPanel
                         Orientation="Horizontal">
                         <TextBlock Text="Beschreibung:"/>
-                        <TextBlock Text="{x:Bind Path=ViewModel.SecondErrorDescription, Mode=OneWay}"/>
+                        <TextBlock Text="{x:Bind Path=ViewModel.SecondErrorDescription, Mode=OneWay}" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Expander>
 
@@ -327,6 +330,7 @@
 				    Style="{StaticResource AccentButtonStyle}"
 				    FontWeight="Bold">Weitergeben</Button>
                 <Button
+                    Click="CommentClick"
 				    Margin="0,15,0,0"
 				    HorizontalAlignment="Right"
 				    Height="60"
@@ -367,7 +371,7 @@
                         <Border 
                                 x:Name="Days"
                                 Margin="0,0,0,0" CornerRadius="0,5,5,0">
-                            <TextBlock Margin="0,0,10,3" Text=" Tage(e)"/>
+                            <TextBlock Margin="0,0,10,3" Text=" Tag(e)"/>
                         </Border>
 
                     </StackPanel>
@@ -388,7 +392,7 @@
                         <Border 
                                 x:Name="DurationDays"
                                 Margin="0,20,0,0" CornerRadius="0,5,5,0">
-                            <TextBlock Margin="0,0,10,3" Text=" Tage(e)"/>
+                            <TextBlock Margin="0,0,10,3" Text=" Tag(e)"/>
                         </Border>
                     </StackPanel>
                     <StackPanel
@@ -413,11 +417,15 @@
                             FontSize="12" 
                             IsColorFontEnabled="True" 
                             Text="bearbeitet von:"/>
-                        <TextBlock Text="{Binding NoteBy.Name, Mode=OneWay}"/>
+                        <TextBlock 
+                            Margin="10,5,0,0"
+                            FontSize="12" 
+                            Text="{Binding PanelComment.NotedBy.Name, Mode=OneWay}"/>
                     </StackPanel>
                     <TextBlock 
                             Margin="20,10,0,20"
-                            Text="{Binding ErrorDescription, Mode=OneWay}"/>
+                            TextWrapping="Wrap"
+                            Text="{Binding PanelComment.Content, Mode=OneWay}"/>
                 </StackPanel>
             </StackPanel>
 

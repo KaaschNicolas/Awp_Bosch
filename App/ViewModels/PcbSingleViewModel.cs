@@ -104,7 +104,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    private Comment _comment;
+    private Comment _panelComment;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -174,6 +174,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private readonly ICrudService<Diagnose> _diagnoseCrudService;
     private readonly IPcbDataService<Pcb> _pcbDataService;
     private readonly ICrudService<StorageLocation> _storageService;
+    private readonly ICrudService<Comment> _commentService;
+    private readonly ICrudService<Device> _deviceService;
     private readonly IDialogService _dialogService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
@@ -181,7 +183,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     public IAsyncRelayCommand FirstAsyncCommand { get; }
 
-    public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
+    public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, ICrudService<Comment> commentService, ICrudService<Device> deviceService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
     {
         try
         {
@@ -196,6 +198,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _transfersService = transfersService;
             _transfers = new ObservableCollection<Transfer>();
             _pcbs = new ObservableCollection<Pcb>();
+            _commentService = commentService;
+            _deviceService = deviceService;
         }
         catch (Exception e)
         {
@@ -300,6 +304,59 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         }
     }
 
+    [RelayCommand]
+    public async void AddComment()
+    {
+        User currentUser = _authenticationService.currentUser();
+
+        var result = await _dialogService.AddCommentDialog("Anmerkung hinzufügen");
+
+        if (result != null)
+        {
+            result.NotedById = currentUser.Id;
+            var commentResult = await _commentService.Create(result);
+            Comment comment = commentResult.Data;
+            _pcb.Comment = comment;
+
+            var response = await _pcbDataService.Update(_pcb.Id, _pcb);
+            if (response.Code == ResponseCode.Success)
+            {
+                PanelComment = response.Data.Comment;
+                _infoBarService.showMessage("Anmerkung wurde hinzugefügt", "Erfolg");
+            }
+            else
+            {
+                _infoBarService.showMessage("Anmerkung konnte nicht hinzugefügt werden", "Fehler");
+            }
+        }
+
+    }
+
+    [RelayCommand]
+    public async void AddRestriction()
+    {
+        var result = await _dialogService.AddRestrictionDialog("Einschränkung hinzufügen");
+
+        if (result != null)
+        {
+            var deviceResult = await _deviceService.Create(result);
+            Device device = deviceResult.Data;
+            _pcb.Restriction = device;
+
+            var response = await _pcbDataService.Update(_pcb.Id, _pcb);
+            if (response.Code == ResponseCode.Success)
+            {
+                Restriction = response.Data.Restriction;
+                _infoBarService.showMessage("Anmerkung wurde hinzugefügt", "Erfolg");
+            }
+            else
+            {
+                _infoBarService.showMessage("Anmerkung konnte nicht hinzugefügt werden", "Fehler");
+            }
+        }
+
+    }
+
     public async void OnNavigatedTo(object parameter)
     {
         try
@@ -316,19 +373,23 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             }
 
             _selectedItem = _pcb;
+            Id = _pcb.Id;
+
+            var result = await _pcbDataService.GetByIdEager(Id);
+
+            _pcb = result.Data;
 
             if (_pcb.Restriction == null){
                 RestrictionInfoBarVisibility = Visibility.Collapsed;
                 RestrictionButtonVisibility = Visibility.Visible;
             }else
             {
+                Restriction = _pcb.Restriction;
                 RestrictionInfoBarVisibility = Visibility.Visible;
                 RestrictionButtonVisibility = Visibility.Collapsed;
             }
-
             SerialNumber = _pcb.SerialNumber;
             CreatedDate = _pcb.CreatedDate;
-            Restriction = _pcb.Restriction;
             ErrorDescription = _pcb.ErrorDescription;
             ErrorTypes = _pcb.ErrorTypes;
             if (ErrorTypes != null)
@@ -366,7 +427,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             }
 
             PcbType = _pcb.PcbType;
-            Comment = _pcb.Comment;
+            PanelComment = _pcb.Comment;
             Diagnose = _pcb.Diagnose;
             NotedBy = (_pcb.Transfers.Last()).NotedBy.Name;
             AtLocationDays = 5;

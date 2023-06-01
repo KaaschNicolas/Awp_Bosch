@@ -19,6 +19,11 @@ namespace App.Core.Models
             get; set;
         }
 
+        public int NotedById
+        {
+            get; set;
+        }
+
         public Pcb Pcb
         {
             get; set;

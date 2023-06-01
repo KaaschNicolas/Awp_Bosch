@@ -3,6 +3,7 @@ using App.Core.Models;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace App.Core.Services
 {
@@ -39,13 +40,15 @@ namespace App.Core.Services
                     await _boschContext.Set<Transfer>().AddAsync(transfer);
                     var pcb = await _boschContext.Set<Pcb>().FirstOrDefaultAsync(x => x.Id == transfer.PcbId);
                     pcb.DiagnoseId = diagnoseId;
+                    _boschContext.Entry(pcb).Property(x => x.DiagnoseId).IsModified = true;
 
                     await _boschContext.SaveChangesAsync();
                     await transaction.CommitAsync();
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Debug.WriteLine(ex);
                     return ResponseCode.Error;
                 }
                 return ResponseCode.Success;
