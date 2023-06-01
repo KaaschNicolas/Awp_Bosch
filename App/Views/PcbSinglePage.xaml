@@ -15,10 +15,6 @@
     x:Name="SinglePage"
     mc:Ignorable="d">
 
-    <!--<Page.Resources> <DataTemplate x:Key="TransfersPageTemplate"> <local:TransfersPage/> </DataTemplate> </Page.Resources>-->
-    <!--<Page.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    </Page.Resources>-->
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
         <DataTemplate x:DataType="viewModels:PcbSingleViewModel">
@@ -41,7 +37,6 @@
                             <TextBlock Text="Leiterplatte" />
                         </CommandBar.Content>
                     </CommandBar>
-                    <!--<TextBlock Text="{ x:Bind Path=ViewModel.SerialNumber, Mode=TwoWay }" FontWeight="Bold"/>-->
                 </StackPanel>
                 <CommandBar
                     Grid.Column="1"
@@ -78,7 +73,6 @@
         <Grid x:Name="ContentArea">
             <Grid.Resources>
                 <CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
-                <!--<DataTemplate x:Key="TransfersPageTemplate"> <local:TransfersPage/> </DataTemplate>-->
             </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
@@ -119,22 +113,6 @@
                         <TextBlock FontWeight="Bold" Text="." />
                         <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.CreatedDate.Year, Mode=OneWay}" />
                     </StackPanel>
-                    <!--<TextBlock
-                        Text="{x:Bind Path=ViewModel.CreatedDate.Date, Mode=OneWay}"/>-->
-                    <!--
-                        Text="{x:Bind Path=ViewModel.CreatedDate.Day, Mode=OneWay}
-                        Text="."
-                        Text="{x:Bind Path=ViewModel.CreatedDate.Month, Mode=OneWay}"
-                        Text="."
-                        Text="{x:Bind Path=ViewModel.CreatedDate.Year, Mode=OneWay}"/>
-                    -->
-                    <!--<CalendarDatePicker
-					    x:Name="dateOfFailure"
-					    Margin="5,0,25,0"
-					    VerticalAlignment="Top"
-					    PlaceholderText="Pick a date"
-					    IsHitTestVisible="false"/>-->
-                    <!--  ="{x:Bind Path=ViewModel.CreatedDate}"/>  -->
                     <TextBlock Margin="0,5,0,0" Text="Aufgenommenen von: " />
                     <TextBlock
                         Margin="10,5,0,0"
@@ -182,7 +160,6 @@
                         Margin="10,0,0,0"
                         FontWeight="Bold"
                         Text="{x:Bind Path=ViewModel.PcbType.PcbPartNumber, Mode=TwoWay}" />
-                    <!--<TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="1688 400 628 - VCI-Renault mit Display"/>-->
                 </StackPanel>
                 <StackPanel Margin="0,30,0,0" Orientation="Horizontal">
                     <TextBlock Text="Fehlerkategorie:" />
@@ -380,7 +357,8 @@
                     Width="280"
                     Height="250"
                     HorizontalAlignment="Right"
-                    Background="white"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     Orientation="Vertical"
                     ScrollViewer.VerticalScrollMode="Disabled">
                     <!--  Style="{ThemeResource }"  -->
@@ -448,7 +426,8 @@
                     Width="280"
                     Height="Auto"
                     Margin="0,10,0,0"
-                    Background="white"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     Orientation="Vertical"
                     ScrollViewer.VerticalScrollMode="Disabled">
                     <TextBlock
