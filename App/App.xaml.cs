@@ -133,7 +133,6 @@ public partial class App : Application
             services.AddTransient<StorageLocation>();
             services.AddTransient<StorageLocationViewModel>();
 
-
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
 

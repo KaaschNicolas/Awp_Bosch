@@ -22,10 +22,14 @@
     <None Remove="Views\DiagnosePage.xaml" />
     <None Remove="Views\PcbViewPage.xaml" />
     <None Remove="Views\UpdateDiagnosePage.xaml" />
+    <None Remove="Controls\TransferDialog.xaml" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Views\StorageLocationsViewPage1.xaml" />
     <None Remove="Views\UpdatePcbPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Controls\TransferDialog.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,6 +82,14 @@
       <Generator></Generator>
     </Compile>
   </ItemGroup>
+
+	<ItemGroup>
+		<Page Include="Controls\TransferDialog.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+
+
 
   <ItemGroup>
     <Page Update="Views\PcbViewPage.xaml">

@@ -19,7 +19,7 @@ namespace App.ViewModels
             IInfoBarService infoBarService,
             IDialogService dialogService,
             INavigationService navigationService,
-                IAuthenticationService authenticationService,
+            IAuthenticationService authenticationService,
             ITransferDataService<Transfer> transferDataService,
             ICrudService<Diagnose> diagnoseCrudService
         )
@@ -283,40 +283,32 @@ namespace App.ViewModels
         [RelayCommand]
         public async void ShowTransfer()
         {
-            User currentUser = _authenticationService.currentUser();
-            var storageLocationsResponse = await _storageLocationCrudService.GetAll();
-            var storageLocations = new List<StorageLocation>();
-            if (storageLocationsResponse.Code == ResponseCode.Success)
-            {
-                storageLocations = storageLocationsResponse.Data;
-            }
-
-            var diagnoseResponse = await _diagnoseCrudService.GetAll();
-            var diagnoses = new List<Diagnose>();
-            if (diagnoseResponse.Code == ResponseCode.Success)
-            {
-                diagnoses = diagnoseResponse.Data;
-            }
-            var result = await _dialogService.ShowCreateTransferDialog("Weitergabe", currentUser, storageLocations, diagnoses);
+            var result = await _dialogService.ShowCreateTransferDialog("Weitergabe");
             if (result != null)
             {
                 Transfer transfer = result.Item1;
-                int diagnoseId = result.Item2;
-
+                int? diagnoseId = result.Item2;
                 transfer.PcbId = _selectedItem.Id;
+                Response<Transfer> response;
 
-                var response = await _transferDataService.CreateTransfer(transfer, diagnoseId);
-                if (response == ResponseCode.Success)
+                if (diagnoseId.HasValue)
                 {
+                    response = await _transferDataService.CreateTransfer(transfer, (int)diagnoseId);
+                }
+                else
+                {
+                    response = await _transferDataService.Create(transfer);
+                }
+
+                if (response.Code == ResponseCode.Success)
+                {
+
                     _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
                 }
                 else
                 {
                     _infoBarService.showError("Fehler bei der Weitergabe", "Error");
-
                 }
-
-
             }
         }
 

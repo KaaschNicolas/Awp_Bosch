@@ -297,6 +297,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
                 .Include(T => T.Diagnose)
                 .Include(T => T.PcbType)
                 .Include(T => T.ErrorTypes)
+                .AsNoTracking()
                 .FirstAsync(x => x.Id == id);
             return new Response<T>(ResponseCode.Success, entity);
         }

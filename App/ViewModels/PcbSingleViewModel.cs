@@ -181,6 +181,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private readonly INavigationService _navigationService;
     private readonly ITransferDataService<Transfer> _transfersService;
 
+    private Pcb _oldPcb;
+
     public IAsyncRelayCommand FirstAsyncCommand { get; }
 
     public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, ICrudService<Comment> commentService, ICrudService<Device> deviceService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
@@ -235,44 +237,39 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [RelayCommand]
     public async void ShowTransfer()
     {
-        User currentUser = _authenticationService.currentUser();
-        var storageLocationsResponse = await _storageLocationCrudService.GetAll();
-        var storageLocations = new List<StorageLocation>();
-        if (storageLocationsResponse.Code == ResponseCode.Success)
-        {
-            storageLocations = storageLocationsResponse.Data;
-        }
-
-        var diagnoseResponse = await _diagnoseCrudService.GetAll();
-        var diagnoses = new List<Diagnose>();
-        if (diagnoseResponse.Code == ResponseCode.Success)
-        {
-            diagnoses = diagnoseResponse.Data;
-        }
-        var result = await _dialogService.ShowCreateTransferDialog("Weitergabe", currentUser, storageLocations, diagnoses);
+        var result = await _dialogService.ShowCreateTransferDialog("Weitergabe");
         if (result != null)
         {
             Transfer transfer = result.Item1;
-            int diagnoseId = result.Item2;
+            int? diagnoseId = result.Item2;
+            transfer.PcbId = _oldPcb.Id;
+            Response<Transfer> response;
 
-            transfer.PcbId = _pcb.Id;
-
-            var response = await _transfersService.CreateTransfer(transfer, diagnoseId);
-            if (response == ResponseCode.Success)
+            if (diagnoseId.HasValue)
             {
-                Refresh(_pcb);
+                response = await _transfersService.CreateTransfer(transfer, (int)diagnoseId);
+            }
+            else
+            {
+                response = await _transfersService.Create(transfer);
+            }
+
+            if (response.Code == ResponseCode.Success)
+            {
                 _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
+                //Refresh(_pcb);
             }
             else
             {
                 _infoBarService.showError("Fehler bei der Weitergabe", "Error");
             }
         }
+
     }
 
     private void Refresh(object parameter)
     {
-        _navigationService.NavigateTo("App.ViewModels.SinglePcbViewModel", _selectedItem);
+        _navigationService.NavigateTo("App.ViewModels.PcbSingleViewModel", _selectedItem);
     }
 
     [RelayCommand]
@@ -300,7 +297,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
         } else {
-        _infoBarService.showError("Leiterplatte konnte nicht gelöscht werden", "Fehler");
+            _infoBarService.showError("Leiterplatte konnte nicht gelöscht werden", "Fehler");
         }
     }
 
@@ -362,7 +359,9 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         try
         {
             _pcb = (Pcb)parameter;
+            _oldPcb = _pcb;
 
+            /*
             var pcbResponse = await _pcbDataService.GetAll();
             if (pcbResponse.Data != null)
             {
@@ -371,11 +370,13 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                     _pcbs.Add(item);
                 }
             }
+            */
 
             _selectedItem = _pcb;
             Id = _pcb.Id;
 
             var result = await _pcbDataService.GetByIdEager(Id);
+
 
             _pcb = result.Data;
 
@@ -445,8 +446,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             {
                 ColorDays = "green";
             }
-
-
+          
             var transfers = await _transfersService.GetTransfersByPcb(_pcb.Id);
 
             //_transfers = new ObservableCollection<Transfer>();
@@ -465,17 +465,19 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                     if (transfer == transfers.Data[transfers.Data.Count - 1])
                     {
                         AtLocationDays = (int)Math.Round((DateTime.Now - transfer.CreatedDate).TotalDays);
-                        if (AtLocationDays > int.Parse(transfer.StorageLocation.DwellTimeYellow))
-                        {
-                            ColorTransferDays = "yellow";
-                        }
-                        else if (AtLocationDays > int.Parse(transfer.StorageLocation.DwellTimeRed))
-                        {
-                            ColorTransferDays = "red";
-                        }
-                        else
-                        {
-                            ColorTransferDays = "green";
+                        if(!transfer.StorageLocation.DwellTimeYellow.Equals("--") && !transfer.StorageLocation.DwellTimeRed.Equals("--")){
+                            if (AtLocationDays > int.Parse(transfer.StorageLocation.DwellTimeYellow))
+                            {
+                                ColorTransferDays = "yellow";
+                            }
+                            else if (AtLocationDays > int.Parse(transfer.StorageLocation.DwellTimeRed))
+                            {
+                                ColorTransferDays = "red";
+                            }
+                            else
+                            {
+                                ColorTransferDays = "green";
+                            }
                         }
                     }
                 }

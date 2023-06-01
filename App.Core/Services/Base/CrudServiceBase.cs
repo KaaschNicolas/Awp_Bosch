@@ -10,6 +10,7 @@ using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace App.Core.Services.Base;
 public abstract class CrudServiceBase<T> where T : BaseEntity
@@ -32,9 +33,10 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
             await _boschContext.SaveChangesAsync();
             return new Response<T>(ResponseCode.Success, (T)entityEntry.Entity);
         }
-        catch (DbUpdateException)
+        catch (Exception ex)
         {
-            _loggingService.Audit(LogLevel.Error, $"Fehler beim Erstellen von {typeof(T)}", null);
+            Debug.WriteLine(ex);
+                _loggingService.Audit(LogLevel.Error, $"Fehler beim Erstellen von {typeof(T)}", null);
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim Erstellen von {typeof(T)}");
         }
     }
@@ -114,5 +116,10 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
             _loggingService.Log(LogLevel.Error, "Error GetById()");
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
         }
+    }
+
+    public async Task Dispose()
+    {
+        await _boschContext.DisposeAsync();
     }
 }
