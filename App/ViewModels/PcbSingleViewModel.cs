@@ -2,14 +2,21 @@
 using App.Contracts.ViewModels;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
-using App.Services.PrintService.impl;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using static ZXing.QrCode.Internal.Version;
+using App.Core.Services;
+using App.Services.PrintService;
+using App.Services.PrintService.impl;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using System.Reflection.Metadata;
+using System.Security.Cryptography.X509Certificates;
 
 namespace App.ViewModels;
 
@@ -224,29 +231,30 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [RelayCommand]
     public async void ShowTransfer()
     {
+        User currentUser = _authenticationService.currentUser();
+        var storageLocationsResponse = await _storageLocationCrudService.GetAll();
+        var storageLocations = new List<StorageLocation>();
+        if (storageLocationsResponse.Code == ResponseCode.Success)
+        {
+            storageLocations = storageLocationsResponse.Data;
+        }
 
-        var result = await _dialogService.ShowCreateTransferDialog("Weitergabe");
+        var diagnoseResponse = await _diagnoseCrudService.GetAll();
+        var diagnoses = new List<Diagnose>();
+        if (diagnoseResponse.Code == ResponseCode.Success)
+        {
+            diagnoses = diagnoseResponse.Data;
+        }
+        var result = await _dialogService.ShowCreateTransferDialog("Weitergabe", currentUser, storageLocations, diagnoses);
         if (result != null)
         {
             Transfer transfer = result.Item1;
-            int? diagnoseId = result.Item2;
+            int diagnoseId = result.Item2;
 
             transfer.PcbId = _pcb.Id;
 
-            Response<Transfer> response;
-
-            if (diagnoseId.HasValue)
-            {
-                response = await _transfersService.CreateTransfer(transfer, (int)diagnoseId);
-            }
-            else
-            {
-                response = await _transfersService.Create(transfer);
-            }
-
-
-
-            if (response.Code == ResponseCode.Success)
+            var response = await _transfersService.CreateTransfer(transfer, diagnoseId);
+            if (response == ResponseCode.Success)
             {
                 Refresh(_pcb);
                 _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
@@ -260,7 +268,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     private void Refresh(object parameter)
     {
-        _navigationService.NavigateTo("App.ViewModels.PcbSingleViewModel", _selectedItem);
+        _navigationService.NavigateTo("App.ViewModels.SinglePcbViewModel", _selectedItem);
     }
 
     [RelayCommand]
@@ -287,10 +295,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             await _pcbDataService.Delete(pcbToRemove);
             _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
-        }
-        else
-        {
-            _infoBarService.showError("Leiterplatte konnte nicht gelöscht werden", "Fehler");
+        } else {
+        _infoBarService.showError("Leiterplatte konnte nicht gelöscht werden", "Fehler");
         }
     }
 
@@ -311,12 +317,10 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
             _selectedItem = _pcb;
 
-            if (_pcb.Restriction == null)
-            {
+            if (_pcb.Restriction == null){
                 RestrictionInfoBarVisibility = Visibility.Collapsed;
                 RestrictionButtonVisibility = Visibility.Visible;
-            }
-            else
+            }else
             {
                 RestrictionInfoBarVisibility = Visibility.Visible;
                 RestrictionButtonVisibility = Visibility.Collapsed;

@@ -1,6 +1,7 @@
 ﻿using App.Contracts.Services;
 using App.Core.Models;
 using App.Core.Models.Enums;
+using App.Core.Services;
 using App.Core.Services.Interfaces;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -18,10 +19,13 @@ namespace App.ViewModels
             IInfoBarService infoBarService,
             IDialogService dialogService,
             INavigationService navigationService,
-            ITransferDataService<Transfer> transferDataService
+                IAuthenticationService authenticationService,
+            ITransferDataService<Transfer> transferDataService,
+            ICrudService<Diagnose> diagnoseCrudService
         )
         {
             _pcbDataService = pcbDataService;
+            _authenticationService = authenticationService;
             FirstAsyncCommand = new AsyncRelayCommand(
                 async () => await GetPcbs(1, _pageSize, _isSortingAscending),
                 () => _pageNumber != 1
@@ -56,16 +60,19 @@ namespace App.ViewModels
             _dialogService = dialogService;
             _infoBarService = infoBarService;
             _navigationService = navigationService;
-            _transferDataService = transferDataService;
             _storageLocationCrudService = storageLocationDataService;
+            _diagnoseCrudService = diagnoseCrudService;
+            _transferDataService = transferDataService;
             Refresh();
         }
 
         private readonly IPcbDataService<Pcb> _pcbDataService;
         private readonly ICrudService<StorageLocation> _storageLocationCrudService;
+        private readonly ICrudService<Diagnose> _diagnoseCrudService;
         private readonly IInfoBarService _infoBarService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
+        private readonly IAuthenticationService _authenticationService;
         private readonly ITransferDataService<Transfer> _transferDataService;
 
         public IAsyncRelayCommand FirstAsyncCommand { get; }
@@ -276,34 +283,40 @@ namespace App.ViewModels
         [RelayCommand]
         public async void ShowTransfer()
         {
-            var result = await _dialogService.ShowCreateTransferDialog("Weitergabe");
+            User currentUser = _authenticationService.currentUser();
+            var storageLocationsResponse = await _storageLocationCrudService.GetAll();
+            var storageLocations = new List<StorageLocation>();
+            if (storageLocationsResponse.Code == ResponseCode.Success)
+            {
+                storageLocations = storageLocationsResponse.Data;
+            }
+
+            var diagnoseResponse = await _diagnoseCrudService.GetAll();
+            var diagnoses = new List<Diagnose>();
+            if (diagnoseResponse.Code == ResponseCode.Success)
+            {
+                diagnoses = diagnoseResponse.Data;
+            }
+            var result = await _dialogService.ShowCreateTransferDialog("Weitergabe", currentUser, storageLocations, diagnoses);
             if (result != null)
             {
                 Transfer transfer = result.Item1;
-                int? diagnoseId = result.Item2;
+                int diagnoseId = result.Item2;
 
                 transfer.PcbId = _selectedItem.Id;
 
-                Response<Transfer> response;
-
-                if (diagnoseId.HasValue)
+                var response = await _transferDataService.CreateTransfer(transfer, diagnoseId);
+                if (response == ResponseCode.Success)
                 {
-                    response = await _transferDataService.CreateTransfer(transfer, (int)diagnoseId);
-                }
-                else
-                {
-                    response = await _transferDataService.Create(transfer);
-                }
-
-                if (response.Code == ResponseCode.Success)
-                {
-
                     _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
                 }
                 else
                 {
                     _infoBarService.showError("Fehler bei der Weitergabe", "Error");
+
                 }
+
+
             }
         }
 
