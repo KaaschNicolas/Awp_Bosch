@@ -22,8 +22,25 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     private Pcb _pcbToEdit;
     public DateTime MaxDate { get; private set; } = DateTime.Now;
 
-    [ObservableProperty]
-    private DateTime _createdAt;
+    private DateTime _createdAt = DateTime.Now;
+    public DateTime CreatedAt
+    {
+        get => _createdAt;
+        set
+        {
+            // Bug Fix: when clicking on date of CalendarDatePicker twice
+            // returns MinValue instead of null and set current value
+            if (value == DateTime.MinValue)
+            {
+                OnPropertyChanged(nameof(CreatedAt));
+                return;
+            }
+            else
+            {
+                SetProperty(ref _createdAt, value);
+            }
+        }
+    }
 
     [ObservableProperty]
     private User _user;
