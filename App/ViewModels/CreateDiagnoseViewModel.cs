@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using App.Contracts.Services;
+﻿using App.Contracts.Services;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
-using App.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace App.ViewModels;
@@ -13,7 +12,6 @@ public partial class CreateDiagnoseViewModel : ObservableValidator
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    [MinLength(10)]
     private string _name;
 
     private readonly ICrudService<Diagnose> _crudService;
