@@ -1,11 +1,5 @@
 ﻿using App.Core.Models;
-using App.Core.Validator;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.Models
 {
@@ -69,8 +63,31 @@ namespace App.Models
         {
             get; set;
         }
-        public string LastStorageLocationName { get; set; }
+        public string? LastStorageLocationName { get; set; }
 
+
+        public static PaginatedPcb ToPaginatedPcb(Pcb pcb)
+        {
+            string? currentStorageLocationName = pcb.Transfers.Count > 0 ? pcb.Transfers[0].StorageLocation.StorageName : null;
+            return new PaginatedPcb()
+            {
+                Id = pcb.Id,
+                CreatedDate = pcb.CreatedDate,
+                DeletedDate = pcb.DeletedDate,
+                SerialNumber = pcb.SerialNumber,
+                Restriction = pcb.Restriction,
+                ErrorDescription = pcb.ErrorDescription,
+                ErrorTypes = pcb.ErrorTypes,
+                Finalized = pcb.Finalized,
+                PcbTypeId = pcb.PcbTypeId,
+                PcbType = pcb.PcbType,
+                Comment = pcb.Comment,
+                Transfers = pcb.Transfers, // Hier ist jetzt halt nur einer drin weil wir uns nur den neusten zurück geben
+                Diagnose = pcb.Diagnose,
+                DiagnoseId = pcb.DiagnoseId,
+                LastStorageLocationName = currentStorageLocationName,
+            };
+        }
         public static PaginatedPcb ToPaginatedPcb(Pcb pcb, Transfer transfer, List<StorageLocation> storageLocations, Func<Transfer, List<StorageLocation>, string> storageLocation)
         {
             return new PaginatedPcb()

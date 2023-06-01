@@ -1,10 +1,5 @@
 using App.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace App.Core.Services.Interfaces
@@ -32,5 +27,6 @@ namespace App.Core.Services.Interfaces
         public Task<Response<List<T>>> GetWithFilterStorageLocation(int pageIndex, int pageSize, int storageLocationId);
 
         public Task<Response<T>> GetByIdEager(int id);
+        public Task<Response<List<T>>> GetAllEager();
     }
 }

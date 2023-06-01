@@ -7,7 +7,6 @@ using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
 {
@@ -29,7 +28,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
                     .Skip(pageIndex * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-            } 
+            }
             else
             {
                 data = await _boschContext.Set<T>()
@@ -152,7 +151,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
         catch (DbUpdateException)
         {
-            return new Response<List<Transfer>>(ResponseCode.Error, error: "GetLastTransferByPcb() failed");   
+            return new Response<List<Transfer>>(ResponseCode.Error, error: "GetLastTransferByPcb() failed");
         }
     }
 
@@ -350,6 +349,30 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         catch (DbUpdateException)
         {
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
+        }
+    }
+
+    public async Task<Response<List<T>>> GetAllEager()
+    {
+        try
+        {
+            var entity = await _boschContext.Set<T>()
+                .Include(T => T.Restriction)
+                .Include(T => T.Diagnose)
+                .Include(T => T.PcbType)
+                .Include(T => T.ErrorTypes)
+                .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
+                .ThenInclude(transfer => transfer.StorageLocation)
+                .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
+                .ThenInclude(transfer => transfer.NotedBy)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return new Response<List<T>>(ResponseCode.Success, entity);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<List<T>>(ResponseCode.Error, error: $"Fehler beim Eager Loading der Pcbs");
         }
     }
 }

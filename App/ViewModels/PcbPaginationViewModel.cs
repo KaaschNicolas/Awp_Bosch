@@ -1,7 +1,6 @@
 ﻿using App.Contracts.Services;
 using App.Core.Models;
 using App.Core.Models.Enums;
-using App.Core.Services;
 using App.Core.Services.Interfaces;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -175,26 +174,31 @@ namespace App.ViewModels
                     List<PaginatedPcb> convertedPcbs = new();
                     var lastTransfersList = await _pcbDataService.GetLastTransferByPcb();
                     var storageLocationList = await _storageLocationCrudService.GetStorageLoactionByTransfer(lastTransfersList.Data);
-                    pcbs.Data.ForEach(async x => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(
-                        x,
-                        lastTransfersList.Data.Where(e => e.PcbId == x.Id).First(),
-                        storageLocationList.Data,
-                        (x, y) =>
-                        {
-                            string storageLocationName = String.Empty;
+                    // TODO: Error handling
+                    var resEager = await _pcbDataService.GetAllEager();
+                    resEager.Data.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
 
-                            foreach (var item in y)
-                            {
-                                if (item.Id == x.StorageLocationId)
-                                {
-                                    storageLocationName = item.StorageName;
-                                }
-                            }
-                            
-                            return storageLocationName ?? "Keine Daten";
-                        }
-                    )));
 
+                    /*                    pcbs.Data.ForEach(async x => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(
+                                            x,
+                                            lastTransfersList.Data.Where(e => e.PcbId == x.Id).First(),
+                                            storageLocationList.Data,
+                                            (x, y) =>
+                                            {
+                                                string storageLocationName = String.Empty;
+
+                                                foreach (var item in y)
+                                                {
+                                                    if (item.Id == x.StorageLocationId)
+                                                    {
+                                                        storageLocationName = item.StorageName;
+                                                    }
+                                                }
+
+                                                return storageLocationName ?? "Keine Daten";
+                                            }
+                                        )));
+                    */
                     PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
                         convertedPcbs,
                         pageIndex,
@@ -216,7 +220,7 @@ namespace App.ViewModels
                 {
                     maxEntries = await _pcbDataService.MaxEntries();
                     pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
-                } 
+                }
                 else
                 {
                     switch (_filterOptions)
