@@ -1,9 +1,10 @@
 ﻿using App.Contracts.Services;
+using App.Controls;
 using App.Core.Models;
+using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Security.Cryptography.X509Certificates;
-
 
 namespace App.Services;
 
@@ -42,86 +43,16 @@ public sealed class DialogService : IDialogService
         }
         return null;
     }
-    public async Task<Tuple<Transfer, int>?> ShowCreateTransferDialog(string title, User user, List<StorageLocation> storageLocations, List<Diagnose> diagnoses, string confirmButtonText, string cancelButtonText)
+    public async Task<Tuple<Transfer, int?>?> ShowCreateTransferDialog(string title, string confirmButtonText, string cancelButtonText)
     {
+
+
         if (rootElement != null)
-
         {
-            Grid DynamicGrid = new Grid { RowSpacing = 20 };
-            ColumnDefinition gridCol1 = new ColumnDefinition();
-            ColumnDefinition gridCol2 = new ColumnDefinition();
-
-            DynamicGrid.ColumnDefinitions.Add(gridCol1);
-            DynamicGrid.ColumnDefinitions.Add(gridCol2);
-
-            RowDefinition gridRow1 = new RowDefinition();
-            RowDefinition gridRow2 = new RowDefinition();
-            RowDefinition gridRow3 = new RowDefinition();
-
-            DynamicGrid.RowDefinitions.Add(gridRow1);
-            DynamicGrid.RowDefinitions.Add(gridRow2);
-            DynamicGrid.RowDefinitions.Add(gridRow3);
-
-            CalendarDatePicker transferDate = new CalendarDatePicker
-            {
-                Header = "Eingang",
-                Date = DateTime.Today
-            };
-            Grid.SetRow(transferDate, 0);
-            Grid.SetColumn(transferDate, 0);
-            DynamicGrid.Children.Add(transferDate);
-
-            TextBox username = new TextBox
-            {
-                Header = "aufgenommen von:",
-                Text = user.Name,
-                IsReadOnly = true,
-            };
-            Grid.SetRow(username, 0);
-            Grid.SetColumn(username, 1);
-            DynamicGrid.Children.Add(username);
-
-            ComboBox storageLocation = new ComboBox
-            {
-                Header = "Ort",
-                PlaceholderText = "auswählen",
-                ItemsSource = storageLocations,
-                DisplayMemberPath = "StorageName"
-
-            };
-            Grid.SetRow(storageLocation, 1);
-            Grid.SetColumn(storageLocation, 0);
-            DynamicGrid.Children.Add(storageLocation);
-
-
-            ComboBox diagnose = new ComboBox
-            {
-                Header = "Fehlerkategorie",
-                PlaceholderText = "auswählen",
-                ItemsSource = diagnoses,
-                DisplayMemberPath = "Name"
-
-
-            };
-            Grid.SetRow(diagnose, 1);
-            Grid.SetColumn(diagnose, 1);
-            DynamicGrid.Children.Add(diagnose);
-
-            TextBox comment = new TextBox
-            {
-                Header = "Beurteilung | Anmerkung",
-                PlaceholderText = "Text eintragen"
-            };
-
-            Grid.SetRow(comment, 2);
-            Grid.SetColumnSpan(comment, 2);
-            DynamicGrid.Children.Add(comment);
-
-
             var dialog = new ContentDialog
             {
                 Title = title,
-                Content = DynamicGrid,
+                Content = new TransferDialog(),
                 PrimaryButtonText = confirmButtonText,
                 DefaultButton = ContentDialogButton.Primary,
                 RequestedTheme = rootElement.RequestedTheme,
@@ -130,6 +61,7 @@ public sealed class DialogService : IDialogService
 
             };
             var result = await dialog.ShowAsync();
+            var view = (TransferDialog)dialog.Content;
 
             if (result == ContentDialogResult.None)
             {
@@ -137,16 +69,18 @@ public sealed class DialogService : IDialogService
             }
             if (result == ContentDialogResult.Primary)
             {
+                TransferDialogViewModel tdVM = (TransferDialogViewModel)view.ViewModel;
+
+                int? diagnoseId = ((Diagnose)tdVM.SelectedDiagnose) != null ? ((Diagnose)tdVM.SelectedDiagnose).Id : null;
 
                 return Tuple.Create(new Transfer
                 {
-                    NotedById = user.Id,
-                    CreatedDate = transferDate.Date.Value.DateTime,
-                    StorageLocationId = ((StorageLocation)storageLocation.SelectedItem).Id,
-                    Comment = comment.Text
-                }, ((Diagnose)diagnose.SelectedItem).Id);
+                    NotedById = tdVM.NotedBy.Id,
+                    CreatedDate = tdVM.TransferDate,
+                    StorageLocationId = ((StorageLocation)tdVM.SelectedStorageLocation).Id,
+                    Comment = tdVM.Comment
+                }, diagnoseId);
             }
-
         }
         return null;
     }

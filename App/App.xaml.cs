@@ -131,6 +131,7 @@ public partial class App : Application
             //services.AddTransient<CreateStorageLocation>();
             services.AddTransient<StorageLocation>();
             services.AddTransient<StorageLocationViewModel>();
+            services.AddTransient<TransferDialogViewModel>();
 
 
             // Configuration
