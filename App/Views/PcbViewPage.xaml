@@ -246,11 +246,11 @@
             <ctWinUI:DataGrid.Columns>
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding SerialNumber}"
-                    Header="SerialNumber"
+                    Header="Seriennummer"
                     Tag="SerialNumber" />
                 <ctWinUI:DataGridComboBoxColumn
                     Binding="{Binding ErrorDescription}"
-                    Header="Fehler Beschreibung"
+                    Header="Fehlerbeschreibung"
                     Tag="ErrorDescription" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding Finalized}"
@@ -263,7 +263,7 @@
                     CanUserSort="False" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding CreatedDate}"
-                    Header="Erstellt am"
+                    Header="Ausgefallen am"
                     Tag="CreateDate" />
                 <controls:DataGridTemplateColumn Width="100" Header="Aktion" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate>
