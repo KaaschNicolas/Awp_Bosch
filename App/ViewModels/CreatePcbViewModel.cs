@@ -102,7 +102,7 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
             Pcb pcb = new Pcb
             {
                 CreatedDate = _createdAt,
-                SerialNumber = _serialNumber
+                SerialNumber = _serialNumber,
                 Finalized = _selectedStorageLocation.IsFinalDestination,
                 PcbTypeId = _selectedPcbType.Id,
                 Transfers = transfers,
