@@ -66,7 +66,7 @@
                     Header="Aufgenommen von"
                     IsReadOnly="True"
                     PlaceholderText="Benutzername"
-                    Text="{x:Bind ViewModel.User.Name, Mode=OneWay}" />
+                    Text="{x:Bind ViewModel.CreatedBy.Name, Mode=OneWay}" />
 
                 <AutoSuggestBox
                     x:Name="PcbPartNumber"
@@ -154,44 +154,63 @@
                     Text="{x:Bind ViewModel.Restriction, Mode=TwoWay}" />
                 <TextBlock
                     Grid.Row="5"
+                    Grid.ColumnSpan="2"
                     FontSize="20"
                     Text="Weitergabe" />
 
                 <Grid
                     Grid.Row="6"
                     Grid.Column="0"
-                    Grid.ColumnSpan="4"
+                    Grid.ColumnSpan="5"
+                    Padding="20"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
                     ColumnSpacing="20"
+                    CornerRadius="8"
                     RowSpacing="20">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <CalendarDatePicker
+                    <StackPanel
                         Grid.Row="0"
-                        Grid.Column="0"
-                        Date="{x:Bind ViewModel.CreatedAt, Mode=TwoWay, Converter={StaticResource TimeConverter}}"
-                        DateFormat="{}{day.integer}.{month.integer}.{year.full}"
-                        Header="Am"
-                        MaxDate="{x:Bind ViewModel.MaxDate, Mode=OneWay, Converter={StaticResource TimeConverter}}" />
-                    <ComboBox
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        DisplayMemberPath="StorageName"
-                        Header="Lagerort"
-                        ItemsSource="{x:Bind ViewModel.StorageLocations}"
-                        PlaceholderText="Lagerort auswählen"
-                        SelectedItem="{x:Bind ViewModel.SelectedStorageLocation, Mode=TwoWay}"
-                        SelectedValuePath="ID" />
+                        Grid.ColumnSpan="3"
+                        Orientation="Horizontal"
+                        Spacing="20">
+                        <CalendarDatePicker
+                            Date="{x:Bind ViewModel.CreatedAt, Mode=TwoWay, Converter={StaticResource TimeConverter}}"
+                            DateFormat="{}{day.integer}.{month.integer}.{year.full}"
+                            Header="Am"
+                            MaxDate="{x:Bind ViewModel.MaxDate, Mode=OneWay, Converter={StaticResource TimeConverter}}" />
+                        <ComboBox
+                            DisplayMemberPath="StorageName"
+                            Header="Lagerort"
+                            ItemsSource="{x:Bind ViewModel.StorageLocations}"
+                            PlaceholderText="auswählen"
+                            SelectedItem="{x:Bind ViewModel.SelectedStorageLocation, Mode=TwoWay}"
+                            SelectedValuePath="ID" />
+
+                        <ComboBox
+                            DisplayMemberPath="Name"
+                            Header="Fehlerkategorie"
+                            ItemsSource="{x:Bind ViewModel.Diagnoses}"
+                            PlaceholderText="auswählen"
+                            SelectedItem="{x:Bind ViewModel.SelectedDiagnose, Mode=TwoWay}"
+                            SelectedValuePath="ID" />
+                    </StackPanel>
+
+
 
                     <TextBox
                         Grid.Row="1"
-                        Grid.ColumnSpan="2"
+                        Grid.ColumnSpan="3"
                         Header="Anmerkung"
                         Text="{x:Bind ViewModel.Comment, Mode=TwoWay}" />
 
