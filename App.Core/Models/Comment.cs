@@ -1,4 +1,7 @@
-﻿namespace App.Core.Models
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+namespace App.Core.Models
 {
     public class Comment : BaseEntity
     {

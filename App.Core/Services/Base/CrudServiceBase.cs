@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using App.Core.DataAccess;
+﻿using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +43,6 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
 
             entity.Id = id;
 
-            _boschContext.Set<T>().Update(entity);
             await _boschContext.SaveChangesAsync();
 
             return new Response<T>(ResponseCode.Success, entity);
