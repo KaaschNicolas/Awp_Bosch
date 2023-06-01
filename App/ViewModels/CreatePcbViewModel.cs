@@ -17,8 +17,26 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
     private readonly INavigationService _navigationService;
     private readonly IAuthenticationService _authenticationService;
 
-    [ObservableProperty]
+
     private DateTime _createdAt = DateTime.Now;
+    public DateTime CreatedAt
+    {
+        get => _createdAt;
+        set
+        {
+            // Bug Fix: when clicking on date of CalendarDatePicker twice
+            // returns MinValue instead of null and set current value
+            if (value == DateTime.MinValue)
+            {
+                OnPropertyChanged(nameof(CreatedAt));
+                return;
+            }
+            else
+            {
+                SetProperty(ref _createdAt, value);
+            }
+        }
+    }
 
     public DateTime MaxDate { get; private set; } = DateTime.Now;
 
@@ -122,6 +140,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
 
     public async void OnNavigatedTo(object parameter)
     {
+        CreatedAt = DateTime.Now;
         var pcbResponse = await _pcbTypeCrudService.GetAll();
         if (pcbResponse != null)
         {
