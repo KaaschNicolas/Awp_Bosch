@@ -88,28 +88,7 @@ namespace App.Models
                 LastStorageLocationName = currentStorageLocationName,
             };
         }
-        public static PaginatedPcb ToPaginatedPcb(Pcb pcb, Transfer transfer, List<StorageLocation> storageLocations, Func<Transfer, List<StorageLocation>, string> storageLocation)
-        {
-            return new PaginatedPcb()
-            {
-                Id = pcb.Id,
-                CreatedDate = pcb.CreatedDate,
-                DeletedDate = pcb.DeletedDate,
-                SerialNumber = pcb.SerialNumber,
-                Restriction = pcb.Restriction,
-                ErrorDescription = pcb.ErrorDescription,
-                ErrorTypes = pcb.ErrorTypes,
-                Finalized = pcb.Finalized,
-                PcbTypeId = pcb.PcbTypeId,
-                PcbType = pcb.PcbType,
-                Comment = pcb.Comment,
-                Transfers = pcb.Transfers,
-                Diagnose = pcb.Diagnose,
-                DiagnoseId = pcb.DiagnoseId,
-                LastStorageLocationName = storageLocation.Invoke(transfer, storageLocations)
-            };
-        }
-
+        
         public static Pcb ToPcb(PaginatedPcb paginatedPcb)
         {
             return new Pcb()

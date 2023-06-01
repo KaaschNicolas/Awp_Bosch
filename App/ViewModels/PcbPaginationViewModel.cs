@@ -176,29 +176,19 @@ namespace App.ViewModels
                     var storageLocationList = await _storageLocationCrudService.GetStorageLoactionByTransfer(lastTransfersList.Data);
                     // TODO: Error handling
                     var resEager = await _pcbDataService.GetAllEager();
-                    resEager.Data.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
+                    var newPcbs = new List<Pcb>();
+                    foreach (var item in resEager.Data)
+                    {
+                        foreach (var pcb in pcbs.Data)
+                        {
+                            if (item.Id.Equals(pcb.Id))
+                            {
+                                newPcbs.Add(item);
+                            }
+                        }
+                    }
+                    newPcbs.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
 
-
-                    /*                    pcbs.Data.ForEach(async x => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(
-                                            x,
-                                            lastTransfersList.Data.Where(e => e.PcbId == x.Id).First(),
-                                            storageLocationList.Data,
-                                            (x, y) =>
-                                            {
-                                                string storageLocationName = String.Empty;
-
-                                                foreach (var item in y)
-                                                {
-                                                    if (item.Id == x.StorageLocationId)
-                                                    {
-                                                        storageLocationName = item.StorageName;
-                                                    }
-                                                }
-
-                                                return storageLocationName ?? "Keine Daten";
-                                            }
-                                        )));
-                    */
                     PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
                         convertedPcbs,
                         pageIndex,
@@ -260,25 +250,20 @@ namespace App.ViewModels
                     List<PaginatedPcb> convertedPcbs = new();
                     var lastTransfersList = await _pcbDataService.GetLastTransferByPcb();
                     var storageLocationList = await _storageLocationCrudService.GetStorageLoactionByTransfer(lastTransfersList.Data);
-                    pcbs.Data.ForEach(async x => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(
-                        x,
-                        lastTransfersList.Data.Where(e => e.PcbId == x.Id).First(),
-                        storageLocationList.Data,
-                        (x, y) =>
+                    // TODO: Error handling
+                    var resEager = await _pcbDataService.GetAllEager();
+                    var newPcbs = new List<Pcb>();
+                    foreach (var item in resEager.Data)
+                    {
+                        foreach (var pcb in pcbs.Data)
                         {
-                            string storageLocationName = String.Empty;
-
-                            foreach (var item in y)
+                            if (item.Id.Equals(pcb.Id))
                             {
-                                if (item.Id == x.StorageLocationId)
-                                {
-                                    storageLocationName = item.StorageName;
-                                }
+                                newPcbs.Add(item);
                             }
-
-                            return storageLocationName ?? "Keine Daten";
                         }
-                    )));
+                    }
+                    newPcbs.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
 
                     PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
                         convertedPcbs,
@@ -305,25 +290,20 @@ namespace App.ViewModels
                     List<PaginatedPcb> convertedPcbs = new();
                     var lastTransfersList = await _pcbDataService.GetLastTransferByPcb();
                     var storageLocationList = await _storageLocationCrudService.GetStorageLoactionByTransfer(lastTransfersList.Data);
-                    pcbs.Data.ForEach(async x => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(
-                        x,
-                        lastTransfersList.Data.Where(e => e.PcbId == x.Id).First(),
-                        storageLocationList.Data,
-                        (x, y) =>
+                    // TODO: Error handling
+                    var resEager = await _pcbDataService.GetAllEager();
+                    var newPcbs = new List<Pcb>();
+                    foreach (var item in resEager.Data)
+                    {
+                        foreach (var pcb in pcbs.Data)
                         {
-                            string storageLocationName = String.Empty;
-
-                            foreach (var item in y)
+                            if (item.Id.Equals(pcb.Id))
                             {
-                                if (item.Id == x.StorageLocationId)
-                                {
-                                    storageLocationName = item.StorageName;
-                                }
+                                newPcbs.Add(item);
                             }
-
-                            return storageLocationName ?? "Keine Daten";
                         }
-                    )));
+                    }
+                    newPcbs.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
 
                     PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
                         convertedPcbs,

@@ -95,7 +95,12 @@
                         Grid.Row="3"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
-                        Text="{Binding LastStorageLocation}" />
+                        Text="{Binding LastStorageLocationName}" />
+                    <TextBlock
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding CreatedDate}" />
                 </Grid>
             </DataTemplate>
         </Grid.Resources>
@@ -252,10 +257,14 @@
                     Header="Abgeschlossen"
                     Tag="Finalized" />
                 <ctWinUI:DataGridTextColumn
-                    Binding="{Binding LastStorageLocation}"
+                    Binding="{Binding LastStorageLocationName}"
                     Header="Letzter Lagerort"
                     Tag="LastStorageLocation" 
                     CanUserSort="False" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding CreatedDate}"
+                    Header="Erstellt am"
+                    Tag="CreateDate" />
                 <controls:DataGridTemplateColumn Width="100" Header="Aktion" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
