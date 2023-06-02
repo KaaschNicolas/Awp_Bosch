@@ -201,8 +201,7 @@
                                     Header="Lagerot"
                                     IsSynchronizedWithCurrentItem="False"
                                     ItemsSource="{Binding ViewModel.StorageLocations, ElementName=EditPcbPage}"
-                                    SelectedValue="{Binding StorageLocation.StorageName}"
-                                    SelectedValuePath="StorageName"
+                                    SelectedItem="{Binding StorageLocation, Mode=TwoWay}"
                                     Text="Hello" />
 
                                 <TextBox
