@@ -171,7 +171,7 @@ namespace App.ViewModels
                     List<PaginatedPcb> convertedPcbs = new();
                     
                     // TODO: Error handling
-                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize);
+                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
                     var newPcbs = new List<Pcb>();
                     foreach (var item in resEager.Data)
                     {
@@ -216,17 +216,17 @@ namespace App.ViewModels
                             pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
                             break;
                         case PcbFilterOptions.Filter1:
-                            Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true && x.Transfers.Last().StorageLocation.Id == _selectedComboBox.Id;
+                            Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
                             maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
                             pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where1);
                             break;
                         case PcbFilterOptions.Filter2:
-                            Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.Now.Date && x.Transfers.Last().StorageLocation.Id == _selectedComboBox.Id;
+                            Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.UtcNow.Date;
                             maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
                             pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where2);
                             break;
                         case PcbFilterOptions.Filter3:
-                            Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0 && x.Transfers.Last().StorageLocation.Id == _selectedComboBox.Id;
+                            Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0;
                             maxEntries = await _pcbDataService.MaxEntriesFiltered(where3);
                             pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
                             break;
@@ -245,7 +245,7 @@ namespace App.ViewModels
                 {
                     List<PaginatedPcb> convertedPcbs = new();
                     // TODO: Error handling
-                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize);
+                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
                     var newPcbs = new List<Pcb>();
                     foreach (var item in resEager.Data)
                     {
@@ -283,7 +283,7 @@ namespace App.ViewModels
                 {
                     List<PaginatedPcb> convertedPcbs = new();
                     // TODO: Error handling
-                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize);
+                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
                     var newPcbs = new List<Pcb>();
                     foreach (var item in resEager.Data)
                     {

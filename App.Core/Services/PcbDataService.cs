@@ -218,9 +218,10 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
+            _ = pageIndex == 0 ? pageIndex : pageIndex = pageIndex - 1;
             var data = await _boschContext.Set<T>()
                 .Where(where)
-                .Skip((pageIndex - 1) * pageSize)
+                .Skip(pageIndex * pageSize)
                 .Take(pageSize)
                 .Include("PcbType")
                 .ToListAsync();
@@ -333,10 +334,12 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    public async Task<Response<List<T>>> GetAllEager(int pageIndex, int pageSize)
+    public async Task<Response<List<T>>> GetAllEager(int pageIndex, int pageSize, string orderByProperty,
+        bool isAscending)
     {
         try
         {
+            _ = pageIndex == 0 ? pageIndex : pageIndex = pageIndex - 1;
             var entity = await _boschContext.Set<T>()
                 .Include(T => T.Restriction)
                 .Include(T => T.Diagnose)
@@ -347,7 +350,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
                 .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
                 .ThenInclude(transfer => transfer.NotedBy)
                 .AsNoTracking()
-                .Skip((pageIndex - 1) * pageSize)
+                .OrderBy(orderByProperty, isAscending)
+                .Skip(pageIndex * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 

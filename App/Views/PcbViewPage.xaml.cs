@@ -87,6 +87,7 @@ namespace App.Views
             {
                 if (e.AddedItems.First() is not null)
                 {
+                    _displayMode = DataGridDisplayMode.Default;
                     ViewModel.FilterOptions = PcbFilterOptions.FilterStorageLocation;
                     ViewModel.SelectedComboBox = ComboBoxStorageLocation.SelectedItem as StorageLocation;
                     ViewModel.FilterItems.ExecuteAsync(null);
@@ -119,6 +120,7 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Filtered;
             ViewModel.FilterOptions = PcbFilterOptions.Filter1;
+            ComboBoxStorageLocation.SelectedItem = null;
             await ViewModel.FilterItems.ExecuteAsync(null);
         }
 
@@ -127,6 +129,7 @@ namespace App.Views
             ViewModel.PageNumber = 1;
             _displayMode = DataGridDisplayMode.Filtered;
             ViewModel.FilterOptions = PcbFilterOptions.Filter2;
+            ComboBoxStorageLocation.SelectedItem = null;
             await ViewModel.FilterItems.ExecuteAsync(null);
         }
 
@@ -134,6 +137,7 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Filtered;
             ViewModel.FilterOptions = PcbFilterOptions.Filter3;
+            ComboBoxStorageLocation.SelectedItem = null;
             await ViewModel.FilterItems.ExecuteAsync(null);
         }
 
@@ -141,6 +145,7 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Default;
             ViewModel.FilterOptions = PcbFilterOptions.None;
+            ComboBoxStorageLocation.SelectedItem = null;
             
             await ViewModel.FirstAsyncCommand.ExecuteAsync(null);
         }
@@ -150,6 +155,7 @@ namespace App.Views
             _displayMode = DataGridDisplayMode.Search;
             ViewModel.FilterOptions = PcbFilterOptions.Search;
             ViewModel.QueryText = e.QueryText;
+            ComboBoxStorageLocation.SelectedItem = null;
             await ViewModel.FilterItems.ExecuteAsync(null);
         }
 

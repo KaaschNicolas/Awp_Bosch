@@ -25,6 +25,6 @@ namespace App.Core.Services.Interfaces
         public Task<Response<List<T>>> GetWithFilterStorageLocation(int pageIndex, int pageSize, int storageLocationId);
 
         public Task<Response<T>> GetByIdEager(int id);
-        public Task<Response<List<T>>> GetAllEager(int pageIndex, int pageSize);
+        public Task<Response<List<T>>> GetAllEager(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
     }
 }
