@@ -59,5 +59,11 @@ public partial class CreateDiagnoseViewModel : ObservableValidator
 
     }
 
+    [RelayCommand]
+    public void Cancel()
+    {
+        _navigationService.GoBack();
+    }
+
 }
 

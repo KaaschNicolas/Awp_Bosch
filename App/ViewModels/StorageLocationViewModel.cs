@@ -38,9 +38,9 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         }
     }
 
-    private int _dwellTimeYellow;
+    private string _dwellTimeYellow;
 
-    public int DwellTimeYellow
+    public string DwellTimeYellow
     {
         get => _dwellTimeYellow;
         set
@@ -50,9 +50,9 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         }
     }
 
-    private int _dwellTimeRed;
+    private string _dwellTimeRed;
     
-    public int DwellTimeRed
+    public string DwellTimeRed
     {
         get => _dwellTimeRed;
         set
@@ -62,12 +62,21 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         }
     }
 
+    public bool _isFinalDestination;
+    public bool IsFinalDestination
+    {
+        get => _isFinalDestination;
+        set
+        {
+            _isFinalDestination = value;
+            OnPropertyChanged(nameof(IsFinalDestination));
+        }
+    }
+
+
     private readonly ICrudService<StorageLocation> _crudService;
-
     private readonly IDialogService _dialogService;
-
     private readonly IInfoBarService _infoBarService;
-
     private readonly INavigationService _navigationService;
 
 
@@ -94,6 +103,11 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
     }
 
     public ICommand ConfirmationDeleteCommand
+    {
+        get;
+    }
+
+    public ICommand RefreshStorageLocationCommand
     {
         get;
     }
@@ -143,6 +157,7 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         NavigateToUpdateStorageLocationCommand = new RelayCommand<StorageLocation>(NavigateToUpdateStorageLocation);
         CreateSL = new RelayCommand(CreateStorageLocation);
         DeleteSL = new RelayCommand(DeleteStorageLocation);
+        RefreshStorageLocationCommand = new RelayCommand(RefreshStorageLocation);
         StorageLocations = new ObservableCollection<StorageLocation>();
     }
 
@@ -152,7 +167,12 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
     
     public async void CreateStorageLocation()
     {
-        var sl = await _crudService.Create(new StorageLocation { StorageName = _storageName, DwellTimeYellow = _dwellTimeYellow, DwellTimeRed = _dwellTimeRed });
+        if (IsFinalDestination)
+        {
+            _dwellTimeRed = "--";
+            _dwellTimeYellow = "--";
+        }
+        var sl = await _crudService.Create(new StorageLocation { StorageName = _storageName, DwellTimeYellow = _dwellTimeYellow, DwellTimeRed = _dwellTimeRed, IsFinalDestination=_isFinalDestination});
         _infoBarService.showMessage("Erfolgreich Lagerort erstellt", "Erfolg");
         _navigationService.NavigateTo("App.ViewModels.StorageLocationViewModel");
     }
@@ -177,6 +197,11 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         _navigationService.NavigateTo("App.ViewModels.UpdateStorageLocationViewModel", storageLocation);
     }
 
+    public async void RefreshStorageLocation() 
+    {
+         OnNavigatedTo(new { });
+    }
+
     public async void OnNavigatedTo(object parameter)
     {
         StorageLocations.Clear();
@@ -186,10 +211,7 @@ public class StorageLocationViewModel : ObservableRecipient, INotifyPropertyChan
         if (response.Code == ResponseCode.Success) { 
             foreach (var item in response.Data)
             {
-                if (item.DeletedDate < new DateTime(2000,01,01))
-                {
-                    StorageLocations.Add(item);
-                }
+                StorageLocations.Add(item);
             }
         }
         else

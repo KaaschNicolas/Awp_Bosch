@@ -54,6 +54,12 @@ public partial class PcbTypeViewModel : ObservableValidator, INavigationAware
 
     }
 
+    [RelayCommand]
+    public void RefreshPartNumber() 
+    {
+        OnNavigatedTo(null);
+    }
+
 
     public async void OnNavigatedTo(object parameter)
     {

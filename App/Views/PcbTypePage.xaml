@@ -35,8 +35,8 @@
                     <AppBarButton
                         Click="CreatPartNumberButton_Click"
                         Icon="Add"
-                        Label="Hinzufügen" />
-                    <AppBarButton Icon="Refresh" Label="Neu Laden" />
+                        Label="Hinzufügen"/>
+                    <AppBarButton Icon="Refresh" Label="Neu Laden" Click="RefreshPartNumberButton_Click"/>
 
                 </CommandBar>
                 <StackPanel
@@ -44,11 +44,13 @@
                     VerticalAlignment="Center"
                     Background="{ThemeResource CommandBarBackground}">
                     <AutoSuggestBox
-                        x:Name="search_box"
-                        Width="200px"
-                        BorderThickness="0"
-                        PlaceholderText="Search"
-                        QueryIcon="Find" />
+                        MinWidth="304"
+                        MaxWidth="320"
+                        Margin="0,8,0,12"
+                        HorizontalAlignment="Left"
+                        PlaceholderText="Suche"
+                        FontWeight="Normal"
+                        QueryIcon="Find"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -87,7 +89,8 @@
                                 VerticalAlignment="Center"
                                 Background="Transparent"
                                 Icon="More"
-                                LabelPosition="Collapsed">
+                                LabelPosition="Collapsed"
+                                AllowFocusOnInteraction="True">
                                 <AppBarButton.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
                                         <MenuFlyoutItem

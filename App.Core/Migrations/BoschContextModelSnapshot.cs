@@ -149,7 +149,12 @@ namespace App.Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(650)");
 
+                    b.Property<int?>("PcbId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PcbId");
 
                     b.ToTable("ErrorTypes");
                 });
@@ -250,11 +255,11 @@ namespace App.Core.Migrations
                     b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DwellTimeRed")
-                        .HasColumnType("int");
+                    b.Property<string>("DwellTimeRed")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DwellTimeYellow")
-                        .HasColumnType("int");
+                    b.Property<string>("DwellTimeYellow")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsFinalDestination")
                         .HasColumnType("bit");
@@ -288,7 +293,7 @@ namespace App.Core.Migrations
                     b.Property<int>("NotedById")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PcbId")
+                    b.Property<int>("PcbId")
                         .HasColumnType("int");
 
                     b.Property<int>("StorageLocationId")
@@ -332,21 +337,6 @@ namespace App.Core.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ErrorTypePcb", b =>
-                {
-                    b.Property<int>("ErrorTypesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PcbsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ErrorTypesId", "PcbsId");
-
-                    b.HasIndex("PcbsId");
-
-                    b.ToTable("ErrorTypePcb");
-                });
-
             modelBuilder.Entity("App.Core.Models.Comment", b =>
                 {
                     b.HasOne("App.Core.Models.User", "NotedBy")
@@ -356,6 +346,15 @@ namespace App.Core.Migrations
                         .IsRequired();
 
                     b.Navigation("NotedBy");
+                });
+
+            modelBuilder.Entity("App.Core.Models.ErrorType", b =>
+                {
+                    b.HasOne("App.Core.Models.Pcb", "Pcb")
+                        .WithMany("ErrorTypes")
+                        .HasForeignKey("PcbId");
+
+                    b.Navigation("Pcb");
                 });
 
             modelBuilder.Entity("App.Core.Models.Pcb", b =>
@@ -397,7 +396,9 @@ namespace App.Core.Migrations
 
                     b.HasOne("App.Core.Models.Pcb", "Pcb")
                         .WithMany("Transfers")
-                        .HasForeignKey("PcbId");
+                        .HasForeignKey("PcbId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("App.Core.Models.StorageLocation", "StorageLocation")
                         .WithMany("Transfers")
@@ -410,21 +411,6 @@ namespace App.Core.Migrations
                     b.Navigation("Pcb");
 
                     b.Navigation("StorageLocation");
-                });
-
-            modelBuilder.Entity("ErrorTypePcb", b =>
-                {
-                    b.HasOne("App.Core.Models.ErrorType", null)
-                        .WithMany()
-                        .HasForeignKey("ErrorTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("App.Core.Models.Pcb", null)
-                        .WithMany()
-                        .HasForeignKey("PcbsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("App.Core.Models.Comment", b =>
@@ -444,6 +430,8 @@ namespace App.Core.Migrations
 
             modelBuilder.Entity("App.Core.Models.Pcb", b =>
                 {
+                    b.Navigation("ErrorTypes");
+
                     b.Navigation("Transfers");
                 });
 

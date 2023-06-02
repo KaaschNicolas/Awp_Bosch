@@ -32,4 +32,9 @@ public sealed partial class PcbTypePage : Page
     {
         ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
     }
+
+    void RefreshPartNumberButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) 
+    {
+        ViewModel.RefreshPartNumberCommand.Execute(null);
+    }
 }

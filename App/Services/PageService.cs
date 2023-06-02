@@ -5,7 +5,6 @@ using App.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Microsoft.UI.Xaml.Controls;
-
 namespace App.Services;
 
 public class PageService : IPageService
@@ -26,6 +25,11 @@ public class PageService : IPageService
         Configure<StorageLocationPaginationViewModel, StorageLocationsViewPage1>();
         Configure<CreatePcbTypeViewModel, CreatePcbTypePage>();
         Configure<UpdatePcbTypeViewModel, UpdatePcbTypePage>();
+        Configure<CreatePcbViewModel, CreatePcbPage>();
+        Configure<PcbSingleViewModel, PcbSinglePage>();
+        Configure<TransfersViewModel, TransfersPage>();
+        Configure<PcbPaginationViewModel, PcbViewPage>();
+        Configure<UpdatePcbViewModel, UpdatePcbPage>();
     }
 
     public Type GetPageType(string key)

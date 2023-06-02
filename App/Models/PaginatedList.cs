@@ -22,14 +22,6 @@ public class PaginatedList<T> : List<T>
     }
     private readonly ILoggingService _logger;
 
-    public PaginatedList(List<T> items, int count, int pageIndex, int pageSize, ILoggingService loggingService)
-    {
-        _logger = loggingService;
-        PageIndex = pageIndex;
-        PageCount = (int)Math.Ceiling(count / (double)pageSize);
-        AddRange(items);
-    }
-
     private PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
     {
         PageIndex = pageIndex;

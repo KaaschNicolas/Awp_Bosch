@@ -33,8 +33,8 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
         }
     }
 
-    private int _dwellTimeYellow = 0;
-    public int DwellTimeYellow
+    private string _dwellTimeYellow = "0";
+    public string DwellTimeYellow
     {
         get => _dwellTimeYellow;
         set
@@ -49,8 +49,8 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
         }
     }
 
-    private int _dwellTimeRed = 0;
-    public int DwellTimeRed
+    private string _dwellTimeRed = "";
+    public string DwellTimeRed
     {
         get => _dwellTimeRed;
         set
@@ -62,6 +62,17 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
 
             }
 
+        }
+    }
+
+    public bool _isFinalDestination;
+    public bool IsFinalDestination
+    {
+        get => _isFinalDestination;
+        set
+        {
+            _isFinalDestination = value;
+            OnPropertyChanged(nameof(IsFinalDestination));
         }
     }
 
@@ -96,8 +107,14 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
     {
         _storageLocation.Id = _id;
         _storageLocation.StorageName = _storageName;
+        if (IsFinalDestination)
+        {
+            _dwellTimeRed = "--";
+            _dwellTimeYellow = "--";
+        }
         _storageLocation.DwellTimeYellow = _dwellTimeYellow;
         _storageLocation.DwellTimeRed = _dwellTimeRed;
+        _storageLocation.IsFinalDestination = _isFinalDestination;
         var response = await _crudService.Update(_id, _storageLocation);
         if (response != null)
         {
@@ -123,6 +140,7 @@ public class UpdateStorageLocationViewModel: ObservableRecipient, INavigationAwa
         _storageName = _storageLocation.StorageName;
         _dwellTimeYellow = _storageLocation.DwellTimeYellow;
         _dwellTimeRed = _storageLocation.DwellTimeRed;
+        _isFinalDestination = _storageLocation.IsFinalDestination;
 
     }
 

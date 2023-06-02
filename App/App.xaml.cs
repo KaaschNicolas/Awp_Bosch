@@ -16,8 +16,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
-using Serilog;
 
+using Serilog;
 namespace App;
 
 // To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
@@ -80,15 +80,34 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
             services.AddTransient<ILoggingService, LoggingService>();
 
+            services.AddTransient<ICrudService<Pcb>, CrudService<Pcb>>();
             services.AddTransient<ICrudService<PcbType>, CrudService<PcbType>>();
             services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
-
+            services.AddTransient<ICrudService<User>, CrudService<User>>();
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
+            services.AddTransient<ICrudService<Comment>, CrudService<Comment>>();
+            services.AddTransient<ICrudService<Device>, CrudService<Device>>();
+
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
+            services.AddTransient<IPcbDataService<Pcb>, PcbDataService<Pcb>>();
+            services.AddTransient<ITransferDataService<Transfer>, TransferDataService<Transfer>>();
             services.AddTransient<IMockDataService, MockDataService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
 
 
             // Views and ViewModels
+            services.AddTransient<TransferDialogViewModel>();
+            services.AddTransient<ICrudService<Comment>, CrudService<Comment>>();
+            services.AddTransient<ICrudService<Device>, CrudService<Device>>();
+            services.AddTransient<UpdatePcbViewModel>();
+            services.AddTransient<UpdatePcbPage>();
+            services.AddTransient<CreatePcbViewModel>();
+            services.AddTransient<CreatePcbPage>();
+            services.AddTransient<TransfersViewModel>();
+            services.AddTransient<TransfersPage>();
+            services.AddTransient<PcbSingleViewModel>();
+            services.AddTransient<PcbSinglePage>();
+            services.AddTransient<PcbPaginationViewModel>();
             services.AddTransient<UpdateStorageLocationPage>();
             services.AddTransient<UpdateStorageLocationViewModel>();
             services.AddTransient<UpdatePcbTypeViewModel>();
@@ -116,10 +135,9 @@ public partial class App : Application
             services.AddTransient<StorageLocation>();
             services.AddTransient<StorageLocationViewModel>();
 
-
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
- 
+
             services.AddDbContext<BoschContext>(
                 options => options.UseSqlServer(ConfigurationHelper.Configuration.GetConnectionString("BoschContext")),
                 ServiceLifetime.Transient);

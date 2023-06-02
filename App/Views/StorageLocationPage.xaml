@@ -5,7 +5,8 @@
     xmlns:behaviors="using:App.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" xmlns:viewModels="using:App.ViewModels"
+	xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:viewModels="using:App.ViewModels" 
     mc:Ignorable="d">
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
@@ -38,7 +39,8 @@
                             Click="CreateStorageLocationButton_Click"/>
                         <AppBarButton 
                             Icon="Refresh" 
-                            Label="Neu laden"/>
+                            Label="Neu laden"
+                            Click="RefreshStorageLocationButton_Click"/>
                     </CommandBar>
                     <AutoSuggestBox
                             MinWidth="304"
@@ -76,7 +78,6 @@
             ColumnHeaderHeight="32"
             RowHeight="45"
             MaxColumnWidth="500"
-            FrozenColumnCount="4"
             GridLinesVisibility="All"
             HeadersVisibility="Column"
             IsReadOnly="True"
@@ -95,8 +96,20 @@
 				<controls:DataGridTextColumn Binding="{Binding StorageName}" Header="Lagerort" />
 				<controls:DataGridTextColumn Binding="{Binding DwellTimeYellow}" Header="Tage bis Status GELB" />
 				<controls:DataGridTextColumn Binding="{Binding DwellTimeRed}" Header="Tage bis Status ROT" />
-                <controls:DataGridTextColumn Header="Endgültiger Verbleib"/>
-                                         <!--="{Binding FinalDisposition}"-->
+                <controls:DataGridTemplateColumn Header="Endgültiger Verbleib">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Name="CheckedIcon" 
+                                    HorizontalAlignment="Center" 
+                                    BorderBrush="Transparent"
+                                    Background="Transparent"
+                                    Visibility="{Binding IsFinalDestination}"
+                                    Foreground="Green">
+                                <FontIcon Glyph="&#xE73E;" FontWeight="Bold"/>
+                            </Button>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
                 <controls:DataGridTemplateColumn Header="Aktionen">
 					<controls:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
@@ -107,7 +120,8 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Icon="More"
-                                LabelPosition="Collapsed">
+                                LabelPosition="Collapsed"
+                                AllowFocusOnInteraction="True">
                                 <!--<FontIcon HorizontalAlignment="Center" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE712;" AutomationProperties.Name="{Binding SymbolName}"/>-->
                                 <!--Glyph="{Binding Symbol}"-->
                                 <AppBarButton.Flyout>

@@ -15,5 +15,7 @@ namespace App.Core.Services.Interfaces
         public Task<Response<T>> Delete(T entity);
         public Task<Response<List<T>>> GetAll();
         public Task<Response<T>> GetById(int id);
+
+        public Task Dispose();
     }
 }

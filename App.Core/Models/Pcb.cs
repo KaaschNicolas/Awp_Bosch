@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.Core.Models
 {
@@ -35,6 +30,10 @@ namespace App.Core.Models
             get; set;
         }
         [Required]
+        public int PcbTypeId
+        {
+            get; set;
+        }
         public PcbType PcbType
         {
             get; set;
@@ -55,10 +54,16 @@ namespace App.Core.Models
         {
             get; set;
         }
-        public Diagnose Diagnose
+        [ForeignKey("DiagnoseId")]
+        public Diagnose? Diagnose
         {
             get; set;
         }
+        public int? DiagnoseId
+        {
+            get; set;
+        }
+
 
     }
 }
