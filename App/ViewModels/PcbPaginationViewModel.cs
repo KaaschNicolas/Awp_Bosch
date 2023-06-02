@@ -139,6 +139,7 @@ namespace App.ViewModels
 
             if (_filterOptions != PcbFilterOptions.None && _filterOptions != PcbFilterOptions.FilterStorageLocation)
             {
+                Response<List<Pcb>> eagerPcbs = new();
                 switch (_filterOptions)
                 {
                     case PcbFilterOptions.Search:
@@ -147,6 +148,7 @@ namespace App.ViewModels
                         break;
                     case PcbFilterOptions.Filter1:
                         Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
+                        eagerPcbs = await _pcbDataService.GetAllEagerFiltered(pageIndex, pageSize, _sortyBy, isAscending, where1);
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where1);
                         break;
@@ -171,9 +173,10 @@ namespace App.ViewModels
                     List<PaginatedPcb> convertedPcbs = new();
                     
                     // TODO: Error handling
-                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
+                    //var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
                     var newPcbs = new List<Pcb>();
-                    foreach (var item in resEager.Data)
+                    
+                    foreach (var item in eagerPcbs.Data)
                     {
                         foreach (var pcb in pcbs.Data)
                         {
@@ -226,7 +229,7 @@ namespace App.ViewModels
                             pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where2);
                             break;
                         case PcbFilterOptions.Filter3:
-                            Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0;
+                            Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count() == 0;
                             maxEntries = await _pcbDataService.MaxEntriesFiltered(where3);
                             pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
                             break;

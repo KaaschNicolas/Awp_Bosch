@@ -362,4 +362,33 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             return new Response<List<T>>(ResponseCode.Error, error: $"Fehler beim Eager Loading der Pcbs");
         }
     }
+
+    public async Task<Response<List<T>>> GetAllEagerFiltered(int pageIndex, int pageSize, string orderByProperty, bool isAscending, Expression<Func<T, bool>> where)
+    {
+        try
+        {
+            _ = pageIndex == 0 ? pageIndex : pageIndex = pageIndex - 1;
+            var entity = await _boschContext.Set<T>()
+                .Include(T => T.Restriction)
+                .Include(T => T.Diagnose)
+                .Include(T => T.PcbType)
+                .Include(T => T.ErrorTypes)
+                .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
+                .ThenInclude(transfer => transfer.StorageLocation)
+                .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
+                .ThenInclude(transfer => transfer.NotedBy)
+                .AsNoTracking()
+                .OrderBy(orderByProperty, isAscending)
+                .Where(where)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new Response<List<T>>(ResponseCode.Success, entity);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<List<T>>(ResponseCode.Error, error: $"Fehler beim Eager Loading der Pcbs");
+        }
+    }
 }
