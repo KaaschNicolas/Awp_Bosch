@@ -154,11 +154,13 @@ namespace App.ViewModels
                         break;
                     case PcbFilterOptions.Filter2:
                         Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.Now.Date;
+                        eagerPcbs = await _pcbDataService.GetAllEagerFiltered(pageIndex, pageSize, _sortyBy, isAscending, where2);
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where2);
                         break;
                     case PcbFilterOptions.Filter3:
                         Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0;
+                        eagerPcbs = await _pcbDataService.GetAllEagerFiltered(pageIndex, pageSize, _sortyBy, isAscending, where3);
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where3);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
                         break;
