@@ -85,6 +85,8 @@ public partial class App : Application
             services.AddTransient<ICrudService<StorageLocation>, CrudService<StorageLocation>>();
             services.AddTransient<ICrudService<User>, CrudService<User>>();
             services.AddTransient<ICrudService<Diagnose>, CrudService<Diagnose>>();
+            services.AddTransient<ICrudService<Comment>, CrudService<Comment>>();
+            services.AddTransient<ICrudService<Device>, CrudService<Device>>();
 
             services.AddTransient<IStorageLocationDataService<StorageLocation>, StorageLocationDataService<StorageLocation>>();
             services.AddTransient<IPcbDataService<Pcb>, PcbDataService<Pcb>>();

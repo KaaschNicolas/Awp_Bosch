@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml;
 namespace App.Contracts.Services;
 public interface IDialogService
 {
-    //TODO Extend the Interface -> InputDialog 
     Task<bool?> ConfirmDeleteDialogAsync(string title, string content, string confirmButtonText = "Löschen", string cancelButtonText = "Abbrechen");
     void UnAuthorizedDialogAsync(string title, string content, XamlRoot xamlRoot);
     Task<Comment> AddCommentDialog(string title, string confirmButtonText = "Speichern", string cancelButtonText = "Abbrechen");

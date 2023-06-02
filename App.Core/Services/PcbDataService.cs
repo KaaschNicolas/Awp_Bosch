@@ -20,11 +20,23 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
-                .OrderBy(orderByProperty, isAscending)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            List<T> data = new();
+            if (pageIndex == 0)
+            {
+                data = await _boschContext.Set<T>()
+                    .OrderBy(orderByProperty, isAscending)
+                    .Skip(pageIndex * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            }
+            else
+            {
+                data = await _boschContext.Set<T>()
+                    .OrderBy(orderByProperty, isAscending)
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            }
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
@@ -68,7 +80,10 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             List<Transfer> lastTransfers = new();
 
-            await _boschContext.Pcbs.Include(x => x.Transfers).ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
+            await _boschContext
+                .Pcbs
+                .Include(x => x.Transfers)
+                .ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
 
             List<Pcb> pcbs = new();
 
@@ -141,12 +156,26 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
-                .OrderBy(orderByProperty, isAscending)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .AsNoTracking()
-                .ToListAsync();
+            List<T> data = new();
+            if (pageIndex == 0)
+            {
+                data = await _boschContext.Set<T>()
+                    .OrderBy(orderByProperty, isAscending)
+                    .Skip(pageIndex * pageSize)
+                    .Take(pageSize)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            else
+            {
+                data = await _boschContext.Set<T>()
+                    .OrderBy(orderByProperty, isAscending)
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
@@ -192,7 +221,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             var data = await _boschContext.Set<T>()
                 .Where(where)
-                .Skip((pageIndex - 1) * pageSize)
+                .Skip(pageIndex * pageSize)
                 .Take(pageSize)
                 .Include("PcbType")
                 .ToListAsync();
@@ -304,6 +333,36 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         catch (DbUpdateException)
         {
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
+        }
+    }
+
+    public async Task<Response<List<T>>> GetAllEager(int pageIndex, int pageSize, string orderByProperty,
+        bool isAscending)
+    {
+        try
+        {
+            _ = pageIndex == 0 ? pageIndex : pageIndex = pageIndex - 1;
+            var entity = await _boschContext.Set<T>()
+                .Include(T => T.Restriction)
+                .Include(T => T.Comment)
+                .Include(T => T.Diagnose)
+                .Include(T => T.PcbType)
+                .Include(T => T.ErrorTypes)
+                .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
+                .ThenInclude(transfer => transfer.StorageLocation)
+                .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
+                .ThenInclude(transfer => transfer.NotedBy)
+                .AsNoTracking()
+                .OrderBy(orderByProperty, isAscending)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new Response<List<T>>(ResponseCode.Success, entity);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<List<T>>(ResponseCode.Error, error: $"Fehler beim Eager Loading der Pcbs");
         }
     }
 }

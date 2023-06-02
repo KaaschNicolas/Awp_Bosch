@@ -87,9 +87,9 @@ public sealed class DialogService : IDialogService
 
                 }
             }
-        }catch(Exception ex){
+        } catch(Exception ex) {
 
-        Debug.WriteLine(ex);
+            Debug.WriteLine(ex);
         }
 
         return null;
