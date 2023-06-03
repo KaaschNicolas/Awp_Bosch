@@ -1,6 +1,7 @@
 ﻿using App.Contracts.Services;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
+using App.Errors;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,8 @@ public partial class CreateDiagnoseViewModel : ObservableValidator
 {
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _name;
 
     private readonly ICrudService<Diagnose> _crudService;

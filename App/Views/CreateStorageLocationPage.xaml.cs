@@ -1,22 +1,22 @@
-﻿using System.Diagnostics;
-using App.Behaviors;
+﻿using App.Behaviors;
 using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
+using System.Diagnostics;
 
 namespace App.Views;
 
 public sealed partial class CreateStorageLocationPage : Page
 {
-    public StorageLocationViewModel ViewModel
+    public CreateStorageLocationViewModel ViewModel
     {
         get;
     }
 
     public CreateStorageLocationPage()
     {
-        ViewModel = App.GetService<StorageLocationViewModel>();
+        ViewModel = App.GetService<CreateStorageLocationViewModel>();
         InitializeComponent();
         SetBinding(NavigationViewHeaderBehavior.HeaderContextProperty, new Binding
         {
@@ -28,7 +28,7 @@ public sealed partial class CreateStorageLocationPage : Page
 
     public void checkFinalDestination(object sender, RoutedEventArgs e)
     {
-        
+
     }
 
     public void SaveStorageLocationButton_Click(object sender, RoutedEventArgs e)
