@@ -198,11 +198,10 @@
                                     Grid.Column="2"
                                     Grid.ColumnSpan="3"
                                     DisplayMemberPath="StorageName"
-                                    Header="Lagerot"
+                                    Header="Lagerort"
                                     IsSynchronizedWithCurrentItem="False"
                                     ItemsSource="{Binding ViewModel.StorageLocations, ElementName=EditPcbPage}"
-                                    SelectedItem="{Binding StorageLocation, Mode=TwoWay}"
-                                    Text="Hello" />
+                                    SelectedItem="{Binding StorageLocation, Mode=TwoWay}" />
 
                                 <TextBox
                                     Grid.Row="0"

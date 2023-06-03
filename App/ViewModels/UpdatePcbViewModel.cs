@@ -48,7 +48,6 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     [ObservableProperty]
     private Device _restriction;
 
-
     [ObservableProperty]
     private string _comment;
 
@@ -74,7 +73,6 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         _authenticationService = authenticationService;
         _pcbDataService = pcbDataService;
 
-
         _storageLocations = new ObservableCollection<StorageLocation>();
         _pcbTypes = new ObservableCollection<PcbType>();
         _errorTypes = new ObservableCollection<ErrorType>();
@@ -88,24 +86,22 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     {
         bool isFinalized = false;
 
-
-        foreach (var transfer in _transfers)
+        foreach (var transfer in Transfers)
         {
-            transfer.StorageLocationId = transfer.StorageLocation.Id;
-
+            //transfer.StorageLocationId = transfer.StorageLocation.Id;
             if (transfer.StorageLocation.IsFinalDestination)
             {
                 isFinalized = true;
             }
         }
 
-        _pcbToEdit.CreatedDate = _createdAt;
-        _pcbToEdit.SerialNumber = _serialNumber;
+        _pcbToEdit.CreatedDate = CreatedAt;
+        _pcbToEdit.SerialNumber = SerialNumber;
         _pcbToEdit.Finalized = isFinalized;
-        _pcbToEdit.PcbTypeId = _selectedPcbType.Id;
-        _pcbToEdit.Transfers = new List<Transfer>(_transfers);
-        _pcbToEdit.Restriction = _restriction;
-        _pcbToEdit.ErrorTypes = new List<ErrorType>(_errorTypes);
+        _pcbToEdit.PcbTypeId = SelectedPcbType.Id;
+        _pcbToEdit.Transfers = new List<Transfer>(Transfers);
+        _pcbToEdit.Restriction = Restriction;
+        _pcbToEdit.ErrorTypes = new List<ErrorType>(ErrorTypes);
 
         var response = await _pcbDataService.Update(_pcbId, _pcbToEdit);
 
@@ -114,7 +110,6 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
             if (response.Code == ResponseCode.Success)
             {
                 _infoBarService.showMessage("Leiterplatte erfolgreich gespeichert", "Erfolg");
-                //_navigationService.NavigateTo("App.ViewModels.SinglePcbViewModel", _pcbToEdit);
                 _navigationService.GoBack();
             }
             else
@@ -155,7 +150,7 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         {
             foreach (var item in storageLocationResponse.Data)
             {
-                _storageLocations.Add(item);
+                StorageLocations.Add(item);
             }
         }
 
@@ -164,7 +159,7 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         {
             foreach (var item in pcbResponse.Data)
             {
-                _pcbTypes.Add(item);
+                PcbTypes.Add(item);
             }
         }
 
