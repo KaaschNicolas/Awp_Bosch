@@ -128,7 +128,7 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
-            //services.AddTransient<CreateStorageLocation>();
+            services.AddTransient<CreateStorageLocationViewModel>();
             services.AddTransient<StorageLocation>();
             services.AddTransient<StorageLocationViewModel>();
             services.AddTransient<TransferDialogViewModel>();

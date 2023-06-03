@@ -1,5 +1,5 @@
 ﻿using App.ViewModels;
-using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace App.Views;
@@ -18,24 +18,22 @@ public sealed partial class StorageLocationPage : Page
         DataContext = ViewModel;
     }
 
-    private void CreateStorageLocationButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    public void Create(object sender, RoutedEventArgs e)
     {
-        Frame.Navigate(typeof(CreateStorageLocationPage));
+        ViewModel.NavigateToCreateCommand.Execute(null);
     }
 
-    private void UpdateStorageLocationButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    public void Refresh(object sender, RoutedEventArgs e)
     {
-        ViewModel.NavigateToUpdateStorageLocationCommand.Execute(ViewModel.SelectedItem);
+        ViewModel.RefreshCommand.Execute(null);
     }
-
-    private void DeleteStorageLocation_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    public void Delete(object sender, RoutedEventArgs e)
     {
-        ViewModel.DeleteSL.Execute(null);
+        ViewModel.DeleteCommand.Execute(null);
     }
-
-    private void RefreshStorageLocationButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    public void Edit(object sender, RoutedEventArgs e)
     {
-        ViewModel.RefreshStorageLocationCommand.Execute(null);
+        ViewModel.NavigateToUpdateCommand.Execute(null);
     }
 
     //private void Verbleib_Checked()
