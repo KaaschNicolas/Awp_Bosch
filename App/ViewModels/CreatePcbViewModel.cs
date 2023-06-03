@@ -89,12 +89,17 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
         ValidateAllProperties();
         if (!HasErrors)
         {
-            Transfer transfer = new Transfer { StorageLocationId = _selectedStorageLocation.Id, Comment = _comment, NotedById = _createdBy.Id, CreatedDate = _createdAt };
+            Transfer transfer = new Transfer
+            {
+                StorageLocationId = _selectedStorageLocation.Id,
+                Comment = _comment,
+                NotedById = _createdBy.Id,
+                CreatedDate = _createdAt
+            };
             ErrorType errorType1 = new ErrorType { Code = _errorCode1, ErrorDescription = _errorDescription1 };
             ErrorType errorType2 = new ErrorType { Code = _errorCode2, ErrorDescription = _errorDescription2 };
             Device restriction = _restriction != null ? new Device { Name = _restriction } : null;
             var errorTypes = new List<ErrorType> { errorType1, errorType2 };
-
             var transfers = new List<Transfer>() { transfer };
 
             Pcb pcb = new Pcb
@@ -106,7 +111,7 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
                 Transfers = transfers,
                 Restriction = restriction,
                 ErrorTypes = errorTypes,
-                DiagnoseId = SelectedDiagnose.Id,
+                DiagnoseId = SelectedDiagnose is not null ? SelectedDiagnose.Id : null,
             };
             var response = await _pcbCrudService.Create(pcb);
 

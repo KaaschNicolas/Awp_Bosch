@@ -145,7 +145,7 @@
                     Grid.Row="5"
                     Grid.ColumnSpan="2"
                     Header="Einschränkung"
-                    Text="{x:Bind ViewModel.Restriction, Mode=TwoWay}" />
+                    Text="{x:Bind ViewModel.Restriction.Name, Mode=TwoWay}" />
                 <TextBlock
                     Grid.Row="6"
                     Grid.ColumnSpan="3"

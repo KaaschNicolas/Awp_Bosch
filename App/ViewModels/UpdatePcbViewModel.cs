@@ -64,6 +64,8 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     [ObservableProperty]
     private ObservableCollection<Transfer> _transfers;
 
+    private bool restrictionExists;
+
     public UpdatePcbViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<PcbType> pcbTypesCrudService, IInfoBarService infoBarService, INavigationService navigationService, IAuthenticationService authenticationService)
     {
 
@@ -103,19 +105,21 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         _pcbToEdit.Restriction = Restriction;
         _pcbToEdit.ErrorTypes = new List<ErrorType>(ErrorTypes);
 
-        var response = await _pcbDataService.Update(_pcbId, _pcbToEdit);
+        Response<Pcb> response;
 
-        if (response != null)
+        if (!restrictionExists && _pcbToEdit.Restriction.Name != "")
         {
-            if (response.Code == ResponseCode.Success)
-            {
-                _infoBarService.showMessage("Leiterplatte erfolgreich gespeichert", "Erfolg");
-                _navigationService.GoBack();
-            }
-            else
-            {
-                _infoBarService.showError("Leiterplatte konnte nicht gespeichert werden", "Error");
-            }
+            response = await _pcbDataService.CreateRestrictionAndUpdate(_pcbToEdit);
+        }
+        else
+        {
+            response = await _pcbDataService.Update(_pcbId, _pcbToEdit);
+        }
+
+        if (response != null && response.Code == ResponseCode.Success)
+        {
+            _infoBarService.showMessage("Leiterplatte erfolgreich gespeichert", "Erfolg");
+            _navigationService.GoBack();
         }
         else
         {
@@ -132,17 +136,19 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     public async void OnNavigatedTo(object parameter)
     {
 
-        var test = parameter;
         _pcbToEdit = (Pcb)parameter;
         _pcbId = _pcbToEdit.Id;
 
         var result = await _pcbDataService.GetByIdEager(_pcbId);
 
         _pcbToEdit = result.Data;
+
+        // check if restriction exists if not create new in save method
+        restrictionExists = _pcbToEdit.Restriction is null ? false : true;
         SerialNumber = _pcbToEdit.SerialNumber;
         CreatedAt = _pcbToEdit.CreatedDate;
         User = _pcbToEdit.Transfers[0].NotedBy;
-        Restriction = _pcbToEdit.Restriction;
+        Restriction = _pcbToEdit.Restriction ??= new Device { Name = "" };
         SelectedPcbType = _pcbToEdit.PcbType;
 
         var storageLocationResponse = await _storageLocationCrudService.GetAll();

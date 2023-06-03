@@ -5,6 +5,7 @@ using App.Core.Models;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
@@ -291,6 +292,28 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             _loggingService.Audit(LogLevel.Error, $"Fehler beim Löschen von {typeof(T)} mit der ID {entity.Id}", null);
             return new Response<T>(ResponseCode.Error,
                 error: $"Fehler beim Löschen von {typeof(T)} mit der ID {entity.Id}");
+        }
+    }
+
+    public async Task<Response<T>> CreateRestrictionAndUpdate(T pcb)
+    {
+        using (var transaction = await _boschContext.Database.BeginTransactionAsync())
+        {
+            try
+            {
+                EntityEntry<Device> deviceEntry = await _boschContext.Set<Device>().AddAsync(pcb.Restriction);
+                pcb.Restriction = deviceEntry.Entity;
+                EntityEntry<T> entityEntry = _boschContext.Set<T>().Update(pcb);
+                await _boschContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return new Response<T>(ResponseCode.Success, (T)entityEntry.Entity);
+
+            }
+            catch (Exception)
+            {
+                return new Response<T>(ResponseCode.Error, error: $"Fehler beim Erstellen von {typeof(T)}");
+            }
+
         }
     }
 
