@@ -13,7 +13,7 @@ namespace App.Core.Services
         public AuthenticationService(BoschContext boschContext) {
             _boschContext = boschContext;
         }
-        private void authenticate() {
+        private void Authenticate() {
             var adUsername = Environment.UserName;
             var result = _boschContext.Users.Where(u => u.AdUsername.Equals(adUsername)).ToList();
             if (result.Count != 0 && result[0] != null) { 
@@ -22,22 +22,30 @@ namespace App.Core.Services
             }
         }
 
-        public bool isAuthenticated()
+        public bool IsAuthenticated
         {
-            if (_currentUser == null)
+            get
             {
-               authenticate();
+                if (_currentUser == null)
+                {
+                    Authenticate();
+                }
+                return _isAuthenticated;
             }
-            return _isAuthenticated;
         }
 
-        public User currentUser()
+        public bool IsDbActive => _boschContext.Database.CanConnect();
+                    
+        public User CurrentUser
         {
-            if (_currentUser == null)
+            get
             {
-               authenticate();
+                if (_currentUser == null)
+                {
+                    Authenticate();
+                }
+                return _currentUser;
             }
-            return _currentUser;
         }
     }
 }

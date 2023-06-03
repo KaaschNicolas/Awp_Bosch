@@ -55,7 +55,7 @@ public partial class TransferDialogViewModel : ObservableObject
         _authenticationService = authenticationService;
         _diagnoseCrudService = diagnoseCrudService;
         _storageLocationCrudService = storageLocationCrudService;
-        _notedBy = _authenticationService.currentUser();
+        _notedBy = _authenticationService.CurrentUser;
         LoadData();
     }
 

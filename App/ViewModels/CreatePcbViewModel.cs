@@ -141,7 +141,7 @@ public partial class CreatePcbViewModel : ObservableRecipient, INavigationAware
 
         }
 
-        User = _authenticationService.currentUser();
+        User = _authenticationService.CurrentUser;
 
     }
 
