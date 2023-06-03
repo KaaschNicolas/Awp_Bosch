@@ -97,22 +97,18 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
 
             var transfers = new List<Transfer>() { transfer };
 
-
-
             Pcb pcb = new Pcb
             {
-                CreatedDate = _createdAt,
-                SerialNumber = _serialNumber,
-                Finalized = _selectedStorageLocation.IsFinalDestination,
-                PcbTypeId = _selectedPcbType.Id,
+                CreatedDate = CreatedAt,
+                SerialNumber = SerialNumber,
+                Finalized = SelectedStorageLocation.IsFinalDestination,
+                PcbTypeId = SelectedPcbType.Id,
                 Transfers = transfers,
                 Restriction = restriction,
                 ErrorTypes = errorTypes,
-                Diagnose = _selectedDiagnose,
-                ErrorDescription = _errorDescription1,
+                DiagnoseId = SelectedDiagnose.Id,
             };
             var response = await _pcbCrudService.Create(pcb);
-
 
             if (response != null)
             {

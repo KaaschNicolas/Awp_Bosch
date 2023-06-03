@@ -16,6 +16,7 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
     private readonly IAuthenticationService _authenticationService;
+    private readonly ICrudService<Pcb> _pcbCrudService;
 
     private int _pcbId;
     private Pcb _pcbToEdit;
@@ -88,7 +89,6 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
 
         foreach (var transfer in Transfers)
         {
-            //transfer.StorageLocationId = transfer.StorageLocation.Id;
             if (transfer.StorageLocation.IsFinalDestination)
             {
                 isFinalized = true;
