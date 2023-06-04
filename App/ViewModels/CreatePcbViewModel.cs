@@ -112,7 +112,7 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
             };
             ErrorType errorType1 = new ErrorType { Code = _errorCode1, ErrorDescription = _errorDescription1 };
             ErrorType errorType2 = new ErrorType { Code = _errorCode2, ErrorDescription = _errorDescription2 };
-            Device restriction = _restriction != null ? new Device { Name = _restriction } : null;
+            Device restriction = new Device { Name = _restriction ??= "" };
             var errorTypes = new List<ErrorType> { errorType1, errorType2 };
             var transfers = new List<Transfer>() { transfer };
 
