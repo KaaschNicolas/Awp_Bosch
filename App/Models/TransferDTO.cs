@@ -10,19 +10,25 @@ public partial class TransferDTO : ObservableObject
 
     private DateTime _createdAt;
     public DateTime CreatedAt
+
     {
         get => _createdAt;
         set
         {
+            // Bug Fix: when clicking on date of CalendarDatePicker twice
+            // returns MinValue instead of null and set current value
             if (value == DateTime.MinValue)
             {
                 OnPropertyChanged(nameof(CreatedAt));
                 return;
             }
-            SetProperty(ref _createdAt, value);
-
+            else
+            {
+                SetProperty(ref _createdAt, value);
+            }
         }
     }
+
 
     [ObservableProperty]
     private StorageLocation _storageLocationTransfer;
