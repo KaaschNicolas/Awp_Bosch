@@ -134,7 +134,7 @@ namespace App.ViewModels
             if (_storageLocations.Count == 0)
             {
                 var storageLocations = await _storageLocationCrudService.GetAll();
-                _storageLocations.Add(new StorageLocation() { StorageName = "Alles" });
+               
                 if (storageLocations.Code == ResponseCode.Success)
                 {
                     storageLocations.Data.ForEach(x => _storageLocations.Add(x));
