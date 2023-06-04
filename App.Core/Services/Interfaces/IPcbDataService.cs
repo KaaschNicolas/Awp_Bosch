@@ -1,3 +1,6 @@
+using App.Core.Models;
+using System.Linq.Expressions;
+
 namespace App.Core.Services.Interfaces
 {
     public interface IPcbDataService<T> : ICrudService<T> where T : Pcb

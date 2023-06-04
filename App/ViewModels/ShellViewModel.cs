@@ -2,7 +2,6 @@
 using App.Views;
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace App.ViewModels;
@@ -25,7 +24,8 @@ public class ShellViewModel : ObservableRecipient
 
     public IInfoBarService InfoBarService
     {
-    get; }
+        get;
+    }
 
 
     public bool IsBackEnabled

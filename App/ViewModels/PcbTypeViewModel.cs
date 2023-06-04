@@ -1,10 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using App.Contracts.Services;
+﻿using App.Contracts.Services;
 using App.Contracts.ViewModels;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace App.ViewModels;
 
@@ -55,7 +55,7 @@ public partial class PcbTypeViewModel : ObservableValidator, INavigationAware
     }
 
     [RelayCommand]
-    public void RefreshPartNumber() 
+    public void RefreshPartNumber()
     {
         OnNavigatedTo(null);
     }
@@ -66,8 +66,9 @@ public partial class PcbTypeViewModel : ObservableValidator, INavigationAware
         _pcbTypes.Clear();
 
         var response = await _crudService.GetAll();
-        
-        if (response.Code == ResponseCode.Success) {
+
+        if (response.Code == ResponseCode.Success)
+        {
             foreach (var item in response.Data)
             {
                 _pcbTypes.Add(item);

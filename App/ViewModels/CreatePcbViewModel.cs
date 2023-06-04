@@ -125,7 +125,7 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
                 Transfers = transfers,
                 Restriction = restriction,
                 ErrorTypes = errorTypes,
-                DiagnoseId = SelectedDiagnose is not null ? SelectedDiagnose.Id : null,
+                DiagnoseId = SelectedDiagnose != null ? SelectedDiagnose.Id : null,
             };
             var response = await _pcbCrudService.Create(pcb);
 

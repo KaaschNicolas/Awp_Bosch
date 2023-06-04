@@ -30,7 +30,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         catch (Exception ex)
         {
             Debug.WriteLine(ex);
-                _loggingService.Audit(LogLevel.Error, $"Fehler beim Erstellen von {typeof(T)}", null);
+            _loggingService.Audit(LogLevel.Error, $"Fehler beim Erstellen von {typeof(T)}", null);
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim Erstellen von {typeof(T)}");
         }
     }
@@ -82,7 +82,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
             var res = new List<T>();
             foreach (var item in list)
             {
-                if (item.DeletedDate > item.CreatedDate)
+                if (item.DeletedDate == DateTime.MinValue)
                 {
                     res.Add(item);
                 }

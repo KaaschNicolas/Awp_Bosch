@@ -1,4 +1,11 @@
-﻿namespace App.Services;
+﻿using App.Contracts.Services;
+using App.Controls;
+using App.Core.Models;
+using App.ViewModels;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+
+namespace App.Services;
 
 /// <summary>
 /// A <see langword="class"/> that implements the <see cref="IDialogService"/> <see langword="interface"/> using WinUI APIs.

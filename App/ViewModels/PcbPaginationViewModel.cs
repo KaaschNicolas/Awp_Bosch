@@ -1,4 +1,14 @@
-﻿namespace App.ViewModels
+﻿using App.Contracts.Services;
+using App.Core.Models;
+using App.Core.Models.Enums;
+using App.Core.Services.Interfaces;
+using App.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using System.Linq.Expressions;
+
+namespace App.ViewModels
 {
     public partial class PcbPaginationViewModel : ObservableRecipient
     {
