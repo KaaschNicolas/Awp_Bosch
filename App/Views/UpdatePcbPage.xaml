@@ -57,6 +57,19 @@
                     Header="Seriennummer"
                     Text="{x:Bind ViewModel.SerialNumber, Mode=TwoWay}" />
 
+                <AutoSuggestBox
+                    x:Name="PcbPartNumber"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    DisplayMemberPath="PcbPartNumber"
+                    Header="Sachnummer"
+                    ItemsSource="{x:Bind ViewModel.PcbTypes}"
+                    PlaceholderText="10-Stellige Sachnummer"
+                    SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                    Text="{x:Bind ViewModel.SelectedPcbType.PcbPartNumber, Mode=TwoWay}"
+                    TextChanged="AutoSuggestBox_TextChanged"
+                    TextMemberPath="PcbPartNumber" />
+
                 <CalendarDatePicker
                     Grid.Row="1"
                     Grid.Column="0"
@@ -74,24 +87,21 @@
                     PlaceholderText="Benutzername"
                     Text="{x:Bind ViewModel.User.Name, Mode=OneWay}" />
 
-                <AutoSuggestBox
-                    x:Name="PcbPartNumber"
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    DisplayMemberPath="PcbPartNumber"
-                    Header="Sachnummer"
-                    ItemsSource="{x:Bind ViewModel.PcbTypes}"
-                    PlaceholderText="10-Stellige Sachnummer"
-                    SuggestionChosen="AutoSuggestBox_SuggestionChosen"
-                    Text="{x:Bind ViewModel.SelectedPcbType.PcbPartNumber, Mode=TwoWay}"
-                    TextChanged="AutoSuggestBox_TextChanged"
-                    TextMemberPath="PcbPartNumber" />
-
                 <TextBlock
-                    Grid.Row="3"
+                    Grid.Row="2"
                     Grid.ColumnSpan="5"
                     FontSize="20"
                     Text="Fehler bearbeiten" />
+
+
+                <ComboBox
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    DisplayMemberPath="Name"
+                    Header="Fehlerkategorie"
+                    ItemsSource="{x:Bind ViewModel.Diagnoses}"
+                    PlaceholderText="auswählen"
+                    SelectedItem="{x:Bind ViewModel.DiagnosePcb, Mode=TwoWay}" />
 
                 <ItemsControl
                     Grid.Row="4"

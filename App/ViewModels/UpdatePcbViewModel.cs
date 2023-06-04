@@ -18,6 +18,7 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     private readonly INavigationService _navigationService;
     private readonly IAuthenticationService _authenticationService;
     private readonly ICrudService<Pcb> _pcbCrudService;
+    private readonly ICrudService<Diagnose> _diagnoseCrudService;
 
     private int _pcbId;
     private Pcb _pcbToEdit;
@@ -67,6 +68,12 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     private string _comment;
 
     [ObservableProperty]
+    private Diagnose _diagnosePcb;
+
+    [ObservableProperty]
+    private ObservableCollection<Diagnose> _diagnoses;
+
+    [ObservableProperty]
     private ObservableCollection<StorageLocation> _storageLocations;
 
     [ObservableProperty]
@@ -78,9 +85,8 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     [ObservableProperty]
     private ObservableCollection<TransferDTO> _transfers;
 
-    private bool restrictionExists;
 
-    public UpdatePcbViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<PcbType> pcbTypesCrudService, IInfoBarService infoBarService, INavigationService navigationService, IAuthenticationService authenticationService)
+    public UpdatePcbViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<Diagnose> diagnoseCrudService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<PcbType> pcbTypesCrudService, IInfoBarService infoBarService, INavigationService navigationService, IAuthenticationService authenticationService)
     {
 
         _storageLocationCrudService = storageLocationCrudService;
@@ -89,11 +95,13 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         _navigationService = navigationService;
         _authenticationService = authenticationService;
         _pcbDataService = pcbDataService;
+        _diagnoseCrudService = diagnoseCrudService;
 
         _storageLocations = new ObservableCollection<StorageLocation>();
         _pcbTypes = new ObservableCollection<PcbType>();
         _errorTypes = new ObservableCollection<ErrorType>();
         _transfers = new ObservableCollection<TransferDTO>();
+        _diagnoses = new ObservableCollection<Diagnose>();
 
     }
 
@@ -119,6 +127,7 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         _pcbToEdit.PcbTypeId = SelectedPcbType.Id;
         _pcbToEdit.Transfers = new List<Transfer>(transfers);
         _pcbToEdit.Restriction = Restriction;
+        _pcbToEdit.Diagnose = DiagnosePcb;
         _pcbToEdit.ErrorTypes = new List<ErrorType>(ErrorTypes);
 
 
@@ -149,36 +158,57 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         _pcbId = _pcbToEdit.Id;
 
         var result = await _pcbDataService.GetByIdEager(_pcbId);
-
-        _pcbToEdit = result.Data;
-
-
-        SerialNumber = _pcbToEdit.SerialNumber;
-        CreatedAt = _pcbToEdit.CreatedDate;
-        User = _pcbToEdit.Transfers[0].NotedBy;
-        Restriction = _pcbToEdit.Restriction;
-        SelectedPcbType = _pcbToEdit.PcbType;
-
-        var storageLocationResponse = await _storageLocationCrudService.GetAll();
-        if (storageLocationResponse != null)
+        if (result != null && result.Code == ResponseCode.Success)
         {
-            foreach (var item in storageLocationResponse.Data)
-            {
-                StorageLocations.Add(item);
-            }
-        }
+            _pcbToEdit = result.Data;
 
-        var pcbResponse = await _pcbTypeCrudService.GetAll();
-        if (pcbResponse != null)
+            // needs to happen before DiagnosePcb gets assigned, otherwise Diagnose won't display
+            var diagnoseResponse = await _diagnoseCrudService.GetAll();
+            if (diagnoseResponse != null && diagnoseResponse.Code == ResponseCode.Success)
+            {
+                diagnoseResponse.Data.ForEach(x => Diagnoses.Add(x));
+            }
+            else
+            {
+                _infoBarService.showError("Fehler beim Laden der Fehlerkategorien", "Error");
+            }
+
+            var storageLocationResponse = await _storageLocationCrudService.GetAll();
+            if (storageLocationResponse != null && storageLocationResponse.Code == ResponseCode.Success)
+            {
+                storageLocationResponse.Data.ForEach(x => StorageLocations.Add(x));
+            }
+            else
+            {
+                _infoBarService.showError("Fehler beim Laden der Lagerorte", "Error");
+            }
+
+            var pcbTypeResponse = await _pcbTypeCrudService.GetAll();
+            if (pcbTypeResponse != null && pcbTypeResponse.Code == ResponseCode.Success)
+            {
+                pcbTypeResponse.Data.ForEach(x => PcbTypes.Add(x));
+            }
+            else
+            {
+                _infoBarService.showError("Fehler beim Laden der Sachnummern", "Error");
+            }
+
+
+            SerialNumber = _pcbToEdit.SerialNumber;
+            CreatedAt = _pcbToEdit.CreatedDate;
+            DiagnosePcb = _pcbToEdit.Diagnose;
+            User = _pcbToEdit.Transfers[0].NotedBy;
+            Restriction = _pcbToEdit.Restriction;
+            SelectedPcbType = _pcbToEdit.PcbType;
+
+
+            _pcbToEdit.ErrorTypes.ForEach(x => ErrorTypes.Add(x));
+            _pcbToEdit.Transfers.ForEach(x => Transfers.Add(new TransferDTO(x)));
+        }
+        else
         {
-            foreach (var item in pcbResponse.Data)
-            {
-                PcbTypes.Add(item);
-            }
+            _infoBarService.showError("Fehler beim Laden der Leiterplatte", "Error");
         }
-
-        _pcbToEdit.ErrorTypes.ForEach(x => ErrorTypes.Add(x));
-        _pcbToEdit.Transfers.ForEach(x => Transfers.Add(new TransferDTO(x)));
     }
 
 
