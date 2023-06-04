@@ -82,7 +82,7 @@ namespace App.ViewModels
         private string _sortyBy;
 
         [ObservableProperty]
-        private ObservableCollection<Pcb> _pcbs;
+        private ObservableCollection<PaginatedPcb> _pcbs;
 
         [ObservableProperty]
         private ObservableCollection<StorageLocation> _storageLocations = new();
@@ -97,7 +97,7 @@ namespace App.ViewModels
         private StorageLocation _selectedComboBox;
 
         [ObservableProperty]
-        private Pcb _selectedItem;
+        private PaginatedPcb _selectedItem;
 
         public List<int> PageSizes => new() { 5, 10, 15, 20 };
 
@@ -127,7 +127,7 @@ namespace App.ViewModels
             if (_storageLocations.Count == 0)
             {
                 var storageLocations = await _storageLocationCrudService.GetAll();
-
+               
                 if (storageLocations.Code == ResponseCode.Success)
                 {
                     storageLocations.Data.ForEach(x => _storageLocations.Add(x));
@@ -165,8 +165,25 @@ namespace App.ViewModels
 
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
-                    PaginatedList<Pcb> pcbsPaginated = await PaginatedList<Pcb>.CreateAsync(
-                        pcbs.Data,
+                    List<PaginatedPcb> convertedPcbs = new();
+
+                    // TODO: Error handling
+                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
+                    var newPcbs = new List<Pcb>();
+                    foreach (var item in resEager.Data)
+                    {
+                        foreach (var pcb in pcbs.Data)
+                        {
+                            if (item.Id.Equals(pcb.Id))
+                            {
+                                newPcbs.Add(item);
+                            }
+                        }
+                    }
+                    newPcbs.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
+
+                    PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
+                        convertedPcbs,
                         pageIndex,
                         pageSize,
                         maxEntries.Data
@@ -175,48 +192,72 @@ namespace App.ViewModels
                     PageNumber = pcbsPaginated.PageIndex;
                     PageCount = pcbsPaginated.PageCount;
 
-                    ObservableCollection<Pcb> copy = new();
+                    ObservableCollection<PaginatedPcb> copy = new();
                     pcbsPaginated.ForEach(x => copy.Add(x));
                     Pcbs = copy;
                 }
             }
             else if (_filterOptions != PcbFilterOptions.None && _filterOptions == PcbFilterOptions.FilterStorageLocation)
             {
-                switch (_filterOptions)
+                if (_selectedComboBox.StorageName == "Alles")
                 {
-                    case PcbFilterOptions.Search:
-                        maxEntries = await _pcbDataService.MaxEntriesSearch(QueryText);
-                        pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
-                        break;
-                    case PcbFilterOptions.Filter1:
-                        Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true && x.Transfers.LastOrDefault().StorageLocation.Id == _selectedComboBox.Id;
-                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where1);
-                        break;
-                    case PcbFilterOptions.Filter2:
-                        Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.Now.Date && x.Transfers.LastOrDefault().StorageLocation.Id == _selectedComboBox.Id;
-                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where2);
-                        break;
-                    case PcbFilterOptions.Filter3:
-                        Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0 && x.Transfers.LastOrDefault().StorageLocation.Id == _selectedComboBox.Id;
-                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where3);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
-                        break;
-                    case PcbFilterOptions.FilterStorageLocation:
-                        maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);
-                        pcbs = await _pcbDataService.GetWithFilterStorageLocation(pageIndex, pageSize, SelectedComboBox.Id);
-                        break;
-                    default:
-                        maxEntries = await _pcbDataService.MaxEntries();
-                        pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
-                        break;
+                    maxEntries = await _pcbDataService.MaxEntries();
+                    pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
+                }
+                else
+                {
+                    switch (_filterOptions)
+                    {
+                        case PcbFilterOptions.Search:
+                            maxEntries = await _pcbDataService.MaxEntriesSearch(QueryText);
+                            pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
+                            break;
+                        case PcbFilterOptions.Filter1:
+                            Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
+                            maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
+                            pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where1);
+                            break;
+                        case PcbFilterOptions.Filter2:
+                            Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.UtcNow.Date;
+                            maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
+                            pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where2);
+                            break;
+                        case PcbFilterOptions.Filter3:
+                            Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0;
+                            maxEntries = await _pcbDataService.MaxEntriesFiltered(where3);
+                            pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
+                            break;
+                        case PcbFilterOptions.FilterStorageLocation:
+                            maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);
+                            pcbs = await _pcbDataService.GetWithFilterStorageLocation(pageIndex, pageSize, SelectedComboBox.Id);
+                            break;
+                        default:
+                            maxEntries = await _pcbDataService.MaxEntries();
+                            pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
+                            break;
+                    }
                 }
 
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
-                    PaginatedList<Pcb> pcbsPaginated = await PaginatedList<Pcb>.CreateAsync(
-                        pcbs.Data,
+                    List<PaginatedPcb> convertedPcbs = new();
+                    // TODO: Error handling
+                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
+                    var newPcbs = new List<Pcb>();
+                    foreach (var item in resEager.Data)
+                    {
+                        foreach (var pcb in pcbs.Data)
+                        {
+                            if (item.Id.Equals(pcb.Id))
+                            {
+                                newPcbs.Add(item);
+                            }
+                        }
+                    }
+                    newPcbs.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
+
+                    PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
+                        convertedPcbs,
                         pageIndex,
                         pageSize,
                         maxEntries.Data
@@ -225,7 +266,7 @@ namespace App.ViewModels
                     PageNumber = pcbsPaginated.PageIndex;
                     PageCount = pcbsPaginated.PageCount;
 
-                    ObservableCollection<Pcb> copy = new();
+                    ObservableCollection<PaginatedPcb> copy = new();
                     pcbsPaginated.ForEach(x => copy.Add(x));
                     Pcbs = copy;
                 }
@@ -237,8 +278,24 @@ namespace App.ViewModels
 
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
-                    PaginatedList<Pcb> pcbsPaginated = await PaginatedList<Pcb>.CreateAsync(
-                        pcbs.Data,
+                    List<PaginatedPcb> convertedPcbs = new();
+                    // TODO: Error handling
+                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
+                    var newPcbs = new List<Pcb>();
+                    foreach (var item in resEager.Data)
+                    {
+                        foreach (var pcb in pcbs.Data)
+                        {
+                            if (item.Id.Equals(pcb.Id))
+                            {
+                                newPcbs.Add(item);
+                            }
+                        }
+                    }
+                    newPcbs.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
+
+                    PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
+                        convertedPcbs,
                         pageIndex,
                         pageSize,
                         maxEntries.Data
@@ -247,7 +304,7 @@ namespace App.ViewModels
                     PageNumber = pcbsPaginated.PageIndex;
                     PageCount = pcbsPaginated.PageCount;
 
-                    ObservableCollection<Pcb> copy = new();
+                    ObservableCollection<PaginatedPcb> copy = new();
                     pcbsPaginated.ForEach(x => copy.Add(x));
                     Pcbs = copy;
                 }
@@ -266,9 +323,9 @@ namespace App.ViewModels
             var result = await _dialogService.ConfirmDeleteDialogAsync("Leiterplatte Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?");
             if (result != null && result == true)
             {
-                Pcb pcbToRemove = _selectedItem;
+                PaginatedPcb pcbToRemove = _selectedItem;
                 _pcbs.Remove(pcbToRemove);
-                await _pcbDataService.Delete(pcbToRemove);
+                await _pcbDataService.Delete(PaginatedPcb.ToPcb(pcbToRemove));
                 _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
             }
         }
@@ -308,14 +365,16 @@ namespace App.ViewModels
         }
 
         [RelayCommand]
-        public void NavigateToDetails(Pcb pcb)
+        public void NavigateToDetails(PaginatedPcb paginatedPcb)
         {
+            var pcb = PaginatedPcb.ToPcb(paginatedPcb);
             _navigationService.NavigateTo("App.ViewModels.PcbSingleViewModel", pcb);
         }
 
         [RelayCommand]
-        public void NavigateToUpdate(Pcb pcb)
+        public void NavigateToUpdate(PaginatedPcb paginatedPcb)
         {
+            var pcb = PaginatedPcb.ToPcb(paginatedPcb);
             _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", pcb);
         }
 

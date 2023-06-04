@@ -1,16 +1,10 @@
-﻿using System.Reflection;
-using System.Windows.Input;
-
-using App.Contracts.Services;
-using App.Core.Services;
-using App.Core.Services.Interfaces;
+﻿using App.Contracts.Services;
 using App.Helpers;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-
 using Microsoft.UI.Xaml;
-
+using System.Reflection;
+using System.Windows.Input;
 using Windows.ApplicationModel;
 
 namespace App.ViewModels;

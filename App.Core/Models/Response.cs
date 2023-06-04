@@ -24,4 +24,6 @@ public class Response<T>
         Code = code;
         ErrorMessage = error;
     }
+
+    public Response() { }
 }

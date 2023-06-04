@@ -40,7 +40,7 @@
                         Click="CreatePcbButton_Click"
                         Icon="Add"
                         Label="Hinzufügen" />
-                    <AppBarButton Icon="Refresh" Label="Neu Laden" />
+                    <AppBarButton Icon="Refresh" Label="Neu Laden" Click="FilterClear_Click"/>
 
                 </CommandBar>
                 <StackPanel
@@ -91,6 +91,16 @@
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         Text="{Binding Finalized}" />
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding LastStorageLocationName}" />
+                    <TextBlock
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding CreatedDate}" />
                 </Grid>
             </DataTemplate>
         </Grid.Resources>
@@ -106,7 +116,7 @@
                 DefaultLabelPosition="Right"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <ComboBox x:Name="ComboBox" 
+                    <ComboBox x:Name="ComboBoxStorageLocation" 
                               ItemsSource="{x:Bind ViewModel.StorageLocations}"
                               SelectedItem="{x:Bind ViewModel.SelectedComboBox}"
                               SelectionChanged="ComboBox_SelectionChanged"
@@ -236,17 +246,26 @@
             <ctWinUI:DataGrid.Columns>
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding SerialNumber}"
-                    Header="SerialNumber"
+                    Header="Seriennummer"
                     Tag="SerialNumber" />
                 <ctWinUI:DataGridComboBoxColumn
                     Binding="{Binding ErrorDescription}"
-                    Header="Fehler Beschreibung"
+                    Header="Fehlerbeschreibung"
                     Tag="ErrorDescription" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding Finalized}"
                     Header="Abgeschlossen"
                     Tag="Finalized" />
-                <controls:DataGridTemplateColumn Width="100" Header="Aktion">
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding LastStorageLocationName}"
+                    Header="Letzter Lagerort"
+                    Tag="LastStorageLocation" 
+                    CanUserSort="False" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding CreatedDate}"
+                    Header="Ausgefallen am"
+                    Tag="CreateDate" />
+                <controls:DataGridTemplateColumn Width="100" Header="Aktion" CanUserSort="False">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <AppBarButton

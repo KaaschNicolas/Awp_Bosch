@@ -20,11 +20,25 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
-                .OrderBy(orderByProperty, isAscending)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            List<T> data = new();
+            if (pageIndex == 0)
+            {
+                data = await _boschContext.Set<T>()
+                    .OrderBy(orderByProperty, isAscending)
+                    .Where(x => x.DeletedDate == DateTime.MinValue)
+                    .Skip(pageIndex * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            }
+            else
+            {
+                data = await _boschContext.Set<T>()
+                    .OrderBy(orderByProperty, isAscending)
+                    .Where(x => x.DeletedDate == DateTime.MinValue)
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+            }
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
@@ -38,6 +52,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var data = await _boschContext.Set<T>()
+                .Where(x => x.DeletedDate == DateTime.MinValue)
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
         }
@@ -53,6 +68,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             var data = await _boschContext.Set<T>()
                 .Where(where)
+                .Where(x => x.DeletedDate == DateTime.MinValue)
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
         }
@@ -68,7 +84,11 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             List<Transfer> lastTransfers = new();
 
-            await _boschContext.Pcbs.Include(x => x.Transfers).ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
+            await _boschContext
+                .Pcbs
+                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Include(x => x.Transfers)
+                .ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
 
             List<Pcb> pcbs = new();
 
@@ -126,6 +146,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var data = await _boschContext.Set<T>()
+                .Where(x => x.DeletedDate == DateTime.MinValue)
                 .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
@@ -141,12 +162,28 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
-                .OrderBy(orderByProperty, isAscending)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .AsNoTracking()
-                .ToListAsync();
+            List<T> data = new();
+            if (pageIndex == 0)
+            {
+                data = await _boschContext.Set<T>()
+                    .OrderBy(orderByProperty, isAscending)
+                    .Where(x => x.DeletedDate == DateTime.MinValue)
+                    .Skip(pageIndex * pageSize)
+                    .Take(pageSize)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            else
+            {
+                data = await _boschContext.Set<T>()
+                    .OrderBy(orderByProperty, isAscending)
+                    .Where(x => x.DeletedDate == DateTime.MinValue)
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            
             return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
@@ -164,6 +201,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             if (pageIndex == 0)
             {
                 data = await _boschContext.Set<T>()
+                    .Where(x => x.DeletedDate == DateTime.MinValue)
                     .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
                     .Skip((pageIndex) * pageSize)
                     .Take(pageSize)
@@ -172,6 +210,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             else
             {
                 data = await _boschContext.Set<T>()
+                    .Where(x => x.DeletedDate == DateTime.MinValue)
                     .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
@@ -191,8 +230,9 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var data = await _boschContext.Set<T>()
+                .Where(x => x.DeletedDate == DateTime.MinValue)
                 .Where(where)
-                .Skip((pageIndex - 1) * pageSize)
+                .Skip(pageIndex * pageSize)
                 .Take(pageSize)
                 .Include("PcbType")
                 .ToListAsync();
@@ -211,7 +251,11 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             List<Transfer> lastTransfers = new();
 
-            await _boschContext.Pcbs.Include(x => x.Transfers).ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
+            await _boschContext
+                .Pcbs
+                .Include(x => x.Transfers)
+                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
 
             List<T> pcbs = new();
 
@@ -247,7 +291,9 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
                 null);
             //setzt alle DeletedDate der anhängenden Objekte null, die es auch nur für diese Leiterplatte gibt.
 
-            Pcb pcb = _boschContext.Set<T>().Where(x => x.Id.Equals(entity.Id))
+            Pcb pcb = _boschContext.Set<T>()
+                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Where(x => x.Id.Equals(entity.Id))
                 .Include(pcb => pcb.Restriction)
                 .Include(etp => etp.ErrorTypes)
                 .Include(pcb => pcb.Transfers)
@@ -288,20 +334,54 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var entity = await _boschContext.Set<T>()
+                .Where(x => x.DeletedDate == DateTime.MinValue)
                 .Include(T => T.Transfers)
                 .ThenInclude(transfer => transfer.NotedBy)
                 .Include(T => T.Transfers)
                 .ThenInclude(transfer => transfer.StorageLocation)
                 .Include(T => T.Restriction)
+                .Include(T => T.Comment)
                 .Include(T => T.Diagnose)
                 .Include(T => T.PcbType)
                 .Include(T => T.ErrorTypes)
+                .AsNoTracking()
                 .FirstAsync(x => x.Id == id);
             return new Response<T>(ResponseCode.Success, entity);
         }
         catch (DbUpdateException)
         {
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
+        }
+    }
+
+    public async Task<Response<List<T>>> GetAllEager(int pageIndex, int pageSize, string orderByProperty,
+        bool isAscending)
+    {
+        try
+        {
+            _ = pageIndex == 0 ? pageIndex : pageIndex = pageIndex - 1;
+            var entity = await _boschContext.Set<T>()
+                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Include(T => T.Restriction)
+                .Include(T => T.Comment)
+                .Include(T => T.Diagnose)
+                .Include(T => T.PcbType)
+                .Include(T => T.ErrorTypes)
+                .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
+                .ThenInclude(transfer => transfer.StorageLocation)
+                .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
+                .ThenInclude(transfer => transfer.NotedBy)
+                .AsNoTracking()
+                .OrderBy(orderByProperty, isAscending)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new Response<List<T>>(ResponseCode.Success, entity);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<List<T>>(ResponseCode.Error, error: $"Fehler beim Eager Loading der Pcbs");
         }
     }
 }

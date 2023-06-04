@@ -35,7 +35,7 @@ public sealed partial class PcbSinglePage : Page
         DataContext = ViewModel;
         //dateOfFailure.Date = new DateTime(2023, 04, 23);
         // GenerateBarcode();
-        //showRestrictionButton();
+        // showRestrictionButton();
         //colorDaysInCirculation();
     }
 
@@ -91,6 +91,16 @@ public sealed partial class PcbSinglePage : Page
     void TransferClick(object sender, RoutedEventArgs e)
     {
         ViewModel.ShowTransferCommand.Execute(null);
+    }
+
+    void CommentClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.AddCommentCommand.Execute(null);
+    }
+
+    void RestrictionClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.AddRestrictionCommand.Execute(null);
     }
 
     //    private async void OnPrintButtonClicked(object sender, RoutedEventArgs e)

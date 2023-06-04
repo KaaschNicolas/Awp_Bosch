@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:App.Converters"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:App.Models"
     xmlns:viewModels="using:App.ViewModels"
     x:Name="EditPcbPage"
     mc:Ignorable="d">
@@ -56,6 +57,19 @@
                     Header="Seriennummer"
                     Text="{x:Bind ViewModel.SerialNumber, Mode=TwoWay}" />
 
+                <AutoSuggestBox
+                    x:Name="PcbPartNumber"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    DisplayMemberPath="PcbPartNumber"
+                    Header="Sachnummer"
+                    ItemsSource="{x:Bind ViewModel.PcbTypes}"
+                    PlaceholderText="10-Stellige Sachnummer"
+                    SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                    Text="{x:Bind ViewModel.SelectedPcbType.PcbPartNumber, Mode=TwoWay}"
+                    TextChanged="AutoSuggestBox_TextChanged"
+                    TextMemberPath="PcbPartNumber" />
+
                 <CalendarDatePicker
                     Grid.Row="1"
                     Grid.Column="0"
@@ -73,24 +87,21 @@
                     PlaceholderText="Benutzername"
                     Text="{x:Bind ViewModel.User.Name, Mode=OneWay}" />
 
-                <AutoSuggestBox
-                    x:Name="PcbPartNumber"
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    DisplayMemberPath="PcbPartNumber"
-                    Header="Sachnummer"
-                    ItemsSource="{x:Bind ViewModel.PcbTypes}"
-                    PlaceholderText="10-Stellige Sachnummer"
-                    SuggestionChosen="AutoSuggestBox_SuggestionChosen"
-                    Text="{x:Bind ViewModel.SelectedPcbType.PcbPartNumber, Mode=TwoWay}"
-                    TextChanged="AutoSuggestBox_TextChanged"
-                    TextMemberPath="PcbPartNumber" />
-
                 <TextBlock
-                    Grid.Row="3"
+                    Grid.Row="2"
                     Grid.ColumnSpan="5"
                     FontSize="20"
                     Text="Fehler bearbeiten" />
+
+
+                <ComboBox
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    DisplayMemberPath="Name"
+                    Header="Fehlerkategorie"
+                    ItemsSource="{x:Bind ViewModel.Diagnoses}"
+                    PlaceholderText="auswählen"
+                    SelectedItem="{x:Bind ViewModel.DiagnosePcb, Mode=TwoWay}" />
 
                 <ItemsControl
                     Grid.Row="4"
@@ -145,7 +156,7 @@
                     Grid.Row="5"
                     Grid.ColumnSpan="2"
                     Header="Einschränkung"
-                    Text="{x:Bind ViewModel.Restriction, Mode=TwoWay}" />
+                    Text="{x:Bind ViewModel.Restriction.Name, Mode=TwoWay}" />
                 <TextBlock
                     Grid.Row="6"
                     Grid.ColumnSpan="3"
@@ -159,7 +170,7 @@
                     HorizontalAlignment="Left"
                     ItemsSource="{x:Bind ViewModel.Transfers}">
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:TransferDTO">
                             <Grid
                                 x:Name="tranferData"
                                 Margin="0,0,0,20"
@@ -188,7 +199,7 @@
                                     Grid.Row="0"
                                     Grid.Column="0"
                                     Grid.ColumnSpan="2"
-                                    Date="{Binding CreatedDate, Mode=TwoWay, Converter={StaticResource TimeConverter}}"
+                                    Date="{x:Bind CreatedAt, Mode=TwoWay, Converter={StaticResource TimeConverter}}"
                                     DateFormat="{}{day.integer}.{month.integer}.{year.full}"
                                     Header="Am"
                                     MaxDate="{Binding ViewModel.MaxDate, Mode=OneWay, ElementName=EditPcbPage, Converter={StaticResource TimeConverter}}" />
@@ -198,12 +209,10 @@
                                     Grid.Column="2"
                                     Grid.ColumnSpan="3"
                                     DisplayMemberPath="StorageName"
-                                    Header="Lagerot"
+                                    Header="Lagerort"
                                     IsSynchronizedWithCurrentItem="False"
                                     ItemsSource="{Binding ViewModel.StorageLocations, ElementName=EditPcbPage}"
-                                    SelectedValue="{Binding StorageLocation.StorageName}"
-                                    SelectedValuePath="StorageName"
-                                    Text="Hello" />
+                                    SelectedItem="{Binding StorageLocationTransfer, Mode=TwoWay}" />
 
                                 <TextBox
                                     Grid.Row="0"
@@ -218,7 +227,7 @@
                                     Grid.Row="1"
                                     Grid.ColumnSpan="8"
                                     Header="Anmerkung"
-                                    Text="{Binding Comment, Mode=TwoWay}" />
+                                    Text="{Binding CommentTransfer, Mode=TwoWay}" />
 
                             </Grid>
                         </DataTemplate>
