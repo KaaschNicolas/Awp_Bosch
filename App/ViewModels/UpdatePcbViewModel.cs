@@ -2,6 +2,7 @@
 using App.Contracts.ViewModels;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
+using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -22,8 +23,21 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     private Pcb _pcbToEdit;
     public DateTime MaxDate { get; private set; } = DateTime.Now;
 
-    [ObservableProperty]
     private DateTime _createdAt;
+    public DateTime CreatedAt
+    {
+        get => _createdAt;
+        set
+        {
+            if (value == DateTime.MinValue)
+            {
+                OnPropertyChanged(nameof(CreatedAt));
+                return;
+            }
+            SetProperty(ref _createdAt, value);
+
+        }
+    }
 
     [ObservableProperty]
     private User _user;
@@ -62,7 +76,7 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     private ObservableCollection<ErrorType> _errorTypes;
 
     [ObservableProperty]
-    private ObservableCollection<Transfer> _transfers;
+    private ObservableCollection<TransferDTO> _transfers;
 
     private bool restrictionExists;
 
@@ -79,18 +93,22 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         _storageLocations = new ObservableCollection<StorageLocation>();
         _pcbTypes = new ObservableCollection<PcbType>();
         _errorTypes = new ObservableCollection<ErrorType>();
-        _transfers = new ObservableCollection<Transfer>();
-
+        _transfers = new ObservableCollection<TransferDTO>();
 
     }
+
+
 
     [RelayCommand]
     public async Task Save()
     {
         bool isFinalized = false;
 
-        foreach (var transfer in Transfers)
+        List<Transfer> transfers = new();
+        foreach (TransferDTO transferDTO in Transfers)
         {
+            Transfer transfer = transferDTO.GetTransfer();
+            transfers.Add(transfer);
             if (transfer.StorageLocation.IsFinalDestination)
             {
                 isFinalized = true;
@@ -101,7 +119,7 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         _pcbToEdit.SerialNumber = SerialNumber;
         _pcbToEdit.Finalized = isFinalized;
         _pcbToEdit.PcbTypeId = SelectedPcbType.Id;
-        _pcbToEdit.Transfers = new List<Transfer>(Transfers);
+        _pcbToEdit.Transfers = new List<Transfer>(transfers);
         _pcbToEdit.Restriction = Restriction;
         _pcbToEdit.ErrorTypes = new List<ErrorType>(ErrorTypes);
 
@@ -170,7 +188,7 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         }
 
         _pcbToEdit.ErrorTypes.ForEach(x => ErrorTypes.Add(x));
-        _pcbToEdit.Transfers.ForEach(x => Transfers.Add(x));
+        _pcbToEdit.Transfers.ForEach(x => Transfers.Add(new TransferDTO(x)));
     }
 
 

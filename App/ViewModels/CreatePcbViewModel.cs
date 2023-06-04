@@ -19,9 +19,22 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
     private readonly INavigationService _navigationService;
     private readonly IAuthenticationService _authenticationService;
 
-    [ObservableProperty]
-    private DateTime _createdAt = DateTime.Now;
 
+    private DateTime _createdAt;
+    public DateTime CreatedAt
+    {
+        get => _createdAt;
+        set
+        {
+            if (value == DateTime.MinValue)
+            {
+                OnPropertyChanged(nameof(CreatedAt));
+                return;
+            }
+            SetProperty(ref _createdAt, value);
+
+        }
+    }
     public DateTime MaxDate { get; private set; } = DateTime.Now;
 
     [ObservableProperty]
@@ -81,6 +94,7 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
         _storageLocations = new ObservableCollection<StorageLocation>();
         _pcbTypes = new ObservableCollection<PcbType>();
         _diagnoses = new ObservableCollection<Diagnose>();
+
     }
 
     [RelayCommand]
@@ -144,6 +158,8 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
 
     public async void OnNavigatedTo(object parameter)
     {
+        _createdAt = DateTime.Now;
+
         var pcbResponse = await _pcbTypeCrudService.GetAll();
         if (pcbResponse != null)
         {
