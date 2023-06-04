@@ -13,6 +13,10 @@ namespace App.Models
         {
             get; set;
         }
+        public string Status
+        {
+            get; set;
+        }
         public Device Restriction
         {
             get; set;
@@ -65,10 +69,13 @@ namespace App.Models
         }
         public string? LastStorageLocationName { get; set; }
 
+        public int AtLocationDays { get; set; } 
+
 
         public static PaginatedPcb ToPaginatedPcb(Pcb pcb)
         {
             string? currentStorageLocationName = pcb.Transfers.Count > 0 ? pcb.Transfers[0].StorageLocation.StorageName : null;
+            int days = (int)Math.Round((DateTime.Now - pcb.Transfers[^1].CreatedDate).TotalDays);
             return new PaginatedPcb()
             {
                 Id = pcb.Id,
@@ -86,6 +93,7 @@ namespace App.Models
                 Diagnose = pcb.Diagnose,
                 DiagnoseId = pcb.DiagnoseId,
                 LastStorageLocationName = currentStorageLocationName,
+                AtLocationDays = days,
             };
         }
 

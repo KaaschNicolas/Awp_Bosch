@@ -106,6 +106,29 @@ namespace App.ViewModels
         [ObservableProperty]
         private PaginatedPcb _selectedItem;
 
+        [ObservableProperty]
+        private int _atLocationDays;
+
+        private string _status;
+
+
+        public string Status
+        {
+            get
+            {
+                /*if(_atLocationDays >= int.Parse(_selectedItem.Transfers[^1].StorageLocation.DwellTimeRed))
+                {
+                    return _status = "red";
+                }
+                else if(_atLocationDays >= int.Parse(_selectedItem.Transfers[^1].StorageLocation.DwellTimeYellow))
+                {
+                    return _status = "yellow";
+                }
+                else {*/
+                return _status = "green"; //}
+            }
+        }
+
         public List<int> PageSizes => new() { 5, 10, 15, 20 };
 
         public string QueryText { get => _queryText; set => SetProperty(ref _queryText, value); }

@@ -65,7 +65,7 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Default;
             DataGrid.ItemsSource = ViewModel.Pcbs; //nötig? weil schon in Xaml gebunden
-            DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Ascending;
+            DataGrid.Columns[1].SortDirection = ctWinUI.DataGridSortDirection.Ascending;
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
             ViewModel.FilterOptions = PcbFilterOptions.None;
         }
