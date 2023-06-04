@@ -300,7 +300,7 @@
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding CreatedDate, Mode=TwoWay}" />
-                                                    <TextBlock Margin="10,0,0,0" Text="{Binding NotedBy.Name, Mode=TwoWay}" />
+                                                    <TextBlock Margin="10,0,0,0" Text="{Binding NotedBy, Mode=TwoWay}" />
                                                 </StackPanel>
                                                 <TextBlock Text="Beschreibung:" />
                                                 <TextBlock Text="{Binding Comment, Mode=OneWay}" />
@@ -309,8 +309,6 @@
                                     </DataTemplate>
                                 </controls:DataGridTemplateColumn.CellTemplate>
                             </controls:DataGridTemplateColumn>
-                            <!--<controls:DataGridTextColumn Header="Created" Binding="{Binding CreatedDate, Mode=TwoWay}" Tag="Created" />
-                            <controls:DataGridTextColumn Header="Noted By" Binding="{Binding NotedBy.Name, Mode=TwoWay}" Tag="User" />-->
                         </controls:DataGrid.Columns>
                     </controls:DataGrid>
                 </Grid>
@@ -426,29 +424,26 @@
                     Width="280"
                     Height="Auto"
                     Margin="0,10,0,0"
+                    Padding="20"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     Orientation="Vertical"
-                    ScrollViewer.VerticalScrollMode="Disabled">
-                    <TextBlock
-                        Margin="20,20,0,0"
-                        FontWeight="SemiBold"
-                        Text="Anmerkungen:" />
-                    <StackPanel Orientation="Horizontal">
+                    ScrollViewer.VerticalScrollMode="Disabled"
+                    Spacing="10">
+                    <TextBlock FontWeight="SemiBold" Text="Anmerkungen:" />
+                    <StackPanel Orientation="Horizontal" Spacing="10">
                         <TextBlock
-                            Margin="20,5,0,0"
                             FontSize="12"
                             IsColorFontEnabled="True"
-                            Text="bearbeitet von:" />
-                        <TextBlock
-                            Margin="10,5,0,0"
-                            FontSize="12"
-                            Text="{Binding NotedBy.Name, Mode=OneWay}" />
+                            Text="erstellt von:" />
+                        <TextBlock FontSize="12" Text="{Binding NotedBy, Mode=OneWay}" />
                     </StackPanel>
-                    <TextBlock
-                        Margin="20,10,0,20"
-                        Text="{Binding PanelComment.Content, Mode=OneWay}"
-                        TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock FontSize="12" Text="Am:" />
+                        <TextBlock FontSize="12" Text="{Binding PanelComment.CreatedDate, Mode=OneWay}" />
+
+                    </StackPanel>
+                    <TextBlock Text="{Binding PanelComment.Content, Mode=OneWay}" TextWrapping="Wrap" />
                 </StackPanel>
             </StackPanel>
 
