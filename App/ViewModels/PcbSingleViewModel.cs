@@ -313,12 +313,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         Restriction = _pcb.Restriction;
         ErrorDescription = _pcb.ErrorDescription;
         ErrorTypes = _pcb.ErrorTypes;
-        if (ErrorTypes != null)
+        if (ErrorTypes[0].Code != "" && ErrorTypes[0].ErrorDescription != "" && ErrorTypes != null)
         {
             FirstErrorCode = ErrorTypes[0].Code;
             FirstErrorDescription = ErrorTypes[0].ErrorDescription;
 
-            if (ErrorTypes[1] != null)
+            if (ErrorTypes[1].Code != "" && ErrorTypes[1].ErrorDescription != "")
             {
                 SecondErrorCode = ErrorTypes[1].Code;
                 SecondErrorDescription = ErrorTypes[1].ErrorDescription;
