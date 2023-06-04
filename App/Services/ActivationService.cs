@@ -80,10 +80,13 @@ public class ActivationService : IActivationService
                 fe.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync("No Connection", "Es besteht keine Verbindung zur Datenbank, \n Bitte wenden sie sich an einen Vorgesetzten.", App.MainWindow.Content.XamlRoot);
             }
             return;
-            if (!_authenticationService.IsAuthenticated) { 
-                if (App.MainWindow.Content is FrameworkElement fr) {
-                   fr.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync("Unauthorized", "Sie haben keine Berechtigungen diese Anwendung zu nutzen.\n Bitte wenden sie sich an ihren nächsten Vorgesetzten,\n wenn Sie dennoch Zugriff benötigen.", App.MainWindow.Content.XamlRoot);
-                } 
+        }
+
+        if (!_authenticationService.IsAuthenticated)
+        {
+            if (App.MainWindow.Content is FrameworkElement fr)
+            {
+                fr.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync("Unauthorized", "Sie haben keine Berechtigungen diese Anwendung zu nutzen.\n Bitte wenden sie sich an ihren nächsten Vorgesetzten,\n wenn Sie dennoch Zugriff benötigen.", App.MainWindow.Content.XamlRoot);
             }
         }
     }
