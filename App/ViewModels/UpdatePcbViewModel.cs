@@ -97,8 +97,6 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
 
     }
 
-
-
     [RelayCommand]
     public async Task Save()
     {
@@ -123,16 +121,9 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
         _pcbToEdit.Restriction = Restriction;
         _pcbToEdit.ErrorTypes = new List<ErrorType>(ErrorTypes);
 
-        Response<Pcb> response;
 
-        if (!restrictionExists && _pcbToEdit.Restriction.Name != "")
-        {
-            response = await _pcbDataService.CreateRestrictionAndUpdate(_pcbToEdit);
-        }
-        else
-        {
-            response = await _pcbDataService.Update(_pcbId, _pcbToEdit);
-        }
+        var response = await _pcbDataService.Update(_pcbId, _pcbToEdit);
+
 
         if (response != null && response.Code == ResponseCode.Success)
         {
@@ -161,12 +152,11 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
 
         _pcbToEdit = result.Data;
 
-        // check if restriction exists if not create new in save method
-        restrictionExists = _pcbToEdit.Restriction is null ? false : true;
+
         SerialNumber = _pcbToEdit.SerialNumber;
         CreatedAt = _pcbToEdit.CreatedDate;
         User = _pcbToEdit.Transfers[0].NotedBy;
-        Restriction = _pcbToEdit.Restriction ??= new Device { Name = "" };
+        Restriction = _pcbToEdit.Restriction;
         SelectedPcbType = _pcbToEdit.PcbType;
 
         var storageLocationResponse = await _storageLocationCrudService.GetAll();
