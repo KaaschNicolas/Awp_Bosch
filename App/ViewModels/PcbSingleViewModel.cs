@@ -300,6 +300,31 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         SerialNumber = _pcb.SerialNumber;
         CreatedDate = _pcb.CreatedDate;
         Restriction = _pcb.Restriction;
+        ErrorDescription = _pcb.ErrorDescription;
+        ErrorTypes = _pcb.ErrorTypes;
+        if (ErrorTypes != null)
+        {
+            FirstErrorCode = ErrorTypes[0].Code;
+            FirstErrorDescription = ErrorTypes[0].ErrorDescription;
+
+            if (ErrorTypes[1] != null)
+            {
+                SecondErrorCode = ErrorTypes[1].Code;
+                SecondErrorDescription = ErrorTypes[1].ErrorDescription;
+            }
+            else
+            {
+                SecondErrorCode = " nicht vorhanden";
+                SecondErrorDescription = " nicht vorhanden";
+            }
+        }
+        else
+        {
+            FirstErrorCode = " nicht vorhanden";
+            FirstErrorDescription = " nicht vorhanden";
+            SecondErrorCode = " nicht vorhanden";
+            SecondErrorDescription = " nicht vorhanden";
+        }
 
 
         Finalized = _pcb.Finalized;
@@ -367,11 +392,17 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                     }
                 }
             }
+            SortedData = transfers.Data.ToList();
+            SortedData.Reverse();
         }
-
+        else
+        {
+            _infoBarService.showError("Couldn't load transfer list", "Transfer List");
+        }
     }
     public void OnNavigatedFrom()
     {
+
     }
 
     private void NavigateToPcbs()
