@@ -6,10 +6,11 @@ using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels;
 
-public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
+public partial class UpdatePcbViewModel : ObservableValidator, INavigationAware
 {
     private readonly IPcbDataService<Pcb> _pcbDataService;
     private readonly ICrudService<PcbType> _pcbTypeCrudService;
@@ -44,9 +45,11 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     private User _user;
 
     [ObservableProperty]
+    [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Sachnummer muss aus genau 10 Zahlen bestehen.")]
     private PcbType _selectedPcbType;
 
     [ObservableProperty]
+    [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Seriennummer muss aus genau 10 Zahlen bestehen.")]
     private string _serialNumber;
 
     [ObservableProperty]
@@ -108,40 +111,44 @@ public partial class UpdatePcbViewModel : ObservableRecipient, INavigationAware
     [RelayCommand]
     public async Task Save()
     {
-        bool isFinalized = false;
-
-        List<Transfer> transfers = new();
-        foreach (TransferDTO transferDTO in Transfers)
+        ValidateAllProperties();
+        if (!HasErrors)
         {
-            Transfer transfer = transferDTO.GetTransfer();
-            transfers.Add(transfer);
-            if (transfer.StorageLocation.IsFinalDestination)
+            bool isFinalized = false;
+
+            List<Transfer> transfers = new();
+            foreach (TransferDTO transferDTO in Transfers)
             {
-                isFinalized = true;
+                Transfer transfer = transferDTO.GetTransfer();
+                transfers.Add(transfer);
+                if (transfer.StorageLocation.IsFinalDestination)
+                {
+                    isFinalized = true;
+                }
             }
-        }
 
-        _pcbToEdit.CreatedDate = CreatedAt;
-        _pcbToEdit.SerialNumber = SerialNumber;
-        _pcbToEdit.Finalized = isFinalized;
-        _pcbToEdit.PcbTypeId = SelectedPcbType.Id;
-        _pcbToEdit.Transfers = new List<Transfer>(transfers);
-        _pcbToEdit.Restriction = Restriction;
-        _pcbToEdit.Diagnose = DiagnosePcb;
-        _pcbToEdit.ErrorTypes = new List<ErrorType>(ErrorTypes);
-
-
-        var response = await _pcbDataService.Update(_pcbId, _pcbToEdit);
+            _pcbToEdit.CreatedDate = CreatedAt;
+            _pcbToEdit.SerialNumber = SerialNumber;
+            _pcbToEdit.Finalized = isFinalized;
+            _pcbToEdit.PcbTypeId = SelectedPcbType.Id;
+            _pcbToEdit.Transfers = new List<Transfer>(transfers);
+            _pcbToEdit.Restriction = Restriction;
+            _pcbToEdit.Diagnose = DiagnosePcb;
+            _pcbToEdit.ErrorTypes = new List<ErrorType>(ErrorTypes);
 
 
-        if (response != null && response.Code == ResponseCode.Success)
-        {
-            _infoBarService.showMessage("Leiterplatte erfolgreich gespeichert", "Erfolg");
-            _navigationService.GoBack();
-        }
-        else
-        {
-            _infoBarService.showError("Leiterplatte konnte nicht gespeichert werden", "Error");
+            var response = await _pcbDataService.Update(_pcbId, _pcbToEdit);
+
+
+            if (response != null && response.Code == ResponseCode.Success)
+            {
+                _infoBarService.showMessage("Leiterplatte erfolgreich gespeichert", "Erfolg");
+                _navigationService.GoBack();
+            }
+            else
+            {
+                _infoBarService.showError("Leiterplatte konnte nicht gespeichert werden", "Error");
+            }
         }
     }
 

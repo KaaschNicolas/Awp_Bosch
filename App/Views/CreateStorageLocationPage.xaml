@@ -57,6 +57,7 @@
             Text="{x:Bind Path=ViewModel.DwellTimeRed, Mode=TwoWay}" />
         <StackPanel
             Grid.Row="4"
+            Grid.ColumnSpan="2"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Orientation="Horizontal"

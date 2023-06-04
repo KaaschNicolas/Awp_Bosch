@@ -3,6 +3,7 @@ using App.Contracts.Services;
 using App.Contracts.ViewModels;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
+using App.Errors;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -42,6 +43,8 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
     private User _createdBy;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
     private PcbType _selectedPcbType;
 
     [ObservableProperty]
@@ -65,6 +68,8 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
     private string _restriction;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
     private StorageLocation _selectedStorageLocation;
 
     [ObservableProperty]
