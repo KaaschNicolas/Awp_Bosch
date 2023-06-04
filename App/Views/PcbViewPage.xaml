@@ -40,7 +40,7 @@
                         Click="CreatePcbButton_Click"
                         Icon="Add"
                         Label="Hinzufügen" />
-                    <AppBarButton Icon="Refresh" Label="Neu Laden" />
+                    <AppBarButton Icon="Refresh" Label="Neu Laden" Click="FilterClear_Click"/>
 
                 </CommandBar>
                 <StackPanel
