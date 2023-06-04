@@ -1,12 +1,4 @@
-﻿using App.Contracts.Services;
-using App.Controls;
-using App.Core.Models;
-using App.ViewModels;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using System.Security.Cryptography.X509Certificates;
-
-namespace App.Services;
+﻿namespace App.Services;
 
 /// <summary>
 /// A <see langword="class"/> that implements the <see cref="IDialogService"/> <see langword="interface"/> using WinUI APIs.
@@ -87,13 +79,15 @@ public sealed class DialogService : IDialogService
 
     public async Task<Comment> AddCommentDialog(string title, string confirmButtonText, string cancelButtonText)
     {
-        if(rootElement != null)
+        if (rootElement != null)
         {
             TextBox comment = new TextBox
             {
                 Header = "Anmerkung",
                 PlaceholderText = "Text eintragen"
             };
+
+
 
             var dialog = new ContentDialog
             {
@@ -107,7 +101,6 @@ public sealed class DialogService : IDialogService
 
             };
             var result = await dialog.ShowAsync();
-
             if (result == ContentDialogResult.None)
             {
                 return null;
@@ -124,6 +117,8 @@ public sealed class DialogService : IDialogService
         }
         return null;
     }
+
+
 
     public async Task<Device> AddRestrictionDialog(string title, string confirmButtonText, string cancelButtonText)
     {
@@ -164,6 +159,8 @@ public sealed class DialogService : IDialogService
         }
         return null;
     }
+
+
 
     public async void UnAuthorizedDialogAsync(string title, string content, XamlRoot xamlRoot)
     {

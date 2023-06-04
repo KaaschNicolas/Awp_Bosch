@@ -75,7 +75,7 @@ public class ActivationService : IActivationService
         await Task.CompletedTask;
         if (!_authenticationService.isAuthenticated()) { 
             if (App.MainWindow.Content is FrameworkElement fe) {
-               fe.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync("Unauthorized", "Sie haben keine Berechtigungen diese Anwendung zu nutzen. \n Bitte wenden sie sich an ihren nächsten Vorgesetzten, \n wenn Sie dennoch Zugriff benötigen.", App.MainWindow.Content.XamlRoot);
+               fe.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync("Unauthorized", "Sie haben keine Berechtigungen diese Anwendung zu nutzen.\n Bitte wenden sie sich an ihren nächsten Vorgesetzten,\n wenn Sie dennoch Zugriff benötigen.", App.MainWindow.Content.XamlRoot);
             } 
         }
     }

@@ -1,6 +1,4 @@
-﻿using App.Core.Models;
-
-namespace App.Core.Services.Interfaces
+﻿namespace App.Core.Services.Interfaces
 {
     public interface ITransferDataService<T> : ICrudService<T> where T : Transfer
     {

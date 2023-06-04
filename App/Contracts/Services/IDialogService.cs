@@ -1,7 +1,4 @@
-﻿using App.Core.Models;
-using Microsoft.UI.Xaml;
-
-namespace App.Contracts.Services;
+﻿namespace App.Contracts.Services;
 
 public interface IDialogService
 {

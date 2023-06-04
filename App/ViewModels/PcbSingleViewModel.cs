@@ -1,15 +1,4 @@
-﻿using App.Contracts.Services;
-using App.Contracts.ViewModels;
-using App.Core.Models;
-using App.Core.Services.Interfaces;
-using App.Services.PrintService.impl;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using System.Collections.ObjectModel;
-
-namespace App.ViewModels;
+﻿namespace App.ViewModels;
 
 public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 {
@@ -128,6 +117,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private readonly INavigationService _navigationService;
     private readonly ITransferDataService<Transfer> _transfersService;
 
+    private Pcb _oldPcb;
+
     public IAsyncRelayCommand FirstAsyncCommand { get; }
 
     public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<Pcb> pcbCrudService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, ICrudService<Comment> commentService, ICrudService<Device> deviceService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
@@ -152,15 +143,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [RelayCommand]
     public async void ShowTransfer()
     {
-
         var result = await _dialogService.ShowCreateTransferDialog("Weitergabe");
         if (result != null)
         {
             Transfer transfer = result.Item1;
             int? diagnoseId = result.Item2;
-
-            transfer.PcbId = _pcb.Id;
-
+            transfer.PcbId = _oldPcb.Id;
             Response<Transfer> response;
 
             if (diagnoseId.HasValue)
@@ -172,18 +160,17 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                 response = await _transfersService.Create(transfer);
             }
 
-
-
             if (response.Code == ResponseCode.Success)
             {
-                Refresh(_pcb);
                 _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
+                //Refresh(_pcb);
             }
             else
             {
                 _infoBarService.showError("Fehler bei der Weitergabe", "Error");
             }
         }
+
     }
 
     private void Refresh(object parameter)
@@ -232,14 +219,14 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         if (result != null)
         {
             result.NotedById = currentUser.Id;
-            // TODO: Comment ID einfügen
             var commentResult = await _commentService.Create(result);
-            _pcb.Comment = commentResult.Data;
+            Comment comment = commentResult.Data;
+            _pcb.Comment = comment;
 
-            var response = await _pcbCrudService.Update(_pcb.Id, _pcb);
+            var response = await _pcbDataService.Update(_pcb.Id, _pcb);
             if (response.Code == ResponseCode.Success)
             {
-                PanelComment = _pcb.Comment;
+                PanelComment = response.Data.Comment;
                 _infoBarService.showMessage("Anmerkung wurde hinzugefügt", "Erfolg");
             }
             else
@@ -277,75 +264,170 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     public async void OnNavigatedTo(object parameter)
     {
+        User currentUser = _authenticationService.currentUser();
 
-        _pcb = (Pcb)parameter;
+        var result = await _dialogService.AddCommentDialog("Anmerkung hinzufügen");
 
-        _selectedItem = _pcb;
-
-        var result = await _pcbDataService.GetByIdEager(_selectedItem.Id);
-
-        _pcb = result.Data;
-
-        if (_pcb.Restriction == null)
+        if (result != null)
         {
-            RestrictionInfoBarVisibility = Visibility.Collapsed;
-            RestrictionButtonVisibility = Visibility.Visible;
+            _pcb = (Pcb)parameter;
+            _oldPcb = _pcb;
+
+            /*
+            var pcbResponse = await _pcbDataService.GetAll();
+            if (pcbResponse.Data != null)
+            {
+                foreach (var item in pcbResponse.Data)
+                {
+                    _pcbs.Add(item);
+                }
+            }
+            */
+
+            _selectedItem = _pcb;
+            Id = _pcb.Id;
+
+            var result = await _pcbDataService.GetByIdEager(Id);
+
+
+            _pcb = result.Data;
+
+            if (_pcb.Restriction == null)
+            {
+                RestrictionInfoBarVisibility = Visibility.Collapsed;
+                RestrictionButtonVisibility = Visibility.Visible;
+            }
+            else
+            {
+                Restriction = _pcb.Restriction;
+                RestrictionInfoBarVisibility = Visibility.Visible;
+                RestrictionButtonVisibility = Visibility.Collapsed;
+            }
+            SerialNumber = _pcb.SerialNumber;
+            CreatedDate = _pcb.CreatedDate;
+            ErrorDescription = _pcb.ErrorDescription;
+            ErrorTypes = _pcb.ErrorTypes;
+            if (ErrorTypes != null)
+            {
+                FirstErrorCode = ErrorTypes[0].Code;
+                FirstErrorDescription = ErrorTypes[0].ErrorDescription;
+
+                var response = await _pcbDataService.Update(_pcb.Id, _pcb);
+                if (response.Code == ResponseCode.Success)
+                {
+                    Restriction = response.Data.Restriction;
+                    _infoBarService.showMessage("Anmerkung wurde hinzugefügt", "Erfolg");
+                }
+                else
+                {
+                    _infoBarService.showMessage("Anmerkung konnte nicht hinzugefügt werden", "Fehler");
+                }
+            }
+
         }
-        else
+
+        public async void OnNavigatedTo(object parameter)
         {
-            RestrictionInfoBarVisibility = Visibility.Visible;
-            RestrictionButtonVisibility = Visibility.Collapsed;
-        }
 
-        SerialNumber = _pcb.SerialNumber;
-        CreatedDate = _pcb.CreatedDate;
-        Restriction = _pcb.Restriction;
+            _pcb = (Pcb)parameter;
 
+            _selectedItem = _pcb;
 
-        Finalized = _pcb.Finalized;
-        if (!Finalized)
-        {
-            Status = "offen";
-        }
-        else
-        {
-            Status = "abgeschlossen";
-        }
+            var result = await _pcbDataService.GetByIdEager(_selectedItem.Id);
 
+            _pcb = result.Data;
 
+            if (_pcb.Restriction == null)
+            {
+                RestrictionInfoBarVisibility = Visibility.Collapsed;
+                RestrictionButtonVisibility = Visibility.Visible;
+            }
+            else
+            {
+                RestrictionInfoBarVisibility = Visibility.Visible;
+                RestrictionButtonVisibility = Visibility.Collapsed;
+            }
 
-        PcbType = _pcb.PcbType;
-        DiagnosePcb = new Diagnose { };
-        PanelComment = _pcb.Comment;
-        NotedBy = (_pcb.Transfers.Last()).NotedBy.Name;
-        AtLocationDays = 5;
-
-        InCirculationDays = (int)Math.Round((DateTime.Now - _pcb.CreatedDate).TotalDays);
-        if (InCirculationDays > 5)
-        {
-            ColorDays = "yellow";
-        }
-        else if (InCirculationDays > 10)
-        {
-            ColorDays = "red";
-        }
-        else
-        {
-            ColorDays = "green";
-        }
-    }
+            SerialNumber = _pcb.SerialNumber;
+            CreatedDate = _pcb.CreatedDate;
+            Restriction = _pcb.Restriction;
 
 
+            Finalized = _pcb.Finalized;
+            if (!Finalized)
+            {
+                Status = "offen";
+            }
+            else
+            {
+                Status = "abgeschlossen";
+            }
+
+            PcbType = _pcb.PcbType;
+            PanelComment = _pcb.Comment;
+            Diagnose = _pcb.Diagnose;
+            NotedBy = (_pcb.Transfers.Last()).NotedBy.Name;
+            AtLocationDays = 5;
+
+            InCirculationDays = (int)Math.Round((DateTime.Now - _pcb.CreatedDate).TotalDays);
+            if (InCirculationDays > 5)
+            {
+                ColorDays = "yellow";
+            }
+            else if (InCirculationDays > 10)
+            {
+                ColorDays = "red";
+            }
+            else
+            {
+                ColorDays = "green";
+            }
+
+            var transfers = await _transfersService.GetTransfersByPcb(_pcb.Id);
+
+            //_transfers = new ObservableCollection<Transfer>();
+            if (transfers.Code == ResponseCode.Success)
+            {
+                for (int i = 0; i < (transfers.Data).Count; i++)
+                {
+                    var transfer = (transfers.Data)[i];
+                    transfer.Id = i + 1;
+                    NotedBy = transfer.NotedBy.Name;
+                    Storage = transfer.StorageLocation.StorageName;
+                    Transfers.Add(transfer);
+
+                    AtLocationDays = (int)Math.Round((DateTime.Now - transfer.CreatedDate).TotalDays);
+
+                    if (transfer == transfers.Data[transfers.Data.Count - 1])
+                    {
+                        AtLocationDays = (int)Math.Round((DateTime.Now - transfer.CreatedDate).TotalDays);
+                        if (!transfer.StorageLocation.DwellTimeYellow.Equals("--") && !transfer.StorageLocation.DwellTimeRed.Equals("--"))
+                        {
+                            if (AtLocationDays > int.Parse(transfer.StorageLocation.DwellTimeYellow))
+                            {
+                                ColorTransferDays = "yellow";
+                            }
+                            else if (AtLocationDays > int.Parse(transfer.StorageLocation.DwellTimeRed))
+                            {
+                                ColorTransferDays = "red";
+                            }
+                            else
+                            {
+                                ColorTransferDays = "green";
+                            }
+                        }
+                    }
+                }
 
 
 
-    public void OnNavigatedFrom()
-    {
-    }
+                public void OnNavigatedFrom()
+                {
+                }
 
-    private void NavigateToPcbs()
-    {
-        _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
-    }
+                private void NavigateToPcbs()
+                {
+                    _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
+                }
 
-}
+            }

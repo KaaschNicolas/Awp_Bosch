@@ -96,6 +96,9 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<TransferDialogViewModel>();
+            services.AddTransient<ICrudService<Comment>, CrudService<Comment>>();
+            services.AddTransient<ICrudService<Device>, CrudService<Device>>();
             services.AddTransient<UpdatePcbViewModel>();
             services.AddTransient<UpdatePcbPage>();
             services.AddTransient<CreatePcbViewModel>();
@@ -132,7 +135,6 @@ public partial class App : Application
             services.AddTransient<StorageLocation>();
             services.AddTransient<StorageLocationViewModel>();
             services.AddTransient<TransferDialogViewModel>();
-
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

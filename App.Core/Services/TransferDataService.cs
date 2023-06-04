@@ -40,17 +40,17 @@ namespace App.Core.Services
                     EntityEntry<T> entityEntry = await _boschContext.Set<T>().AddAsync(transfer);
                     var pcb = await _boschContext.Set<Pcb>().FirstOrDefaultAsync(x => x.Id == transfer.PcbId);
                     pcb.DiagnoseId = diagnoseId;
+                    _boschContext.Entry(pcb).Property(x => x.DiagnoseId).IsModified = true;
 
                     await _boschContext.SaveChangesAsync();
                     await transaction.CommitAsync();
                     return new Response<T>(ResponseCode.Success, (T)entityEntry.Entity);
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return new Response<T>(ResponseCode.Error, error: $"Fehler beim Erstellen von {typeof(T)}");
                 }
-
             }
         }
     }
