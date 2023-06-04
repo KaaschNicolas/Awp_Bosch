@@ -304,7 +304,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [RelayCommand]
     public async void AddComment()
     {
-        User currentUser = _authenticationService.currentUser();
+        User currentUser = _authenticationService.CurrentUser;
 
         var result = await _dialogService.AddCommentDialog("Anmerkung hinzufügen");
 

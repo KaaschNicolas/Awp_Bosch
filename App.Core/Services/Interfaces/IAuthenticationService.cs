@@ -4,8 +4,9 @@ namespace App.Core.Services.Interfaces
 {
     public interface IAuthenticationService
     {
-        public bool isAuthenticated();
-        public User currentUser();
+        public bool IsAuthenticated { get; }
+        public User CurrentUser { get; }
+        public bool IsDbActive { get; }
        
     }
 }

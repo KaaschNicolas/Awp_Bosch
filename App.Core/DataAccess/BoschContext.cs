@@ -69,5 +69,19 @@ namespace App.Core.DataAccess
 
             return base.SaveChanges();
         }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && e.State == EntityState.Added);
+            foreach (var entry in entries)
+            {
+                if (((BaseEntity)entry.Entity).CreatedDate == DateTime.MinValue)
+                {
+                    ((BaseEntity)entry.Entity).CreatedDate = DateTime.Now;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
     }
 }
