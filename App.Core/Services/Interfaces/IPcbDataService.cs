@@ -26,6 +26,5 @@ namespace App.Core.Services.Interfaces
 
         public Task<Response<T>> GetByIdEager(int id);
 
-        public Task<Response<T>> CreateRestrictionAndUpdate(T pcb);
     }
 }
