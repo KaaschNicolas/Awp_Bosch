@@ -10,34 +10,47 @@ namespace App.Core.Services
         private User _currentUser;
 
         private BoschContext _boschContext;
-        public AuthenticationService(BoschContext boschContext) {
+        public AuthenticationService(BoschContext boschContext) 
+        {
             _boschContext = boschContext;
         }
-        private void authenticate() {
+
+        private void Authenticate() {
             var adUsername = Environment.UserName;
-            var result = _boschContext.Users.Where(u => u.AdUsername.Equals(adUsername)).ToList();
+            var result = _boschContext
+                .Users
+                .Where(u => u.AdUsername.Equals(adUsername) && u.DeletedDate != DateTime.MinValue )
+                .ToList();
             if (result.Count != 0 && result[0] != null) { 
                 _isAuthenticated = true;
                 _currentUser = result[0];
             }
         }
 
-        public bool isAuthenticated()
+        public bool IsAuthenticated
         {
-            if (_currentUser == null)
+            get
             {
-               authenticate();
+                if (_currentUser == null)
+                {
+                    Authenticate();
+                }
+                return _isAuthenticated;
             }
-            return _isAuthenticated;
         }
 
-        public User currentUser()
+        public bool IsDbActive => _boschContext.Database.CanConnect();
+                    
+        public User CurrentUser
         {
-            if (_currentUser == null)
+            get
             {
-               authenticate();
+                if (_currentUser == null)
+                {
+                    Authenticate();
+                }
+                return _currentUser;
             }
-            return _currentUser;
         }
     }
 }

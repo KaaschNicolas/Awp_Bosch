@@ -1,13 +1,4 @@
-﻿using App.Contracts.Services;
-using App.Contracts.ViewModels;
-using App.Core.Models;
-using App.Core.Services.Interfaces;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-
-namespace App.ViewModels;
+﻿namespace App.ViewModels;
 
 public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
 {
@@ -179,7 +170,7 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
             diagnoseResponse.Data.ForEach(_diagnoses.Add);
         }
 
-        CreatedBy = _authenticationService.currentUser();
+        User = _authenticationService.CurrentUser;
 
     }
 

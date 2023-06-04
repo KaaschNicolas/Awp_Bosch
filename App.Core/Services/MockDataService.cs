@@ -13,7 +13,7 @@ public class MockDataService : IMockDataService
     public MockDataService(BoschContext boschContext)
     {
         _boschContext = boschContext;
-        SeedMockData();
+        //SeedMockData();
         //fill where "Kreisläufer" Excel is located 
         //SeedFromExcel("");
     }
