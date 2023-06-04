@@ -2,6 +2,7 @@
 using App.Contracts.ViewModels;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
+using App.Errors;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -45,10 +46,11 @@ public partial class UpdatePcbViewModel : ObservableValidator, INavigationAware
     private User _user;
 
     [ObservableProperty]
-    [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Sachnummer muss aus genau 10 Zahlen bestehen.")]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
     private PcbType _selectedPcbType;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
     [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Seriennummer muss aus genau 10 Zahlen bestehen.")]
     private string _serialNumber;
 

@@ -26,8 +26,11 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         }
     }
 
-    public Visibility RestrictionButtonVisibility;
-    public Visibility RestrictionInfoBarVisibility;
+    [ObservableProperty]
+    private Visibility _restrictionButtonVisibility;
+
+    [ObservableProperty]
+    private Visibility _restrictionInfoBarVisibility;
 
     [ObservableProperty]
     private Pcb _selectedItem;
@@ -235,7 +238,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             Comment comment = commentResult.Data;
             _pcb.Comment = comment;
 
-            var response = await _pcbDataService.Update(_pcb.Id, _pcb);
+            var response = await _pcbCrudService.Update(_pcb.Id, _pcb);
             if (response.Code == ResponseCode.Success)
             {
                 PanelComment = response.Data.Comment;
@@ -256,14 +259,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
         if (result != null)
         {
-            var deviceResult = await _deviceService.Create(result);
-            Device device = deviceResult.Data;
-            _pcb.Restriction = device;
-
-            var response = await _pcbDataService.Update(_pcb.Id, _pcb);
-            if (response.Code == ResponseCode.Success)
+            _pcb.Restriction = result;
+            var response = await _pcbCrudService.Update(_pcb.Id, _pcb);
+            if (response != null && response.Code == ResponseCode.Success)
             {
                 Restriction = response.Data.Restriction;
+                showRestriction();
                 _infoBarService.showMessage("Anmerkung wurde hinzugefügt", "Erfolg");
             }
             else
@@ -272,6 +273,18 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             }
         }
 
+    }
+
+    private void showAddRestrictionButton()
+    {
+        RestrictionInfoBarVisibility = Visibility.Collapsed;
+        RestrictionButtonVisibility = Visibility.Visible;
+    }
+
+    private void showRestriction()
+    {
+        RestrictionInfoBarVisibility = Visibility.Visible;
+        RestrictionButtonVisibility = Visibility.Collapsed;
     }
 
 
@@ -286,15 +299,13 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
         _pcb = result.Data;
 
-        if (_pcb.Restriction == null)
+        if (_pcb.Restriction.Name == "")
         {
-            RestrictionInfoBarVisibility = Visibility.Collapsed;
-            RestrictionButtonVisibility = Visibility.Visible;
+            showAddRestrictionButton();
         }
         else
         {
-            RestrictionInfoBarVisibility = Visibility.Visible;
-            RestrictionButtonVisibility = Visibility.Collapsed;
+            showRestriction();
         }
 
         SerialNumber = _pcb.SerialNumber;

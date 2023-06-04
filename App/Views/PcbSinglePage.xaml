@@ -161,13 +161,13 @@
                         FontWeight="Bold"
                         Text="{x:Bind Path=ViewModel.PcbType.PcbPartNumber, Mode=TwoWay}" />
                 </StackPanel>
-                <StackPanel Margin="0,30,0,0" Orientation="Horizontal">
+                <StackPanel
+                    Margin="0,30,0,0"
+                    Orientation="Horizontal"
+                    Spacing="5">
                     <TextBlock Text="Fehlerkategorie:" />
-                    <TextBlock Text="{x:Bind Path=ViewModel.DiagnosePcb.Name, Mode=TwoWay}" />
-                    <TextBlock
-                        Margin="5,0,0,0"
-                        FontWeight="Bold"
-                        Text="Hardware" />
+                    <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.DiagnosePcb.Name, Mode=TwoWay}" />
+
                 </StackPanel>
 
                 <!--  Fehlertypen  -->
