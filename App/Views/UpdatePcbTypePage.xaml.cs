@@ -15,5 +15,6 @@ public sealed partial class UpdatePcbTypePage : Page
     {
         ViewModel = App.GetService<UpdatePcbTypeViewModel>();
         InitializeComponent();
+        DataContext = ViewModel;
     }
 }

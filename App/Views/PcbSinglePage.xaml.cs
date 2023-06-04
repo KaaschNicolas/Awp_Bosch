@@ -35,7 +35,7 @@ public sealed partial class PcbSinglePage : Page
         DataContext = ViewModel;
         //dateOfFailure.Date = new DateTime(2023, 04, 23);
         // GenerateBarcode();
-        //showRestrictionButton();
+        // showRestrictionButton();
         //colorDaysInCirculation();
     }
 

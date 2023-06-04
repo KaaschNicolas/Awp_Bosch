@@ -4,8 +4,6 @@ using App.Core.Models;
 using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics;
-
 
 namespace App.Services;
 
@@ -46,52 +44,43 @@ public sealed class DialogService : IDialogService
     }
     public async Task<Tuple<Transfer, int?>?> ShowCreateTransferDialog(string title, string confirmButtonText, string cancelButtonText)
     {
-        try
+
+
+        if (rootElement != null)
         {
-            if (rootElement != null)
+            var dialog = new ContentDialog
             {
-                var dialog = new ContentDialog
-                {
-                    Title = title,
-                    Content = new TransferDialog(),
-                    PrimaryButtonText = confirmButtonText,
-                    DefaultButton = ContentDialogButton.Primary,
-                    RequestedTheme = rootElement.RequestedTheme,
-                    CloseButtonText = cancelButtonText,
-                    XamlRoot = rootElement.XamlRoot
-                };
-                var result = await dialog.ShowAsync();
-                var view = (TransferDialog)dialog.Content;
+                Title = title,
+                Content = new TransferDialog(),
+                PrimaryButtonText = confirmButtonText,
+                DefaultButton = ContentDialogButton.Primary,
+                RequestedTheme = rootElement.RequestedTheme,
+                CloseButtonText = cancelButtonText,
+                XamlRoot = rootElement.XamlRoot
 
-                if (result == ContentDialogResult.None)
-                {
-                    return null;
-                }
+            };
+            var result = await dialog.ShowAsync();
+            var view = (TransferDialog)dialog.Content;
 
-                if (result == ContentDialogResult.Primary)
-                {
-
-                    TransferDialogViewModel tdVM = (TransferDialogViewModel)view.ViewModel;
-
-                    int? diagnoseId = ((Diagnose)tdVM.SelectedDiagnose) != null
-                        ? ((Diagnose)tdVM.SelectedDiagnose).Id
-                        : null;
-                    return Tuple.Create(
-                        new Transfer
-                        {
-                            NotedById = tdVM.NotedBy.Id,
-                            CreatedDate = tdVM.TransferDate,
-                            StorageLocationId = ((StorageLocation)tdVM.SelectedStorageLocation).Id,
-                            Comment = tdVM.Comment
-                        }, diagnoseId);
-
-                }
+            if (result == ContentDialogResult.None)
+            {
+                return null;
             }
-        } catch(Exception ex) {
+            if (result == ContentDialogResult.Primary)
+            {
+                TransferDialogViewModel tdVM = (TransferDialogViewModel)view.ViewModel;
 
-            Debug.WriteLine(ex);
+                int? diagnoseId = ((Diagnose)tdVM.SelectedDiagnose) != null ? ((Diagnose)tdVM.SelectedDiagnose).Id : null;
+
+                return Tuple.Create(new Transfer
+                {
+                    NotedById = tdVM.NotedBy.Id,
+                    CreatedDate = tdVM.TransferDate,
+                    StorageLocationId = ((StorageLocation)tdVM.SelectedStorageLocation).Id,
+                    Comment = tdVM.Comment
+                }, diagnoseId);
+            }
         }
-
         return null;
     }
 
@@ -105,6 +94,8 @@ public sealed class DialogService : IDialogService
                 PlaceholderText = "Text eintragen"
             };
 
+
+
             var dialog = new ContentDialog
             {
                 Title = title,
@@ -117,7 +108,6 @@ public sealed class DialogService : IDialogService
 
             };
             var result = await dialog.ShowAsync();
-
             if (result == ContentDialogResult.None)
             {
                 return null;
@@ -134,6 +124,8 @@ public sealed class DialogService : IDialogService
         }
         return null;
     }
+
+
 
     public async Task<Device> AddRestrictionDialog(string title, string confirmButtonText, string cancelButtonText)
     {
