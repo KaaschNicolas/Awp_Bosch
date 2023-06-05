@@ -67,7 +67,7 @@
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9D2;" />
                     </NavigationViewItem.Icon>
                     <NavigationViewItem.MenuItems>
-                        <NavigationViewItem x:Uid="Shell_Analysis_WhereAbouts_1" />
+                        <NavigationViewItem x:Uid="Shell_Analysis_WhereAbouts_1" helpers:NavigationHelper.NavigateTo="App.ViewModels.DwellTimeEvaluationViewModel"/>
                         <NavigationViewItem x:Uid="Shell_Analysis_WhereAbouts_2" />
                         <NavigationViewItem x:Uid="Shell_Analysis_PartNumber" />
                         <NavigationViewItem x:Uid="Shell_Analysis_PartNumber_I_O" />

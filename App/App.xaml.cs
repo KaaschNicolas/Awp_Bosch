@@ -135,6 +135,8 @@ public partial class App : Application
             services.AddTransient<StorageLocation>();
             services.AddTransient<StorageLocationViewModel>();
             services.AddTransient<TransferDialogViewModel>();
+            services.AddTransient<DwellTimeEvaluationViewModel>();
+            services.AddTransient<DwellTimeEvalutionPage>();
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

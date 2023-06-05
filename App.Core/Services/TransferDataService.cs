@@ -53,5 +53,22 @@ namespace App.Core.Services
                 }
             }
         }
+
+        public async Task<Response<List<IGrouping<int, T>>>> GetAllGroupedByStorageLocation()
+        {
+            try
+            {
+                var data = await _boschContext
+                    .Set<T>()
+                    .OrderBy(x => x.CreatedDate)
+                    .GroupBy(x => x.StorageLocationId)
+                    .ToListAsync();
+                return new Response<List<IGrouping<int, T>>>(ResponseCode.Success, data: data);
+            }
+            catch (DbUpdateException)
+            {
+                return new Response<List<IGrouping<int, T>>>(ResponseCode.Error, error: "GetAllGroupedByStorageLocation() failed");
+            }
+        }
     }
 }
