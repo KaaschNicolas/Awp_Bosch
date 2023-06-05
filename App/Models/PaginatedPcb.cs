@@ -1,4 +1,6 @@
 ﻿using App.Core.Models;
+using Microsoft.UI;
+using Microsoft.UI.Xaml.Media;
 using System.ComponentModel.DataAnnotations;
 
 namespace App.Models
@@ -10,10 +12,6 @@ namespace App.Models
         public DateTime DeletedDate { get; set; }
         [MaxLength(10)]
         public string SerialNumber
-        {
-            get; set;
-        }
-        public string Status
         {
             get; set;
         }
@@ -71,6 +69,8 @@ namespace App.Models
 
         public int AtLocationDays { get; set; } 
 
+        public SolidColorBrush Status { get; set; }
+
 
         public static PaginatedPcb ToPaginatedPcb(Pcb pcb)
         {
@@ -94,6 +94,7 @@ namespace App.Models
                 DiagnoseId = pcb.DiagnoseId,
                 LastStorageLocationName = currentStorageLocationName,
                 AtLocationDays = days,
+                Status = new SolidColorBrush(Colors.Red),
             };
         }
 

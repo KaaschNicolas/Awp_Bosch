@@ -101,6 +101,10 @@
                         Grid.Column="1"
                         HorizontalAlignment=" Right"
                         Text="{Binding AtLocationDays}"/>
+                    <Ellipse
+                        Fill="{Binding Status}"
+                        Stroke="White"
+                        StrokeThickness="2"/>
                     <TextBlock
                         Grid.Row="5"
                         Grid.Column="1"
@@ -271,6 +275,16 @@
                     Header="Verweildauer"
                     Tag="AtLocationDays"
                     CanUserSort="False"/>
+                <ctWinUI:DataGridTemplateColumn Header="Status">
+                    <ctWinUI:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse
+                                Fill="{Binding Status}"
+                                Height="22" 
+                                Width="22"/>
+                        </DataTemplate>
+                    </ctWinUI:DataGridTemplateColumn.CellTemplate>
+                </ctWinUI:DataGridTemplateColumn>
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding CreatedDate}"
                     Header="Ausgefallen am"
