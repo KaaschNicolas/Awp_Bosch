@@ -106,8 +106,8 @@ namespace App.ViewModels
         [ObservableProperty]
         private PaginatedPcb _selectedItem;
 
-        [ObservableProperty]
-        private int _atLocationDays;
+        /*[ObservableProperty]
+        private int _atLocationDays;*/
 
         private string _status;
 

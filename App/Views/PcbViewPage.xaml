@@ -78,6 +78,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock 
+                        Grid.Row="0"
                         Grid.Column="1"
                         HorizontalAlignment=" Right"
                         Text="{Binding AtLocationDays}"/>
@@ -251,7 +252,7 @@
             <ctWinUI:DataGrid.Columns>
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding AtLocationDays}"
-                    Header="AtLocationDays"
+                    Header="Verweildauer"
                     Tag="AtLocationDays" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding SerialNumber}"
