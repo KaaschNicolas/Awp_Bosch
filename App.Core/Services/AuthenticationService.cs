@@ -10,18 +10,20 @@ namespace App.Core.Services
         private User _currentUser;
 
         private BoschContext _boschContext;
-        public AuthenticationService(BoschContext boschContext) 
+        public AuthenticationService(BoschContext boschContext)
         {
             _boschContext = boschContext;
         }
 
-        private void Authenticate() {
+        private void Authenticate()
+        {
             var adUsername = Environment.UserName;
             var result = _boschContext
                 .Users
-                .Where(u => u.AdUsername.Equals(adUsername) && u.DeletedDate != DateTime.MinValue )
+                .Where(u => u.AdUsername.Equals(adUsername) && u.DeletedDate == DateTime.MinValue)
                 .ToList();
-            if (result.Count != 0 && result[0] != null) { 
+            if (result.Count != 0 && result[0] != null)
+            {
                 _isAuthenticated = true;
                 _currentUser = result[0];
             }
@@ -40,7 +42,7 @@ namespace App.Core.Services
         }
 
         public bool IsDbActive => _boschContext.Database.CanConnect();
-                    
+
         public User CurrentUser
         {
             get

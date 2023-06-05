@@ -4,6 +4,7 @@ using App.Core.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Core.Migrations
 {
     [DbContext(typeof(BoschContext))]
-    partial class BoschContextModelSnapshot : ModelSnapshot
+    [Migration("20230531141633_AddFkComment")]
+    partial class AddFkComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,6 +120,7 @@ namespace App.Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(650)");
 
                     b.HasKey("Id");
@@ -134,6 +137,7 @@ namespace App.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
@@ -144,6 +148,7 @@ namespace App.Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ErrorDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(650)");
 
                     b.Property<int?>("PcbId")

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using App.Core.DataAccess;
+﻿using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +30,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         catch (Exception ex)
         {
             Debug.WriteLine(ex);
-                _loggingService.Audit(LogLevel.Error, $"Fehler beim Erstellen von {typeof(T)}", null);
+            _loggingService.Audit(LogLevel.Error, $"Fehler beim Erstellen von {typeof(T)}", null);
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim Erstellen von {typeof(T)}");
         }
     }
@@ -48,8 +42,8 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
             _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {entity.Id} upgedated", null);
 
             entity.Id = id;
-
             _boschContext.Set<T>().Update(entity);
+
             await _boschContext.SaveChangesAsync();
 
             return new Response<T>(ResponseCode.Success, entity);
@@ -88,7 +82,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
             var res = new List<T>();
             foreach (var item in list)
             {
-                if (item.DeletedDate > item.CreatedDate)
+                if (item.DeletedDate == DateTime.MinValue)
                 {
                     res.Add(item);
                 }

@@ -1,7 +1,6 @@
 ﻿using App.Contracts.Services;
 using App.Core.Models;
 using App.Core.Models.Enums;
-using App.Core.Services;
 using App.Core.Services.Interfaces;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -19,13 +18,10 @@ namespace App.ViewModels
             IInfoBarService infoBarService,
             IDialogService dialogService,
             INavigationService navigationService,
-            IAuthenticationService authenticationService,
-            ITransferDataService<Transfer> transferDataService,
-            ICrudService<Diagnose> diagnoseCrudService
+            ITransferDataService<Transfer> transferDataService
         )
         {
             _pcbDataService = pcbDataService;
-            _authenticationService = authenticationService;
             FirstAsyncCommand = new AsyncRelayCommand(
                 async () => await GetPcbs(1, _pageSize, _isSortingAscending),
                 () => _pageNumber != 1
@@ -60,19 +56,16 @@ namespace App.ViewModels
             _dialogService = dialogService;
             _infoBarService = infoBarService;
             _navigationService = navigationService;
-            _storageLocationCrudService = storageLocationDataService;
-            _diagnoseCrudService = diagnoseCrudService;
             _transferDataService = transferDataService;
+            _storageLocationCrudService = storageLocationDataService;
             Refresh();
         }
 
         private readonly IPcbDataService<Pcb> _pcbDataService;
-        private readonly IStorageLocationDataService<StorageLocation> _storageLocationCrudService;
-        private readonly ICrudService<Diagnose> _diagnoseCrudService;
+        private readonly ICrudService<StorageLocation> _storageLocationCrudService;
         private readonly IInfoBarService _infoBarService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
-        private readonly IAuthenticationService _authenticationService;
         private readonly ITransferDataService<Transfer> _transferDataService;
 
         public IAsyncRelayCommand FirstAsyncCommand { get; }
@@ -368,7 +361,9 @@ namespace App.ViewModels
             {
                 Transfer transfer = result.Item1;
                 int? diagnoseId = result.Item2;
+
                 transfer.PcbId = _selectedItem.Id;
+
                 Response<Transfer> response;
 
                 if (diagnoseId.HasValue)

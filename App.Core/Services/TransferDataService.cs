@@ -4,7 +4,6 @@ using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Diagnostics;
 
 namespace App.Core.Services
 {
@@ -18,7 +17,7 @@ namespace App.Core.Services
             {
                 var data = await _boschContext
                     .Set<T>()
-                    .Where(x => x.Id == pcbId)
+                    .Where(x => x.PcbId == pcbId)
                     .Include("Pcb")
                     .Include("StorageLocation")
                     .Include("NotedBy")
@@ -38,7 +37,6 @@ namespace App.Core.Services
             {
                 try
                 {
-                    //await _boschContext.Set<Transfer>().AddAsync(transfer);
                     EntityEntry<T> entityEntry = await _boschContext.Set<T>().AddAsync(transfer);
                     var pcb = await _boschContext.Set<Pcb>().FirstOrDefaultAsync(x => x.Id == transfer.PcbId);
                     pcb.DiagnoseId = diagnoseId;
@@ -47,13 +45,12 @@ namespace App.Core.Services
                     await _boschContext.SaveChangesAsync();
                     await transaction.CommitAsync();
                     return new Response<T>(ResponseCode.Success, (T)entityEntry.Entity);
+
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex);
                     return new Response<T>(ResponseCode.Error, error: $"Fehler beim Erstellen von {typeof(T)}");
                 }
-               
             }
         }
     }

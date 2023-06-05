@@ -12,6 +12,7 @@ public class TimeConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
+        if (value == null) return DateTime.MinValue;
         return ((DateTimeOffset)value).DateTime;
     }
 }

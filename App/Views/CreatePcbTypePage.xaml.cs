@@ -15,5 +15,6 @@ public sealed partial class CreatePcbTypePage : Page
     {
         ViewModel = App.GetService<CreatePcbTypeViewModel>();
         InitializeComponent();
+        DataContext = ViewModel;
     }
 }
