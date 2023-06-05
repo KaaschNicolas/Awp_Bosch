@@ -21,7 +21,7 @@ namespace App.ViewModels
         public DwellTimeEvaluationViewModel(ITransferDataService<Transfer> transferDataService)
         {
             _transferDataService = transferDataService;
-            Task.WaitAll(InitializeBarPlot());    
+            InitializeBarPlot();    
         }
 
         private ITransferDataService<Transfer> _transferDataService;
