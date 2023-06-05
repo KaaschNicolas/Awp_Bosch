@@ -7,22 +7,27 @@
 
 using App.ViewModels;
 using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Controls;
+using Windows.UI.WindowManagement;
 
-namespace App.Controls;
-public sealed partial class TransferDialog : ContentDialog
+namespace App.Views;
+
+/// <summary>
+/// An empty window that can be used on its own or navigated to within a Frame.
+/// </summary>
+public sealed partial class TransferWindow : WindowEx
 {
+
     public TransferDialogViewModel ViewModel
     {
         get;
     }
-
-    public AppWindow TransferAppWindow { get; set; }
-
-    public TransferDialog()
+    public TransferWindow()
     {
         ViewModel = App.GetService<TransferDialogViewModel>();
         InitializeComponent();
+        AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets/WindowIcon.ico"));
+        Title = "Weitergabe erstellen";
+        AppWindow.SetPresenter(AppWindowPresenterKind.CompactOverlay);
+
     }
 }
-

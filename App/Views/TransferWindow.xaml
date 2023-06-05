@@ -1,0 +1,32 @@
+<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+<!--  Licensed under the MIT License.  -->
+
+<windowex:WindowEx
+    x:Class="App.Views.TransferWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="using:App.Controls"
+    xmlns:controls="using:App.Controls"
+    xmlns:convert="using:App.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:App"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:windowex="using:WinUIEx"
+    MinWidth="300"
+    MinHeight="500"
+    PersistenceId="TransferWindow"
+    mc:Ignorable="d">
+    <windowex:WindowEx.Backdrop>
+        <windowex:MicaSystemBackdrop />
+    </windowex:WindowEx.Backdrop>
+
+    <Page Padding="20">
+        <Grid Padding="20">
+            <control:TransferDialog />
+        </Grid>
+    </Page>
+
+
+
+
+</windowex:WindowEx>

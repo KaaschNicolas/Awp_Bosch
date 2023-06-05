@@ -50,6 +50,7 @@ public partial class TransferDialogViewModel : ObservableObject
     private readonly IAuthenticationService _authenticationService;
     private readonly ICrudService<StorageLocation> _storageLocationCrudService;
     private readonly ICrudService<Diagnose> _diagnoseCrudService;
+    private readonly ITransferDataService<Transfer> _transferDataService;
     public TransferDialogViewModel(IAuthenticationService authenticationService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService)
     {
         _authenticationService = authenticationService;
@@ -74,6 +75,11 @@ public partial class TransferDialogViewModel : ObservableObject
         {
             resDiagnoses.Data.ForEach(x => _diagnoses.Add(x));
         }
+    }
+
+    private async void Save()
+    {
+        await _transferDataService.CreateTransfer();
     }
 }
 

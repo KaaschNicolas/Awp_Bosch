@@ -1,7 +1,7 @@
 ﻿<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
 <!--  Licensed under the MIT License.  -->
 
-<UserControl
+<ContentDialog
     x:Class="App.Controls.TransferDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -11,9 +11,9 @@
     mc:Ignorable="d">
 
 
-    <UserControl.Resources>
+    <ContentDialog.Resources>
         <local:TimeConverter x:Key="TimeConverter" />
-    </UserControl.Resources>
+    </ContentDialog.Resources>
 
 
 
@@ -66,4 +66,4 @@
 
 
     </Grid>
-</UserControl>
+</ContentDialog>

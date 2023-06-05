@@ -48,18 +48,14 @@ public sealed class DialogService : IDialogService
 
         if (rootElement != null)
         {
-            var dialog = new ContentDialog
-            {
-                Title = title,
-                Content = new TransferDialog(),
-                PrimaryButtonText = confirmButtonText,
-                DefaultButton = ContentDialogButton.Primary,
-                RequestedTheme = rootElement.RequestedTheme,
-                CloseButtonText = cancelButtonText,
-                XamlRoot = rootElement.XamlRoot
+            /*  WindowEx window = new TransferWindow();
+              window.Activate();*/
 
-            };
+            var dialog = new TransferDialog { XamlRoot = rootElement.XamlRoot };
+
             var result = await dialog.ShowAsync();
+
+
             var view = (TransferDialog)dialog.Content;
 
             if (result == ContentDialogResult.None)
