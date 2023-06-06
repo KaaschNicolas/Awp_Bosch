@@ -5,8 +5,10 @@ using App.Core.Services.Interfaces;
 using App.Services.PrintService.impl;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using System.Collections.ObjectModel;
 
 namespace App.ViewModels;
@@ -110,7 +112,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private int _atLocationDays;
 
     [ObservableProperty]
-    private string _colorTransferDays;
+    private SolidColorBrush _colorTransferDays;
 
     private Pcb _pcb;
 
@@ -388,17 +390,17 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                     AtLocationDays = (int)Math.Round((DateTime.Now - transfer.CreatedDate).TotalDays);
                     if (!transfer.StorageLocation.DwellTimeYellow.Equals("--") && !transfer.StorageLocation.DwellTimeRed.Equals("--"))
                     {
-                        if (AtLocationDays > int.Parse(transfer.StorageLocation.DwellTimeYellow))
+                        if (AtLocationDays >= int.Parse(transfer.StorageLocation.DwellTimeRed))
                         {
-                            ColorTransferDays = "yellow";
+                            ColorTransferDays = new SolidColorBrush(Colors.Red);
                         }
-                        else if (AtLocationDays > int.Parse(transfer.StorageLocation.DwellTimeRed))
+                        else if (AtLocationDays >= int.Parse(transfer.StorageLocation.DwellTimeYellow))
                         {
-                            ColorTransferDays = "red";
+                            ColorTransferDays = new SolidColorBrush(Colors.Yellow);
                         }
                         else
                         {
-                            ColorTransferDays = "green";
+                            ColorTransferDays = new SolidColorBrush(Colors.LimeGreen);
                         }
                     }
                 }
