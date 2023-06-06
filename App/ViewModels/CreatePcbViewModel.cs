@@ -53,18 +53,28 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
     private string _serialNumber;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [MaxLength(5, ErrorMessage = "Fehler ID darf nur 5 Zeichen enthalten")]
     private string _errorCode1;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [MaxLength(5, ErrorMessage = "Fehler ID darf nur 5 Zeichen enthalten")]
     private string _errorCode2;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _errorDescription1;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _errorDescription2;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _restriction;
 
     [ObservableProperty]
