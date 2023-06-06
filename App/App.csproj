@@ -22,7 +22,6 @@
     <None Remove="Views\CreateDiagnosePage.xaml" />
     <None Remove="Views\DiagnosePage.xaml" />
     <None Remove="Views\PcbViewPage.xaml" />
-    <None Remove="Views\TransferWindow.xaml" />
     <None Remove="Views\UpdateDiagnosePage.xaml" />
     <None Remove="Controls\TransferDialog.xaml" />
   </ItemGroup>
@@ -89,12 +88,6 @@
 		<Page Include="Controls\TransferDialog.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Views\TransferWindow.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
 	</ItemGroup>
 
 
