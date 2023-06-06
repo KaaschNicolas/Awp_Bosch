@@ -400,7 +400,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                         }
                         else
                         {
-                            ColorTransferDays = new SolidColorBrush(Colors.Green);
+                            ColorTransferDays = new SolidColorBrush(Colors.LimeGreen);
                         }
                     }
                 }
