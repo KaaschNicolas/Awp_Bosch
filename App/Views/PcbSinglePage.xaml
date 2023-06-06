@@ -400,7 +400,8 @@
                         <Border
                             x:Name="StorageDuration"
                             Margin="20,20,0,0"
-                            CornerRadius="5,0,0,5">
+                            CornerRadius="5,0,0,5"
+                            Background="{Binding ColorTransferDays, Mode=OneWay}">
                             <TextBlock
                                 Margin="10,0,0,0"
                                 FontWeight="SemiBold"
@@ -409,7 +410,8 @@
                         <Border
                             x:Name="DurationDays"
                             Margin="0,20,0,0"
-                            CornerRadius="0,5,5,0">
+                            CornerRadius="0,5,5,0"
+                            Background="{Binding ColorTransferDays, Mode=OneWay}">
                             <TextBlock Margin="0,0,10,3" Text=" Tag(e)" />
                         </Border>
                     </StackPanel>

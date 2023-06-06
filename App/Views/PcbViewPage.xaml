@@ -96,8 +96,19 @@
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         Text="{Binding LastStorageLocationName}" />
-                    <TextBlock
+                    <TextBlock 
                         Grid.Row="4"
+                        Grid.Column="1"
+                        HorizontalAlignment=" Right"
+                        Text="{Binding AtLocationDays}"/>
+                    <Ellipse
+                        Fill="{Binding Status}"
+                        Stroke="Black"
+                        StrokeThickness="0.2"
+                        Height="22" 
+                        Width="22"/>
+                    <TextBlock
+                        Grid.Row="5"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         Text="{Binding CreatedDate}" />
@@ -261,6 +272,26 @@
                     Header="Letzter Lagerort"
                     Tag="LastStorageLocation" 
                     CanUserSort="False" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding AtLocationDays}"
+                    Header="Verweildauer"
+                    Tag="AtLocationDays"
+                    CanUserSort="False"/>
+                <ctWinUI:DataGridTemplateColumn 
+                    Header="Status"
+                    Tag="Status"
+                    CanUserSort="False">
+                    <ctWinUI:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse
+                                Fill="{Binding Status}"
+                                Stroke="Black"
+                                StrokeThickness="0.2"
+                                Height="22" 
+                                Width="22"/>
+                        </DataTemplate>
+                    </ctWinUI:DataGridTemplateColumn.CellTemplate>
+                </ctWinUI:DataGridTemplateColumn>
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding CreatedDate}"
                     Header="Ausgefallen am"
