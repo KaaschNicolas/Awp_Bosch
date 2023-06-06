@@ -280,6 +280,8 @@
                         <DataTemplate>
                             <Ellipse
                                 Fill="{Binding Status}"
+                                Stroke="Black"
+                                StrokeThickness="0.2"
                                 Height="22" 
                                 Width="22"/>
                         </DataTemplate>

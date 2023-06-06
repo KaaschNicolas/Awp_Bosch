@@ -76,6 +76,7 @@ namespace App.Models
         {
             string? currentStorageLocationName = pcb.Transfers.Count > 0 ? pcb.Transfers[0].StorageLocation.StorageName : null;
             int days = (int)Math.Round((DateTime.Now - pcb.Transfers[^1].CreatedDate).TotalDays);
+            
             return new PaginatedPcb()
             {
                 Id = pcb.Id,
@@ -94,7 +95,7 @@ namespace App.Models
                 DiagnoseId = pcb.DiagnoseId,
                 LastStorageLocationName = currentStorageLocationName,
                 AtLocationDays = days,
-                Status = new SolidColorBrush(Colors.Red),
+                Status = getStatusColor(pcb, days),
             };
         }
 
@@ -117,6 +118,31 @@ namespace App.Models
                 Diagnose = paginatedPcb.Diagnose,
                 DiagnoseId = paginatedPcb.DiagnoseId,
             };
+        }
+
+        public static SolidColorBrush getStatusColor(Pcb pcb, int atLocationDays)
+        {
+            var Status = new SolidColorBrush();
+            if (pcb != null)
+            {
+                if(atLocationDays >= int.Parse(pcb.Transfers[^1].StorageLocation.DwellTimeRed))
+                {
+                    Status = new SolidColorBrush(Colors.Red);
+                }
+                else if(atLocationDays >= int.Parse(pcb.Transfers[^1].StorageLocation.DwellTimeYellow))
+                {
+                    Status = new SolidColorBrush(Colors.Yellow);
+                }
+                else
+                {
+                    Status = new SolidColorBrush(Colors.Green);
+                }
+                return Status;
+            }
+            else
+            {
+                return Status = new SolidColorBrush(Colors.Transparent);
+            }
         }
     }
 }
