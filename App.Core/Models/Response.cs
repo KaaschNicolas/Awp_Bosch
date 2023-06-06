@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace App.Core.Models;
+﻿namespace App.Core.Models;
 public class Response<T>
 {
     public ResponseCode Code { get; set; }
 
     public T Data { get; set; }
 
-    public string  ErrorMessage { get; set; }
+    public string ErrorMessage { get; set; }
 
     public Response(ResponseCode code, T data)
     {
@@ -23,6 +17,11 @@ public class Response<T>
     {
         Code = code;
         ErrorMessage = error;
+    }
+
+    public Response(ResponseCode code)
+    {
+        Code = code;
     }
 
     public Response() { }

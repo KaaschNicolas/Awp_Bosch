@@ -17,16 +17,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 {
     public PcbSingleViewModel ViewModel { get; }
 
+    [ObservableProperty]
     private string _serialNumber;
-    public string SerialNumber
-    {
-        get => _serialNumber;
-        set
-        {
-            _serialNumber = value;
-            OnPropertyChanged(nameof(SerialNumber));
-        }
-    }
 
     [ObservableProperty]
     private Visibility _restrictionButtonVisibility;
@@ -85,7 +77,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private ObservableCollection<Transfer> _transfers;
 
     [ObservableProperty]
-    private List<Transfer> _sortedData;
+    private ObservableCollection<Transfer> _sortedData;
 
     [ObservableProperty]
     private Transfer _transfer;
@@ -163,9 +155,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         var response = await _dialogService.ShowCreateTransferDialog();
         if (response != null && response.Code == ResponseCode.Success)
         {
+            Transfer addedTransfer = response.Data;
+            addedTransfer.Id = SortedData.Count() + 1;
+            SortedData.Insert(0, addedTransfer);
             _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
         }
-        else if (response != null && response.Code == ResponseCode.Error)
+        else if ((response != null && response.Code == ResponseCode.Error) || response == null)
         {
             _infoBarService.showError("Fehler bei der Weitergabe", "Erfolg");
         }
@@ -393,8 +388,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                     }
                 }
             }
-            SortedData = transfers.Data.ToList();
-            SortedData.Reverse();
+            SortedData = new ObservableCollection<Transfer>(transfers.Data.ToList().OrderByDescending(x => x.CreatedDate));
         }
         else
         {

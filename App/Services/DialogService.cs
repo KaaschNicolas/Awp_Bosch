@@ -1,6 +1,7 @@
 ﻿using App.Contracts.Services;
 using App.Controls;
 using App.Core.Models;
+using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -56,16 +57,15 @@ public sealed class DialogService : IDialogService
 
             var result = await dialog.ShowAsync();
 
-
-            //var view = (TransferDialog)dialog.Content;
+            TransferDialogViewModel vm = dialog.ViewModel;
 
             if (result == ContentDialogResult.None)
             {
-                return null;
+                return new Response<Transfer>(ResponseCode.None, "None");
             }
             if (result == ContentDialogResult.Primary)
             {
-                return new Response<Transfer>(ResponseCode.Success, "");
+                return await vm.Save();
             }
         }
         return null;

@@ -101,7 +101,7 @@ public partial class TransferDialogViewModel : ObservableValidator
     }
 
 
-    public async void Save()
+    public async Task<Response<Transfer>> Save()
     {
 
         Transfer transfer = new Transfer
@@ -113,26 +113,15 @@ public partial class TransferDialogViewModel : ObservableValidator
             StorageLocationId = SelectedStorageLocation.Id
         };
 
-        Response<Transfer> response;
-
         if (SelectedDiagnose != null)
         {
-            response = await _transferDataService.CreateTransfer(transfer, SelectedDiagnose.Id);
+            return await _transferDataService.CreateTransfer(transfer, SelectedDiagnose.Id);
         }
         else
         {
-            response = await _transferDataService.Create(transfer);
+            return await _transferDataService.Create(transfer);
         }
 
-        if (response.Code == ResponseCode.Success)
-        {
-
-            _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
-        }
-        else
-        {
-            _infoBarService.showError("Fehler bei der Weitergabe", "Error");
-        }
     }
     private bool CanExecute()
     {

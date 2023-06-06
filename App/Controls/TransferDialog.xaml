@@ -12,7 +12,6 @@
     CloseButtonText="Abbrechen"
     DefaultButton="Primary"
     IsPrimaryButtonEnabled="{x:Bind ViewModel.IsEnabled, Mode=TwoWay}"
-    PrimaryButtonClick="{x:Bind ViewModel.Save}"
     PrimaryButtonText="Weitergabe"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
