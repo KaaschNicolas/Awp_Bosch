@@ -1,17 +1,21 @@
 ﻿using App.Contracts.Services;
+using App.Contracts.ViewModels;
 using App.Core.Models;
 using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
+using App.Messages;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 
 namespace App.ViewModels
 {
-    public partial class PcbPaginationViewModel : ObservableRecipient
+    public partial class PcbPaginationViewModel : ObservableRecipient, INavigationAware
     {
+
         public PcbPaginationViewModel(
             IPcbDataService<Pcb> pcbDataService,
             IStorageLocationDataService<StorageLocation> storageLocationDataService,
@@ -21,6 +25,9 @@ namespace App.ViewModels
             ITransferDataService<Transfer> transferDataService
         )
         {
+
+
+
             _pcbDataService = pcbDataService;
             FirstAsyncCommand = new AsyncRelayCommand(
                 async () => await GetPcbs(1, _pageSize, _isSortingAscending),
@@ -127,7 +134,7 @@ namespace App.ViewModels
             if (_storageLocations.Count == 0)
             {
                 var storageLocations = await _storageLocationCrudService.GetAll();
-               
+
                 if (storageLocations.Code == ResponseCode.Success)
                 {
                     storageLocations.Data.ForEach(x => _storageLocations.Add(x));
@@ -330,39 +337,21 @@ namespace App.ViewModels
             }
         }
 
+
         [RelayCommand]
         public async void ShowTransfer()
         {
-            var result = await _dialogService.ShowCreateTransferDialog("Weitergabe");
-            if (result != null)
+            var response = await _dialogService.ShowCreateTransferDialog();
+            if (response != null && response.Code == ResponseCode.Success)
             {
-                Transfer transfer = result.Item1;
-                int? diagnoseId = result.Item2;
-
-                transfer.PcbId = _selectedItem.Id;
-
-                Response<Transfer> response;
-
-                if (diagnoseId.HasValue)
-                {
-                    response = await _transferDataService.CreateTransfer(transfer, (int)diagnoseId);
-                }
-                else
-                {
-                    response = await _transferDataService.Create(transfer);
-                }
-
-                if (response.Code == ResponseCode.Success)
-                {
-
-                    _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
-                }
-                else
-                {
-                    _infoBarService.showError("Fehler bei der Weitergabe", "Error");
-                }
+                _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
+            }
+            else if (response != null && response.Code == ResponseCode.Error)
+            {
+                _infoBarService.showError("Fehler bei der Weitergabe", "Erfolg");
             }
         }
+
 
         [RelayCommand]
         public void NavigateToDetails(PaginatedPcb paginatedPcb)
@@ -383,6 +372,36 @@ namespace App.ViewModels
             _pageNumber = 0;
             FirstAsyncCommand.ExecuteAsync(null);
         }
+        // Register Messenger on Page load
+        protected override void OnActivated()
+        {
 
+            Messenger.Register<PcbPaginationViewModel, CurrentPcbRequestMessage>(this, (r, m) =>
+            {
+
+                m.Reply(PaginatedPcb.ToPcb(r.SelectedItem));
+
+            }
+            );
+
+        }
+        // Unregister Messneger when Page is navigated away from
+        protected override void OnDeactivated()
+        {
+            Messenger.UnregisterAll(this);
+        }
+
+
+
+        public void OnNavigatedTo(object parameter)
+        {
+            IsActive = true; // invokes onActivated
+        }
+
+
+        public void OnNavigatedFrom()
+        {
+            IsActive = false; // invokes onDeactivated
+        }
     }
 }

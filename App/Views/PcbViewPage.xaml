@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-    <!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
 <!--  Licensed under the MIT License.  -->
 
 <Page
@@ -40,7 +40,10 @@
                         Click="CreatePcbButton_Click"
                         Icon="Add"
                         Label="Hinzufügen" />
-                    <AppBarButton Icon="Refresh" Label="Neu Laden" Click="FilterClear_Click"/>
+                    <AppBarButton
+                        Click="FilterClear_Click"
+                        Icon="Refresh"
+                        Label="Neu Laden" />
 
                 </CommandBar>
                 <StackPanel
@@ -52,9 +55,9 @@
                         MaxWidth="320"
                         Margin="0,8,0,12"
                         HorizontalAlignment="Left"
-                        PlaceholderText="Suche"
                         FontWeight="Normal"
-                        QueryIcon="Find"/>
+                        PlaceholderText="Suche"
+                        QueryIcon="Find" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -116,23 +119,24 @@
                 DefaultLabelPosition="Right"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <ComboBox x:Name="ComboBoxStorageLocation" 
-                              ItemsSource="{x:Bind ViewModel.StorageLocations}"
-                              SelectedItem="{x:Bind ViewModel.SelectedComboBox}"
-                              SelectionChanged="ComboBox_SelectionChanged"
-                              PlaceholderText="Alles">
+                    <ComboBox
+                        x:Name="ComboBoxStorageLocation"
+                        ItemsSource="{x:Bind ViewModel.StorageLocations}"
+                        PlaceholderText="Alles"
+                        SelectedItem="{x:Bind ViewModel.SelectedComboBox}"
+                        SelectionChanged="ComboBox_SelectionChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding StorageName}"/>
+                                <TextBlock Text="{Binding StorageName}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </AppBarElementContainer>
                 <AppBarButton
                     Width="80"
+                    AllowFocusOnInteraction="True"
                     Icon="Filter"
-                    Label="Filter"
-                    AllowFocusOnInteraction="True">
+                    Label="Filter">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
                             <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Einträge" />
@@ -258,23 +262,26 @@
                     Tag="Finalized" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding LastStorageLocationName}"
+                    CanUserSort="False"
                     Header="Letzter Lagerort"
-                    Tag="LastStorageLocation" 
-                    CanUserSort="False" />
+                    Tag="LastStorageLocation" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding CreatedDate}"
                     Header="Ausgefallen am"
                     Tag="CreateDate" />
-                <controls:DataGridTemplateColumn Width="100" Header="Aktion" CanUserSort="False">
+                <controls:DataGridTemplateColumn
+                    Width="100"
+                    CanUserSort="False"
+                    Header="Aktion">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <AppBarButton
                                 Width="60"
                                 VerticalAlignment="Center"
+                                AllowFocusOnInteraction="True"
                                 Background="Transparent"
                                 Icon="More"
-                                LabelPosition="Collapsed"
-                                AllowFocusOnInteraction="True">
+                                LabelPosition="Collapsed">
                                 <AppBarButton.Flyout>
                                     <MenuFlyout Placement="BottomEdgeAlignedLeft">
                                         <MenuFlyoutItem

@@ -2,9 +2,11 @@
 using App.Contracts.ViewModels;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
+using App.Messages;
 using App.Services.PrintService.impl;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
@@ -158,34 +160,15 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [RelayCommand]
     public async void ShowTransfer()
     {
-        var result = await _dialogService.ShowCreateTransferDialog("Weitergabe");
-        if (result != null)
+        var response = await _dialogService.ShowCreateTransferDialog();
+        if (response != null && response.Code == ResponseCode.Success)
         {
-            Transfer transfer = result.Item1;
-            int? diagnoseId = result.Item2;
-            transfer.PcbId = _oldPcb.Id;
-            Response<Transfer> response;
-
-            if (diagnoseId.HasValue)
-            {
-                response = await _transfersService.CreateTransfer(transfer, (int)diagnoseId);
-            }
-            else
-            {
-                response = await _transfersService.Create(transfer);
-            }
-
-            if (response.Code == ResponseCode.Success)
-            {
-                _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
-                //Refresh(_pcb);
-            }
-            else
-            {
-                _infoBarService.showError("Fehler bei der Weitergabe", "Error");
-            }
+            _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
         }
-
+        else if (response != null && response.Code == ResponseCode.Error)
+        {
+            _infoBarService.showError("Fehler bei der Weitergabe", "Erfolg");
+        }
     }
 
     private void Refresh(object parameter)
@@ -288,14 +271,21 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     }
 
 
+    // Unregister Messneger when Page is navigated away from
+
     public async void OnNavigatedTo(object parameter)
     {
-
         _pcb = (Pcb)parameter;
 
         _selectedItem = _pcb;
 
-        var result = await _pcbDataService.GetByIdEager(_selectedItem.Id);
+        // Register Messenger used with ShowTransfer
+        WeakReferenceMessenger.Default.Register<PcbSingleViewModel, CurrentPcbRequestMessage>(this, (r, m) =>
+        {
+            m.Reply(r.SelectedItem);
+        });
+
+        var result = await _pcbDataService.GetByIdEager(SelectedItem.Id);
 
         _pcb = result.Data;
 
@@ -411,13 +401,15 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             _infoBarService.showError("Couldn't load transfer list", "Transfer List");
         }
     }
+
     public void OnNavigatedFrom()
     {
-
+        WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
     private void NavigateToPcbs()
     {
         _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
     }
+
 }

@@ -1,7 +1,6 @@
 ﻿using App.Contracts.Services;
 using App.Controls;
 using App.Core.Models;
-using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -42,21 +41,23 @@ public sealed class DialogService : IDialogService
         }
         return null;
     }
-    public async Task<Tuple<Transfer, int?>?> ShowCreateTransferDialog(string title, string confirmButtonText, string cancelButtonText)
+    public async Task<Response<Transfer>?> ShowCreateTransferDialog()
     {
-
-
         if (rootElement != null)
         {
             /*  WindowEx window = new TransferWindow();
               window.Activate();*/
 
-            var dialog = new TransferDialog { XamlRoot = rootElement.XamlRoot };
+            var dialog = new TransferDialog
+            {
+                XamlRoot = rootElement.XamlRoot,
+                RequestedTheme = rootElement.RequestedTheme
+            };
 
             var result = await dialog.ShowAsync();
 
 
-            var view = (TransferDialog)dialog.Content;
+            //var view = (TransferDialog)dialog.Content;
 
             if (result == ContentDialogResult.None)
             {
@@ -64,17 +65,7 @@ public sealed class DialogService : IDialogService
             }
             if (result == ContentDialogResult.Primary)
             {
-                TransferDialogViewModel tdVM = (TransferDialogViewModel)view.ViewModel;
-
-                int? diagnoseId = ((Diagnose)tdVM.SelectedDiagnose) != null ? ((Diagnose)tdVM.SelectedDiagnose).Id : null;
-
-                return Tuple.Create(new Transfer
-                {
-                    NotedById = tdVM.NotedBy.Id,
-                    CreatedDate = tdVM.TransferDate,
-                    StorageLocationId = ((StorageLocation)tdVM.SelectedStorageLocation).Id,
-                    Comment = tdVM.Comment
-                }, diagnoseId);
+                return new Response<Transfer>(ResponseCode.Success, "");
             }
         }
         return null;
