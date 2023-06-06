@@ -53,25 +53,6 @@ public sealed partial class PcbSinglePage : Page
         }
     }*/
 
-    public void colorDaysInCirculation()
-    {
-        if (ViewModel.ColorDays == "green")
-        {
-            inCirculationText.Background = new SolidColorBrush(Colors.Green);
-            Days.Background = new SolidColorBrush(Colors.Green);
-        }
-        else if (ViewModel.ColorDays == "yellow")
-        {
-            inCirculationText.Background = new SolidColorBrush(Colors.Yellow);
-            Days.Background = new SolidColorBrush(Colors.Yellow);
-        }
-        else if (ViewModel.ColorDays == "red")
-        {
-            inCirculationText.Background = new SolidColorBrush(Colors.Red);
-            Days.Background = new SolidColorBrush(Colors.Red);
-        }
-    }
-
     private void EditClick(object sender, RoutedEventArgs e)
     {
         ViewModel.EditCommand.Execute(null);

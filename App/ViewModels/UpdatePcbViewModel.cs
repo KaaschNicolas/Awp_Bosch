@@ -43,7 +43,7 @@ public partial class UpdatePcbViewModel : ObservableValidator, INavigationAware
     }
 
     [ObservableProperty]
-    private User _user;
+    private User _createdBy;
 
     [ObservableProperty]
     [Required(ErrorMessage = ValidationErrorMessage.Required)]
@@ -116,26 +116,21 @@ public partial class UpdatePcbViewModel : ObservableValidator, INavigationAware
         ValidateAllProperties();
         if (!HasErrors)
         {
-            bool isFinalized = false;
-
             List<Transfer> transfers = new();
             foreach (TransferDTO transferDTO in Transfers)
             {
                 Transfer transfer = transferDTO.GetTransfer();
                 transfers.Add(transfer);
-                if (transfer.StorageLocation.IsFinalDestination)
-                {
-                    isFinalized = true;
-                }
             }
 
             _pcbToEdit.CreatedDate = CreatedAt;
             _pcbToEdit.SerialNumber = SerialNumber;
-            _pcbToEdit.Finalized = isFinalized;
+            //TODO: Finalized depending on last transfer
+            _pcbToEdit.Finalized = transfers.Last().StorageLocation.IsFinalDestination;
             _pcbToEdit.PcbTypeId = SelectedPcbType.Id;
             _pcbToEdit.Transfers = new List<Transfer>(transfers);
             _pcbToEdit.Restriction = Restriction;
-            _pcbToEdit.Diagnose = DiagnosePcb;
+            _pcbToEdit.DiagnoseId = DiagnosePcb != null ? DiagnosePcb.Id : null;
             _pcbToEdit.ErrorTypes = new List<ErrorType>(ErrorTypes);
 
 
@@ -206,7 +201,7 @@ public partial class UpdatePcbViewModel : ObservableValidator, INavigationAware
             SerialNumber = _pcbToEdit.SerialNumber;
             CreatedAt = _pcbToEdit.CreatedDate;
             DiagnosePcb = _pcbToEdit.Diagnose;
-            User = _pcbToEdit.Transfers[0].NotedBy;
+            CreatedBy = _pcbToEdit.Transfers[0].NotedBy;
             Restriction = _pcbToEdit.Restriction;
             SelectedPcbType = _pcbToEdit.PcbType;
 

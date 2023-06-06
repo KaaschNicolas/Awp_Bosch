@@ -85,7 +85,7 @@
                     IsEnabled="False"
                     IsReadOnly="True"
                     PlaceholderText="Benutzername"
-                    Text="{x:Bind ViewModel.User.Name, Mode=OneWay}" />
+                    Text="{x:Bind ViewModel.CreatedBy.Name, Mode=OneWay}" />
 
                 <TextBlock
                     Grid.Row="2"
