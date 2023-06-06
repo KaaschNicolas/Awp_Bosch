@@ -49,6 +49,7 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
     [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Seriennummer muss genau 10 Zahlen besitzen.")]
     private string _serialNumber;
 
