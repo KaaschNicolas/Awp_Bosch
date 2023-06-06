@@ -30,21 +30,29 @@ namespace App.ViewModels
         {
             DwellTimeBarPlot = new PlotModel();
             DwellTimeBarPlot.PlotAreaBorderColor = OxyColors.Transparent;
+            
 
-            var barSeries = new BarSeries
+            var barSeries = new BarSeries()
             {
                 ItemsSource = await GenerateBarItems(),
                 LabelPlacement = LabelPlacement.Outside,
                 TextColor = OxyColors.WhiteSmoke
             };
-
+            barSeries.IsStacked = false;
+            
             DwellTimeBarPlot.Series.Add(barSeries);
 
+            //DwellTimeBarPlot.Axes.Add(new CategoryAxis
+            //{
+            //    Position = AxisPosition.Bottom,
+            //    Key = "StorageLocation"
+            //});
             DwellTimeBarPlot.Axes.Add(new CategoryAxis
             {
-                Position = AxisPosition.Bottom,
-                Key = "Lagerort"
+                Position = AxisPosition.Left,
+                Key = "DwellTime"
             });
+            DwellTimeBarPlot.Axes.Add(new LinearAxis() { Position = AxisPosition.Bottom, MinimumPadding = 0, AbsoluteMinimum = 0 });
         }
 
         private async Task<List<BarItem>> GenerateBarItems()
