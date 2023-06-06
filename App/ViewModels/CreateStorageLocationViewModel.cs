@@ -17,19 +17,14 @@ public partial class CreateStorageLocationViewModel : ObservableValidator
     private string _storageName;
 
     [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
     private string _dwellTimeYellow;
 
     [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
     private string _dwellTimeRed;
 
     [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
     private bool _isFinalDestination;
+
 
     private readonly ICrudService<StorageLocation> _crudService;
     private readonly IInfoBarService _infoBarService;
