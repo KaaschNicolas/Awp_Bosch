@@ -31,7 +31,7 @@ namespace App.Core.Services
         }
 
 
-        public async Task<Response<T>> CreateTransfer(T transfer, int diagnoseId)
+        public async Task<Response<T>> CreateTransfer(T transfer, int? diagnoseId = null)
         {
             using (var transaction = await _boschContext.Database.BeginTransactionAsync())
             {
@@ -39,8 +39,16 @@ namespace App.Core.Services
                 {
                     EntityEntry<T> entityEntry = await _boschContext.Set<T>().AddAsync(transfer);
                     var pcb = await _boschContext.Set<Pcb>().FirstOrDefaultAsync(x => x.Id == transfer.PcbId);
-                    pcb.DiagnoseId = diagnoseId;
+                    var storageLocation = await _boschContext.Set<StorageLocation>().FirstOrDefaultAsync(x => x.Id == transfer.StorageLocationId);
+                    if (diagnoseId != null)
+                    {
+                        pcb.DiagnoseId = diagnoseId;
+                    }
+
+                    pcb.Finalized = storageLocation.IsFinalDestination;
+
                     _boschContext.Entry(pcb).Property(x => x.DiagnoseId).IsModified = true;
+                    _boschContext.Entry(pcb).Property(x => x.Finalized).IsModified = true;
 
                     await _boschContext.SaveChangesAsync();
                     await transaction.CommitAsync();

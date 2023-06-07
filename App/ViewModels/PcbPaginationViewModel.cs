@@ -345,6 +345,7 @@ namespace App.ViewModels
             if (response != null && response.Code == ResponseCode.Success)
             {
                 _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
+                Refresh();
             }
             else if (response != null && response.Code == ResponseCode.Error)
             {
