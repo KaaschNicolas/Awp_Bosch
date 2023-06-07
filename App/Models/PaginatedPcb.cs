@@ -101,8 +101,11 @@ namespace App.Models
         public static SolidColorBrush getStatusColor(Pcb pcb, int atLocationDays)
         {
             var Status = new SolidColorBrush();
-            if (pcb != null)
+            if (pcb != null &&
+                pcb.Transfers[^1].StorageLocation.DwellTimeRed != "--" &&
+                pcb.Transfers[^1].StorageLocation.DwellTimeYellow != "--")
             {
+
                 if (atLocationDays >= int.Parse(pcb.Transfers[^1].StorageLocation.DwellTimeRed))
                 {
                     Status = new SolidColorBrush(Colors.Red);
