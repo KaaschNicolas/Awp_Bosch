@@ -119,8 +119,9 @@ public partial class TransferDialogViewModel : ObservableValidator
         }
         else
         {
-            return await _transferDataService.Create(transfer);
+            return await _transferDataService.CreateTransfer(transfer);
         }
+
 
     }
     private bool CanExecute()
