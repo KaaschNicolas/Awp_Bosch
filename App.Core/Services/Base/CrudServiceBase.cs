@@ -95,10 +95,6 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
             _loggingService.Log(LogLevel.Error, "Error GetAll()");
             return new Response<List<T>>(ResponseCode.Error, error: "Error GetAll()");
         }
-        catch (Exception)
-        {
-            return new Response<List<T>>(ResponseCode.Error, error: "Error GetAll()");
-        }
     }
 
     public async Task<Response<T>> GetById(int id)
