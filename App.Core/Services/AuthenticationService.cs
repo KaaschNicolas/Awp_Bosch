@@ -20,7 +20,7 @@ namespace App.Core.Services
             var adUsername = Environment.UserName;
             var result = _boschContext
                 .Users
-                .Where(u => u.AdUsername.Equals(adUsername) && u.DeletedDate == DateTime.MinValue)
+                .Where(u => u.AdUsername.Equals(adUsername) && u.DeletedDate < u.CreatedDate)
                 .ToList();
             if (result.Count != 0 && result[0] != null)
             {

@@ -25,7 +25,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             {
                 data = await _boschContext.Set<T>()
                     .OrderBy(orderByProperty, isAscending)
-                    .Where(x => x.DeletedDate == DateTime.MinValue)
+                    .Where(x => x.DeletedDate < x.CreatedDate)
                     .Skip(pageIndex * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -34,7 +34,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             {
                 data = await _boschContext.Set<T>()
                     .OrderBy(orderByProperty, isAscending)
-                    .Where(x => x.DeletedDate == DateTime.MinValue)
+                    .Where(x => x.DeletedDate < x.CreatedDate)
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
@@ -52,7 +52,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var data = await _boschContext.Set<T>()
-                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Where(x => x.DeletedDate < x.CreatedDate)
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
         }
@@ -68,7 +68,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             var data = await _boschContext.Set<T>()
                 .Where(where)
-                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Where(x => x.DeletedDate < x.CreatedDate)
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
         }
@@ -86,7 +86,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
 
             await _boschContext
                 .Pcbs
-                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Where(x => x.DeletedDate < x.CreatedDate)
                 .Include(x => x.Transfers)
                 .ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
 
@@ -146,7 +146,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var data = await _boschContext.Set<T>()
-                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Where(x => x.DeletedDate < x.CreatedDate)
                 .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
                 .CountAsync();
             return new Response<int>(ResponseCode.Success, data: data);
@@ -167,7 +167,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             {
                 data = await _boschContext.Set<T>()
                     .OrderBy(orderByProperty, isAscending)
-                    .Where(x => x.DeletedDate == DateTime.MinValue)
+                    .Where(x => x.DeletedDate < x.CreatedDate)
                     .Skip(pageIndex * pageSize)
                     .Take(pageSize)
                     .AsNoTracking()
@@ -177,7 +177,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             {
                 data = await _boschContext.Set<T>()
                     .OrderBy(orderByProperty, isAscending)
-                    .Where(x => x.DeletedDate == DateTime.MinValue)
+                    .Where(x => x.DeletedDate < x.CreatedDate)
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
                     .AsNoTracking()
@@ -201,7 +201,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             if (pageIndex == 0)
             {
                 data = await _boschContext.Set<T>()
-                    .Where(x => x.DeletedDate == DateTime.MinValue)
+                    .Where(x => x.DeletedDate < x.CreatedDate)
                     .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
                     .Skip((pageIndex) * pageSize)
                     .Take(pageSize)
@@ -210,7 +210,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             else
             {
                 data = await _boschContext.Set<T>()
-                    .Where(x => x.DeletedDate == DateTime.MinValue)
+                    .Where(x => x.DeletedDate < x.CreatedDate)
                     .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
                     .Skip((pageIndex - 1) * pageSize)
                     .Take(pageSize)
@@ -230,7 +230,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var data = await _boschContext.Set<T>()
-                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Where(x => x.DeletedDate < x.CreatedDate)
                 .Where(where)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
@@ -254,7 +254,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             await _boschContext
                 .Pcbs
                 .Include(x => x.Transfers)
-                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Where(x => x.DeletedDate < x.CreatedDate)
                 .ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
 
             List<T> pcbs = new();
@@ -292,7 +292,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             //setzt alle DeletedDate der anhängenden Objekte null, die es auch nur für diese Leiterplatte gibt.
 
             Pcb pcb = _boschContext.Set<T>()
-                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Where(x => x.DeletedDate < x.CreatedDate)
                 .Where(x => x.Id.Equals(entity.Id))
                 .Include(pcb => pcb.Restriction)
                 .Include(etp => etp.ErrorTypes)
@@ -334,7 +334,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var entity = await _boschContext.Set<T>()
-                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Where(x => x.DeletedDate < x.CreatedDate)
                 .Include(T => T.Transfers)
                 .ThenInclude(transfer => transfer.NotedBy)
                 .Include(T => T.Transfers)
@@ -360,7 +360,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             _ = pageIndex == 0 ? pageIndex : pageIndex = pageIndex - 1;
             var entity = await _boschContext.Set<T>()
-                .Where(x => x.DeletedDate == DateTime.MinValue)
+                .Where(x => x.DeletedDate < x.CreatedDate)
                 .Include(T => T.Restriction)
                 .Include(T => T.Comment)
                 .Include(T => T.Diagnose)
