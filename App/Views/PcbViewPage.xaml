@@ -40,6 +40,7 @@
                         Click="CreatePcbButton_Click"
                         Icon="Add"
                         Label="Hinzufügen" 
+                        FontWeight="SemiBold"
                         Background="{StaticResource AccentFillColorDefaultBrush}"
                         Foreground="{StaticResource TextOnAccentFillColorPrimary}"/>
                         
