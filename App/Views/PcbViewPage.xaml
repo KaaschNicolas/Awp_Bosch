@@ -74,7 +74,17 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
-                        Text="{Binding ErrorDescription}" />
+                        Text="{Binding PcbType.PcbPartNumber}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding FirstErrorCode}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding SecondErrorCode}" />
                     <TextBlock
                         Grid.Row="2"
                         Grid.Column="1"
@@ -249,10 +259,21 @@
                     Binding="{Binding SerialNumber}"
                     Header="Seriennummer"
                     Tag="SerialNumber" />
-                <ctWinUI:DataGridComboBoxColumn
-                    Binding="{Binding ErrorDescription}"
-                    Header="Fehlerbeschreibung"
-                    Tag="ErrorDescription" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding PcbType.PcbPartNumber}"
+                    Header="Sachnummer"
+                    Tag="PcbType"
+                    CanUserSort="False"/>
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding FirstErrorCode}"
+                    Header="Oberfehler"
+                    Tag="FirstErrorCode"
+                    CanUserSort="False"/>
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding SecondErrorCode}"
+                    Header="Unterfehler"
+                    Tag="SecondErrorCode"
+                    CanUserSort="False"/>
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding Finalized}"
                     Header="Abgeschlossen"
