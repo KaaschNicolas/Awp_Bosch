@@ -2,6 +2,7 @@
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.ExceptionServices;
 
 namespace App.Models
 {
@@ -27,6 +28,17 @@ namespace App.Models
         {
             get; set;
         }
+
+        public string FirstErrorCode
+        {
+            get; set;
+        }
+
+        public string SecondErrorCode
+        {
+            get; set;
+        }
+
         public bool Finalized
         {
             get; set;
@@ -76,6 +88,8 @@ namespace App.Models
         {
             string? currentStorageLocationName = pcb.Transfers.Count > 0 ? pcb.Transfers[0].StorageLocation.StorageName : null;
             int days = (int)Math.Round((DateTime.Now - pcb.Transfers[^1].CreatedDate).TotalDays);
+            string? first = pcb.ErrorTypes[0].Code;
+            string? second = pcb.ErrorTypes[1].Code;
             return new PaginatedPcb()
             {
                 Id = pcb.Id,
@@ -85,6 +99,8 @@ namespace App.Models
                 Restriction = pcb.Restriction,
                 ErrorDescription = pcb.ErrorDescription,
                 ErrorTypes = pcb.ErrorTypes,
+                FirstErrorCode = first,
+                SecondErrorCode = second,
                 Finalized = pcb.Finalized,
                 PcbTypeId = pcb.PcbTypeId,
                 PcbType = pcb.PcbType,
