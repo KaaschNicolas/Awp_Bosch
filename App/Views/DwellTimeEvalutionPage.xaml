@@ -24,8 +24,8 @@
                     <RepositionThemeTransition />
                 </TransitionCollection>
             </GridViewItem.Transitions>
-            <Grid Width="400"
-                  Height="340"
+            <Grid Width="1000"
+                  Height="640"
                   Margin="0"
                   CornerRadius="4"
                   RowDefinitions="auto, *">
@@ -39,15 +39,17 @@
                         Background="{ThemeResource SystemAccentColor}"
                         Opacity=".5" />
 
-                <TextBlock Text="Bar"
+                <TextBlock Text="Übersicht der durschnittlichen Verweildauer pro PVB im gesamten Zeitraum"
                            Padding="0"
                            HorizontalAlignment="Stretch"
                            FontSize="16"
                            Margin="10 5" />
 
                 <oxyplot:PlotView Model="{x:Bind ViewModel.DwellTimeBarPlot}"
+                                  x:Name="BarPlot"
                                   Background="Transparent"
-                                  Grid.Row="1" />
+                                  Grid.Row="1"
+                                  ScrollViewer.IsDeferredScrollingEnabled="False"/>
             </Grid>
         </GridViewItem>
     </GridView>

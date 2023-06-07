@@ -34,16 +34,20 @@ namespace App.Views
             ViewModel = App.GetService<DwellTimeEvaluationViewModel>();
             InitializeComponent();
             Loaded += Page_Loaded;
+            
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             ApplyTheme(ActualTheme);
+            ViewModel.GeneratePlotCommand.ExecuteAsync(null);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ActualThemeChanged += Page_ActualThemeChanged;
+            ViewModel.GeneratePlotCommand.ExecuteAsync(null);
+            BarPlot.InvalidatePlot(true);
             base.OnNavigatedTo(e);
         }
 

@@ -7,6 +7,7 @@ using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -22,64 +23,22 @@ namespace App.ViewModels
         {
             _transferDataService = transferDataService;
             _storageLocationDataService = storageLocationDataService;
-            InitializeBarPlot();    
+            GeneratePlotCommand = new AsyncRelayCommand(
+                GeneratePlot
+            );
+            Refresh();  
         }
 
         private ITransferDataService<Transfer> _transferDataService;
         private IStorageLocationDataService<StorageLocation> _storageLocationDataService;
 
-        private async Task InitializeBarPlot()
+        public IAsyncRelayCommand GeneratePlotCommand { get; }
+
+        public async Task GeneratePlot()
         {
             DwellTimeBarPlot = new PlotModel();
             DwellTimeBarPlot.PlotAreaBorderColor = OxyColors.Transparent;
             DwellTimeBarPlot = await ColumnSeries();
-
-            //var barSeries = new HistogramSeries()
-            //{
-            //    ItemsSource = await GenerateBarItems(),
-            //    LabelPlacement = LabelPlacement.Outside,
-            //    TextColor = OxyColors.WhiteSmoke
-            //};
-
-            //DwellTimeBarPlot.Series.Add(barSeries);
-
-            ////DwellTimeBarPlot.Axes.Add(new CategoryAxis
-            ////{
-            ////    Position = AxisPosition.Bottom,
-            ////    Key = "StorageLocation"
-            ////});
-
-            //DwellTimeBarPlot.Axes.Add(new CategoryAxis
-            //{
-            //    Position = AxisPosition.Bottom,
-            //    Key = "DwellTime",
-            //});
-            //DwellTimeBarPlot.Axes.Add(new LinearAxis() { Position = AxisPosition.Left, MinimumPadding = 0, AbsoluteMinimum = 0 });
-        }
-
-        private async Task<List<HistogramItem>> GenerateBarItems()
-        {
-            var transfer = await _transferDataService.GetAll();
-
-            if (transfer.Code == ResponseCode.Success)
-            {
-                var q = from x in transfer.Data
-                        group x by new { x.StorageLocationId, CreatedAt = x.CreatedDate } into g
-                        select new TransferDto(g.Key.StorageLocationId, g.Key.CreatedAt);
-                List<HistogramItem> barItems = new();
-                List<int> distinctStorageLocationIds = new();
-                foreach(var item in q)
-                {
-                    if (!distinctStorageLocationIds.Contains(item.StorageLocationId))
-                    {
-                        distinctStorageLocationIds.Add(item.StorageLocationId);
-                        barItems.Add(new HistogramItem(0, 1, 2, item.StorageLocationId));
-                    }
-                }
-                
-                return barItems;
-            }
-            return null;
         }
 
         public async Task<PlotModel> ColumnSeries()
@@ -88,13 +47,14 @@ namespace App.ViewModels
 
             // specify axis keys
             var barSeries = new BarSeries { XAxisKey = "Value", YAxisKey = "Category" };
-            barSeries.Items.Add(new BarItem { Value = 10 });
-            barSeries.Items.Add(new BarItem { Value = 12 });
-            barSeries.Items.Add(new BarItem { Value = 16 });
+            List<BarItem> barItems = await FillData();
+            barItems.ForEach(x => barSeries.Items.Add(x));
+            
             model.Series.Add(barSeries);
 
             // specify key and position
             var categoryAxis = new CategoryAxis { Position = AxisPosition.Bottom, Key = "Category" };
+            categoryAxis.IsZoomEnabled = false;
             var storageLocation = await _storageLocationDataService.GetAll();
             storageLocation.Data.ForEach(x => categoryAxis.Labels.Add(x.StorageName));
             
@@ -102,11 +62,50 @@ namespace App.ViewModels
 
             // specify key and position
             var valueAxis = new LinearAxis { Position = AxisPosition.Left, Key = "Value" };
+            valueAxis.IsZoomEnabled = false;
             model.Axes.Add(valueAxis);
 
             return model;
         }
 
-        private record TransferDto(int StorageLocationId, DateTime CreatedAt);
+        public async Task<List<BarItem>> FillData()
+        {
+            var data = await _transferDataService.GetAllEager();
+            var barItems = new List<BarItem>();
+            if (data.Code == ResponseCode.Success)
+            {
+                Dictionary<StorageLocation, double> keyValuePairs = new Dictionary<StorageLocation, double>();
+                int count = 0;
+                Dictionary<int, int> keys = new();
+                foreach (var key in keyValuePairs.Keys)
+                {
+                    keys.Add(key.Id, keys[key.Id] + 1);
+                }
+                foreach (var item in data.Data)
+                {
+                    if (!keyValuePairs.Keys.Contains(item.StorageLocation))
+                    {
+                        count++;
+                        keyValuePairs.Add(item.StorageLocation, Math.Round((DateTime.Now - item.CreatedDate).TotalDays));
+                    }
+                    else
+                    {
+                        count++;
+                        keyValuePairs[item.StorageLocation] += Math.Round((DateTime.Now - item.CreatedDate).TotalDays);
+                    }
+                }
+
+                foreach (var item in keyValuePairs)
+                {
+                    barItems.Add(new BarItem(item.Value));
+                }
+            }
+            return barItems;
+        }
+
+        private void Refresh()
+        {
+            GeneratePlotCommand.ExecuteAsync(null);
+        }
     }
 }
