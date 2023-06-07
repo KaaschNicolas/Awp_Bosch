@@ -79,268 +79,201 @@
                 <ColumnDefinition Width="0,5*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
 
 
-            <StackPanel
-                Grid.Row="0"
-                Grid.Column="0"
-                Orientation="Vertical">
-                <StackPanel Margin="0,0,0,15" Orientation="Horizontal">
-                    <TextBlock FontSize="18" Text="Seriennummer:" />
-                    <TextBlock
-                        Margin="5,0,0,0"
-                        FontSize="18"
-                        FontWeight="Bold"
-                        Text="{x:Bind Path=ViewModel.SerialNumber, Mode=OneWay}" />
-                </StackPanel>
-                <StackPanel
-                    Margin="0,15,0,0"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                    <TextBlock Margin="0,5,0,0" Text="Ausgefallen am:" />
+
+            <Grid RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Vertical">
+                    <StackPanel Margin="0,0,0,15" Orientation="Horizontal">
+                        <TextBlock FontSize="18" Text="Seriennummer:" />
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            Text="{x:Bind Path=ViewModel.SerialNumber, Mode=OneWay}" />
+                    </StackPanel>
                     <StackPanel
-                        Margin="5,5,25,0"
-                        VerticalAlignment="Top"
-                        Orientation="Horizontal">
-                        <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.CreatedDate.Day, Mode=OneWay}" />
-                        <TextBlock FontWeight="Bold" Text="." />
-                        <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.CreatedDate.Month, Mode=OneWay}" />
-                        <TextBlock FontWeight="Bold" Text="." />
-                        <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.CreatedDate.Year, Mode=OneWay}" />
-                    </StackPanel>
-                    <TextBlock Margin="0,5,0,0" Text="Aufgenommenen von: " />
-                    <TextBlock
-                        Margin="10,5,0,0"
-                        FontWeight="Bold"
-                        Text="{x:Bind Path=ViewModel.NotedBy, Mode=OneWay}" />
-                </StackPanel>
-            </StackPanel>
-            <Button
-                x:Name="RestrictionButton"
-                Grid.Row="1"
-                Grid.Column="0"
-                Grid.ColumnSpan="1"
-                Width="230"
-                Height="50"
-                Margin="0,-260,0,0"
-                HorizontalAlignment="Right"
-                Background="#f7e771"
-                Click="RestrictionClick"
-                FontWeight="SemiBold"
-                Visibility="{x:Bind Path=ViewModel.RestrictionButtonVisibility, Mode=TwoWay}">
-                Einschränkung hinzufügen
-            </Button>
-            <InfoBar
-                x:Name="RestrictionInfoBar"
-                Title="Einschränkung"
-                Grid.Row="1"
-                Grid.Column="0"
-                Grid.ColumnSpan="1"
-                Margin="0,0,0,0"
-                HorizontalAlignment="Right"
-                IsClosable="False"
-                IsIconVisible="True"
-                IsOpen="True"
-                Message="{x:Bind Path=ViewModel.Restriction.Name, Mode=TwoWay}"
-                Severity="Warning"
-                Visibility="{x:Bind Path=ViewModel.RestrictionInfoBarVisibility, Mode=TwoWay}" />
-
-            <StackPanel
-                Grid.Row="1"
-                Grid.RowSpan="2"
-                Grid.Column="0">
-                <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
-                    <TextBlock Text="Sachnummer:" />
-                    <TextBlock
-                        Margin="10,0,0,0"
-                        FontWeight="Bold"
-                        Text="{x:Bind Path=ViewModel.PcbType.PcbPartNumber, Mode=TwoWay}" />
-                </StackPanel>
-                <StackPanel
-                    Margin="0,30,0,0"
-                    Orientation="Horizontal"
-                    Spacing="5">
-                    <TextBlock Text="Fehlerkategorie:" />
-                    <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.DiagnosePcb.Name, Mode=TwoWay}" />
-
-                </StackPanel>
-
-                <!--  Fehlertypen  -->
-                <Expander
-                    Margin="0,20,0,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    ExpandDirection="Down"
-                    IsExpanded="True">
-                    <Expander.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Fehler:" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                FontWeight="Bold"
-                                Text="{x:Bind Path=ViewModel.FirstErrorCode, Mode=OneWay}" />
-                        </StackPanel>
-                    </Expander.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Beschreibung:" />
-                        <TextBlock Margin="5,0,0,0" Text="{x:Bind Path=ViewModel.FirstErrorDescription, Mode=OneWay}" />
-                    </StackPanel>
-                </Expander>
-
-                <Expander
-                    Margin="0,20,0,0"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
-                    ExpandDirection="Down"
-                    IsExpanded="True">
-                    <Expander.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Fehler:" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                FontWeight="Bold"
-                                Text="{x:Bind Path=ViewModel.SecondErrorCode, Mode=OneWay}" />
-                        </StackPanel>
-                    </Expander.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Beschreibung:" />
-                        <TextBlock Margin="5,0,0,0" Text="{x:Bind Path=ViewModel.SecondErrorDescription, Mode=OneWay}" />
-                    </StackPanel>
-                </Expander>
-
-
-                <!--  Umlauf-Historie  -->
-
-                <Grid Margin="0,60,0,0">
-                    <Grid.Resources>
-                        <Style TargetType="controls:DataGrid">
-                            <Setter Property="Background" Value="Transparent" />
-                            <!--  Hintergrundfarbe der selektierten Zeile  -->
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <TextBlock
-                        Margin="5,0"
+                        Margin="0,15,0,0"
                         VerticalAlignment="Center"
-                        Style="{ThemeResource SubtitleTextBlockStyle}"
-                        Text="Umlauf-Historie" />
-                    <controls:DataGrid
-                        x:Name="dataGrid"
-                        Grid.Row="1"
-                        Margin="12"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        AlternatingRowBackground="Transparent"
-                        AlternatingRowForeground="Gray"
-                        AreRowDetailsFrozen="False"
-                        AreRowGroupHeadersFrozen="True"
-                        AutoGenerateColumns="False"
-                        CanUserReorderColumns="False"
-                        CanUserResizeColumns="True"
-                        CanUserSortColumns="False"
-                        ColumnHeaderHeight="32"
-                        ColumnWidth="Auto"
-                        FrozenColumnCount="0"
-                        GridLinesVisibility="None"
-                        HeadersVisibility="None"
-                        HorizontalScrollBarVisibility="Visible"
-                        IsReadOnly="False"
-                        ItemsSource="{Binding SortedData}"
-                        MaxColumnWidth="400"
-                        RowDetailsVisibilityMode="VisibleWhenSelected"
-                        RowGroupHeaderPropertyNameAlternative="Range"
-                        SelectedItem="{Binding Transfer, Mode=TwoWay}"
-                        SelectionMode="Extended"
-                        VerticalScrollBarVisibility="Visible">
-                        <!--  RowDetailsTemplate="{StaticResource RowDetailsTemplate}"  -->
-                        <controls:DataGrid.Columns>
-                            <!--<controls:DataGridTextColumn Binding="{Binding Id, Mode=TwoWay}" />-->
-                            <controls:DataGridTemplateColumn Width="40" Header="Id">
-                                <controls:DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Grid
-                                            Width="40"
-                                            Height="40"
-                                            VerticalAlignment="top">
-                                            <Ellipse
-                                                x:Name="EllipseColor"
-                                                Fill="Black"
-                                                Stroke="white"
-                                                StrokeThickness="2" />
-                                            <TextBlock
-                                                HorizontalAlignment="center"
-                                                VerticalAlignment="center"
-                                                FontWeight="Bold"
-                                                Foreground="white"
-                                                Text="{Binding Id, Mode=OneWay}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </controls:DataGridTemplateColumn.CellTemplate>
-                                <!--<controls:DataGridTextColumn Binding="{Binding StorageLocation.StorageName, Mode=TwoWay}" Header="Lagerort"/>
-                            <controls:DataGridTextColumn Binding="{Binding Comment, Mode=TwoWay}" Header="Comment"/>-->
-                            </controls:DataGridTemplateColumn>
-                            <controls:DataGridTemplateColumn Width="500" Header="standort">
-                                <controls:DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Expander
-                                            Margin="10,0,0,0"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Top"
-                                            HorizontalContentAlignment="Stretch"
-                                            Header="{Binding StorageLocation.StorageName, Mode=OneWay}"
-                                            IsExpanded="false">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding CreatedDate, Mode=TwoWay}" />
-                                                    <TextBlock Margin="10,0,0,0" Text="{Binding NotedBy, Mode=TwoWay}" />
-                                                </StackPanel>
-                                                <TextBlock Text="Beschreibung:" />
-                                                <TextBlock Text="{Binding Comment, Mode=OneWay}" />
-                                            </StackPanel>
-                                        </Expander>
-                                    </DataTemplate>
-                                </controls:DataGridTemplateColumn.CellTemplate>
-                            </controls:DataGridTemplateColumn>
-                        </controls:DataGrid.Columns>
-                    </controls:DataGrid>
-                </Grid>
-            </StackPanel>
+                        Orientation="Horizontal">
+                        <TextBlock Margin="0,5,0,0" Text="Ausgefallen am:" />
+                        <StackPanel
+                            Margin="5,5,25,0"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                            <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.CreatedDate.Day, Mode=OneWay}" />
+                            <TextBlock FontWeight="Bold" Text="." />
+                            <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.CreatedDate.Month, Mode=OneWay}" />
+                            <TextBlock FontWeight="Bold" Text="." />
+                            <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.CreatedDate.Year, Mode=OneWay}" />
+                        </StackPanel>
+                        <TextBlock Margin="0,5,0,0" Text="Aufgenommenen von: " />
+                        <TextBlock
+                            Margin="10,5,0,0"
+                            FontWeight="Bold"
+                            Text="{x:Bind Path=ViewModel.NotedBy, Mode=OneWay}" />
+                    </StackPanel>
 
+
+
+                    <StackPanel>
+                        <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
+                            <TextBlock Text="Sachnummer:" />
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                FontWeight="Bold"
+                                Text="{x:Bind Path=ViewModel.PcbType.PcbPartNumber, Mode=TwoWay}" />
+                        </StackPanel>
+                        <Grid Margin="0,10,0,0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="Fehlerkategorie:" />
+                                <TextBlock FontWeight="Bold" Text="{x:Bind Path=ViewModel.DiagnosePcb.Name, Mode=TwoWay}" />
+                            </StackPanel>
+                            <Grid>
+                                <Button
+                                    x:Name="RestrictionButton"
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="1"
+                                    Width="230"
+                                    Height="50"
+                                    HorizontalAlignment="Right"
+                                    Background="#f7e771"
+                                    Click="RestrictionClick"
+                                    FontWeight="SemiBold"
+                                    Visibility="{x:Bind Path=ViewModel.RestrictionButtonVisibility, Mode=TwoWay}">
+                                    Einschränkung hinzufügen
+                                </Button>
+                                <InfoBar
+                                    x:Name="RestrictionInfoBar"
+                                    Title="Einschränkung"
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="1"
+                                    Margin="0,0,0,0"
+                                    HorizontalAlignment="Right"
+                                    IsClosable="False"
+                                    IsIconVisible="True"
+                                    IsOpen="True"
+                                    Message="{x:Bind Path=ViewModel.Restriction.Name, Mode=TwoWay}"
+                                    Severity="Warning"
+                                    Visibility="{x:Bind Path=ViewModel.RestrictionInfoBarVisibility, Mode=TwoWay}" />
+                            </Grid>
+
+                        </Grid>
+                    </StackPanel>
+
+                    <!--  Fehlertypen  -->
+                    <Expander
+                        Margin="0,20,0,0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        ExpandDirection="Down"
+                        IsExpanded="True">
+                        <Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Fehler:" />
+                                <TextBlock
+                                    Margin="5,0,0,0"
+                                    FontWeight="Bold"
+                                    Text="{x:Bind Path=ViewModel.FirstErrorCode, Mode=OneWay}" />
+                            </StackPanel>
+                        </Expander.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Beschreibung:" />
+                            <TextBlock Margin="5,0,0,0" Text="{x:Bind Path=ViewModel.FirstErrorDescription, Mode=OneWay}" />
+                        </StackPanel>
+                    </Expander>
+
+                    <Expander
+                        Margin="0,20,0,0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        ExpandDirection="Down"
+                        IsExpanded="True">
+                        <Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Fehler:" />
+                                <TextBlock
+                                    Margin="5,0,0,0"
+                                    FontWeight="Bold"
+                                    Text="{x:Bind Path=ViewModel.SecondErrorCode, Mode=OneWay}" />
+                            </StackPanel>
+                        </Expander.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Beschreibung:" />
+                            <TextBlock Margin="5,0,0,0" Text="{x:Bind Path=ViewModel.SecondErrorDescription, Mode=OneWay}" />
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Spacing="20">
+                    <TextBlock
+                        FontSize="24"
+                        FontWeight="SemiBold"
+                        Text="Umlauf-Historie" />
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.SortedData, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="400" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border
+                                        x:Name="EllipseColor"
+                                        Grid.Column="0"
+                                        Width="40"
+                                        Height="40"
+                                        Margin="10"
+                                        Padding="0,9,0,0"
+                                        VerticalAlignment="top"
+                                        Background="{StaticResource AccentFillColorDefaultBrush}"
+                                        BorderThickness="2"
+                                        CornerRadius="50">
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            HorizontalAlignment="center"
+                                            VerticalAlignment="top"
+                                            FontWeight="Bold"
+                                            Foreground="{StaticResource TextOnAccentFillColorPrimary}"
+                                            Text="{Binding Id, Mode=OneWay}" />
+                                    </Border>
+
+
+                                    <Expander
+                                        Grid.Column="1"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Top"
+                                        HorizontalContentAlignment="Stretch"
+                                        Header="{Binding StorageLocation.StorageName, Mode=OneWay}"
+                                        IsExpanded="false">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                                <TextBlock Text="{Binding CreatedDate, Mode=OneWay}" />
+                                                <TextBlock Text="{Binding NotedBy.Name, Mode=OneWay}" />
+                                            </StackPanel>
+                                            <TextBlock Text="Beschreibung:" />
+                                            <TextBlock Text="{Binding Comment, Mode=OneWay}" />
+                                        </StackPanel>
+                                    </Expander>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Grid>
 
             <!--  Weitergabe- & Anmerkungs-Buttons  -->
-            <StackPanel
-                Grid.Row="2"
-                Grid.RowSpan="2"
-                Grid.Column="2"
-                Margin="0,60,15,0"
-                Orientation="Vertical"
-                ScrollViewer.VerticalScrollMode="Disabled">
-                <Button
-                    Width="250"
-                    Height="60"
-                    HorizontalAlignment="Right"
-                    Click="TransferClick"
-                    FontWeight="Bold"
-                    Style="{StaticResource AccentButtonStyle}">
-                    Weitergeben
-                </Button>
-                <Button
-                    Width="250"
-                    Height="60"
-                    Margin="0,15,0,0"
-                    HorizontalAlignment="Right"
-                    Click="CommentClick">
-                    Anmerkung hinzufügen
-                </Button>
-            </StackPanel>
+
 
             <!--  Status & Info-Panel  -->
             <StackPanel
@@ -447,25 +380,34 @@
                     </StackPanel>
                     <TextBlock Text="{Binding PanelComment.Content, Mode=OneWay}" TextWrapping="Wrap" />
                 </StackPanel>
+                <StackPanel
+                    Grid.Row="2"
+                    Grid.RowSpan="2"
+                    Grid.Column="2"
+                    Margin="0,60,15,0"
+                    Orientation="Vertical"
+                    ScrollViewer.VerticalScrollMode="Disabled">
+                    <Button
+                        Width="250"
+                        Height="60"
+                        HorizontalAlignment="Right"
+                        Click="TransferClick"
+                        FontWeight="Bold"
+                        Style="{StaticResource AccentButtonStyle}">
+                        Weitergeben
+                    </Button>
+                    <Button
+                        Width="250"
+                        Height="60"
+                        Margin="0,15,0,0"
+                        HorizontalAlignment="Right"
+                        Click="CommentClick">
+                        Anmerkung hinzufügen
+                    </Button>
+                </StackPanel>
+
             </StackPanel>
-
-            <!--<Rectangle
-                    x:Name="BackgroundRectangle"
-                    Fill="White" Stroke="LightGray" StrokeThickness="0.5"
-				    Height="250" Width="280"
-				    RadiusX="4" RadiusY="4"
-				    HorizontalAlignment="Right"/>
-            <Rectangle
-				    Fill="White" Stroke="LightGray" StrokeThickness="0.5"
-				    Height="100" Width="280"
-				    RadiusX="4" RadiusY="4"
-				    Margin="0,20,0,0"
-				    HorizontalAlignment="Right"/>-->
-
-            <!--<ContentControl  ContentTemplate="{StaticResource TransfersPage}"/>-->
-
         </Grid>
-
     </ScrollViewer>
 
 </Page>

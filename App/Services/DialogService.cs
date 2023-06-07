@@ -42,43 +42,30 @@ public sealed class DialogService : IDialogService
         }
         return null;
     }
-    public async Task<Tuple<Transfer, int?>?> ShowCreateTransferDialog(string title, string confirmButtonText, string cancelButtonText)
+    public async Task<Response<Transfer>?> ShowCreateTransferDialog()
     {
-
-
         if (rootElement != null)
         {
-            var dialog = new ContentDialog
-            {
-                Title = title,
-                Content = new TransferDialog(),
-                PrimaryButtonText = confirmButtonText,
-                DefaultButton = ContentDialogButton.Primary,
-                RequestedTheme = rootElement.RequestedTheme,
-                CloseButtonText = cancelButtonText,
-                XamlRoot = rootElement.XamlRoot
+            /*  WindowEx window = new TransferWindow();
+              window.Activate();*/
 
+            var dialog = new TransferDialog
+            {
+                XamlRoot = rootElement.XamlRoot,
+                RequestedTheme = rootElement.RequestedTheme
             };
+
             var result = await dialog.ShowAsync();
-            var view = (TransferDialog)dialog.Content;
+
+            TransferDialogViewModel vm = dialog.ViewModel;
 
             if (result == ContentDialogResult.None)
             {
-                return null;
+                return new Response<Transfer>(ResponseCode.None, "None");
             }
             if (result == ContentDialogResult.Primary)
             {
-                TransferDialogViewModel tdVM = (TransferDialogViewModel)view.ViewModel;
-
-                int? diagnoseId = ((Diagnose)tdVM.SelectedDiagnose) != null ? ((Diagnose)tdVM.SelectedDiagnose).Id : null;
-
-                return Tuple.Create(new Transfer
-                {
-                    NotedById = tdVM.NotedBy.Id,
-                    CreatedDate = tdVM.TransferDate,
-                    StorageLocationId = ((StorageLocation)tdVM.SelectedStorageLocation).Id,
-                    Comment = tdVM.Comment
-                }, diagnoseId);
+                return await vm.Save();
             }
         }
         return null;

@@ -1,15 +1,17 @@
-﻿using App.Core.Models;
+﻿using App.Contracts.Services;
+using App.Core.Models;
 using App.Core.Services.Interfaces;
+using App.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
+using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 
 namespace App.ViewModels;
 
-public partial class TransferDialogViewModel : ObservableObject
+public partial class TransferDialogViewModel : ObservableValidator
 {
     [ObservableProperty]
-    private Visibility _isVisible = Visibility.Collapsed;
+    private bool _isEnabled = false;
 
     [ObservableProperty]
     private User _notedBy;
@@ -18,20 +20,14 @@ public partial class TransferDialogViewModel : ObservableObject
     private DateTime _transferDate = DateTime.Now;
 
     private StorageLocation _selectedStorageLocation;
+
     public StorageLocation SelectedStorageLocation
     {
         get => _selectedStorageLocation;
         set
         {
-            if (value.IsFinalDestination == true)
-            {
-                IsVisible = Visibility.Visible;
-            }
-            else
-            {
-                IsVisible = Visibility.Collapsed;
-            }
             SetProperty(ref _selectedStorageLocation, value);
+            IsEnabled = true;
         }
     }
 
@@ -39,7 +35,15 @@ public partial class TransferDialogViewModel : ObservableObject
     private Diagnose _selectedDiagnose;
 
     [ObservableProperty]
-    private string _comment;
+    private string _commentPcb;
+
+    [ObservableProperty]
+    private bool hasMaxTransfer;
+
+    [ObservableProperty]
+    private string _maxTransferError;
+
+    public Pcb SelectedPcb;
 
     [ObservableProperty]
     private ObservableCollection<StorageLocation> _storageLocations = new();
@@ -50,30 +54,79 @@ public partial class TransferDialogViewModel : ObservableObject
     private readonly IAuthenticationService _authenticationService;
     private readonly ICrudService<StorageLocation> _storageLocationCrudService;
     private readonly ICrudService<Diagnose> _diagnoseCrudService;
-    public TransferDialogViewModel(IAuthenticationService authenticationService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService)
+    private readonly ITransferDataService<Transfer> _transferDataService;
+    private readonly IPcbDataService<Pcb> _pcbDataService;
+    private readonly IInfoBarService _infoBarService;
+    public TransferDialogViewModel(IAuthenticationService authenticationService, IPcbDataService<Pcb> pcbDataService, IInfoBarService infoBarServíce, ITransferDataService<Transfer> transferDataService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService)
     {
         _authenticationService = authenticationService;
         _diagnoseCrudService = diagnoseCrudService;
         _storageLocationCrudService = storageLocationCrudService;
+        _infoBarService = infoBarServíce;
+        _transferDataService = transferDataService;
+        _pcbDataService = pcbDataService;
         _notedBy = _authenticationService.CurrentUser;
         LoadData();
     }
 
+
     private async void LoadData()
     {
-
+        SelectedPcb = WeakReferenceMessenger.Default.Send<CurrentPcbRequestMessage>();
+        var response = await _pcbDataService.GetByIdEager(SelectedPcb.Id);
+        if (response != null && response.Code == ResponseCode.Success)
+        {
+            SelectedPcb = response.Data;
+        }
+        // check if max transfer is exceeded
+        if (SelectedPcb.Transfers.Count > 0)
+        {
+            int maxTransfer = SelectedPcb.PcbType.MaxTransfer;
+            int transferCount = SelectedPcb.Transfers.Count;
+            HasMaxTransfer = transferCount >= maxTransfer ? true : false;
+            MaxTransferError = $"Weitergaben Anzahl: {transferCount} von max. {maxTransfer}";
+        }
         //TODO: Error handling
         var resStorageLocations = await _storageLocationCrudService.GetAll();
         if (resStorageLocations.Code == ResponseCode.Success)
         {
-            resStorageLocations.Data.ForEach(x => _storageLocations.Add(x));
+            resStorageLocations.Data.ForEach(x => StorageLocations.Add(x));
         }
 
         var resDiagnoses = await _diagnoseCrudService.GetAll();
         if (resDiagnoses.Code == ResponseCode.Success)
         {
-            resDiagnoses.Data.ForEach(x => _diagnoses.Add(x));
+            resDiagnoses.Data.ForEach(x => Diagnoses.Add(x));
         }
     }
+
+
+    public async Task<Response<Transfer>> Save()
+    {
+
+        Transfer transfer = new Transfer
+        {
+            PcbId = SelectedPcb.Id,
+            Comment = CommentPcb,
+            NotedById = NotedBy.Id,
+            CreatedDate = TransferDate,
+            StorageLocationId = SelectedStorageLocation.Id
+        };
+
+        if (SelectedDiagnose != null)
+        {
+            return await _transferDataService.CreateTransfer(transfer, SelectedDiagnose.Id);
+        }
+        else
+        {
+            return await _transferDataService.Create(transfer);
+        }
+
+    }
+    private bool CanExecute()
+    {
+        return false;
+    }
+
 }
 
