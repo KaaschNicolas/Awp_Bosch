@@ -211,9 +211,6 @@
                             SelectedItem="{x:Bind ViewModel.SelectedDiagnose, Mode=TwoWay}"
                             SelectedValuePath="ID" />
                     </StackPanel>
-
-
-
                     <TextBox
                         Grid.Row="1"
                         Grid.ColumnSpan="3"
