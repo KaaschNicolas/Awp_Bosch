@@ -53,5 +53,47 @@ namespace App.Core.Services
                 }
             }
         }
+
+        public async Task<Response<List<IGrouping<int, T>>>> GetAllGroupedByStorageLocation()
+        {
+            try
+            {
+                var data = await _boschContext
+                    .Set<T>()
+                    .OrderBy(x => x.CreatedDate)
+                    .GroupBy(x => x.StorageLocationId)
+                    .ToListAsync();
+                return new Response<List<IGrouping<int, T>>>(ResponseCode.Success, data: data);
+            }
+            catch (DbUpdateException)
+            {
+                return new Response<List<IGrouping<int, T>>>(ResponseCode.Error, error: "GetAllGroupedByStorageLocation() failed");
+            }
+        }
+
+        public async Task<Response<List<T>>> GetAllEager()
+        {
+            try
+            {
+                var list = await _boschContext
+                    .Set<T>()
+                    .Include(x => x.StorageLocation)
+                    .ToListAsync();
+                var res = new List<T>();
+                foreach (var item in list)
+                {
+                    if (item.DeletedDate == DateTime.MinValue)
+                    {
+                        res.Add(item);
+                    }
+                }
+
+                return new Response<List<T>>(ResponseCode.Success, data: res);
+            }
+            catch (DbUpdateException)
+            {
+                return new Response<List<T>>(ResponseCode.Success, error: "GetAllEager() failed");
+            }
+        }
     }
 }

@@ -31,6 +31,7 @@ public class PageService : IPageService
         Configure<TransfersViewModel, TransfersPage>();
         Configure<PcbPaginationViewModel, PcbViewPage>();
         Configure<UpdatePcbViewModel, UpdatePcbPage>();
+        Configure<DwellTimeEvaluationViewModel, DwellTimeEvalutionPage>();
     }
 
     public Type GetPageType(string key)
