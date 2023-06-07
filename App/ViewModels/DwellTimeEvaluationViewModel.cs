@@ -77,10 +77,14 @@ namespace App.ViewModels
                 Dictionary<StorageLocation, double> keyValuePairs = new Dictionary<StorageLocation, double>();
                 int count = 0;
                 Dictionary<int, int> keys = new();
-                foreach (var key in keyValuePairs.Keys)
+                foreach (var key in data.Data)
                 {
-                    keys.Add(key.Id, keys[key.Id] + 1);
+                    if (!keys.Keys.Contains(key.Id))
+                    {
+                        keys.Add(key.Id, 0);
+                    }
                 }
+
                 foreach (var item in data.Data)
                 {
                     if (!keyValuePairs.Keys.Contains(item.StorageLocation))
@@ -94,6 +98,8 @@ namespace App.ViewModels
                         keyValuePairs[item.StorageLocation] += Math.Round((DateTime.Now - item.CreatedDate).TotalDays);
                     }
                 }
+
+                
 
                 foreach (var item in keyValuePairs)
                 {
