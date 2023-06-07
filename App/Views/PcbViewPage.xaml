@@ -39,26 +39,12 @@
                     <AppBarButton
                         Click="CreatePcbButton_Click"
                         Icon="Add"
-                        Label="Hinzufügen" />
-                    <AppBarButton
-                        Click="FilterClear_Click"
-                        Icon="Refresh"
-                        Label="Neu Laden" />
-
+                        Label="Hinzufügen" 
+                        FontWeight="SemiBold"
+                        Background="{StaticResource AccentFillColorDefaultBrush}"
+                        Foreground="{StaticResource TextOnAccentFillColorPrimary}"/>
+                        
                 </CommandBar>
-                <StackPanel
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Background="{ThemeResource CommandBarBackground}">
-                    <AutoSuggestBox
-                        MinWidth="304"
-                        MaxWidth="320"
-                        Margin="0,8,0,12"
-                        HorizontalAlignment="Left"
-                        FontWeight="Normal"
-                        PlaceholderText="Suche"
-                        QueryIcon="Find" />
-                </StackPanel>
             </Grid>
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
@@ -88,19 +74,29 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
-                        Text="{Binding ErrorDescription}" />
+                        Text="{Binding PcbType.PcbPartNumber}" />
                     <TextBlock
                         Grid.Row="2"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
-                        Text="{Binding Finalized}" />
+                        Text="{Binding FirstErrorCode}" />
                     <TextBlock
                         Grid.Row="3"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
-                        Text="{Binding LastStorageLocationName}" />
+                        Text="{Binding SecondErrorCode}" />
                     <TextBlock
                         Grid.Row="4"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Finalized}" />
+                    <TextBlock
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Text="{Binding LastStorageLocationName}" />
+                    <TextBlock 
+                        Grid.Row="6"
                         Grid.Column="1"
                         HorizontalAlignment=" Right"
                         Text="{Binding AtLocationDays}" />
@@ -111,7 +107,7 @@
                         Stroke="Black"
                         StrokeThickness="0.2" />
                     <TextBlock
-                        Grid.Row="5"
+                        Grid.Row="7"
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         Text="{Binding CreatedDate}" />
@@ -263,10 +259,21 @@
                     Binding="{Binding SerialNumber}"
                     Header="Seriennummer"
                     Tag="SerialNumber" />
-                <ctWinUI:DataGridComboBoxColumn
-                    Binding="{Binding ErrorDescription}"
-                    Header="Fehlerbeschreibung"
-                    Tag="ErrorDescription" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding PcbType.PcbPartNumber}"
+                    Header="Sachnummer"
+                    Tag="PcbType"
+                    CanUserSort="False"/>
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding FirstErrorCode}"
+                    Header="Oberfehler"
+                    Tag="FirstErrorCode"
+                    CanUserSort="False"/>
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding SecondErrorCode}"
+                    Header="Unterfehler"
+                    Tag="SecondErrorCode"
+                    CanUserSort="False"/>
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding Finalized}"
                     Header="Abgeschlossen"
