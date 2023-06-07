@@ -25,7 +25,7 @@ public partial class CreatePcbTypeViewModel : ObservableValidator
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    private double _maxTransfer;
+    private double _maxTransfer = 1;
 
     private readonly ICrudService<PcbType> _crudService;
     private readonly IInfoBarService _infoBarService;
