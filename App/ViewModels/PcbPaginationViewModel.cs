@@ -368,6 +368,12 @@ namespace App.ViewModels
             _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", pcb);
         }
 
+        [RelayCommand]
+        public void NavigateToCreate()
+        {
+            _navigationService.NavigateTo("App.ViewModels.CreatePcbViewModel");
+        }
+
         private void Refresh()
         {
             _pageNumber = 0;
@@ -386,7 +392,7 @@ namespace App.ViewModels
             );
 
         }
-        // Unregister Messneger when Page is navigated away from
+        // Unregister Messenger when Page is navigated away from
         protected override void OnDeactivated()
         {
             Messenger.UnregisterAll(this);

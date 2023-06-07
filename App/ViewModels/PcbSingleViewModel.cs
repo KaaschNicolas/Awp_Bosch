@@ -157,19 +157,10 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         var response = await _dialogService.ShowCreateTransferDialog();
         if (response != null && response.Code == ResponseCode.Success)
         {
-            Transfer addedTransfer = response.Data;
-            var responseTransfer = await _transfersService.GetById(addedTransfer.Id);
-            if (responseTransfer != null && responseTransfer.Code == ResponseCode.Success)
-            {
-                addedTransfer = responseTransfer.Data;
-                addedTransfer.Id = SortedData.Count() + 1;
-                SortedData.Insert(0, addedTransfer);
-                _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
-            }
-            else
-            {
-                _infoBarService.showError("Fehler bei der Weitergabe", "Error");
-            }
+            var addedTransfer = response.Data;
+            addedTransfer.Id = SortedData.Count() + 1;
+            SortedData.Insert(0, addedTransfer);
+            _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
 
         }
         else if ((response != null && response.Code == ResponseCode.Error) || response == null)
