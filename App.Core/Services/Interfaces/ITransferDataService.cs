@@ -6,6 +6,7 @@ namespace App.Core.Services.Interfaces
     {
         public Task<Response<List<T>>> GetTransfersByPcb(int pcbId);
         public Task<Response<T>> CreateTransfer(T transfer, int? diagnoseId = null);
+        public Task<Response<List<T>>> GetAllEager();
 
     }
 }

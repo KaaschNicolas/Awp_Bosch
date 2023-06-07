@@ -145,6 +145,4 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
             return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
         }
     }
-    
-
 }
