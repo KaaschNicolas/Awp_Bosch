@@ -46,31 +46,40 @@ public partial class UpdatePcbViewModel : ObservableValidator, INavigationAware
     private User _createdBy;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
     [Required(ErrorMessage = ValidationErrorMessage.Required)]
     private PcbType _selectedPcbType;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
     [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Seriennummer muss aus genau 10 Zahlen bestehen.")]
     private string _serialNumber;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [MaxLength(5, ErrorMessage = "Fehler ID darf nur 5 Zeichen enthalten")]
     private string _errorCode1;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [MaxLength(5, ErrorMessage = "Fehler ID darf nur 5 Zeichen enthalten")]
     private string _errorCode2;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _errorDescription1;
 
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _errorDescription2;
 
     [ObservableProperty]
-    private Device _restriction;
-
-    [ObservableProperty]
-    private string _comment;
+    [NotifyDataErrorInfo]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
+    private string _restriction;
 
     [ObservableProperty]
     private Diagnose _diagnosePcb;
@@ -123,15 +132,21 @@ public partial class UpdatePcbViewModel : ObservableValidator, INavigationAware
                 transfers.Add(transfer);
             }
 
+            _pcbToEdit.ErrorTypes[0].Code = ErrorCode1;
+            _pcbToEdit.ErrorTypes[0].ErrorDescription = ErrorDescription1;
+
+            _pcbToEdit.ErrorTypes[1].Code = ErrorCode2;
+            _pcbToEdit.ErrorTypes[1].ErrorDescription = ErrorDescription2;
+
             _pcbToEdit.CreatedDate = CreatedAt;
             _pcbToEdit.SerialNumber = SerialNumber;
             //TODO: Finalized depending on last transfer
             _pcbToEdit.Finalized = transfers.Last().StorageLocation.IsFinalDestination;
             _pcbToEdit.PcbTypeId = SelectedPcbType.Id;
             _pcbToEdit.Transfers = new List<Transfer>(transfers);
-            _pcbToEdit.Restriction = Restriction;
+            _pcbToEdit.Restriction.Name = Restriction;
             _pcbToEdit.DiagnoseId = DiagnosePcb != null ? DiagnosePcb.Id : null;
-            _pcbToEdit.ErrorTypes = new List<ErrorType>(ErrorTypes);
+            _pcbToEdit.ErrorTypes = new List<ErrorType>(_pcbToEdit.ErrorTypes);
 
 
             var response = await _pcbDataService.Update(_pcbId, _pcbToEdit);
@@ -202,11 +217,12 @@ public partial class UpdatePcbViewModel : ObservableValidator, INavigationAware
             CreatedAt = _pcbToEdit.CreatedDate;
             DiagnosePcb = _pcbToEdit.Diagnose;
             CreatedBy = _pcbToEdit.Transfers[0].NotedBy;
-            Restriction = _pcbToEdit.Restriction;
+            Restriction = _pcbToEdit.Restriction.Name;
             SelectedPcbType = _pcbToEdit.PcbType;
-
-
-            _pcbToEdit.ErrorTypes.ForEach(x => ErrorTypes.Add(x));
+            ErrorCode1 = _pcbToEdit.ErrorTypes[0].Code;
+            ErrorCode2 = _pcbToEdit.ErrorTypes[1].Code;
+            ErrorDescription1 = _pcbToEdit.ErrorTypes[0].ErrorDescription;
+            ErrorDescription2 = _pcbToEdit.ErrorTypes[1].ErrorDescription;
             _pcbToEdit.Transfers.ForEach(x => Transfers.Add(new TransferDTO(x)));
         }
         else

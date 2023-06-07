@@ -112,15 +112,17 @@
                     Orientation="Vertical"
                     Spacing="10">
                     <TextBlock Text="Fehlerbeschreibung Teil 1" />
-                    <TextBox
+                    <controls:ValidationTextBox
                         Width="200"
                         HorizontalAlignment="Left"
-                        Header="Fehler ID"
+                        HeaderText="Fehler ID"
                         PlaceholderText="M1.."
+                        PropertyName="ErrorCode1"
                         Text="{x:Bind ViewModel.ErrorCode1, Mode=TwoWay}" />
-                    <TextBox
-                        Header="Fehlerbeschreibung"
+                    <controls:ValidationTextBox
+                        HeaderText="Fehlerbeschreibung"
                         PlaceholderText="Fehlerbeschreibung eintragen"
+                        PropertyName="ErrorDescription1"
                         Text="{x:Bind ViewModel.ErrorDescription1, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel
@@ -136,23 +138,26 @@
                     Spacing="10">
 
                     <TextBlock Text="Fehlerbeschreibung Teil 2" />
-                    <TextBox
+                    <controls:ValidationTextBox
                         Width="200"
                         HorizontalAlignment="Left"
-                        Header="Fehler ID"
+                        HeaderText="Fehler ID"
                         PlaceholderText="M1.."
+                        PropertyName="ErrorCode2"
                         Text="{x:Bind ViewModel.ErrorCode2, Mode=TwoWay}" />
-                    <TextBox
-                        Header="Fehlerbeschreibung"
+                    <controls:ValidationTextBox
+                        HeaderText="Fehlerbeschreibung"
                         PlaceholderText="Fehlerbeschreibung eintragen"
+                        PropertyName="ErrorDescription2"
                         Text="{x:Bind ViewModel.ErrorDescription2, Mode=TwoWay}" />
 
                 </StackPanel>
 
-                <TextBox
+                <controls:ValidationTextBox
                     Grid.Row="4"
                     Grid.ColumnSpan="2"
-                    Header="Einschränkung"
+                    HeaderText="Einschränkung"
+                    PropertyName="Restriction"
                     Text="{x:Bind ViewModel.Restriction, Mode=TwoWay}" />
                 <TextBlock
                     Grid.Row="5"
@@ -206,9 +211,6 @@
                             SelectedItem="{x:Bind ViewModel.SelectedDiagnose, Mode=TwoWay}"
                             SelectedValuePath="ID" />
                     </StackPanel>
-
-
-
                     <TextBox
                         Grid.Row="1"
                         Grid.ColumnSpan="3"
