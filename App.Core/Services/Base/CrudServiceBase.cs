@@ -82,7 +82,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
             var res = new List<T>();
             foreach (var item in list)
             {
-                if (item.DeletedDate == DateTime.MinValue)
+                if (item.DeletedDate < item.CreatedDate)
                 {
                     res.Add(item);
                 }
