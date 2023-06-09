@@ -21,7 +21,7 @@ public sealed partial class UsersPage : Page
 
     private void NavigateCreateUser(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        //Frame.Navigate(typeof(CreateUserPage));
+        Frame.Navigate(typeof(CreateUserPage));
     }
 
     void deleteClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

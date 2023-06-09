@@ -239,4 +239,7 @@
   <data name="Shell_UpdatePcb.Content" xml:space="preserve">
     <value>UpdatePcb</value>
   </data>
+  <data name="Shell_CreateUser.Content" xml:space="preserve">
+    <value>CreateUser</value>
+  </data>
 </root>
