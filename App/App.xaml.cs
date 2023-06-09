@@ -18,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
 using Serilog;
+
 namespace App;
 
 // To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
@@ -96,6 +97,8 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<UsersViewModel>();
+            services.AddTransient<UsersPage>();
             services.AddTransient<TransferDialogViewModel>();
             services.AddTransient<ICrudService<Comment>, CrudService<Comment>>();
             services.AddTransient<ICrudService<Device>, CrudService<Device>>();
