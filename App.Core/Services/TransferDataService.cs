@@ -46,10 +46,6 @@ namespace App.Core.Services
                     }
 
                     pcb.Finalized = storageLocation.IsFinalDestination;
-
-                    _boschContext.Entry(pcb).Property(x => x.DiagnoseId).IsModified = true;
-                    _boschContext.Entry(pcb).Property(x => x.Finalized).IsModified = true;
-
                     await _boschContext.SaveChangesAsync();
                     await transaction.CommitAsync();
                     return new Response<T>(ResponseCode.Success, (T)entityEntry.Entity);

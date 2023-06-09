@@ -124,10 +124,6 @@ public partial class TransferDialogViewModel : ObservableValidator
 
 
     }
-    private bool CanExecute()
-    {
-        return false;
-    }
 
 }
 

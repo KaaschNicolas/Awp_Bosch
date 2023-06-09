@@ -99,13 +99,13 @@
                         Grid.Row="6"
                         Grid.Column="1"
                         HorizontalAlignment=" Right"
-                        Text="{Binding AtLocationDays}"/>
+                        Text="{Binding AtLocationDays}" />
                     <Ellipse
+                        Width="22"
+                        Height="22"
                         Fill="{Binding Status}"
                         Stroke="Black"
-                        StrokeThickness="0.2"
-                        Height="22" 
-                        Width="22"/>
+                        StrokeThickness="0.2" />
                     <TextBlock
                         Grid.Row="7"
                         Grid.Column="1"
@@ -285,21 +285,21 @@
                     Tag="LastStorageLocation" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding AtLocationDays}"
+                    CanUserSort="False"
                     Header="Verweildauer"
-                    Tag="AtLocationDays"
-                    CanUserSort="False"/>
-                <ctWinUI:DataGridTemplateColumn 
+                    Tag="AtLocationDays" />
+                <ctWinUI:DataGridTemplateColumn
+                    CanUserSort="False"
                     Header="Status"
-                    Tag="Status"
-                    CanUserSort="False">
+                    Tag="Status">
                     <ctWinUI:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Ellipse
+                                Width="22"
+                                Height="22"
                                 Fill="{Binding Status}"
                                 Stroke="Black"
-                                StrokeThickness="0.2"
-                                Height="22" 
-                                Width="22"/>
+                                StrokeThickness="0.2" />
                         </DataTemplate>
                     </ctWinUI:DataGridTemplateColumn.CellTemplate>
                 </ctWinUI:DataGridTemplateColumn>
