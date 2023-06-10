@@ -299,7 +299,7 @@
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding CreatedDate}"
                     Header="Ausgefallen am"
-                    Tag="CreateDate" />
+                    Tag="CreatedDate" />
                 <controls:DataGridTemplateColumn
                     Width="100"
                     CanUserSort="False"
