@@ -126,6 +126,39 @@ namespace App.ViewModels
 
         public string SortBy { get => _sortyBy; set => SetProperty(ref _sortyBy, value); }
 
+        private async Task CreatePcbList(int pageIndex, int pageSize, List<Pcb> pcbs, bool isAscending, int maxEntries)
+        {
+            List<PaginatedPcb> convertedPcbs = new();
+
+            // TODO: Error handling
+            var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
+            var newPcbs = new List<Pcb>();
+            foreach (var item in resEager.Data)
+            {
+                foreach (var pcb in pcbs)
+                {
+                    if (item.Id.Equals(pcb.Id))
+                    {
+                        newPcbs.Add(item);
+                    }
+                }
+            }
+            newPcbs.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
+
+            PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
+                convertedPcbs,
+            pageIndex,
+                pageSize,
+                maxEntries
+            );
+
+            PageNumber = pcbsPaginated.PageIndex;
+            PageCount = pcbsPaginated.PageCount;
+
+            Pcbs = new ObservableCollection<PaginatedPcb>(pcbsPaginated);
+
+        }
+
         private async Task GetPcbs(int pageIndex, int pageSize, bool isAscending)
         {
             Response<List<Pcb>> pcbs;
@@ -172,36 +205,7 @@ namespace App.ViewModels
 
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
-                    List<PaginatedPcb> convertedPcbs = new();
-
-                    // TODO: Error handling
-                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
-                    var newPcbs = new List<Pcb>();
-                    foreach (var item in resEager.Data)
-                    {
-                        foreach (var pcb in pcbs.Data)
-                        {
-                            if (item.Id.Equals(pcb.Id))
-                            {
-                                newPcbs.Add(item);
-                            }
-                        }
-                    }
-                    newPcbs.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
-
-                    PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
-                        convertedPcbs,
-                        pageIndex,
-                        pageSize,
-                        maxEntries.Data
-                    );
-
-                    PageNumber = pcbsPaginated.PageIndex;
-                    PageCount = pcbsPaginated.PageCount;
-
-                    ObservableCollection<PaginatedPcb> copy = new();
-                    pcbsPaginated.ForEach(x => copy.Add(x));
-                    Pcbs = copy;
+                    await CreatePcbList(pageIndex, pageSize, pcbs.Data, isAscending, maxEntries.Data);
                 }
             }
             else if (_filterOptions != PcbFilterOptions.None && _filterOptions == PcbFilterOptions.FilterStorageLocation)
@@ -247,35 +251,7 @@ namespace App.ViewModels
 
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
-                    List<PaginatedPcb> convertedPcbs = new();
-                    // TODO: Error handling
-                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
-                    var newPcbs = new List<Pcb>();
-                    foreach (var item in resEager.Data)
-                    {
-                        foreach (var pcb in pcbs.Data)
-                        {
-                            if (item.Id.Equals(pcb.Id))
-                            {
-                                newPcbs.Add(item);
-                            }
-                        }
-                    }
-                    newPcbs.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
-
-                    PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
-                        convertedPcbs,
-                        pageIndex,
-                        pageSize,
-                        maxEntries.Data
-                    );
-
-                    PageNumber = pcbsPaginated.PageIndex;
-                    PageCount = pcbsPaginated.PageCount;
-
-                    ObservableCollection<PaginatedPcb> copy = new();
-                    pcbsPaginated.ForEach(x => copy.Add(x));
-                    Pcbs = copy;
+                    await CreatePcbList(pageIndex, pageSize, pcbs.Data, isAscending, maxEntries.Data);
                 }
             }
             else
@@ -285,35 +261,7 @@ namespace App.ViewModels
 
                 if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
                 {
-                    List<PaginatedPcb> convertedPcbs = new();
-                    // TODO: Error handling
-                    var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
-                    var newPcbs = new List<Pcb>();
-                    foreach (var item in resEager.Data)
-                    {
-                        foreach (var pcb in pcbs.Data)
-                        {
-                            if (item.Id.Equals(pcb.Id))
-                            {
-                                newPcbs.Add(item);
-                            }
-                        }
-                    }
-                    newPcbs.ForEach(pcbItem => convertedPcbs.Add(PaginatedPcb.ToPaginatedPcb(pcbItem)));
-
-                    PaginatedList<PaginatedPcb> pcbsPaginated = await PaginatedList<PaginatedPcb>.CreateAsync(
-                        convertedPcbs,
-                        pageIndex,
-                        pageSize,
-                        maxEntries.Data
-                    );
-
-                    PageNumber = pcbsPaginated.PageIndex;
-                    PageCount = pcbsPaginated.PageCount;
-
-                    ObservableCollection<PaginatedPcb> copy = new();
-                    pcbsPaginated.ForEach(x => copy.Add(x));
-                    Pcbs = copy;
+                    await CreatePcbList(pageIndex, pageSize, pcbs.Data, isAscending, maxEntries.Data);
                 }
 
                 FirstAsyncCommand.NotifyCanExecuteChanged();
