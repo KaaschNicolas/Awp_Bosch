@@ -1,4 +1,17 @@
-﻿namespace App.ViewModels
+﻿using App.Contracts.Services;
+using App.Contracts.ViewModels;
+using App.Core.Models;
+using App.Core.Models.Enums;
+using App.Core.Services.Interfaces;
+using App.Messages;
+using App.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using System.Collections.ObjectModel;
+using System.Linq.Expressions;
+
+namespace App.ViewModels
 {
     public partial class PcbPaginationViewModel : ObservableRecipient, INavigationAware
     {
@@ -149,7 +162,7 @@
         private async Task GetPcbs(int pageIndex, int pageSize, bool isAscending)
         {
             Response<List<Pcb>> pcbs;
-            int maxEntries;
+            Response<int> maxEntries;
 
 
             await _pcbDataService.GetAllEagerTest(0, 10, "Status", false);
@@ -166,27 +179,31 @@
                 }
             }
 
-            // Check if new filter is set
             if (_filterOptions != PcbFilterOptions.None && _filterOptions != PcbFilterOptions.FilterStorageLocation)
             {
                 switch (_filterOptions)
                 {
                     case PcbFilterOptions.Search:
+                        maxEntries = await _pcbDataService.MaxEntriesSearch(QueryText);
                         pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
                         break;
                     case PcbFilterOptions.Filter1:
                         Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
+                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where1);
                         break;
                     case PcbFilterOptions.Filter2:
                         Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.Now.Date;
+                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where2);
                         break;
                     case PcbFilterOptions.Filter3:
                         Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0;
+                        maxEntries = await _pcbDataService.MaxEntriesFiltered(where3);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
                         break;
                     default:
+                        maxEntries = await _pcbDataService.MaxEntries();
                         pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
                         break;
                 }
@@ -201,32 +218,39 @@
                 if (_selectedComboBox.StorageName == "Alles")
                 {
 
+                    maxEntries = await _pcbDataService.MaxEntries();
                     pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
+
                 }
                 else
                 {
                     switch (_filterOptions)
                     {
                         case PcbFilterOptions.Search:
-
+                            maxEntries = await _pcbDataService.MaxEntriesSearch(QueryText);
                             pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
                             break;
                         case PcbFilterOptions.Filter1:
                             Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
+                            maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
                             pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where1);
                             break;
                         case PcbFilterOptions.Filter2:
                             Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.UtcNow.Date;
+                            maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
                             pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where2);
                             break;
                         case PcbFilterOptions.Filter3:
                             Expression<Func<Pcb, bool>> where3 = x => x.Transfers.Count < 0;
+                            maxEntries = await _pcbDataService.MaxEntriesFiltered(where3);
                             pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, where3);
                             break;
                         case PcbFilterOptions.FilterStorageLocation:
+                            maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);
                             pcbs = await _pcbDataService.GetWithFilterStorageLocation(pageIndex, pageSize, SelectedComboBox.Id);
                             break;
                         default:
+                            maxEntries = await _pcbDataService.MaxEntries();
                             pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
                             break;
                     }
@@ -239,6 +263,7 @@
             }
             else
             {
+                maxEntries = await _pcbDataService.MaxEntries();
                 pcbs = await _pcbDataService.GetAllQueryable(pageIndex, pageSize, _sortyBy, isAscending);
 
                 if (pcbs.Code == ResponseCode.Success)
