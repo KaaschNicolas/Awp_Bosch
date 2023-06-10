@@ -26,5 +26,6 @@ namespace App.Core.Services.Interfaces
         public Task<Response<T>> GetByIdEager(int id);
 
         public Task<Response<List<T>>> GetAllEager(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
+        public Task<Response<List<T>>> GetAllEagerTest(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
     }
 }
