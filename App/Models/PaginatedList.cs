@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using App.Core.Models;
-using App.Core.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using App.Core.Services.Interfaces;
 
 namespace App.Models;
 public class PaginatedList<T> : List<T>
@@ -36,14 +28,13 @@ public class PaginatedList<T> : List<T>
     int maxEntries
     )
     {
-        var count = source.Count();
-        if (count == 0)
+        if (maxEntries == 0)
         {
             // No results -> return page 0.
             return new PaginatedList<T>(new List<T>(), 0, 0, pageSize);
         }
 
-        
+
 
         return new PaginatedList<T>(source, maxEntries, pageIndex, pageSize);
     }
