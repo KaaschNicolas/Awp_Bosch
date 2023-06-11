@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using ABI.Microsoft.UI.Xaml.Input;
 using App.Core.Models;
 using App.Core.Models.Enums;
 using App.ViewModels;
@@ -9,9 +8,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System.Diagnostics;
 using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
-using System.Windows.Input;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -42,7 +39,7 @@ namespace App.Views
             Loaded += Page_Loaded;
             Unloaded += Page_Unload;
             ViewModel.FilterOptions = PcbFilterOptions.None;
-            ViewModel.SortBy = DataGrid.Columns[0].Tag.ToString();
+            ViewModel.SortBy = DataGrid.Columns[5].Tag.ToString();
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
         }
 
@@ -65,7 +62,7 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Default;
             DataGrid.ItemsSource = ViewModel.Pcbs; //nötig? weil schon in Xaml gebunden
-            DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Ascending;
+            DataGrid.Columns[5].SortDirection = ctWinUI.DataGridSortDirection.Descending;
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
             ViewModel.FilterOptions = PcbFilterOptions.None;
         }
@@ -173,12 +170,12 @@ namespace App.Views
 
         void EditClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
+            ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem.PcbId);
         }
 
         private void NavigateToDetails(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.NavigateToDetailsCommand.Execute(ViewModel.SelectedItem);
+            ViewModel.NavigateToDetailsCommand.Execute(ViewModel.SelectedItem.PcbId);
         }
 
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

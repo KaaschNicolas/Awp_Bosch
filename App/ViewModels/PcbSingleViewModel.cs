@@ -180,13 +180,13 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     private void Refresh(object parameter)
     {
-        _navigationService.NavigateTo("App.ViewModels.PcbSingleViewModel", _selectedItem);
+        _navigationService.NavigateTo("App.ViewModels.PcbSingleViewModel", SelectedItem.Id);
     }
 
     [RelayCommand]
     public void Edit()
     {
-        _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", _selectedItem);
+        _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", SelectedItem.Id);
     }
 
     [RelayCommand]

@@ -212,28 +212,33 @@
                     Binding="{Binding SerialNumber}"
                     Header="Seriennummer"
                     Tag="SerialNumber" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding PcbPartNumber}"
+                    CanUserSort="False"
+                    Header="Sachnummer"
+                    Tag="PcbPartNumber" />
                 <!--<ctWinUI:DataGridComboBoxColumn
                     Binding="{Binding ErrorDescription}"
                     Header="Fehlerbeschreibung"
-                    Tag="ErrorDescription" />--> 
+                    Tag="ErrorDescription" />-->
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding IsFinalized}"
                     Header="Abgeschlossen"
-                    Tag="Finalized" />
+                    Tag="IsFinalized" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding StorageName}"
-                    CanUserSort="False"
+                    CanUserSort="True"
                     Header="Letzter Lagerort"
-                    Tag="LastStorageLocation" />
+                    Tag="StorageName" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding DwellTime}"
                     CanUserSort="False"
                     Header="Verweildauer"
-                    Tag="AtLocationDays" />
+                    Tag="DwellTime" />
                 <ctWinUI:DataGridTemplateColumn
-                    CanUserSort="False"
+                    CanUserSort="True"
                     Header="Status"
-                    Tag="Status">
+                    Tag="DwellTimeStatus">
                     <ctWinUI:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Ellipse
@@ -248,7 +253,7 @@
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding FailedAt}"
                     Header="Ausgefallen am"
-                    Tag="CreatedDate" />
+                    Tag="FailedAt" />
                 <controls:DataGridTemplateColumn
                     Width="100"
                     CanUserSort="False"

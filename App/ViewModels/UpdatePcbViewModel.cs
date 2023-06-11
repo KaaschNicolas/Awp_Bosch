@@ -173,8 +173,7 @@ public partial class UpdatePcbViewModel : ObservableValidator, INavigationAware
     public async void OnNavigatedTo(object parameter)
     {
 
-        _pcbToEdit = (Pcb)parameter;
-        _pcbId = _pcbToEdit.Id;
+        _pcbId = (int)parameter;
 
         var result = await _pcbDataService.GetByIdEager(_pcbId);
         if (result != null && result.Code == ResponseCode.Success)

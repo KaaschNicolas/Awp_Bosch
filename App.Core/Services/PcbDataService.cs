@@ -17,35 +17,26 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
     }
 
-    public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty,
+    public async Task<Response<List<PcbDTO>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty,
         bool isAscending)
     {
         try
         {
-            List<T> data = new();
-            if (pageIndex == 0)
-            {
-                data = await _boschContext.Set<T>()
-                    .OrderBy(orderByProperty, isAscending)
-                    .Where(x => x.DeletedDate < x.CreatedDate)
-                    .Skip(pageIndex * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-            }
-            else
-            {
-                data = await _boschContext.Set<T>()
-                    .OrderBy(orderByProperty, isAscending)
-                    .Where(x => x.DeletedDate < x.CreatedDate)
-                    .Skip((pageIndex - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-            }
-            return new Response<List<T>>(ResponseCode.Success, data: data);
+
+            var query = _boschContext.PcbsDTO
+            .FromSqlRaw($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b \r\n\r\n")
+            .OrderBy(orderByProperty, isAscending)
+            .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+            var data = await query;
+            return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
         }
+
         catch (DbUpdateException)
         {
-            return new Response<List<T>>(ResponseCode.Error, error: "GetAllQueryable() failed");
+            return new Response<List<PcbDTO>>(ResponseCode.Error, error: "GetAllQueryable() failed");
         }
     }
 
@@ -94,17 +85,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
 
             List<Pcb> pcbs = new();
 
-            //lastTransfers.ForEach(async x =>
-            //{
-            //    if (x.StorageLocationId == storageLocationId)
-            //    {
-            //        var res = await GetById(x.PcbId);
-            //        if (res.Code == ResponseCode.Success)
-            //        {
-            //            pcbs.Add(res.Data);
-            //        }
-            //    }
-            //});
             foreach (var transfers in lastTransfers)
             {
                 if (transfers.StorageLocationId == storageLocationId)
@@ -118,22 +98,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             }
 
             var count = pcbs.Count;
-            //var test = from p in _boschContext.Pcbs
-            //           join t in _boschContext.Transfers on p.Id equals t.PcbId
-            //           group t by p.Id into grp
-            //           select grp.OrderByDescending(x => x.Id).First() into grpOldest
-            //           where grpOldest.StorageLocationId == storageLocationId 
-            //           select new { PcbId = grpOldest.PcbId };
-
-
-
-            //var dynamicList =  _boschContext
-            //    .Pcbs
-            //    .FromSqlRaw($"SELECT MAX(T.CreatedDate) AS 'CreatedAt', T.PcbId FROM Pcbs  AS P JOIN Transfers AS T ON P.Id = T.PcbId WHERE T.StorageLocationId = '4'  GROUP BY T.PcbId").AsEnumerable().Count();
-
-            //List<int> list = new();
-            //pcbs.ForEach(x => list.Add(x.TransferId));
-            //var lastTransfer = _boschContext.Transfers.Include(t => t.Pcb).Where(t => t.StorageLocationId == storageLocationId).Where(t => list.Contains(t.Id) ).Count();
 
             return new Response<int>(ResponseCode.Success, data: count);
         }
@@ -159,129 +123,62 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    public async Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize, string orderByProperty,
-        bool isAscending)
+
+    public async Task<Response<List<PcbDTO>>> Like(int pageIndex, int pageSize, string queryText)
     {
         try
         {
-            List<T> data = new();
-            if (pageIndex == 0)
-            {
-                data = await _boschContext.Set<T>()
-                    .OrderBy(orderByProperty, isAscending)
-                    .Where(x => x.DeletedDate < x.CreatedDate)
-                    .Skip(pageIndex * pageSize)
-                    .Take(pageSize)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
-            else
-            {
-                data = await _boschContext.Set<T>()
-                    .OrderBy(orderByProperty, isAscending)
-                    .Where(x => x.DeletedDate < x.CreatedDate)
-                    .Skip((pageIndex - 1) * pageSize)
-                    .Take(pageSize)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            var query = _boschContext.PcbsDTO
+                       .FromSqlRaw($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate AND SerialNumber LIKE '%{queryText}%') AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b ")
+                       .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
+                       .Take(pageSize)
+                       .ToListAsync();
 
-            return new Response<List<T>>(ResponseCode.Success, data: data);
+            var data = await query;
+            return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
         {
-            return new Response<List<T>>(ResponseCode.Error, error: "GetAllSortedBy() failed");
+            return new Response<List<PcbDTO>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
         }
     }
 
-    public async Task<Response<List<T>>> Like(int pageIndex, int pageSize, string queryText)
+    public async Task<Response<List<PcbDTO>>> GetWithFilter(int pageIndex, int pageSize, string where)
     {
         try
         {
-            List<T> data;
-
-            if (pageIndex == 0)
-            {
-                data = await _boschContext.Set<T>()
-                    .Where(x => x.DeletedDate < x.CreatedDate)
-                    .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
-                    .Skip((pageIndex) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-            }
-            else
-            {
-                data = await _boschContext.Set<T>()
-                    .Where(x => x.DeletedDate < x.CreatedDate)
-                    .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
-                    .Skip((pageIndex - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-            }
-
-            return new Response<List<T>>(ResponseCode.Success, data: data);
-        }
-        catch (DbUpdateException)
-        {
-            return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
-        }
-    }
-
-    public async Task<Response<List<T>>> GetWithFilter(int pageIndex, int pageSize, Expression<Func<T, bool>> where)
-    {
-        try
-        {
-            var data = await _boschContext.Set<T>()
-                .Where(x => x.DeletedDate < x.CreatedDate)
-                .Where(where)
+            var data = await _boschContext.Set<PcbDTO>()
+                // TODO: Check where to put WHERE clause to minimize overhead
+                .FromSqlRaw($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b \r\n\r\n WHERE {where}")
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
-                .Include("PcbType")
+                //.Include("PcbType")
                 .ToListAsync();
-            return new Response<List<T>>(ResponseCode.Success, data: data);
+            return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
         {
-            return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
+            return new Response<List<PcbDTO>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
         }
     }
 
-    public async Task<Response<List<T>>> GetWithFilterStorageLocation(int pageIndex, int pageSize,
+    public async Task<Response<List<PcbDTO>>> GetWithFilterStorageLocation(int pageIndex, int pageSize,
         int storageLocationId)
     {
         try
         {
-            List<Transfer> lastTransfers = new();
+            var pcbs = _boschContext.PcbsDTO
+            .FromSqlRaw($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\ts.Id,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1 AND s.Id = {storageLocationId}) as b ")
+            .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
-            await _boschContext
-                .Pcbs
-                .Include(x => x.Transfers)
-                .Where(x => x.DeletedDate < x.CreatedDate)
-                .ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
-
-            List<T> pcbs = new();
-
-            foreach (var transfers in lastTransfers)
-            {
-                if (transfers.StorageLocationId == storageLocationId)
-                {
-                    var res = await GetById(transfers.PcbId);
-                    if (res.Code == ResponseCode.Success)
-                    {
-                        pcbs.Add(res.Data);
-                    }
-                }
-            }
-
-            var pcbsPaginated = pcbs
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize);
-
-            return new Response<List<T>>(ResponseCode.Success, data: pcbsPaginated.ToList());
+            var result = await pcbs;
+            return new Response<List<PcbDTO>>(ResponseCode.Success, data: result);
         }
         catch (DbUpdateException)
         {
-            return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
+            return new Response<List<PcbDTO>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
         }
     }
 
@@ -362,7 +259,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         {
             _ = pageIndex == 0 ? pageIndex : pageIndex = pageIndex - 1;
             var pcbs = _boschContext.PcbsDTO
-                .FromSqlRaw($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b \r\n\r\n")
+                .FromSqlRaw($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b \r\n\r\n")
                 .OrderBy(orderByProperty, isAscending)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
@@ -379,34 +276,4 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    /*    public async Task<Response<List<T>>> GetAllEager(int pageIndex, int pageSize, string orderByProperty,
-            bool isAscending)
-        {
-            try
-            {
-                _ = pageIndex == 0 ? pageIndex : pageIndex = pageIndex - 1;
-                var entity = await _boschContext.Set<T>()
-                    .Where(x => x.DeletedDate < x.CreatedDate)
-                    .Include(T => T.Restriction)
-                    .Include(T => T.Comment)
-                    .Include(T => T.Diagnose)
-                    .Include(T => T.PcbType)
-                    .Include(T => T.ErrorTypes)
-                    .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
-                    .ThenInclude(transfer => transfer.StorageLocation)
-                    .Include(T => T.Transfers.OrderByDescending(transfer => transfer.CreatedDate).Take(1))
-                    .ThenInclude(transfer => transfer.NotedBy)
-                    .AsNoTracking()
-                    .OrderBy(orderByProperty, isAscending)
-                    .Skip(pageIndex * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-
-                return new Response<List<T>>(ResponseCode.Success, entity);
-            }
-            catch (DbUpdateException)
-            {
-                return new Response<List<T>>(ResponseCode.Error, error: $"Fehler beim Eager Loading der Pcbs");
-            }
-        }*/
 }

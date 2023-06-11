@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
+
 namespace App.Core.DTOs;
 
 [Keyless]
@@ -19,10 +20,10 @@ public class PcbDTO
     public string DwellTimeYellow { get; set; }
 
 
-    private SolidColorBrush _dwellTimeColor;
+    private string _dwellTimeColor;
 
     [NotMapped]
-    public SolidColorBrush DwellTimeColor
+    public string DwellTimeColor
     {
         get => getColor();
         set
@@ -45,32 +46,32 @@ public class PcbDTO
 
     public PcbDTO() { }
 
-    public SolidColorBrush getColor()
+    public string getColor()
     {
-        var StatusColor = new SolidColorBrush();
+        string StatusColor;
         if (DwellTimeRed != "--" && DwellTimeYellow != "--")
         {
 
             if (DwellTime >= int.Parse(DwellTimeRed))
             {
 
-                StatusColor = new SolidColorBrush(Colors.Red);
+                StatusColor = "red";
 
             }
             else if (DwellTime >= int.Parse(DwellTimeYellow))
             {
-                StatusColor = new SolidColorBrush(Colors.Yellow);
+                StatusColor = "yellow";
             }
             else
             {
-                StatusColor = new SolidColorBrush(Colors.LimeGreen);
+                StatusColor = "limegreen";
 
             }
             return StatusColor;
         }
         else
         {
-            return new SolidColorBrush(Colors.Transparent);
+            return "transparent";
         }
     }
 }
