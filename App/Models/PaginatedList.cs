@@ -1,5 +1,4 @@
 ﻿using App.Core.Services.Interfaces;
-
 namespace App.Models;
 public class PaginatedList<T> : List<T>
 {

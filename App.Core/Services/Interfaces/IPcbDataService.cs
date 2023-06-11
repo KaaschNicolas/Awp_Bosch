@@ -1,3 +1,4 @@
+using App.Core.DTOs;
 using App.Core.Models;
 using System.Linq.Expressions;
 
@@ -25,7 +26,8 @@ namespace App.Core.Services.Interfaces
 
         public Task<Response<T>> GetByIdEager(int id);
 
-        public Task<Response<List<T>>> GetAllEager(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
-        public Task<Response<List<T>>> GetAllEagerTest(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
+        public Task<Response<T>> Delete(int id);
+
+        public Task<Response<List<PcbDTO>>> GetAllEager(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
     }
 }

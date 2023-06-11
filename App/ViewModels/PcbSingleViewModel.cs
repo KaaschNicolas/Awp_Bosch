@@ -204,7 +204,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         {
             Pcb pcbToRemove = _selectedItem;
             _pcbs.Remove(pcbToRemove);
-            await _pcbDataService.Delete(pcbToRemove);
+            await _pcbDataService.Delete(pcbToRemove.Id);
             _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
         }
@@ -282,19 +282,19 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     public async void OnNavigatedTo(object parameter)
     {
-        _pcb = (Pcb)parameter;
-
-        _selectedItem = _pcb;
+        int pcbId = (int)parameter;
 
         // Register Messenger used with ShowTransfer
         WeakReferenceMessenger.Default.Register<PcbSingleViewModel, CurrentPcbRequestMessage>(this, (r, m) =>
         {
-            m.Reply(r.SelectedItem);
+            m.Reply(pcbId);
         });
 
-        var result = await _pcbDataService.GetByIdEager(SelectedItem.Id);
+        var result = await _pcbDataService.GetByIdEager(pcbId);
 
         _pcb = result.Data;
+        //TODO: Check if selectedItem can be replaced with _pcb
+        _selectedItem = _pcb;
 
         if (_pcb.Restriction.Name == "")
         {

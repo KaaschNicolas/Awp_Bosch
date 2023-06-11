@@ -67,57 +67,6 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid.Resources>
-            <DataTemplate x:Key="RowDetailsTemplate">
-                <Grid Padding="10" BorderThickness=".5,0,.5,.5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding SerialNumber}" />
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding ErrorDescription}" />
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Finalized}" />
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding LastStorageLocationName}" />
-                    <TextBlock 
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        HorizontalAlignment=" Right"
-                        Text="{Binding AtLocationDays}"/>
-                    <Ellipse
-                        Fill="{Binding Status}"
-                        Stroke="Black"
-                        StrokeThickness="0.2"
-                        Height="22" 
-                        Width="22"/>
-                    <TextBlock
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding CreatedDate}" />
-                </Grid>
-            </DataTemplate>
-        </Grid.Resources>
         <StackPanel
             Height="52"
             Margin="0,0,0,16"
@@ -263,41 +212,41 @@
                     Binding="{Binding SerialNumber}"
                     Header="Seriennummer"
                     Tag="SerialNumber" />
-                <ctWinUI:DataGridComboBoxColumn
+                <!--<ctWinUI:DataGridComboBoxColumn
                     Binding="{Binding ErrorDescription}"
                     Header="Fehlerbeschreibung"
-                    Tag="ErrorDescription" />
+                    Tag="ErrorDescription" />--> 
                 <ctWinUI:DataGridTextColumn
-                    Binding="{Binding Finalized}"
+                    Binding="{Binding IsFinalized}"
                     Header="Abgeschlossen"
                     Tag="Finalized" />
                 <ctWinUI:DataGridTextColumn
-                    Binding="{Binding LastStorageLocationName}"
+                    Binding="{Binding StorageName}"
                     CanUserSort="False"
                     Header="Letzter Lagerort"
                     Tag="LastStorageLocation" />
                 <ctWinUI:DataGridTextColumn
-                    Binding="{Binding AtLocationDays}"
+                    Binding="{Binding DwellTime}"
+                    CanUserSort="False"
                     Header="Verweildauer"
-                    Tag="AtLocationDays"
-                    CanUserSort="False"/>
-                <ctWinUI:DataGridTemplateColumn 
+                    Tag="AtLocationDays" />
+                <ctWinUI:DataGridTemplateColumn
+                    CanUserSort="False"
                     Header="Status"
-                    Tag="Status"
-                    CanUserSort="False">
+                    Tag="Status">
                     <ctWinUI:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Ellipse
-                                Fill="{Binding Status}"
+                                Width="22"
+                                Height="22"
+                                Fill="{Binding DwellTimeColor}"
                                 Stroke="Black"
-                                StrokeThickness="0.2"
-                                Height="22" 
-                                Width="22"/>
+                                StrokeThickness="0.2" />
                         </DataTemplate>
                     </ctWinUI:DataGridTemplateColumn.CellTemplate>
                 </ctWinUI:DataGridTemplateColumn>
                 <ctWinUI:DataGridTextColumn
-                    Binding="{Binding CreatedDate}"
+                    Binding="{Binding FailedAt}"
                     Header="Ausgefallen am"
                     Tag="CreatedDate" />
                 <controls:DataGridTemplateColumn
