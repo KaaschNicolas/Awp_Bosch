@@ -102,11 +102,6 @@
                             <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Einträge" />
                             <MenuFlyoutItem Click="Filter2_Click" Text="Heute erstellt" />
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem
-                                x:Name="FilterHeightLow"
-                                Click="Filter3_Click"
-                                Text="keine Weitergaben" />
-                            <MenuFlyoutSeparator />
                             <MenuFlyoutItem Click="FilterClear_Click" Text="Filter entfernen" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
