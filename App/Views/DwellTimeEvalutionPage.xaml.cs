@@ -34,7 +34,6 @@ namespace App.Views
             ViewModel = App.GetService<DwellTimeEvaluationViewModel>();
             InitializeComponent();
             Loaded += Page_Loaded;
-            
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

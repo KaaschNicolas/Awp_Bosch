@@ -12,45 +12,57 @@
     xmlns:oxyplot="using:OxyPlot"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <GridView x:Name="GridView"
-              SelectionMode="None"
-              VerticalAlignment="Stretch"
-              Margin="0">
-        <GridViewItem CornerRadius="4"
-                      Padding="0"
-                      Margin="0 0 20 20">
-            <GridViewItem.Transitions>
-                <TransitionCollection>
-                    <RepositionThemeTransition />
-                </TransitionCollection>
-            </GridViewItem.Transitions>
-            <Grid Width="1000"
-                  Height="640"
-                  Margin="0"
-                  CornerRadius="4"
-                  RowDefinitions="auto, *">
-                <Border Margin="0"
-                        BorderThickness="0"
-                        Background="{ThemeResource SystemAccentColor}"
-                        Opacity=".2"
-                        Grid.RowSpan="10" />
-                <Border Margin="0"
-                        BorderThickness="0"
-                        Background="{ThemeResource SystemAccentColor}"
-                        Opacity=".5" />
+    <Grid x:Name="GridView"
+              Margin="0 0 0 80"
+          RowDefinitions="auto, auto, auto"
+          ColumnSpacing="0"
+          RowSpacing="10">
+        
+        <StackPanel
+            Grid.Row="0"
+            Height="52"
+            Margin="0,0,0,16"
+            HorizontalAlignment="Left"
+            CornerRadius="4"
+            Orientation="Horizontal">
+            <CommandBar
+                VerticalAlignment="Center"
+                Background="Transparent"
+                DefaultLabelPosition="Right"
+                OverflowButtonVisibility="Collapsed">
+                <AppBarElementContainer>
+                    <CalendarDatePicker
+                        x:Name="From"
+                        Date="{x:Bind ViewModel.From, Mode=TwoWay, Converter={StaticResource TimeConverter}}"
+                        DateFormat="{}{day.integer}.{month.integer}.{year.full}"
+                        />
+                </AppBarElementContainer>
+                <AppBarElementContainer>
+                    <CalendarDatePicker
+                        x:Name="To"
+                        Date="{x:Bind ViewModel.To, Mode=TwoWay, Converter={StaticResource TimeConverter}}"
+                        DateFormat="{}{day.integer}.{month.integer}.{year.full}"
+                        MaxDate="{x:Bind ViewModel.MaxDate, Mode=OneWay, Converter={StaticResource TimeConverter}}"
+                        />
+                </AppBarElementContainer>
+            </CommandBar>
+        </StackPanel>
+        
+        <TextBlock 
+            Grid.Row="1"
+            Text="Übersicht der durschnittlichen Verweildauer pro PVB im gesamten Zeitraum"
+            Padding="0"
+            HorizontalAlignment="Stretch"
+            FontSize="16"
+            Margin="10 5" />
 
-                <TextBlock Text="Übersicht der durschnittlichen Verweildauer pro PVB im gesamten Zeitraum"
-                           Padding="0"
-                           HorizontalAlignment="Stretch"
-                           FontSize="16"
-                           Margin="10 5" />
-
-                <oxyplot:PlotView Model="{x:Bind ViewModel.DwellTimeBarPlot, Mode=TwoWay}"
-                                  x:Name="BarPlot"
-                                  Background="Transparent"
-                                  Grid.Row="1"
-                                  ScrollViewer.IsDeferredScrollingEnabled="False"/>
-            </Grid>
-        </GridViewItem>
-    </GridView>
+        <oxyplot:PlotView Model="{x:Bind ViewModel.DwellTimeBarPlot, Mode=TwoWay}"
+            Grid.Row="2"
+            Width="800"
+            Height="600"
+            HorizontalAlignment="Left"
+            x:Name="BarPlot"
+            Background="Transparent"
+            ScrollViewer.IsDeferredScrollingEnabled="False"/>
+    </Grid>
 </Page>
