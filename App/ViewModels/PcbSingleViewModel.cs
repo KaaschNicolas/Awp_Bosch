@@ -202,8 +202,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         var result = await _dialogService.ConfirmDeleteDialogAsync("Leiterplatte Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?");
         if (result != null && result == true)
         {
-            Pcb pcbToRemove = _selectedItem;
-            _pcbs.Remove(pcbToRemove);
+            Pcb pcbToRemove = SelectedItem;
+            Pcbs.Remove(pcbToRemove);
             await _pcbDataService.Delete(pcbToRemove.Id);
             _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
@@ -294,7 +294,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
         _pcb = result.Data;
         //TODO: Check if selectedItem can be replaced with _pcb
-        _selectedItem = _pcb;
+        SelectedItem = _pcb;
 
         if (_pcb.Restriction.Name == "")
         {
