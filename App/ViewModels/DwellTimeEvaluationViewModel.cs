@@ -62,7 +62,7 @@ namespace App.ViewModels
             };
 
             List<BarItem> barItems = await FillData();
-            barItems.ForEach(x => x.Color = myColors[myRandom.Next(myColors.Count - 1)]);
+            //barItems.ForEach(x => x.Color = myColors[myRandom.Next(myColors.Count - 1)]);
             barItems.ForEach(x => barSeries.Items.Add(x));
             model.Series.Add(barSeries);
 

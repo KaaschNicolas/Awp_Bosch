@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,8 +47,18 @@ namespace App.Views
         {
             ActualThemeChanged += Page_ActualThemeChanged;
             ViewModel.GeneratePlotCommand.ExecuteAsync(null);
-            BarPlot.InvalidatePlot(true);
+            //BarPlot.InvalidatePlot(true);
             base.OnNavigatedTo(e);
+        }
+
+        private void DateChangedFrom(object sender, CalendarDatePickerDateChangedEventArgs e)
+        {
+            ViewModel.From = ((DateTimeOffset)From.Date).DateTime;
+        }
+
+        private void DateChangedTo(object sender, CalendarDatePickerDateChangedEventArgs e)
+        {
+            ViewModel.To = ((DateTimeOffset)To.Date).DateTime;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
