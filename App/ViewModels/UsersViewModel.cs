@@ -45,7 +45,7 @@ public partial class UsersViewModel : ObservableRecipient, INavigationAware
     [RelayCommand]
     public void NavigateToUpdate(User user)
     {
-        //_navigationService.NavigateTo("App.ViewModels.UpdateUserViewModel", user);
+        _navigationService.NavigateTo("App.ViewModels.UpdateUserViewModel", user);
 
     }
 

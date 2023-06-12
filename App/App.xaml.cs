@@ -97,6 +97,8 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<UpdateUserViewModel>();
+            services.AddTransient<UpdateUserPage>();
             services.AddTransient<CreateUserViewModel>();
             services.AddTransient<CreateUserPage>();
             services.AddTransient<UsersViewModel>();

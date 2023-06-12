@@ -1,4 +1,5 @@
 ﻿using App.Contracts.Services;
+using App.Contracts.ViewModels;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using App.Errors;
@@ -6,10 +7,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace App.ViewModels;
-public partial class CreateUserViewModel : ObservableValidator
+
+public partial class UpdateUserViewModel : ObservableValidator, INavigationAware
 {
+
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required(ErrorMessage = ValidationErrorMessage.Required)]
@@ -22,11 +24,14 @@ public partial class CreateUserViewModel : ObservableValidator
     [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _adusername;
 
+    private int _id;
+
+    private User _user;
+
     private readonly ICrudService<User> _crudService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
-
-    public CreateUserViewModel(ICrudService<User> crudService, IInfoBarService infoBarService, INavigationService navigationService)
+    public UpdateUserViewModel(ICrudService<User> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
         _infoBarService = infoBarService;
@@ -39,12 +44,16 @@ public partial class CreateUserViewModel : ObservableValidator
         ValidateAllProperties();
         if (!HasErrors)
         {
-            var response = await _crudService.Create(new User { Name = _name, AdUsername = _adusername });
+            _user.Id = _id;
+            _user.Name = _name;
+            _user.AdUsername = _adusername;
+
+            var response = await _crudService.Update(_id, _user);
             if (response != null)
             {
                 if (response.Code == ResponseCode.Success)
                 {
-                    _infoBarService.showMessage("Erfolgreich Leiterplatte erstellt", "Erfolg");
+                    _infoBarService.showMessage("Benutzer erfolgreich erstellt", "Erfolg");
                     _navigationService.NavigateTo("App.ViewModels.UsersViewModel");
                 }
                 else
@@ -60,9 +69,19 @@ public partial class CreateUserViewModel : ObservableValidator
         }
     }
 
+
     [RelayCommand]
     public void Cancel()
     {
         _navigationService.GoBack();
+    }
+
+    public void OnNavigatedFrom() { }
+    public void OnNavigatedTo(object parameter)
+    {
+        _user = (User)parameter;
+        _id = _user.Id;
+        _name = _user.Name;
+        _adusername = _user.AdUsername;
     }
 }
