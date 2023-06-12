@@ -82,7 +82,7 @@ FROM(
 	WHERE rn=1) as b 
 
 
--- LIKE Transfer --
+-- WHERE FILTER AUF PCB --
 SELECT 
 b.PcbId,
 b.StorageName,
@@ -119,7 +119,7 @@ FROM(
 		COUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount
 		FROM Transfers 
 		WHERE CreatedDate > DeletedDate) as t
-	INNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate) AS p ON t.PcbId=p.Id
+	INNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate AND CreatedDate = GetDate) AS p ON t.PcbId=p.Id
 	INNER JOIN 	(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id
 	INNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id
-	WHERE rn=1 AND s.Id = 8) as b 
+	WHERE rn=1) as b 
