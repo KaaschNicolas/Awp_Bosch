@@ -27,15 +27,11 @@ namespace App.ViewModels
         )
         {
 
-
-
             _pcbDataService = pcbDataService;
             FirstAsyncCommand = new AsyncRelayCommand(
                 async () => await GetPcbs(1, _pageSize, _isSortingAscending),
                 () => _pageNumber != 1
             );
-
-
 
             PreviousAsyncCommand = new AsyncRelayCommand(
                 async () => await GetPcbs(_pageNumber - 1, _pageSize, _isSortingAscending),
@@ -131,23 +127,9 @@ namespace App.ViewModels
 
         private async Task CreatePcbList(int pageIndex, int pageSize, List<PcbDTO> pcbs, bool isAscending, int maxEntries)
         {
-            List<PcbDTO> convertedPcbs = new();
-
-            // TODO: Error handling
-            var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
-            foreach (var item in resEager.Data)
-            {
-                foreach (var pcb in pcbs)
-                {
-                    if (item.PcbId.Equals(pcb.PcbId))
-                    {
-                        convertedPcbs.Add(item);
-                    }
-                }
-            }
 
             PaginatedList<PcbDTO> pcbsPaginated = await PaginatedList<PcbDTO>.CreateAsync(
-                convertedPcbs,
+                pcbs,
                 pageIndex,
                 pageSize,
                 maxEntries
@@ -192,20 +174,20 @@ namespace App.ViewModels
                     case PcbFilterOptions.Filter1:
                         Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "Finalized = 1");
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "Finalized = 1", SortBy, isAscending);
                         break;
                     case PcbFilterOptions.Filter2:
                         Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.UtcNow.Date;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "DATEDIFF(DAY, CreatedDate, GETDATE()) = 0");
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "DATEDIFF(DAY, CreatedDate, GETDATE()) = 0", SortBy, isAscending);
                         break;
                     case PcbFilterOptions.FilterStorageLocation:
                         maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);
-                        pcbs = await _pcbDataService.GetWithFilterStorageLocation(pageIndex, pageSize, SelectedComboBox.Id);
+                        pcbs = await _pcbDataService.GetWithFilterStorageLocation(pageIndex, pageSize, SelectedComboBox.Id, SortBy, isAscending);
                         break;
                     default:
                         maxEntries = await _pcbDataService.MaxEntries();
-                        pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
+                        pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, SortBy, isAscending);
                         break;
                 }
                 if (pcbs.Code == ResponseCode.Success)
@@ -224,13 +206,12 @@ namespace App.ViewModels
 
                     await CreatePcbList(pageIndex, pageSize, pcbs.Data, isAscending, maxEntries.Data);
                 }
-
-                FirstAsyncCommand.NotifyCanExecuteChanged();
-                PreviousAsyncCommand.NotifyCanExecuteChanged();
-                NextAsyncCommand.NotifyCanExecuteChanged();
-                LastAsyncCommand.NotifyCanExecuteChanged();
-                FilterItems.NotifyCanExecuteChanged();
             }
+            FirstAsyncCommand.NotifyCanExecuteChanged();
+            PreviousAsyncCommand.NotifyCanExecuteChanged();
+            NextAsyncCommand.NotifyCanExecuteChanged();
+            LastAsyncCommand.NotifyCanExecuteChanged();
+            FilterItems.NotifyCanExecuteChanged();
 
         }
 

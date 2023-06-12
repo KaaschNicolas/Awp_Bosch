@@ -143,13 +143,14 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    public async Task<Response<List<PcbDTO>>> GetWithFilter(int pageIndex, int pageSize, string where)
+    public async Task<Response<List<PcbDTO>>> GetWithFilter(int pageIndex, int pageSize, string where, string orderByProperty, bool isAscending)
     {
         try
         {
-            var data = await _boschContext.Set<PcbDTO>()
+            var data = await _boschContext.PcbsDTO
                 // TODO: Check where to put WHERE clause to minimize overhead
                 .FromSqlRaw($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate AND {where}) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b \r\n\r\n")
+                .OrderBy(orderByProperty, isAscending)
                 .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 //.Include("PcbType")
@@ -162,14 +163,14 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    public async Task<Response<List<PcbDTO>>> GetWithFilterStorageLocation(int pageIndex, int pageSize,
-        int storageLocationId)
+    public async Task<Response<List<PcbDTO>>> GetWithFilterStorageLocation(int pageIndex, int pageSize, int storageLocationId, string orderByProperty, bool isAscending)
     {
         try
         {
             var pcbs = _boschContext.PcbsDTO
             .FromSqlRaw($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\ts.Id,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1 AND s.Id = {storageLocationId}) as b ")
-            .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize * pageSize)
+            .OrderBy(orderByProperty, isAscending)
+            .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
 
