@@ -5,6 +5,8 @@ using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Linq.Expressions;
 
 namespace App.Core.Services
@@ -102,11 +104,19 @@ namespace App.Core.Services
             }
         }
 
-        public async Task<Response<List<DwellTimeEvaluationDTO>>> GetAvgDwellTimeByStorageLocation()
+        public async Task<Response<List<DwellTimeEvaluationDTO>>> GetAvgDwellTimeByStorageLocation(DateTime? from, DateTime? to)
         {
             try
             {
-                string queryString = BuildQuery();
+                string queryString = string.Empty;
+                if (from != null && to != null)
+                {
+                    queryString = BuildQuery(from, to);
+                }
+                else
+                {
+                    queryString = BuildQuery(null, null);
+                }
                 var data = await _boschContext
                     .DwellTimeEvaluationDTO
                     .FromSqlRaw(queryString)
@@ -119,8 +129,15 @@ namespace App.Core.Services
             }
         }
 
-        private string BuildQuery()
+        private string BuildQuery(DateTime? from, DateTime? to)
         {
+            string dateCheck = null;
+            if (from != null && to != null)
+            {
+                var newFrom = (DateTime)from;
+                var newTo = (DateTime)to;
+                dateCheck = $"AND CreatedDate BETWEEN '{newFrom.ToString("yyyy-MM-dd HH:mm:ss")}' AND '{newTo.ToString("yyyy-MM-dd HH:mm:ss")}'";
+            }
             return $@"SELECT b.StorageName,
                     ROUND(AVG(CAST(DwellTime AS FLOAT)), 2) AS AvgDwellTime
                     FROM
@@ -136,7 +153,7 @@ namespace App.Core.Services
                             (SELECT Id,
                                     StorageName
                             FROM StorageLocations) AS s ON s.Id = t.StorageLocationId
-                        WHERE CreatedDate > DeletedDate) AS b
+                        WHERE CreatedDate > DeletedDate {dateCheck}) AS b
                     GROUP BY b.StorageName";
         }
     }

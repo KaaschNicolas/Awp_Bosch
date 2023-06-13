@@ -21,10 +21,10 @@ namespace App.ViewModels
         private PlotModel _dwellTimeBarPlot;
 
         [ObservableProperty]
-        private DateTime _from;
+        private DateTime? _from;
 
         [ObservableProperty]
-        private DateTime _to;
+        private DateTime? _to;
 
         public DateTime MaxDate { get; private set; } = DateTime.Now;
 
@@ -33,9 +33,9 @@ namespace App.ViewModels
             _transferDataService = transferDataService;
             _storageLocationDataService = storageLocationDataService;
             GeneratePlotCommand = new AsyncRelayCommand(
-                GeneratePlot
+                async () => await GeneratePlot()
             );
-            Refresh();  
+              
         }
 
         private ITransferDataService<Transfer> _transferDataService;
@@ -62,7 +62,7 @@ namespace App.ViewModels
                 LabelPlacement = LabelPlacement.Outside 
             };
 
-            var avgDwellTimeDTO = await _transferDataService.GetAvgDwellTimeByStorageLocation();
+            var avgDwellTimeDTO = await _transferDataService.GetAvgDwellTimeByStorageLocation(_from, _to);
             
             if (avgDwellTimeDTO.Code == ResponseCode.Success)
             {

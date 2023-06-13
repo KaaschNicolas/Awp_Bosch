@@ -22,7 +22,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            string queryString = buildQuery();
+            string queryString = BuildQuery();
             Debug.WriteLine(queryString);
             var query = _boschContext.PcbsDTO
             .FromSqlRaw(queryString)
@@ -77,7 +77,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var query = _boschContext.PcbsDTO
-                .FromSqlRaw(buildQuery(whereFilterOnStorageLocation: storageLocationId.ToString()))
+                .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: storageLocationId.ToString()))
                 .CountAsync();
             int count = await query;
             return new Response<int>(ResponseCode.Success, data: count);
@@ -110,7 +110,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var query = _boschContext.PcbsDTO
-                       .FromSqlRaw(buildQuery(likeFilterOnPcb: queryText))
+                       .FromSqlRaw(BuildQuery(likeFilterOnPcb: queryText))
                        .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
                        .Take(pageSize)
                        .ToListAsync();
@@ -132,12 +132,12 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             if (isFilterStoragLocation)
             {
                 query = _boschContext.PcbsDTO
-                .FromSqlRaw(buildQuery(whereFilterOnStorageLocation: value));
+                .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: value));
             }
             else
             {
                 query = _boschContext.PcbsDTO
-                    .FromSqlRaw(buildQuery(whereFilterOnPcb: value));
+                    .FromSqlRaw(BuildQuery(whereFilterOnPcb: value));
             }
 
             var data = query
@@ -223,7 +223,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    private string buildQuery(string? whereFilterOnStorageLocation = null, string? whereFilterOnPcb = null, string? likeFilterOnPcb = null)
+    private string BuildQuery(string? whereFilterOnStorageLocation = null, string? whereFilterOnPcb = null, string? likeFilterOnPcb = null)
     {
         whereFilterOnPcb = whereFilterOnPcb is not null ? $"AND {whereFilterOnPcb}" : whereFilterOnPcb;
         whereFilterOnStorageLocation = whereFilterOnStorageLocation is not null ? $"WHERE Id = {whereFilterOnStorageLocation} " : whereFilterOnStorageLocation;

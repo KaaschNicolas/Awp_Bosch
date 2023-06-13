@@ -44,7 +44,7 @@
                 DateFormat="{}{day.integer}.{month.integer}.{year.full}"
                 PlaceholderText="Enddatum"
                 />
-            <Button Content="Auswerten" />
+            <Button Content="Auswerten" Click="Click_EvaluationButton" />
         </StackPanel>
         
         <TextBlock 
