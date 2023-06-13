@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using ABI.Microsoft.UI.Xaml.Input;
 using App.Core.Models;
 using App.Core.Models.Enums;
 using App.ViewModels;
@@ -9,19 +8,10 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System.Diagnostics;
 using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
-using System.Windows.Input;
-
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace App.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class PcbViewPage : Page
     {
         private enum DataGridDisplayMode
@@ -65,7 +55,7 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Default;
             DataGrid.ItemsSource = ViewModel.Pcbs; //nötig? weil schon in Xaml gebunden
-            DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Ascending;
+            DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Descending;
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
             ViewModel.FilterOptions = PcbFilterOptions.None;
         }
@@ -173,17 +163,17 @@ namespace App.Views
 
         void EditClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
+            ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem.PcbId);
         }
 
         private void NavigateToDetails(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.NavigateToDetailsCommand.Execute(ViewModel.SelectedItem);
+            ViewModel.NavigateToDetailsCommand.Execute(ViewModel.SelectedItem.PcbId);
         }
 
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(CreatePcbPage));
+            ViewModel.NavigateToCreateCommand.Execute(null);
         }
 
         private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)
@@ -224,12 +214,5 @@ namespace App.Views
         {
             ViewModel.ShowTransferCommand.Execute(null);
         }
-
-        /*private void UIElement_OnLostFocus(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("ok");
-        }*/
-
-
     }
 }

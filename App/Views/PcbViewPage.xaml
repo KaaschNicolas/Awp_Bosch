@@ -53,67 +53,6 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid.Resources>
-            <DataTemplate x:Key="RowDetailsTemplate">
-                <Grid Padding="10" BorderThickness=".5,0,.5,.5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding SerialNumber}" />
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding PcbType.PcbPartNumber}" />
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding FirstErrorCode}" />
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding SecondErrorCode}" />
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Finalized}" />
-                    <TextBlock
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding LastStorageLocationName}" />
-                    <TextBlock 
-                        Grid.Row="6"
-                        Grid.Column="1"
-                        HorizontalAlignment=" Right"
-                        Text="{Binding AtLocationDays}"/>
-                    <Ellipse
-                        Fill="{Binding Status}"
-                        Stroke="Black"
-                        StrokeThickness="0.2"
-                        Height="22" 
-                        Width="22"/>
-                    <TextBlock
-                        Grid.Row="7"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding CreatedDate}" />
-                </Grid>
-            </DataTemplate>
-        </Grid.Resources>
         <StackPanel
             Height="52"
             Margin="0,0,0,16"
@@ -148,11 +87,6 @@
                         <MenuFlyout>
                             <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Einträge" />
                             <MenuFlyoutItem Click="Filter2_Click" Text="Heute erstellt" />
-                            <MenuFlyoutSeparator />
-                            <MenuFlyoutItem
-                                x:Name="FilterHeightLow"
-                                Click="Filter3_Click"
-                                Text="keine Weitergaben" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem Click="FilterClear_Click" Text="Filter entfernen" />
                         </MenuFlyout>
@@ -214,6 +148,7 @@
                 Margin="8,0,0,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
+                PlaceholderText="Seriennummer suchen"
                 QueryIcon="Find"
                 QuerySubmitted="SearchBox_QuerySubmitted" />
             <CommandBar
@@ -255,58 +190,62 @@
                 <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
             </ctWinUI:DataGrid.Resources>
             <ctWinUI:DataGrid.Columns>
+                <ctWinUI:DataGridTemplateColumn
+                    CanUserSort="True"
+                    Header="Status"
+                    Tag="DwellTimeStatus">
+                    <ctWinUI:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse
+                                Width="22"
+                                Height="22"
+                                Fill="{Binding DwellTimeColor}"
+                                Stroke="Black"
+                                StrokeThickness="0.2" />
+                        </DataTemplate>
+                    </ctWinUI:DataGridTemplateColumn.CellTemplate>
+                </ctWinUI:DataGridTemplateColumn>
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding DwellTime}"
+                    CanUserSort="False"
+                    Header="Verweildauer"
+                    Tag="DwellTime" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding SerialNumber}"
                     Header="Seriennummer"
                     Tag="SerialNumber" />
                 <ctWinUI:DataGridTextColumn
-                    Binding="{Binding PcbType.PcbPartNumber}"
-                    Header="Sachnummer"
-                    Tag="PcbType"
-                    CanUserSort="False"/>
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding FirstErrorCode}"
-                    Header="Oberfehler"
-                    Tag="FirstErrorCode"
-                    CanUserSort="False"/>
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding SecondErrorCode}"
-                    Header="Unterfehler"
-                    Tag="SecondErrorCode"
-                    CanUserSort="False"/>
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding Finalized}"
-                    Header="Abgeschlossen"
-                    Tag="Finalized" />
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding LastStorageLocationName}"
+                    Binding="{Binding PcbPartNumber}"
                     CanUserSort="False"
+                    Header="Sachnummer"
+                    Tag="PcbPartNumber" />
+                <ctWinUI:DataGridComboBoxColumn
+                    Binding="{Binding MainErrorCode}"
+                    CanUserSort="True"
+                    Header="Hauptfehler"
+                    Tag="MainErrorCode" />
+                <ctWinUI:DataGridComboBoxColumn
+                    Binding="{Binding SubErrorCode}"
+                    CanUserSort="True"
+                    Header="Unterfehler"
+                    Tag="SubErrorCode" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding IsFinalized}"
+                    Header="Abgeschlossen"
+                    Tag="IsFinalized" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding TransferCount}"
+                    Header="Weitergaben"
+                    Tag="TransferCount" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding StorageName}"
+                    CanUserSort="True"
                     Header="Letzter Lagerort"
-                    Tag="LastStorageLocation" />
+                    Tag="StorageName" />
                 <ctWinUI:DataGridTextColumn
-                    Binding="{Binding AtLocationDays}"
-                    Header="Verweildauer"
-                    Tag="AtLocationDays"
-                    CanUserSort="False"/>
-                <ctWinUI:DataGridTemplateColumn 
-                    Header="Status"
-                    Tag="Status"
-                    CanUserSort="False">
-                    <ctWinUI:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Ellipse
-                                Fill="{Binding Status}"
-                                Stroke="Black"
-                                StrokeThickness="0.2"
-                                Height="22" 
-                                Width="22"/>
-                        </DataTemplate>
-                    </ctWinUI:DataGridTemplateColumn.CellTemplate>
-                </ctWinUI:DataGridTemplateColumn>
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding CreatedDate}"
+                    Binding="{Binding FailedAt}"
                     Header="Ausgefallen am"
-                    Tag="CreatedDate" />
+                    Tag="FailedAt" />
                 <controls:DataGridTemplateColumn
                     Width="100"
                     CanUserSort="False"
@@ -338,11 +277,9 @@
                                             Click="DeleteClick"
                                             Icon="Delete"
                                             Text="Löschen" />
-
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
-
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>

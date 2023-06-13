@@ -1,4 +1,5 @@
-﻿using App.Core.Helpers;
+﻿using App.Core.DTOs;
+using App.Core.Helpers;
 using App.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +36,11 @@ namespace App.Core.DataAccess
         {
             get; set;
         }
+
+
+        public virtual DbSet<PcbDTO> PcbsDTO { get; set; }
+
+
         public DbSet<PcbType> PcbTypes
         {
             get; set;
