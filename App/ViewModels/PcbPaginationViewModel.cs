@@ -168,7 +168,7 @@ namespace App.ViewModels
                 {
                     case PcbFilterOptions.Search:
                         maxEntries = await _pcbDataService.MaxEntriesSearch(QueryText);
-                        pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
+                        pcbs = await _pcbDataService.Like(pageIndex, pageSize, $"%{QueryText}%");
                         break;
                     case PcbFilterOptions.Filter1:
                         Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
