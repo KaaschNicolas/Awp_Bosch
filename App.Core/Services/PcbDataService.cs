@@ -7,6 +7,7 @@ using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Linq.Expressions;
 
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
@@ -21,9 +22,10 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-
+            string queryString = buildQuery();
+            Debug.WriteLine(queryString);
             var query = _boschContext.PcbsDTO
-            .FromSqlInterpolated($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b \r\n\r\n")
+            .FromSqlRaw(queryString)
             .OrderBy(orderByProperty, isAscending)
             .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
             .Take(pageSize)
@@ -74,9 +76,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-
             var query = _boschContext.PcbsDTO
-                .FromSqlInterpolated($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations WHERE Id = {storageLocationId}) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b \r\n\r\n")
+                .FromSqlRaw(buildQuery(whereFilterOnStorageLocation: storageLocationId.ToString()))
                 .CountAsync();
             int count = await query;
             return new Response<int>(ResponseCode.Success, data: count);
@@ -109,7 +110,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var query = _boschContext.PcbsDTO
-                       .FromSqlInterpolated($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate AND SerialNumber LIKE {queryText}) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b ")
+                       .FromSqlRaw(buildQuery(likeFilterOnPcb: queryText))
                        .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
                        .Take(pageSize)
                        .ToListAsync();
@@ -131,13 +132,12 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             if (isFilterStoragLocation)
             {
                 query = _boschContext.PcbsDTO
-                    .FromSqlInterpolated($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations WHERE Id = {value}) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b \r\n\r\n");
+                .FromSqlRaw(buildQuery(whereFilterOnStorageLocation: value));
             }
             else
             {
                 query = _boschContext.PcbsDTO
-                    .FromSqlRaw($"SELECT \r\nb.PcbId,\r\nb.StorageName,\r\nb.DwellTime,\r\nb.DwellTimeRed,\r\nb.DwellTimeYellow,\r\nb.FailedAt,\r\nb.Finalized as IsFinalized,\r\nb.SerialNumber,\r\nb.TransferCount,\r\nb.PcbPartNumber,\r\nIIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', \r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,\r\n\tIIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,\r\n\t1)),\r\n0) AS DwellTimeStatus\r\nFROM(\r\n\tSELECT t.*,\r\n\ts.StorageName,\r\n\tp.SerialNumber,\r\n\tp.Finalized,\r\n\tp.CreatedDate As FailedAt,\r\n\ts.DwellTimeRed,\r\n\ts.DwellTimeYellow,\r\n\tpt.PcbPartNumber,\r\n\tDATEDIFF(day, t.LastTransferDate, GETDATE()) as DwellTime \r\n\tFROM (\r\n\t\tSELECT\r\n\t\tPcbId,\r\n\t\tCreatedDate As LastTransferDate,\r\n\t\tStorageLocationId,\r\n\t\tROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,\r\n\t\tCOUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount\r\n\t\tFROM Transfers \r\n\t\tWHERE CreatedDate > DeletedDate) as t\r\n\tINNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate AND {value}) AS p ON t.PcbId=p.Id\r\n\tINNER JOIN \t(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations  ) AS s ON t.StorageLocationId=s.Id\r\n\tINNER JOIN (SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id\r\n\tWHERE rn=1) as b \r\n\r\n");
-
+                    .FromSqlRaw(buildQuery(whereFilterOnPcb: value));
             }
 
             var data = query
@@ -222,5 +222,74 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
         }
     }
+
+    private string buildQuery(string? whereFilterOnStorageLocation = null, string? whereFilterOnPcb = null, string? likeFilterOnPcb = null)
+    {
+        whereFilterOnPcb = whereFilterOnPcb is not null ? $"AND {whereFilterOnPcb}" : whereFilterOnPcb;
+        whereFilterOnStorageLocation = whereFilterOnStorageLocation is not null ? $"WHERE Id = {whereFilterOnStorageLocation} " : whereFilterOnStorageLocation;
+        likeFilterOnPcb = likeFilterOnPcb is not null ? $"AND SerialNumber LIKE '%{likeFilterOnPcb}%'" : likeFilterOnPcb;
+
+        string query = $@"SELECT 
+                    b.PcbId,
+                    b.StorageName,
+                    b.DwellTime,
+                    b.DwellTimeRed,
+                    b.DwellTimeYellow,
+                    b.FailedAt,
+                    b.Finalized as IsFinalized,
+                    b.SerialNumber,
+                    b.TransferCount,
+                    b.PcbPartNumber,
+                    b.MainErrorCode,
+                    b.SubErrorCode,
+                    IIF(NOT b.DwellTimeYellow = '--' AND NOT b.DwellTimeYellow = '--', 
+	                    IIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeYellow AS INT) AND CAST(b.DwellTime AS INT) < CAST(b.DwellTimeRed AS INT), 2,
+	                    IIF (CAST(b.DwellTime AS INT) >= CAST(b.DwellTimeRed AS INT), 3,
+	                    1)),
+                    0) AS DwellTimeStatus
+                    FROM(
+	                    SELECT t.*,
+	                    s.StorageName,
+	                    p.SerialNumber,
+	                    p.Finalized,
+	                    p.CreatedDate As FailedAt,
+	                    s.DwellTimeRed,
+	                    s.DwellTimeYellow,
+	                    pt.PcbPartNumber,
+	                    DATEDIFF(DAY, t.LastTransferDate, GETDATE()) as DwellTime,
+	                    e.MainErrorCode,
+	                    e.SubErrorCode
+	                    FROM (
+		                    SELECT
+		                    PcbId,
+		                    CreatedDate As LastTransferDate,
+		                    StorageLocationId,
+		                    ROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS rn,
+		                    COUNT(PcbId) OVER(PARTITION BY PcbId) AS TransferCount,
+		                    ROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY PcbId) AS ErrorCount
+		                    FROM Transfers 
+		                    WHERE CreatedDate > DeletedDate) as t
+	                    INNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate {whereFilterOnPcb} {likeFilterOnPcb}) AS p ON t.PcbId=p.Id
+                        INNER JOIN(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations {whereFilterOnStorageLocation}) AS s ON t.StorageLocationId = s.Id
+                        INNER JOIN(SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id
+                        INNER JOIN(SELECT* FROM (
+                                        SELECT
+                                        PcbId,
+                                        FIRST_VALUE(Code) OVER (PARTITION BY PcbId ORDER BY CreatedDate) AS MainErrorCode,
+                                        FIRST_VALUE(Code) OVER(PARTITION BY PcbId ORDER BY CreatedDate DESC) AS SubErrorCode,
+                                        ROW_NUMBER() OVER(PARTITION BY PcbId ORDER BY CreatedDate) AS ErrorRowNumber
+
+                                        FROM ErrorTypes
+
+                                        WHERE CreatedDate > DeletedDate AND PcbId IS NOT NULL) AS err
+
+                                    WHERE err.ErrorRowNumber = 1
+				                    ) AS e on p.Id = e.PcbId
+
+                        WHERE rn = 1) as b ";
+
+        return query;
+    }
+
 
 }

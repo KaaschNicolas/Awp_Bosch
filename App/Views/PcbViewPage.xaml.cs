@@ -39,7 +39,7 @@ namespace App.Views
             Loaded += Page_Loaded;
             Unloaded += Page_Unload;
             ViewModel.FilterOptions = PcbFilterOptions.None;
-            ViewModel.SortBy = DataGrid.Columns[5].Tag.ToString();
+            ViewModel.SortBy = DataGrid.Columns[0].Tag.ToString();
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
         }
 
@@ -62,7 +62,7 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Default;
             DataGrid.ItemsSource = ViewModel.Pcbs; //nötig? weil schon in Xaml gebunden
-            DataGrid.Columns[5].SortDirection = ctWinUI.DataGridSortDirection.Descending;
+            DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Descending;
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
             ViewModel.FilterOptions = PcbFilterOptions.None;
         }

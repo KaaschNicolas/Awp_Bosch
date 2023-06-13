@@ -162,6 +162,7 @@
                 Margin="8,0,0,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
+                PlaceholderText="Seriennummer suchen"
                 QueryIcon="Find"
                 QuerySubmitted="SearchBox_QuerySubmitted" />
             <CommandBar
@@ -203,33 +204,6 @@
                 <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
             </ctWinUI:DataGrid.Resources>
             <ctWinUI:DataGrid.Columns>
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding SerialNumber}"
-                    Header="Seriennummer"
-                    Tag="SerialNumber" />
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding PcbPartNumber}"
-                    CanUserSort="False"
-                    Header="Sachnummer"
-                    Tag="PcbPartNumber" />
-                <!--<ctWinUI:DataGridComboBoxColumn
-                    Binding="{Binding ErrorDescription}"
-                    Header="Fehlerbeschreibung"
-                    Tag="ErrorDescription" />-->
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding IsFinalized}"
-                    Header="Abgeschlossen"
-                    Tag="IsFinalized" />
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding StorageName}"
-                    CanUserSort="True"
-                    Header="Letzter Lagerort"
-                    Tag="StorageName" />
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding DwellTime}"
-                    CanUserSort="False"
-                    Header="Verweildauer"
-                    Tag="DwellTime" />
                 <ctWinUI:DataGridTemplateColumn
                     CanUserSort="True"
                     Header="Status"
@@ -245,6 +219,43 @@
                         </DataTemplate>
                     </ctWinUI:DataGridTemplateColumn.CellTemplate>
                 </ctWinUI:DataGridTemplateColumn>
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding DwellTime}"
+                    CanUserSort="False"
+                    Header="Verweildauer"
+                    Tag="DwellTime" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding SerialNumber}"
+                    Header="Seriennummer"
+                    Tag="SerialNumber" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding PcbPartNumber}"
+                    CanUserSort="False"
+                    Header="Sachnummer"
+                    Tag="PcbPartNumber" />
+                <ctWinUI:DataGridComboBoxColumn
+                    Binding="{Binding MainErrorCode}"
+                    CanUserSort="True"
+                    Header="Hauptfehler"
+                    Tag="MainErrorCode" />
+                <ctWinUI:DataGridComboBoxColumn
+                    Binding="{Binding SubErrorCode}"
+                    CanUserSort="True"
+                    Header="Unterfehler"
+                    Tag="SubErrorCode" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding IsFinalized}"
+                    Header="Abgeschlossen"
+                    Tag="IsFinalized" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding TransferCount}"
+                    Header="Weitergaben"
+                    Tag="TransferCount" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding StorageName}"
+                    CanUserSort="True"
+                    Header="Letzter Lagerort"
+                    Tag="StorageName" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding FailedAt}"
                     Header="Ausgefallen am"

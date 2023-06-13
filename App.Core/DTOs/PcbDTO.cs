@@ -44,6 +44,10 @@ public class PcbDTO
 
     public int TransferCount { get; set; }
 
+    public string MainErrorCode { get; set; }
+
+    public string SubErrorCode { get; set; }
+
     public PcbDTO() { }
 
     public string getColor()

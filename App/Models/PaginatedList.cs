@@ -15,8 +15,8 @@ public class PaginatedList<T> : List<T>
 
     private PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
     {
-        PageIndex = pageIndex;
         PageCount = (int)Math.Ceiling(count / (double)pageSize);
+        PageIndex = PageCount > 0 ? (pageIndex == 0 ? pageIndex + 1 : pageIndex) : pageIndex;
         AddRange(items);
     }
 
