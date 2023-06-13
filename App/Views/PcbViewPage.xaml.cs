@@ -55,7 +55,7 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Default;
             DataGrid.ItemsSource = ViewModel.Pcbs; //nötig? weil schon in Xaml gebunden
-            DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Ascending;
+            DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Descending;
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
             ViewModel.FilterOptions = PcbFilterOptions.None;
         }
@@ -163,12 +163,12 @@ namespace App.Views
 
         void EditClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
+            ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem.PcbId);
         }
 
         private void NavigateToDetails(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.NavigateToDetailsCommand.Execute(ViewModel.SelectedItem);
+            ViewModel.NavigateToDetailsCommand.Execute(ViewModel.SelectedItem.PcbId);
         }
 
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

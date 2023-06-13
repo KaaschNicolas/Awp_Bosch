@@ -53,6 +53,7 @@ public partial class TransferDTO : ObservableObject
     {
         transfer.CreatedDate = CreatedAt;
         transfer.StorageLocation = StorageLocationTransfer;
+        transfer.StorageLocationId = StorageLocationTransfer.Id;
         transfer.NotedBy = NotedBy;
         transfer.Comment = CommentTransfer;
 
