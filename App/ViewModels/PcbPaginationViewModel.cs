@@ -138,7 +138,6 @@ namespace App.ViewModels
             PageNumber = pcbsPaginated.PageIndex;
             PageCount = pcbsPaginated.PageCount;
 
-
             Pcbs = new ObservableCollection<PcbDTO>(pcbsPaginated);
 
         }
@@ -183,7 +182,7 @@ namespace App.ViewModels
                         break;
                     case PcbFilterOptions.FilterStorageLocation:
                         maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);
-                        pcbs = await _pcbDataService.GetWithFilterStorageLocation(pageIndex, pageSize, SelectedComboBox.Id, SortBy, isAscending);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, SelectedComboBox.Id.ToString(), SortBy, isAscending, true);
                         break;
                     default:
                         maxEntries = await _pcbDataService.MaxEntries();

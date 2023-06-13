@@ -18,14 +18,11 @@ namespace App.Core.Services.Interfaces
 
         public Task<Response<List<PcbDTO>>> Like(int pageIndex, int pageSize, string queryText);
 
-        public Task<Response<List<PcbDTO>>> GetWithFilter(int pageIndex, int pageSize, string where, string orderByProperty, bool isAscending);
-
-        public Task<Response<List<PcbDTO>>> GetWithFilterStorageLocation(int pageIndex, int pageSize, int storageLocationId, string orderByProperty, bool isAscending);
+        public Task<Response<List<PcbDTO>>> GetWithFilter(int pageIndex, int pageSize, string value, string orderByProperty, bool isAscending, bool isFilterStoragLocation = false);
 
         public Task<Response<T>> GetByIdEager(int id);
 
         public Task<Response<T>> Delete(int id);
 
-        public Task<Response<List<PcbDTO>>> GetAllEager(int pageIndex, int pageSize, string orderByProperty, bool isAscending);
     }
 }
