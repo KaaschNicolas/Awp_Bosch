@@ -39,26 +39,12 @@
                     <AppBarButton
                         Click="CreatePcbButton_Click"
                         Icon="Add"
-                        Label="Hinzufügen" />
-                    <AppBarButton
-                        Click="FilterClear_Click"
-                        Icon="Refresh"
-                        Label="Neu Laden" />
-
+                        Label="Hinzufügen" 
+                        FontWeight="SemiBold"
+                        Background="{StaticResource AccentFillColorDefaultBrush}"
+                        Foreground="{StaticResource TextOnAccentFillColorPrimary}"/>
+                        
                 </CommandBar>
-                <StackPanel
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Background="{ThemeResource CommandBarBackground}">
-                    <AutoSuggestBox
-                        MinWidth="304"
-                        MaxWidth="320"
-                        Margin="0,8,0,12"
-                        HorizontalAlignment="Left"
-                        FontWeight="Normal"
-                        PlaceholderText="Suche"
-                        QueryIcon="Find" />
-                </StackPanel>
             </Grid>
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
@@ -291,11 +277,9 @@
                                             Click="DeleteClick"
                                             Icon="Delete"
                                             Text="Löschen" />
-
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
-
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>

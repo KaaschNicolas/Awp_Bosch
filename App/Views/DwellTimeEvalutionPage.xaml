@@ -1,4 +1,4 @@
-<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+﻿<!-- Copyright (c) Microsoft Corporation and Contributors. -->
 <!-- Licensed under the MIT License. -->
 
 <Page
@@ -39,13 +39,13 @@
                         Background="{ThemeResource SystemAccentColor}"
                         Opacity=".5" />
 
-                <TextBlock Text="�bersicht der durschnittlichen Verweildauer pro PVB im gesamten Zeitraum"
+                <TextBlock Text="Übersicht der durschnittlichen Verweildauer pro PVB im gesamten Zeitraum"
                            Padding="0"
                            HorizontalAlignment="Stretch"
                            FontSize="16"
                            Margin="10 5" />
 
-                <oxyplot:PlotView Model="{x:Bind ViewModel.DwellTimeBarPlot}"
+                <oxyplot:PlotView Model="{x:Bind ViewModel.DwellTimeBarPlot, Mode=TwoWay}"
                                   x:Name="BarPlot"
                                   Background="Transparent"
                                   Grid.Row="1"

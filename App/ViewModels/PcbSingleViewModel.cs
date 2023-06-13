@@ -100,48 +100,41 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private int _inCirculationDays;
 
     [ObservableProperty]
-    private string _colorDays;
-
-    [ObservableProperty]
     private int _atLocationDays;
 
     [ObservableProperty]
     private SolidColorBrush _colorTransferDays;
 
     private Pcb _pcb;
+    private int _pcbId;
 
     [ObservableProperty]
     private ObservableCollection<Pcb> _pcbs;
 
 
     private readonly IAuthenticationService _authenticationService;
-    private readonly ICrudService<StorageLocation> _storageLocationCrudService;
-    private readonly ICrudService<Diagnose> _diagnoseCrudService;
     private readonly ICrudService<Pcb> _pcbCrudService;
     private readonly IPcbDataService<Pcb> _pcbDataService;
-    private readonly ICrudService<StorageLocation> _storageService;
     private readonly ICrudService<Comment> _commentService;
-    private readonly ICrudService<Device> _deviceService;
     private readonly IDialogService _dialogService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
     private readonly ITransferDataService<Transfer> _transfersService;
 
-    private Pcb _oldPcb;
-
-    public IAsyncRelayCommand FirstAsyncCommand { get; }
-
-
-    public PcbSingleViewModel(IPcbDataService<Pcb> pcbDataService, ICrudService<Pcb> pcbCrudService, ICrudService<StorageLocation> storageService, ICrudService<StorageLocation> storageLocationCrudService, ICrudService<Diagnose> diagnoseCrudService, IInfoBarService infoBarService, ICrudService<Comment> commentService, ICrudService<Device> deviceService, IDialogService dialogService, INavigationService navigationService, IAuthenticationService authenticationService, ITransferDataService<Transfer> transfersService)
+    public PcbSingleViewModel(
+        IPcbDataService<Pcb> pcbDataService,
+        ICrudService<Pcb> pcbCrudService,
+        IInfoBarService infoBarService,
+        ICrudService<Comment> commentService,
+        IDialogService dialogService,
+        INavigationService navigationService,
+        IAuthenticationService authenticationService,
+        ITransferDataService<Transfer> transfersService)
     {
         _pcbDataService = pcbDataService;
         _authenticationService = authenticationService;
-        _storageLocationCrudService = storageLocationCrudService;
-        _diagnoseCrudService = diagnoseCrudService;
         _pcbCrudService = pcbCrudService;
-        _storageService = storageService;
         _commentService = commentService;
-        _deviceService = deviceService;
         _dialogService = dialogService;
         _infoBarService = infoBarService;
         _navigationService = navigationService;
@@ -157,30 +150,16 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         var response = await _dialogService.ShowCreateTransferDialog();
         if (response != null && response.Code == ResponseCode.Success)
         {
-            Transfer addedTransfer = response.Data;
-            var responseTransfer = await _transfersService.GetById(addedTransfer.Id);
-            if (responseTransfer != null && responseTransfer.Code == ResponseCode.Success)
-            {
-                addedTransfer = responseTransfer.Data;
-                addedTransfer.Id = SortedData.Count() + 1;
-                SortedData.Insert(0, addedTransfer);
-                _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
-            }
-            else
-            {
-                _infoBarService.showError("Fehler bei der Weitergabe", "Error");
-            }
-
+            var addedTransfer = response.Data;
+            addedTransfer.Id = SortedData.Count() + 1;
+            SortedData.Insert(0, addedTransfer);
+            _infoBarService.showMessage("Weitergabe erfolgreich", "Erfolg");
+            await Load();
         }
         else if ((response != null && response.Code == ResponseCode.Error) || response == null)
         {
             _infoBarService.showError("Fehler bei der Weitergabe", "Error");
         }
-    }
-
-    private void Refresh(object parameter)
-    {
-        _navigationService.NavigateTo("App.ViewModels.PcbSingleViewModel", SelectedItem.Id);
     }
 
     [RelayCommand]
@@ -277,21 +256,9 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         RestrictionButtonVisibility = Visibility.Collapsed;
     }
 
-
-    // Unregister Messneger when Page is navigated away from
-
-    public async void OnNavigatedTo(object parameter)
+    public async Task Load()
     {
-        int pcbId = (int)parameter;
-
-        // Register Messenger used with ShowTransfer
-        WeakReferenceMessenger.Default.Register<PcbSingleViewModel, CurrentPcbRequestMessage>(this, (r, m) =>
-        {
-            m.Reply(pcbId);
-        });
-
-        var result = await _pcbDataService.GetByIdEager(pcbId);
-
+        var result = await _pcbDataService.GetByIdEager(_pcbId);
         _pcb = result.Data;
         //TODO: Check if selectedItem can be replaced with _pcb
         SelectedItem = _pcb;
@@ -336,38 +303,16 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
 
         Finalized = _pcb.Finalized;
-        if (!Finalized)
-        {
-            Status = "offen";
-        }
-        else
-        {
-            Status = "abgeschlossen";
-        }
-
+        Status = Finalized ? "abgeschlossen" : "offen";
         PcbType = _pcb.PcbType;
         PanelComment = _pcb.Comment;
         DiagnosePcb = _pcb.Diagnose;
-        NotedBy = (_pcb.Transfers.Last()).NotedBy.Name;
-        AtLocationDays = 5;
+        NotedBy = _pcb.Transfers.Last().NotedBy.Name;
 
         InCirculationDays = (int)Math.Round((DateTime.Now - _pcb.CreatedDate).TotalDays);
-        if (InCirculationDays > 5)
-        {
-            ColorDays = "yellow";
-        }
-        else if (InCirculationDays > 10)
-        {
-            ColorDays = "red";
-        }
-        else
-        {
-            ColorDays = "green";
-        }
 
         var transfers = await _transfersService.GetTransfersByPcb(_pcb.Id);
 
-        //_transfers = new ObservableCollection<Transfer>();
         if (transfers.Code == ResponseCode.Success)
         {
             for (int i = 0; i < (transfers.Data).Count; i++)
@@ -398,6 +343,10 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
                             ColorTransferDays = new SolidColorBrush(Colors.LimeGreen);
                         }
                     }
+                    else
+                    {
+                        ColorTransferDays = new SolidColorBrush(Colors.Transparent);
+                    }
                 }
             }
             SortedData = new ObservableCollection<Transfer>(transfers.Data.ToList().OrderByDescending(x => x.CreatedDate));
@@ -408,14 +357,23 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         }
     }
 
+
+    public async void OnNavigatedTo(object parameter)
+    {
+        _pcbId = (int)parameter;
+
+        // Register Messenger used with ShowTransfer
+        WeakReferenceMessenger.Default.Register<PcbSingleViewModel, CurrentPcbRequestMessage>(this, (r, m) =>
+        {
+            m.Reply(_pcbId);
+        });
+
+        await Load();
+    }
+
     public void OnNavigatedFrom()
     {
         WeakReferenceMessenger.Default.UnregisterAll(this);
-    }
-
-    private void NavigateToPcbs()
-    {
-        _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
     }
 
 }

@@ -10,15 +10,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
 
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace App.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class PcbViewPage : Page
     {
         private enum DataGridDisplayMode
@@ -180,7 +173,7 @@ namespace App.Views
 
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(CreatePcbPage));
+            ViewModel.NavigateToCreateCommand.Execute(null);
         }
 
         private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)
@@ -221,12 +214,5 @@ namespace App.Views
         {
             ViewModel.ShowTransferCommand.Execute(null);
         }
-
-        /*private void UIElement_OnLostFocus(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("ok");
-        }*/
-
-
     }
 }

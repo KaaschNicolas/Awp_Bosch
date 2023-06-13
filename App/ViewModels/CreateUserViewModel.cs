@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 
 namespace App.ViewModels;
-public partial class CreateDiagnoseViewModel : ObservableValidator
+public partial class CreateUserViewModel : ObservableValidator
 {
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -16,18 +16,22 @@ public partial class CreateDiagnoseViewModel : ObservableValidator
     [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _name;
 
-    private readonly ICrudService<Diagnose> _crudService;
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
+    private string _adusername;
+
+    private readonly ICrudService<User> _crudService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
 
-    public CreateDiagnoseViewModel(ICrudService<Diagnose> crudService, IInfoBarService infoBarService, INavigationService navigationService)
+    public CreateUserViewModel(ICrudService<User> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
         _infoBarService = infoBarService;
         _navigationService = navigationService;
     }
-
-
 
     [RelayCommand]
     public async Task Save()
@@ -35,28 +39,25 @@ public partial class CreateDiagnoseViewModel : ObservableValidator
         ValidateAllProperties();
         if (!HasErrors)
         {
-            var response = await _crudService.Create(new Diagnose { Name = _name });
+            var response = await _crudService.Create(new User { Name = _name, AdUsername = _adusername });
             if (response != null)
             {
                 if (response.Code == ResponseCode.Success)
                 {
-                    _infoBarService.showMessage("Erfolgreich Fehlerkategorie erstellt", "Erfolg");
-                    _navigationService.NavigateTo("App.ViewModels.DiagnoseViewModel");
+                    _infoBarService.showMessage("Erfolgreich Leiterplatte erstellt", "Erfolg");
+                    _navigationService.NavigateTo("App.ViewModels.UsersViewModel");
                 }
                 else
                 {
                     // TODO Fehler in Dict damit man leichter Fehler ändern kann
-                    _infoBarService.showError("Fehlerkategorie konnte nicht erstellt werden", "Error");
+                    _infoBarService.showError("Benutzer konnte nicht erstellt werden", "Error");
                 }
             }
             else
             {
-                _infoBarService.showError("Fehlerkategorie konnte nicht erstellt werden", "Error");
+                _infoBarService.showError("Benutzer konnte nicht erstellt werden", "Error");
             }
-
-
         }
-
     }
 
     [RelayCommand]
@@ -64,6 +65,4 @@ public partial class CreateDiagnoseViewModel : ObservableValidator
     {
         _navigationService.GoBack();
     }
-
 }
-
