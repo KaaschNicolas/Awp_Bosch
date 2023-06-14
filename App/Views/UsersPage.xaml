@@ -80,7 +80,7 @@
 				<!--  TODO: Replace column definitions to match real data. Consider adding Header values to Resources.resw.  -->
 				<controls:DataGridTextColumn Binding="{Binding AdUsername}" Header="AD-Benutzername" />
 				<controls:DataGridTextColumn Binding="{Binding Name}" Header="Name" />
-				<controls:DataGridTextColumn Header="Berechtigung" />
+				<controls:DataGridTextColumn Binding="{Binding Role}" Header="Berechtigung" />
 				<controls:DataGridTemplateColumn Width="100" Header="Aktion">
 					<controls:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>

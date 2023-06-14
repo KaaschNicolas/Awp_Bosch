@@ -43,11 +43,11 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		<ComboBox
 			Grid.Row="2" 
 			Grid.ColumnSpan="3"
-			DisplayMemberPath="Role"
 			Header="Berechtigung"
 			IsSynchronizedWithCurrentItem="False"
-			ItemsSource="{Binding Roles, Mode=TwoWay}"
-			SelectedItem="{Binding Role, Mode=TwoWay}" />
+			ItemsSource="{Binding Roles}"
+			SelectedItem="{Binding Role, Mode=TwoWay}"
+            />
 		<StackPanel
             Grid.Row="3"
             Grid.ColumnSpan="2"

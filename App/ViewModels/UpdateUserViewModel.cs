@@ -66,7 +66,7 @@ public partial class UpdateUserViewModel : ObservableValidator, INavigationAware
             {
                 if (response.Code == ResponseCode.Success)
                 {
-                    _infoBarService.showMessage("Benutzer erfolgreich erstellt", "Erfolg");
+                    _infoBarService.showMessage("Benutzer erfolgreich bearbeitet", "Erfolg");
                     _navigationService.NavigateTo("App.ViewModels.UsersViewModel");
                 }
                 else
@@ -96,6 +96,6 @@ public partial class UpdateUserViewModel : ObservableValidator, INavigationAware
         _id = _user.Id;
         _name = _user.Name;
         _adusername = _user.AdUsername;
-        _role = _user.Role;
+        Role = _user.Role;
     }
 }
