@@ -8,7 +8,6 @@ using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using System.Linq.Expressions;
 
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
@@ -24,7 +23,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             string queryString = buildQuery();
-            Debug.WriteLine(queryString);
             var query = _boschContext.PcbsDTO
             .FromSqlRaw(queryString)
             .OrderBy(orderByProperty, isAscending)
@@ -313,7 +311,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
 				                    ) AS e on p.Id = e.PcbId
 
                         WHERE rn = 1) as b ";
-        Debug.WriteLine(query);
         return query;
     }
 

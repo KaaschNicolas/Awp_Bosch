@@ -8,7 +8,6 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System.Collections.ObjectModel;
 using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
 
 namespace App.Views
@@ -66,19 +65,16 @@ namespace App.Views
 
         }
 
-        private void ItemsControlLoaded(object sender, RoutedEventArgs e)
-        {
-            ItemsControl iC = (ItemsControl)sender;
-            foreach (CheckBox item in iC.ItemTempla)
-            {
-                _listCheckBox.Add(item);
-            }
-        }
 
-        private void CheckBox_Loaded(object sender, RoutedEventArgs)
+        private void CheckBox_Loaded(object sender, RoutedEventArgs e)
         {
             CheckBox cb = sender as CheckBox;
             _listCheckBox.Add(cb);
+            if ((_listCheckBox.Count - 1) == ViewModel.AllPcbTypes.Count)
+            {
+                SelectAll_Checked(sender, e);
+            }
+
         }
 
         private void Page_Unload(object sender, RoutedEventArgs e)
@@ -128,14 +124,28 @@ namespace App.Views
 
         private void Option_Checked(object sender, RoutedEventArgs e)
         {
-            /*CheckBox cb = sender as CheckBox;
-            ViewModel.SelectedPcbTypes.Add(ViewModel.AllPcbTypes.Where(i => i.PcbPartNumber == (string)cb.Content).Single());*/
+            CheckBox cb = sender as CheckBox;
+            if (cb.Content is not null)
+            {
+                PcbType checkedPcbType = ViewModel.AllPcbTypes.Where(i => i.Description == (string)cb.Content).Single();
+                ViewModel.SelectedPcbTypes.Add(checkedPcbType);
+
+            }
+            if (cb != _listCheckBox[0] && (ViewModel.SelectedPcbTypes.Count == (_listCheckBox.Count - 1)))
+            {
+                _listCheckBox[0].IsChecked = true;
+            }
+
         }
 
         private void Option_Unchecked(object sender, RoutedEventArgs e)
         {
             CheckBox cb = sender as CheckBox;
-            ViewModel.SelectedPcbTypes.Remove(ViewModel.SelectedPcbTypes.Where(i => i.PcbPartNumber == (string)cb.Content).Single());
+            ViewModel.SelectedPcbTypes.Remove(ViewModel.SelectedPcbTypes.Where(i => i.Description == (string)cb.Content).Single());
+            if (cb != _listCheckBox[0])
+            {
+                _listCheckBox[0].IsChecked = null;
+            }
         }
 
         private void SelectAll_Checked(object sender, RoutedEventArgs e)
@@ -144,13 +154,16 @@ namespace App.Views
             {
                 cb.IsChecked = true;
             }
-            ViewModel.SelectedPcbTypes = new ObservableCollection<PcbType>(ViewModel.AllPcbTypes);
 
         }
 
         private void SelectAll_Unchecked(object sender, RoutedEventArgs e)
         {
-            ViewModel.SelectedPcbTypes = new ObservableCollection<PcbType>();
+            foreach (CheckBox cb in _listCheckBox)
+            {
+                cb.IsChecked = false;
+            }
+            ViewModel.SelectedPcbTypes.Clear();
         }
 
 
@@ -194,6 +207,7 @@ namespace App.Views
             _displayMode = DataGridDisplayMode.Default;
             ViewModel.FilterOptions = PcbFilterOptions.None;
             ComboBoxStorageLocation.SelectedItem = null;
+            SelectAll_Checked(sender, e);
             await ViewModel.FirstAsyncCommand.ExecuteAsync(null);
         }
 

@@ -130,7 +130,7 @@ namespace App.ViewModels
         public string SortBy { get => _sortyBy; set => SetProperty(ref _sortyBy, value); }
 
         [ObservableProperty]
-        public ObservableCollection<PcbType> selectedPcbTypes;
+        public ObservableCollection<PcbType> selectedPcbTypes = new();
 
         [ObservableProperty]
         private List<PcbType> _allPcbTypes;
@@ -207,11 +207,20 @@ namespace App.ViewModels
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "DATEDIFF(DAY, CreatedDate, GETDATE()) = 0", SortBy, isAscending, PcbFilterOptions.Filter2);
                         break;
                     case PcbFilterOptions.FilterPcbTypes:
-                        var l = new List<PcbType>(SelectedPcbTypes);
-                        var pcbTypeIds = l.Select(x => x.Id);
-                        string pcbTypeIdsString = string.Join(", ", pcbTypeIds);
-                        maxEntries = await _pcbDataService.MaxEntriesPcbTypes(pcbTypeIdsString);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, pcbTypeIdsString, SortBy, isAscending, PcbFilterOptions.FilterPcbTypes);
+                        if (SelectedPcbTypes.Count > 0)
+                        {
+                            var l = new List<PcbType>(SelectedPcbTypes);
+                            var pcbTypeIds = l.Select(x => x.Id);
+                            string pcbTypeIdsString = string.Join(", ", pcbTypeIds);
+                            maxEntries = await _pcbDataService.MaxEntriesPcbTypes(pcbTypeIdsString);
+                            pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, pcbTypeIdsString, SortBy, isAscending, PcbFilterOptions.FilterPcbTypes);
+
+                        }
+                        else
+                        {
+                            maxEntries = new Response<int>(ResponseCode.Success, 0);
+                            pcbs = new Response<List<PcbDTO>>(ResponseCode.Success, new List<PcbDTO>());
+                        }
                         break;
                     case PcbFilterOptions.FilterStorageLocation:
                         maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);

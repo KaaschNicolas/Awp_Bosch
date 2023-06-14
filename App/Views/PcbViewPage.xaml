@@ -98,7 +98,8 @@
                                                     x:Name="OptionsAllCheckBox"
                                                     Checked="SelectAll_Checked"
                                                     Content="Alle auswählen"
-                                                    IsChecked="True"
+                                                    IsThreeState="True"
+                                                    Loaded="CheckBox_Loaded"
                                                     Unchecked="SelectAll_Unchecked" />
                                                 <ItemsControl x:Name="CheckBoxList" ItemsSource="{Binding AllPcbTypes, Mode=OneWay}">
                                                     <ItemsControl.ItemTemplate>
@@ -107,7 +108,6 @@
                                                                 Margin="24,0,0,0"
                                                                 Checked="Option_Checked"
                                                                 Content="{Binding Description}"
-                                                                IsChecked="True"
                                                                 Loaded="CheckBox_Loaded"
                                                                 Unchecked="Option_Unchecked" />
                                                         </DataTemplate>
@@ -242,7 +242,7 @@
                 </ctWinUI:DataGridTemplateColumn>
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding DwellTime}"
-                    CanUserSort="False"
+                    CanUserSort="True"
                     Header="Verweildauer"
                     Tag="DwellTime" />
                 <ctWinUI:DataGridTextColumn
@@ -251,7 +251,7 @@
                     Tag="SerialNumber" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding PcbPartNumber}"
-                    CanUserSort="False"
+                    CanUserSort="True"
                     Header="Sachnummer"
                     Tag="PcbPartNumber" />
                 <ctWinUI:DataGridComboBoxColumn
@@ -271,6 +271,7 @@
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding TransferCount}"
                     Header="Weitergaben"
+                    CanUserSort="True"
                     Tag="TransferCount" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding StorageName}"
