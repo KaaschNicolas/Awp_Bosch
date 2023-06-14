@@ -23,7 +23,8 @@ namespace App.ViewModels
             IInfoBarService infoBarService,
             IDialogService dialogService,
             INavigationService navigationService,
-            ITransferDataService<Transfer> transferDataService
+            ITransferDataService<Transfer> transferDataService,
+            ICrudService<PcbType> pcbTypeCrudService
         )
         {
 
@@ -58,17 +59,20 @@ namespace App.ViewModels
                 () => _pageNumber != _pageCount && _filterOptions != PcbFilterOptions.None
             );
 
+
             FilterOptions = PcbFilterOptions.None;
             _dialogService = dialogService;
             _infoBarService = infoBarService;
             _navigationService = navigationService;
             _transferDataService = transferDataService;
             _storageLocationCrudService = storageLocationDataService;
+            _pcbTypeCrudService = pcbTypeCrudService;
             Refresh();
         }
 
         private readonly IPcbDataService<Pcb> _pcbDataService;
         private readonly ICrudService<StorageLocation> _storageLocationCrudService;
+        private readonly ICrudService<PcbType> _pcbTypeCrudService;
         private readonly IInfoBarService _infoBarService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
@@ -125,6 +129,26 @@ namespace App.ViewModels
 
         public string SortBy { get => _sortyBy; set => SetProperty(ref _sortyBy, value); }
 
+        [ObservableProperty]
+        public ObservableCollection<PcbType> selectedPcbTypes;
+
+        [ObservableProperty]
+        private List<PcbType> _allPcbTypes;
+
+
+        private async Task GetPcbTypes()
+        {
+            var response = await _pcbTypeCrudService.GetAll();
+            if (response != null && response.Code == ResponseCode.Success)
+            {
+                AllPcbTypes = response.Data;
+            }
+            else
+            {
+                _infoBarService.showError("Fehler beim Laden der Sachnnummern", "Error");
+            }
+        }
+
         private async Task CreatePcbList(int pageIndex, int pageSize, List<PcbDTO> pcbs, bool isAscending, int maxEntries)
         {
 
@@ -142,11 +166,13 @@ namespace App.ViewModels
 
         }
 
+
         private async Task GetPcbs(int pageIndex, int pageSize, bool isAscending)
         {
 
             Response<List<PcbDTO>> pcbs;
             Response<int> maxEntries;
+
 
             // Get storage locations for filter
 
@@ -173,16 +199,23 @@ namespace App.ViewModels
                     case PcbFilterOptions.Filter1:
                         Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "Finalized = 1", SortBy, isAscending);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "Finalized = 1", SortBy, isAscending, PcbFilterOptions.Filter1);
                         break;
                     case PcbFilterOptions.Filter2:
                         Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.UtcNow.Date;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "DATEDIFF(DAY, CreatedDate, GETDATE()) = 0", SortBy, isAscending);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "DATEDIFF(DAY, CreatedDate, GETDATE()) = 0", SortBy, isAscending, PcbFilterOptions.Filter2);
+                        break;
+                    case PcbFilterOptions.FilterPcbTypes:
+                        var l = new List<PcbType>(SelectedPcbTypes);
+                        var pcbTypeIds = l.Select(x => x.Id);
+                        string pcbTypeIdsString = string.Join(", ", pcbTypeIds);
+                        maxEntries = await _pcbDataService.MaxEntriesPcbTypes(pcbTypeIdsString);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, pcbTypeIdsString, SortBy, isAscending, PcbFilterOptions.FilterPcbTypes);
                         break;
                     case PcbFilterOptions.FilterStorageLocation:
                         maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, SelectedComboBox.Id.ToString(), SortBy, isAscending, true);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, SelectedComboBox.Id.ToString(), SortBy, isAscending, PcbFilterOptions.FilterStorageLocation);
                         break;
                     default:
                         maxEntries = await _pcbDataService.MaxEntries();
@@ -288,9 +321,10 @@ namespace App.ViewModels
 
 
 
-        public void OnNavigatedTo(object parameter)
+        public async void OnNavigatedTo(object parameter)
         {
             IsActive = true; // invokes onActivated
+            await GetPcbTypes();
         }
 
 

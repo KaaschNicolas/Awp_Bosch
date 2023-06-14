@@ -8,12 +8,14 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using System.Collections.ObjectModel;
 using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
 
 namespace App.Views
 {
     public sealed partial class PcbViewPage : Page
     {
+        private List<CheckBox> _listCheckBox = new();
         private enum DataGridDisplayMode
         {
             Default,
@@ -29,11 +31,13 @@ namespace App.Views
         {
             ViewModel = App.GetService<PcbPaginationViewModel>();
             InitializeComponent();
+            DataContext = ViewModel;
             Loaded += Page_Loaded;
             Unloaded += Page_Unload;
             ViewModel.FilterOptions = PcbFilterOptions.None;
             ViewModel.SortBy = DataGrid.Columns[0].Tag.ToString();
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
+            var cbList = PcbTypesFilterMenuItem.FindName("CheckBoxList");
         }
 
         private DataGridDisplayMode _displayMode = DataGridDisplayMode.Default;
@@ -58,6 +62,23 @@ namespace App.Views
             DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Descending;
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
             ViewModel.FilterOptions = PcbFilterOptions.None;
+
+
+        }
+
+        private void ItemsControlLoaded(object sender, RoutedEventArgs e)
+        {
+            ItemsControl iC = (ItemsControl)sender;
+            foreach (CheckBox item in iC.ItemTempla)
+            {
+                _listCheckBox.Add(item);
+            }
+        }
+
+        private void CheckBox_Loaded(object sender, RoutedEventArgs)
+        {
+            CheckBox cb = sender as CheckBox;
+            _listCheckBox.Add(cb);
         }
 
         private void Page_Unload(object sender, RoutedEventArgs e)
@@ -105,6 +126,35 @@ namespace App.Views
             await ViewModel.SortByCommand.ExecuteAsync(null); //hier nochmal schauen
         }
 
+        private void Option_Checked(object sender, RoutedEventArgs e)
+        {
+            /*CheckBox cb = sender as CheckBox;
+            ViewModel.SelectedPcbTypes.Add(ViewModel.AllPcbTypes.Where(i => i.PcbPartNumber == (string)cb.Content).Single());*/
+        }
+
+        private void Option_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+            ViewModel.SelectedPcbTypes.Remove(ViewModel.SelectedPcbTypes.Where(i => i.PcbPartNumber == (string)cb.Content).Single());
+        }
+
+        private void SelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            foreach (CheckBox cb in _listCheckBox)
+            {
+                cb.IsChecked = true;
+            }
+            ViewModel.SelectedPcbTypes = new ObservableCollection<PcbType>(ViewModel.AllPcbTypes);
+
+        }
+
+        private void SelectAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SelectedPcbTypes = new ObservableCollection<PcbType>();
+        }
+
+
+
         private async void Filter1_Click(object Sender, RoutedEventArgs e)
         {
             _displayMode = DataGridDisplayMode.Filtered;
@@ -128,6 +178,15 @@ namespace App.Views
             ViewModel.FilterOptions = PcbFilterOptions.Filter3;
             ComboBoxStorageLocation.SelectedItem = null;
             await ViewModel.FilterItems.ExecuteAsync(null);
+        }
+
+        private async void FilterPcbTypes_Click(object Sender, RoutedEventArgs e)
+        {
+            _displayMode = DataGridDisplayMode.Filtered;
+            ViewModel.FilterOptions = PcbFilterOptions.FilterPcbTypes;
+            ComboBoxStorageLocation.SelectedItem = null;
+            await ViewModel.FilterItems.ExecuteAsync(null);
+
         }
 
         private async void FilterClear_Click(object sender, RoutedEventArgs e)
