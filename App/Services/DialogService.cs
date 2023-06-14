@@ -1,9 +1,12 @@
 ﻿using App.Contracts.Services;
 using App.Controls;
+using App.Core.DataAccess;
 using App.Core.Models;
 using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.DirectoryServices.ActiveDirectory;
+using ZXing;
 
 namespace App.Services;
 
@@ -14,6 +17,10 @@ public sealed class DialogService : IDialogService
 {
     /// <inheritdoc/>
     private readonly FrameworkElement? rootElement = App.MainWindow.Content as FrameworkElement;
+    private BoschContext _boschContext;
+
+    public DialogService(BoschContext boschContext) => _boschContext = boschContext;
+    public DialogService() { }
 
     public async Task<bool?> ConfirmDeleteDialogAsync(string title, string content, string confirmButtonText, string cancelButtonText)
     {
@@ -110,6 +117,37 @@ public sealed class DialogService : IDialogService
 
         }
         return null;
+    }
+
+    public async Task<bool> RetryConnectionDialog(string title, string confirmButtonText)
+    {
+        if(rootElement != null)
+        {
+            TextBlock textBlock = new() { Text = "Erneut verbinden." };
+
+            var dialog = new ContentDialog
+            {
+                Title = title,
+                Content = textBlock,
+                PrimaryButtonText = confirmButtonText,
+                DefaultButton = ContentDialogButton.Primary,
+                RequestedTheme = rootElement.RequestedTheme,
+                XamlRoot = rootElement.XamlRoot
+            };
+
+            var res = await dialog.ShowAsync();
+            if (res == ContentDialogResult.None)
+            {
+                return false;
+            }
+            if (res == ContentDialogResult.Primary)
+            {
+                return await _boschContext.Database.CanConnectAsync();
+            }
+            return false;
+
+        }
+        return false;
     }
 
 

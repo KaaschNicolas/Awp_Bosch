@@ -28,8 +28,11 @@ public class LoggingService : ILoggingService
         _logger.Log(logLevel: logLevel, message: message);
         try
         {
-            _boschContext.AuditEntries.Add(auditEntry);
-            _boschContext.SaveChanges();
+            if (_boschContext.Database.CanConnect())
+            {
+                _boschContext.AuditEntries.Add(auditEntry);
+                _boschContext.SaveChanges();
+            }
         }
         catch (DbUpdateException ex)
         {

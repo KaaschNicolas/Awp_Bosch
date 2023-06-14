@@ -21,11 +21,15 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     {
         try
         {
-            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} hinzugefügt", null);
+            if (await CanConnect())
+            {
+                _loggingService.Audit(LogLevel.Information, $"{typeof(T)} hinzugefügt", null);
 
-            EntityEntry<T> entityEntry = await _boschContext.Set<T>().AddAsync(entity);
-            await _boschContext.SaveChangesAsync();
-            return new Response<T>(ResponseCode.Success, (T)entityEntry.Entity);
+                EntityEntry<T> entityEntry = await _boschContext.Set<T>().AddAsync(entity);
+                await _boschContext.SaveChangesAsync();
+                return new Response<T>(ResponseCode.Success, (T)entityEntry.Entity);
+            }
+            throw new DbUpdateException();
         }
         catch (Exception ex)
         {
@@ -39,13 +43,17 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     {
         try
         {
-            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {entity.Id} upgedated", null);
+            if (await CanConnect())
+            {
+                _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {entity.Id} upgedated", null);
 
-            var entry = _boschContext.Set<T>().First(e => e.Id == entity.Id);
-            _boschContext.Entry(entry).CurrentValues.SetValues(entity);
-            await _boschContext.SaveChangesAsync();
+                var entry = _boschContext.Set<T>().First(e => e.Id == entity.Id);
+                _boschContext.Entry(entry).CurrentValues.SetValues(entity);
+                await _boschContext.SaveChangesAsync();
 
-            return new Response<T>(ResponseCode.Success, entity);
+                return new Response<T>(ResponseCode.Success, entity);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -58,11 +66,15 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     {
         try
         {
-            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {entity.Id} erfolgreich gelöscht.", null);
+            if (await CanConnect())
+            {
+                _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {entity.Id} erfolgreich gelöscht.", null);
 
-            entity.DeletedDate = DateTime.Now;
-            await _boschContext.SaveChangesAsync();
-            return new Response<T>(ResponseCode.Success, $"{typeof(T)} erfolgreich gelöscht.");
+                entity.DeletedDate = DateTime.Now;
+                await _boschContext.SaveChangesAsync();
+                return new Response<T>(ResponseCode.Success, $"{typeof(T)} erfolgreich gelöscht.");
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -75,19 +87,23 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     {
         try
         {
-            _loggingService.Log(LogLevel.Debug, $"GetAll()");
-
-            var list = await _boschContext.Set<T>().ToListAsync();
-            var res = new List<T>();
-            foreach (var item in list)
+            if (await CanConnect())
             {
-                if (item.DeletedDate < item.CreatedDate)
-                {
-                    res.Add(item);
-                }
-            }
+                _loggingService.Log(LogLevel.Debug, $"GetAll()");
 
-            return new Response<List<T>>(ResponseCode.Success, data: res);
+                var list = await _boschContext.Set<T>().ToListAsync();
+                var res = new List<T>();
+                foreach (var item in list)
+                {
+                    if (item.DeletedDate < item.CreatedDate)
+                    {
+                        res.Add(item);
+                    }
+                }
+
+                return new Response<List<T>>(ResponseCode.Success, data: res);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -100,14 +116,30 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
     {
         try
         {
-            _loggingService.Log(LogLevel.Debug, $"GetById");
-            var entity = await _boschContext.Set<T>().Where(x => x.Id == id).ToListAsync();
-            return new Response<T>(ResponseCode.Success, entity.First());
+            if (await CanConnect())
+            {
+                _loggingService.Log(LogLevel.Debug, $"GetById");
+                var entity = await _boschContext.Set<T>().Where(x => x.Id == id).ToListAsync();
+                return new Response<T>(ResponseCode.Success, entity.First());
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
             _loggingService.Log(LogLevel.Error, "Error GetById()");
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
+        }
+    }
+
+    protected async Task<bool> CanConnect()
+    {
+        try
+        {
+            return await _boschContext.Database.CanConnectAsync();
+        }
+        catch (DbUpdateException)
+        {
+            return false;
         }
     }
 
