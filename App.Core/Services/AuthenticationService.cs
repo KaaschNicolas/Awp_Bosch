@@ -1,5 +1,6 @@
 ﻿using App.Core.DataAccess;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 
 namespace App.Core.Services
@@ -53,6 +54,33 @@ namespace App.Core.Services
                 }
                 return _currentUser;
             }
+        }
+
+        public bool IsAdmin 
+        {
+            get 
+            {
+                return hasRole(Role.Admin);
+            }
+        }
+        public bool IsSchichtleitung
+        {
+            get
+            {
+                return hasRole(Role.Schichtleitung);
+            }
+        }
+
+        public bool IsLesezugriff
+        {
+            get
+            {
+                return hasRole(Role.Lesezugriff);
+            }
+        }
+
+        private bool hasRole(Role role) {
+           return CurrentUser.Role.Equals(role);
         }
     }
 }
