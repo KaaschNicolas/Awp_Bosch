@@ -13,7 +13,7 @@ namespace App.Core.DTOs
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string StorageName { get; set; }
 
         public List<Pcb> Pcbs { get; set; }
 

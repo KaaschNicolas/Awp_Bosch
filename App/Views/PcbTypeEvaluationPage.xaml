@@ -8,7 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:viewModels="using:App.ViewModels"
     xmlns:xaml="using:Microsoft.UI.Xaml"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    xmlns:oxyplot="using:OxyPlot">
 
 	<behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 		<DataTemplate x:DataType="viewModels:PcbTypeEvaluationViewModel">
@@ -62,7 +63,13 @@
                 PlaceholderText="Suche"
                 FontWeight="Normal"
                 QueryIcon="Find"
-		        Header="Sachnummer"/>
+		        Header="Sachnummer"
+                DisplayMemberPath="PcbPartNumber"
+                ItemsSource="{x:Bind ViewModel.PcbTypes}"
+                SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                Text="{x:Bind ViewModel.SelectedPcbType}"
+                TextChanged="AutoSuggestBox_TextChanged"
+                TextMemberPath="PcbPartNumber"/>
             <CalendarDatePicker
                 Margin="10,0,0,0"
                 Header="Stichtag"/>
@@ -133,7 +140,7 @@
         </StackPanel>
         
         <!-- rechtes Panel -->
-        <StackPanel
+        <!--<StackPanel
             Grid.Column="1"
             Grid.Row="0"
             Padding="10"
@@ -154,7 +161,13 @@
                 PlaceholderText="Suche"
                 FontWeight="Normal"
                 QueryIcon="Find"
-		        Header="Sachnummer"/>
+		        Header="Sachnummer"
+                DisplayMemberPath="PcbPartNumber"
+                ItemsSource="{x:Bind ViewModel.PcbTypes}"
+                SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                Text="{x:Bind ViewModel.SelectedPcbType}"
+                TextChanged="AutoSuggestBox_TextChanged"
+                TextMemberPath="PcbPartNumber"/>
             <CalendarDatePicker
                 Margin="10,0,0,0"
                 Header="Stichtag"/>
@@ -172,9 +185,20 @@
                 DefaultLabelPosition="Right"
                 IsOpen="False"
                 VerticalAlignment="Bottom">
-
             </CommandBar>
-        </StackPanel>
+        </StackPanel>-->
+
+            
+
         
+        <oxyplot:PlotView x:Name="pieChart" 
+                          Grid.Column="1"
+                          Grid.Row="1"
+                          Grid.RowSpan="4"
+                          Margin="20,0,0,0"
+                          Height="250"
+                          Model="{x:Bind ViewModel.PcbTypeFinalizedModel, Mode=TwoWay}"
+                          HorizontalContentAlignment="Center"
+                          Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
     </Grid>
 </Page>
