@@ -1,6 +1,7 @@
 ﻿using App.Contracts.Services;
 using App.Contracts.ViewModels;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using App.Errors;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -23,6 +24,16 @@ public partial class UpdateUserViewModel : ObservableValidator, INavigationAware
     [Required(ErrorMessage = ValidationErrorMessage.Required)]
     [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _adusername;
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
+    private Role _role;
+
+    public IEnumerable<Role> Roles {
+        get {
+            return Enum.GetValues(typeof(Role)).Cast<Role>();
+            } 
+    }
 
     private int _id;
 
@@ -47,13 +58,14 @@ public partial class UpdateUserViewModel : ObservableValidator, INavigationAware
             _user.Id = _id;
             _user.Name = _name;
             _user.AdUsername = _adusername;
+            _user.Role = _role;
 
             var response = await _crudService.Update(_id, _user);
             if (response != null)
             {
                 if (response.Code == ResponseCode.Success)
                 {
-                    _infoBarService.showMessage("Benutzer erfolgreich erstellt", "Erfolg");
+                    _infoBarService.showMessage("Benutzer erfolgreich bearbeitet", "Erfolg");
                     _navigationService.NavigateTo("App.ViewModels.UsersViewModel");
                 }
                 else
@@ -83,5 +95,6 @@ public partial class UpdateUserViewModel : ObservableValidator, INavigationAware
         _id = _user.Id;
         _name = _user.Name;
         _adusername = _user.AdUsername;
+        Role = _user.Role;
     }
 }

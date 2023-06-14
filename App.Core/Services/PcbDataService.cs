@@ -22,7 +22,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            string queryString = buildQuery();
+            string queryString = BuildQuery();
+
             var query = _boschContext.PcbsDTO
             .FromSqlRaw(queryString)
             .OrderBy(orderByProperty, isAscending)
@@ -76,7 +77,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var query = _boschContext.PcbsDTO
-                .FromSqlRaw(buildQuery(whereFilterOnPcbTypes: selectedPcbTypesId))
+                .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: selectedPcbTypesId))
                 .CountAsync();
             int count = await query;
             return new Response<int>(ResponseCode.Success, data: count);
@@ -92,7 +93,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var query = _boschContext.PcbsDTO
-                .FromSqlRaw(buildQuery(whereFilterOnStorageLocation: storageLocationId.ToString()))
+                .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: storageLocationId.ToString()))
                 .CountAsync();
             int count = await query;
             return new Response<int>(ResponseCode.Success, data: count);
@@ -125,7 +126,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             var query = _boschContext.PcbsDTO
-                       .FromSqlRaw(buildQuery(likeFilterOnPcb: queryText))
+                       .FromSqlRaw(BuildQuery(likeFilterOnPcb: queryText))
                        .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
                        .Take(pageSize)
                        .ToListAsync();
@@ -148,17 +149,18 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             {
                 case PcbFilterOptions.FilterStorageLocation:
                     query = _boschContext.PcbsDTO
-                    .FromSqlRaw(buildQuery(whereFilterOnStorageLocation: value));
+                    .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: value));
                     break;
                 case PcbFilterOptions.FilterPcbTypes:
                     query = _boschContext.PcbsDTO
-                    .FromSqlRaw(buildQuery(whereFilterOnPcbTypes: value));
+                    .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: value));
                     break;
                 default:
                     query = _boschContext.PcbsDTO
-                   .FromSqlRaw(buildQuery(whereFilterOnPcb: value));
+                   .FromSqlRaw(BuildQuery(whereFilterOnPcb: value));
                     break;
             }
+
             var data = query
                 .OrderBy(orderByProperty, isAscending)
                 .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
@@ -177,9 +179,9 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {id} erfolgreich gelöscht.",
+            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {id} erfolgreich gelÃ¶scht.",
                 null);
-            //setzt alle DeletedDate der anhängenden Objekte null, die es auch nur für diese Leiterplatte gibt.
+            //setzt alle DeletedDate der anhÃ¤ngenden Objekte null, die es auch nur fÃ¼r diese Leiterplatte gibt.
 
             Pcb pcb = _boschContext.Set<T>()
                 .Where(x => x.Id.Equals(id))
@@ -208,13 +210,13 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
                 await _boschContext.SaveChangesAsync();
             }
 
-            return new Response<T>(ResponseCode.Success, $"{typeof(T)} erfolgreich gelöscht.");
+            return new Response<T>(ResponseCode.Success, $"{typeof(T)} erfolgreich gelÃ¶scht.");
         }
         catch (DbUpdateException)
         {
-            _loggingService.Audit(LogLevel.Error, $"Fehler beim Löschen von {typeof(T)} mit der ID {id}", null);
+            _loggingService.Audit(LogLevel.Error, $"Fehler beim LÃ¶schen von {typeof(T)} mit der ID {id}", null);
             return new Response<T>(ResponseCode.Error,
-                error: $"Fehler beim Löschen von {typeof(T)} mit der ID {id}");
+                error: $"Fehler beim LÃ¶schen von {typeof(T)} mit der ID {id}");
         }
     }
 
@@ -242,7 +244,8 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    private string buildQuery(
+
+    private string BuildQuery(
         string? whereFilterOnStorageLocation = null,
         string? whereFilterOnPcb = null,
         string? likeFilterOnPcb = null,
