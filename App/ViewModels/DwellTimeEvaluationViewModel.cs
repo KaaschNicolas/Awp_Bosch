@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using App.Core.DTOs;
 using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
@@ -19,14 +20,22 @@ namespace App.ViewModels
         [ObservableProperty]
         private PlotModel _dwellTimeBarPlot;
 
+        [ObservableProperty]
+        private DateTime? _from;
+
+        [ObservableProperty]
+        private DateTime? _to;
+
+        public DateTime MaxDate { get; private set; } = DateTime.Now;
+
         public DwellTimeEvaluationViewModel(ITransferDataService<Transfer> transferDataService, IStorageLocationDataService<StorageLocation> storageLocationDataService)
         {
             _transferDataService = transferDataService;
             _storageLocationDataService = storageLocationDataService;
             GeneratePlotCommand = new AsyncRelayCommand(
-                GeneratePlot
+                async () => await GeneratePlot()
             );
-            Refresh();  
+              
         }
 
         private ITransferDataService<Transfer> _transferDataService;
@@ -46,68 +55,60 @@ namespace App.ViewModels
             var model = new PlotModel();
 
             // specify axis keys
-            var barSeries = new BarSeries { XAxisKey = "Value", YAxisKey = "Category" };
-            List<BarItem> barItems = await FillData();
-            barItems.ForEach(x => barSeries.Items.Add(x));
+            var barSeries = new BarSeries 
+            { 
+                XAxisKey = "Value",
+                YAxisKey = "Category",
+                LabelPlacement = LabelPlacement.Outside 
+            };
+
+            var avgDwellTimeDTO = await _transferDataService.GetAvgDwellTimeByStorageLocation(_from, _to);
             
-            model.Series.Add(barSeries);
+            if (avgDwellTimeDTO.Code == ResponseCode.Success)
+            {
+                var barItems = new List<BarItem>();
+                avgDwellTimeDTO.Data.ForEach(x => barItems.Add(new BarItem() { Value = x.AvgDwellTime }));
+                barItems.ForEach(x => barSeries.Items.Add(x));
+                //barItems.ForEach(x => x.Color = myColors[myRandom.Next(myColors.Count - 1)]);
+                model.Series.Add(barSeries);
+
+                // specify key and position
+                var categoryAxis = new CategoryAxis
+                { 
+                    Position = AxisPosition.Bottom,
+                    Key = "Category",
+                    IsZoomEnabled = false 
+                };
+                var storageLocation = await _storageLocationDataService.GetAll();
+                avgDwellTimeDTO.Data.ForEach(x => categoryAxis.Labels.Add(x.StorageName));
+                model.Axes.Add(categoryAxis);
+            }
 
             // specify key and position
-            var categoryAxis = new CategoryAxis { Position = AxisPosition.Bottom, Key = "Category" };
-            categoryAxis.IsZoomEnabled = false;
-            var storageLocation = await _storageLocationDataService.GetAll();
-            storageLocation.Data.ForEach(x => categoryAxis.Labels.Add(x.StorageName));
-            
-            model.Axes.Add(categoryAxis);
-
-            // specify key and position
-            var valueAxis = new LinearAxis { Position = AxisPosition.Left, Key = "Value" };
-            valueAxis.IsZoomEnabled = false;
+            var valueAxis = new LinearAxis 
+            { 
+                Position = AxisPosition.Left,
+                Key = "Value",
+                IsZoomEnabled = false,
+                Title = "Tage",
+                TitlePosition = 0.9
+            };
             model.Axes.Add(valueAxis);
-
             return model;
         }
 
-        public async Task<List<BarItem>> FillData()
+        private Random myRandom = new Random();
+
+        private List<OxyColor> myColors = new List<OxyColor>()
         {
-            var data = await _transferDataService.GetAllEager();
-            var barItems = new List<BarItem>();
-            if (data.Code == ResponseCode.Success)
-            {
-                Dictionary<StorageLocation, double> keyValuePairs = new Dictionary<StorageLocation, double>();
-                int count = 0;
-                Dictionary<int, int> keys = new();
-                foreach (var key in data.Data)
-                {
-                    if (!keys.Keys.Contains(key.Id))
-                    {
-                        keys.Add(key.Id, 0);
-                    }
-                }
-
-                foreach (var item in data.Data)
-                {
-                    if (!keyValuePairs.Keys.Contains(item.StorageLocation))
-                    {
-                        count++;
-                        keyValuePairs.Add(item.StorageLocation, Math.Round((DateTime.Now - item.CreatedDate).TotalDays));
-                    }
-                    else
-                    {
-                        count++;
-                        keyValuePairs[item.StorageLocation] += Math.Round((DateTime.Now - item.CreatedDate).TotalDays);
-                    }
-                }
-
-                
-
-                foreach (var item in keyValuePairs)
-                {
-                    barItems.Add(new BarItem(item.Value));
-                }
-            }
-            return barItems;
-        }
+            OxyColor.FromRgb(0, 191, 70),
+            OxyColor.FromRgb(222, 0, 26),
+            OxyColor.FromRgb(0, 232, 85),
+            OxyColor.FromRgb(194, 43, 240),
+            OxyColor.FromRgb(43, 151, 240),
+            OxyColor.FromRgb(5, 93, 166),
+            OxyColor.FromRgb(5, 166, 134)
+        };
 
         private void Refresh()
         {

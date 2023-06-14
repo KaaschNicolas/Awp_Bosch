@@ -72,35 +72,46 @@ public partial class TransferDialogViewModel : ObservableValidator
 
     private async void LoadData()
     {
-        SelectedPcb = WeakReferenceMessenger.Default.Send<CurrentPcbRequestMessage>();
-        var response = await _pcbDataService.GetByIdEager(SelectedPcb.Id);
+        int selectedPcbId = WeakReferenceMessenger.Default.Send<CurrentPcbRequestMessage>();
+        var response = await _pcbDataService.GetByIdEager(selectedPcbId);
         if (response != null && response.Code == ResponseCode.Success)
         {
             SelectedPcb = response.Data;
+            // check if max transfer is exceeded
+            if (SelectedPcb.Transfers.Count > 0)
+            {
+                int maxTransfer = SelectedPcb.PcbType.MaxTransfer;
+                int transferCount = SelectedPcb.Transfers.Count;
+                HasMaxTransfer = transferCount >= maxTransfer ? true : false;
+                MaxTransferError = $"Weitergaben Anzahl: {transferCount} von max. {maxTransfer}";
+            }
+            //TODO: Error handling
+            var resStorageLocations = await _storageLocationCrudService.GetAll();
+            if (resStorageLocations.Code == ResponseCode.Success)
+            {
+                resStorageLocations.Data.ForEach(x => StorageLocations.Add(x));
+            }
+            else
+            {
+                _infoBarService.showError("Fehler beim Laden der Lagerorte", "Error");
+            }
+
+            var resDiagnoses = await _diagnoseCrudService.GetAll();
+            if (resDiagnoses.Code == ResponseCode.Success)
+            {
+                resDiagnoses.Data.ForEach(x => Diagnoses.Add(x));
+            }
+            else
+            {
+                _infoBarService.showError("Fehler beim Laden der Fehlerkategorien", "Error");
+            }
         }
-        // check if max transfer is exceeded
-        if (SelectedPcb.Transfers.Count > 0)
+        else
         {
-            int maxTransfer = SelectedPcb.PcbType.MaxTransfer;
-            int transferCount = SelectedPcb.Transfers.Count;
-            HasMaxTransfer = transferCount >= maxTransfer ? true : false;
-            MaxTransferError = $"Weitergaben Anzahl: {transferCount} von max. {maxTransfer}";
-        }
-        //TODO: Error handling
-        var resStorageLocations = await _storageLocationCrudService.GetAll();
-        if (resStorageLocations.Code == ResponseCode.Success)
-        {
-            resStorageLocations.Data.ForEach(x => StorageLocations.Add(x));
+            _infoBarService.showError("Fehler beim Laden der Leiterplatte", "Error");
         }
 
-        var resDiagnoses = await _diagnoseCrudService.GetAll();
-        if (resDiagnoses.Code == ResponseCode.Success)
-        {
-            resDiagnoses.Data.ForEach(x => Diagnoses.Add(x));
-        }
     }
-
-
     public async Task<Response<Transfer>> Save()
     {
 

@@ -106,6 +106,7 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     private SolidColorBrush _colorTransferDays;
 
     private Pcb _pcb;
+    private int _pcbId;
 
     [ObservableProperty]
     private ObservableCollection<Pcb> _pcbs;
@@ -161,11 +162,10 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         }
     }
 
-
     [RelayCommand]
     public void Edit()
     {
-        _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", _selectedItem);
+        _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", SelectedItem.Id);
     }
 
     [RelayCommand]
@@ -181,9 +181,9 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         var result = await _dialogService.ConfirmDeleteDialogAsync("Leiterplatte Löschen", "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?");
         if (result != null && result == true)
         {
-            Pcb pcbToRemove = _selectedItem;
-            _pcbs.Remove(pcbToRemove);
-            await _pcbDataService.Delete(pcbToRemove);
+            Pcb pcbToRemove = SelectedItem;
+            Pcbs.Remove(pcbToRemove);
+            await _pcbDataService.Delete(pcbToRemove.Id);
             _navigationService.NavigateTo("App.ViewModels.PcbPaginationViewModel");
             _infoBarService.showMessage("Erfolgreich Leiterplatte gelöscht", "Erfolg");
         }
@@ -258,9 +258,10 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     public async Task Load()
     {
-        var result = await _pcbDataService.GetByIdEager(SelectedItem.Id);
-
+        var result = await _pcbDataService.GetByIdEager(_pcbId);
         _pcb = result.Data;
+        //TODO: Check if selectedItem can be replaced with _pcb
+        SelectedItem = _pcb;
 
         if (_pcb.Restriction.Name == "")
         {
@@ -359,14 +360,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     public async void OnNavigatedTo(object parameter)
     {
-        _pcb = (Pcb)parameter;
-
-        SelectedItem = _pcb;
+        _pcbId = (int)parameter;
 
         // Register Messenger used with ShowTransfer
         WeakReferenceMessenger.Default.Register<PcbSingleViewModel, CurrentPcbRequestMessage>(this, (r, m) =>
         {
-            m.Reply(r.SelectedItem);
+            m.Reply(_pcbId);
         });
 
         await Load();

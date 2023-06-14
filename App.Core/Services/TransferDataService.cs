@@ -1,9 +1,13 @@
 ﻿using App.Core.DataAccess;
+using App.Core.DTOs;
 using App.Core.Models;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.Linq.Expressions;
 
 namespace App.Core.Services
 {
@@ -98,6 +102,59 @@ namespace App.Core.Services
             {
                 return new Response<List<T>>(ResponseCode.Success, error: "GetAllEager() failed");
             }
+        }
+
+        public async Task<Response<List<DwellTimeEvaluationDTO>>> GetAvgDwellTimeByStorageLocation(DateTime? from, DateTime? to)
+        {
+            try
+            {
+                string queryString = string.Empty;
+                if (from != null && to != null)
+                {
+                    queryString = BuildQuery(from, to);
+                }
+                else
+                {
+                    queryString = BuildQuery(null, null);
+                }
+                var data = await _boschContext
+                    .DwellTimeEvaluationDTO
+                    .FromSqlRaw(queryString)
+                    .ToListAsync();
+                return new Response<List<DwellTimeEvaluationDTO>>(ResponseCode.Success, data: data);
+            }
+            catch (DbUpdateException)
+            {
+                return new Response<List<DwellTimeEvaluationDTO>>(ResponseCode.Error, error: "GetAvgDwellTimeByStorageLocation() failed");
+            }
+        }
+
+        private string BuildQuery(DateTime? from, DateTime? to)
+        {
+            string dateCheck = null;
+            if (from != null && to != null)
+            {
+                var newFrom = (DateTime)from;
+                var newTo = (DateTime)to;
+                dateCheck = $"AND CreatedDate BETWEEN '{newFrom.ToString("yyyy-MM-dd HH:mm:ss")}' AND '{newTo.ToString("yyyy-MM-dd HH:mm:ss")}'";
+            }
+            return $@"SELECT b.StorageName,
+                    ROUND(AVG(CAST(DwellTime AS FLOAT)), 2) AS AvgDwellTime
+                    FROM
+                        (SELECT PcbId,
+                                t.Id,
+                                CreatedDate AS TransferDate,
+                                StorageLocationId,
+                                s.StorageName,
+                                DATEDIFF(DAY, CreatedDate, lag(CreatedDate, 1, GETDATE()) OVER(PARTITION BY PcbId
+                                        ORDER BY PcbId DESC, CreatedDate DESC)) AS DwellTime
+                        FROM Transfers AS t
+                        INNER JOIN
+                            (SELECT Id,
+                                    StorageName
+                            FROM StorageLocations) AS s ON s.Id = t.StorageLocationId
+                        WHERE CreatedDate > DeletedDate {dateCheck}) AS b
+                    GROUP BY b.StorageName";
         }
     }
 }

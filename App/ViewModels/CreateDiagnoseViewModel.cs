@@ -40,18 +40,18 @@ public partial class CreateDiagnoseViewModel : ObservableValidator
             {
                 if (response.Code == ResponseCode.Success)
                 {
-                    _infoBarService.showMessage("Erfolgreich Leiterplatte erstellt", "Erfolg");
+                    _infoBarService.showMessage("Erfolgreich Fehlerkategorie erstellt", "Erfolg");
                     _navigationService.NavigateTo("App.ViewModels.DiagnoseViewModel");
                 }
                 else
                 {
                     // TODO Fehler in Dict damit man leichter Fehler ändern kann
-                    _infoBarService.showError("Leiterplatte konnte nicht erstellt werden", "Error");
+                    _infoBarService.showError("Fehlerkategorie konnte nicht erstellt werden", "Error");
                 }
             }
             else
             {
-                _infoBarService.showError("Leiterplatte konnte nicht erstellt werden", "Error");
+                _infoBarService.showError("Fehlerkategorie konnte nicht erstellt werden", "Error");
             }
 
 
