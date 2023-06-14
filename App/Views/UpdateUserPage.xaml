@@ -7,6 +7,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:App.ViewModels"
+	x:Name="EditUserPage"
     mc:Ignorable="d">
 
 	<behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
@@ -39,6 +40,14 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             PlaceholderText="Max Mustermann"
             PropertyName="Name"
             Text="{x:Bind Path=ViewModel.Name, Mode=TwoWay}" />
+		<ComboBox
+			Grid.Row="2" 
+			Grid.ColumnSpan="3"
+			DisplayMemberPath="Role"
+			Header="Berechtigung"
+			IsSynchronizedWithCurrentItem="False"
+			ItemsSource="{Binding Roles, Mode=TwoWay}"
+			SelectedItem="{Binding Role, Mode=TwoWay}" />
 		<StackPanel
             Grid.Row="3"
             Grid.ColumnSpan="2"
