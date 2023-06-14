@@ -85,11 +85,17 @@ public partial class TransferDialogViewModel : ObservableValidator
                 HasMaxTransfer = transferCount >= maxTransfer ? true : false;
                 MaxTransferError = $"Weitergaben Anzahl: {transferCount} von max. {maxTransfer}";
             }
-            //TODO: Error handling
+
             var resStorageLocations = await _storageLocationCrudService.GetAll();
             if (resStorageLocations.Code == ResponseCode.Success)
             {
-                resStorageLocations.Data.ForEach(x => StorageLocations.Add(x));
+                resStorageLocations.Data.ForEach(x =>
+                {
+                    if (x.Id != SelectedPcb.Transfers.Last().StorageLocationId)
+                    {
+                        StorageLocations.Add(x);
+                    }
+                });
             }
             else
             {
