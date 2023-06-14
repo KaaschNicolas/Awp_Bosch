@@ -119,7 +119,7 @@ public sealed class DialogService : IDialogService
         return null;
     }
 
-    public async Task<bool> RetryConnectionDialog(string title, string confirmButtonText)
+    public async Task<bool> RetryConnectionDialog(string title, string confirmButtonText, XamlRoot xamlRoot)
     {
         if(rootElement != null)
         {
