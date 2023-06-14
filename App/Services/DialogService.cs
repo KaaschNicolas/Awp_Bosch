@@ -123,19 +123,16 @@ public sealed class DialogService : IDialogService
     {
         if(rootElement != null)
         {
-            TextBlock textBlock = new() { Text = "Erneut verbinden." };
-
-            var dialog = new ContentDialog
+            ReconnectDialog reconnectDialog = new()
             {
-                Title = title,
-                Content = textBlock,
-                PrimaryButtonText = confirmButtonText,
-                DefaultButton = ContentDialogButton.Primary,
-                RequestedTheme = rootElement.RequestedTheme,
-                XamlRoot = rootElement.XamlRoot
+                XamlRoot = rootElement.XamlRoot,
+                RequestedTheme = rootElement.RequestedTheme
+
             };
 
-            var res = await dialog.ShowAsync();
+            ReconnectDialogViewModel vm = reconnectDialog.ViewModel;
+
+            var res = await reconnectDialog.ShowAsync();
             if (res == ContentDialogResult.None)
             {
                 return false;

@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
+using App.ViewModels;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -24,11 +26,19 @@ namespace App.Controls
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ReconnectDialog : Page
+    public sealed partial class ReconnectDialog : ContentDialog
     {
+        public ReconnectDialogViewModel ViewModel { get; }
+        public AppWindow ReconnectAppWindow { get; set; }
         public ReconnectDialog()
         {
-            this.InitializeComponent();
+            ViewModel = App.GetService<ReconnectDialogViewModel>();
+            InitializeComponent();
+        }
+
+        private void Click_Refresh(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CheckConCommand.ExecuteAsync(null);
         }
     }
 }
