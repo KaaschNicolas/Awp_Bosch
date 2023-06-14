@@ -205,7 +205,7 @@ Ein Filter hilft die Ansicht so anzupassen, dass die nötigen Elemente angezeigt
 Im Rechten oberen Ecke findet sich eine Menüleiste, welche das Icon fürs Hinzufügen enthält. Durch einen Klick öffnet sich eine Maske, in welcher die neue Leiterplatte angelegt werden kann.
 ![Hinzufügen Icon](images/Menü_Rechts.png)
 Das Datum wird über ein Kalender Pop-up augewählt. Der Benutzername sollte automatisch ausgefüllt werden. Wenn in der Anwendung nicht der eigene Name hinterlegt ist, sollte aus Sicherheitsgründen der Vorgesetze informiert werden.
-Dann kann eine Sachnummer gewählt werden. Die Seriennummer wird in das Feld der Seriennummer eingetragen.
+Dann kann eine Sachnummer gewählt werden, wenn sie im Auswahlmenü nicht auftaucht, kann sie unter den Stammdaten hinzugefügt werden. Die Seriennummer wird in das Feld der Seriennummer eingetragen.
 Unter Feherbeschreibung kann dann der Fehler gewählt werden. Nun muss nur noch der Lagerort gewählt werden.
 
 Zu beachten sind hier folgende Restriktionen:
@@ -273,7 +273,7 @@ work in progress
 work in progress
 
 ### Stammdaten
-In der Stammdatenübersicht können die Daten eingesehen werden, mit denen aktuell gearbeitet werden. Hier können zusätzlich neue Sachnummern oder Fehlerkategorien erstellt oder angepasst werden.
+In der Stammdatenübersicht können die Daten eingesehen werden, mit denen aktuell gearbeitet werden. Hier können zusätzlich neue n oder Fehlerkategorien erstellt oder angepasst werden.
 
 #### Lagerort
 In diesem Untermenü finden sich alle Lagerorte mit ihren maximalen Lagerzeiten, bis das gelagerte Element in ihrem Status auf gelb oder rot wechselt.

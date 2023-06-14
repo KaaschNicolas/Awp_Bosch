@@ -19,12 +19,12 @@ namespace App.Core.Helpers
             return builderInstance.Value;
         }
 
-        private static IConfigurationRoot CreateConfiguration()
+        public static IConfigurationRoot CreateConfiguration()
         {
             return GetConfigurationBuilder().Build();
         }
 
-        private static IConfigurationBuilder CreateBuilder()
+        public static IConfigurationBuilder CreateBuilder()
         {
             var builder = new ConfigurationBuilder();
             var runtimePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
