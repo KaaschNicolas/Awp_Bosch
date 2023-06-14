@@ -98,21 +98,28 @@
                                                     x:Name="OptionsAllCheckBox"
                                                     Checked="SelectAll_Checked"
                                                     Content="Alle auswählen"
+                                                    Indeterminate="SelectAll_Indeterminate"
                                                     IsThreeState="True"
                                                     Loaded="CheckBox_Loaded"
                                                     Unchecked="SelectAll_Unchecked" />
-                                                <ItemsControl x:Name="CheckBoxList" ItemsSource="{Binding AllPcbTypes, Mode=OneWay}">
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <CheckBox
-                                                                Margin="24,0,0,0"
-                                                                Checked="Option_Checked"
-                                                                Content="{Binding Description}"
-                                                                Loaded="CheckBox_Loaded"
-                                                                Unchecked="Option_Unchecked" />
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
+                                                <ScrollViewer
+                                                    Height="100"
+                                                    IsTabStop="True"
+                                                    IsVerticalScrollChainingEnabled="True"
+                                                    VerticalScrollBarVisibility="Auto">
+                                                    <ItemsControl x:Name="CheckBoxList" ItemsSource="{Binding AllPcbTypes, Mode=OneWay}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox
+                                                                    Margin="24,0,0,0"
+                                                                    Checked="Option_Checked"
+                                                                    Content="{Binding Description}"
+                                                                    Loaded="CheckBox_Loaded"
+                                                                    Unchecked="Option_Unchecked" />
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
                                                 <Button
                                                     Margin="0,20,20,0"
                                                     Click="FilterPcbTypes_Click"
@@ -270,8 +277,8 @@
                     Tag="IsFinalized" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding TransferCount}"
-                    Header="Weitergaben"
                     CanUserSort="True"
+                    Header="Weitergaben"
                     Tag="TransferCount" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding StorageName}"
