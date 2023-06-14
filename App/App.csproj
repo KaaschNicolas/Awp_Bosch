@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\ErrorCardUserControl.xaml" />
+    <None Remove="Controls\ReconnectDialog.xaml" />
     <None Remove="Controls\TransferDialog.xaml" />
     <None Remove="Views\CreateDiagnosePage.xaml" />
     <None Remove="Views\DiagnosePage.xaml" />
@@ -92,6 +93,12 @@
 		<Page Include="Controls\TransferDialog.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Controls\ReconnectDialog.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 
 	<ItemGroup>
