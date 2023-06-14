@@ -1,5 +1,6 @@
 ﻿using App.Contracts.Services;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using App.Errors;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -22,6 +23,19 @@ public partial class CreateUserViewModel : ObservableValidator
     [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _adusername;
 
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
+    private Role _role;
+
+    public IEnumerable<Role> Roles
+    {
+        get
+        {
+            return Enum.GetValues(typeof(Role)).Cast<Role>();
+        }
+    }
+
     private readonly ICrudService<User> _crudService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
@@ -31,6 +45,8 @@ public partial class CreateUserViewModel : ObservableValidator
         _crudService = crudService;
         _infoBarService = infoBarService;
         _navigationService = navigationService;
+
+        _role = Role.Lesezugriff;
     }
 
     [RelayCommand]
@@ -39,7 +55,7 @@ public partial class CreateUserViewModel : ObservableValidator
         ValidateAllProperties();
         if (!HasErrors)
         {
-            var response = await _crudService.Create(new User { Name = _name, AdUsername = _adusername });
+            var response = await _crudService.Create(new User { Name = _name, AdUsername = _adusername , Role= _role});
             if (response != null)
             {
                 if (response.Code == ResponseCode.Success)

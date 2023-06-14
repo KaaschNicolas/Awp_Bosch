@@ -39,6 +39,14 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             PlaceholderText="Max Mustermann"
             PropertyName="Name"
             Text="{x:Bind Path=ViewModel.Name, Mode=TwoWay}" />
+		<ComboBox
+			Grid.Row="2" 
+			Grid.ColumnSpan="3"
+			Header="Berechtigung"
+			IsSynchronizedWithCurrentItem="False"
+			ItemsSource="{Binding Roles}"
+			SelectedItem="{Binding Role, Mode=TwoWay}"
+            />
 		<StackPanel
             Grid.Row="3"
             Grid.ColumnSpan="2"
