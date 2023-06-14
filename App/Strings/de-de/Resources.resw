@@ -221,4 +221,7 @@
   <data name="Shell_UpdatePcb.Content" xml:space="preserve">
     <value>Leiterplatte bearbeiten</value>
   </data>
+  <data name="Shell_PcbTypeEvaluation.Content" xml:space="preserve">
+    <value>Sachnummer</value>
+  </data>
 </root>

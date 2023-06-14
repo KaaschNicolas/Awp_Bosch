@@ -282,7 +282,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
         }
     }
-
+    
     new public async Task<Response<T>> Delete(T entity)
     {
         try

@@ -1,4 +1,5 @@
-﻿using App.Core.Helpers;
+﻿using App.Core.DTOs;
+using App.Core.Helpers;
 using App.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,6 +48,8 @@ namespace App.Core.DataAccess
         {
             get; set;
         }
+
+        public virtual DbSet<EvaluationStorageLocationDTO> EvaluationStorageLocationDTO { get; set; }
 
         public DbSet<AuditEntry> AuditEntries { get; set; }
 

@@ -5,6 +5,7 @@ using App.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Microsoft.UI.Xaml.Controls;
+
 namespace App.Services;
 
 public class PageService : IPageService
@@ -32,6 +33,7 @@ public class PageService : IPageService
         Configure<PcbPaginationViewModel, PcbViewPage>();
         Configure<UpdatePcbViewModel, UpdatePcbPage>();
         Configure<DwellTimeEvaluationViewModel, DwellTimeEvalutionPage>();
+        Configure<PcbTypeEvaluationViewModel, PcbTypeEvaluationPage>();
     }
 
     public Type GetPageType(string key)
