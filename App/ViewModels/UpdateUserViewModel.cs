@@ -6,7 +6,6 @@ using App.Core.Services.Interfaces;
 using App.Errors;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels;
