@@ -27,6 +27,7 @@
 				<CommandBar
                     Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}"
                     IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"
+                   
                     Grid.Column="0"
                     Padding="0"
                     Background="Transparent"
@@ -39,17 +40,17 @@
 
 					<!--  All your AppBar buttons  -->
 					<!--  Get SendAppBarButton.Label from localized resources  -->
-					<AppBarButton
+                    <AppBarButton
                         Click="NavigateCreateUser"
                         Icon="Add"
                         Label="Hinzufügen"/>
 					<AppBarButton 
                         IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"
+                        
                         Icon="Refresh" 
                         Label="Neu Laden"  
                         Click="RefreshUsers"/>
-
-				</CommandBar>
+                </CommandBar>
 				<StackPanel
                     Grid.Column="1"
                     VerticalAlignment="Center"
@@ -67,9 +68,9 @@
 		</DataTemplate>
 	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
-	<Grid x:Name="ContentArea" >
+    <Grid x:Name="ContentArea" Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}">
 
-		<!--  Remove wierd borders around cells, caused bug when opening MenuFlyout  -->
+        <!--  Remove wierd borders around cells, caused bug when opening MenuFlyout  -->
 		<Grid.Resources>
 			<ResourceDictionary>
 				<SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent" />
