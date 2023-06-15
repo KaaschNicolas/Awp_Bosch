@@ -134,7 +134,7 @@ namespace App.Views
             CheckBox cb = sender as CheckBox;
             if (cb.Content is not null)
             {
-                PcbType checkedPcbType = ViewModel.AllPcbTypes.Where(i => i.PcbPartNumber == (string)cb.Content).Single();
+                PcbType checkedPcbType = ViewModel.AllPcbTypes.Where(i => i.Description == (string)cb.Content).Single();
                 ViewModel.SelectedPcbTypes.Add(checkedPcbType);
 
             }
@@ -152,7 +152,7 @@ namespace App.Views
         private void Option_Unchecked(object sender, RoutedEventArgs e)
         {
             CheckBox cb = sender as CheckBox;
-            ViewModel.SelectedPcbTypes.Remove(ViewModel.SelectedPcbTypes.Where(i => i.PcbPartNumber == (string)cb.Content).Single());
+            ViewModel.SelectedPcbTypes.Remove(ViewModel.SelectedPcbTypes.Where(i => i.Description == (string)cb.Content).Single());
             if (cb != _listCheckBox[0])
             {
                 _listCheckBox[0].Indeterminate -= SelectAll_Indeterminate;
