@@ -1,5 +1,6 @@
 ﻿using App.Core.DataAccess;
 using App.Core.Helpers;
+using App.Core.Models.Enums;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +28,7 @@ namespace App.Helpers
             return false;
         }
 
-        public static string Rolle;
+        public static Role Rolle;
 
         public static bool IsLesezugriff()
         {

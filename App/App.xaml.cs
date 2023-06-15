@@ -155,7 +155,9 @@ public partial class App : Application
         }).
         Build();
 
-        AuthServiceHelper.Rolle = "Test";
+        var authService = Host.Services.GetService(typeof(IAuthenticationService)) as AuthenticationService;
+
+        AuthServiceHelper.Rolle = authService.CurrentUser.Role;
 
         UnhandledException += App_UnhandledException;
     }
