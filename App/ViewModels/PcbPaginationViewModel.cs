@@ -141,7 +141,7 @@ namespace App.ViewModels
             var response = await _pcbTypeCrudService.GetAll();
             if (response != null && response.Code == ResponseCode.Success)
             {
-                AllPcbTypes = new List<PcbType>(response.Data.OrderBy(x => x.Description));
+                AllPcbTypes = new List<PcbType>(response.Data.OrderBy(x => x.PcbPartNumber));
             }
             else
             {

@@ -89,7 +89,7 @@
                         <MenuFlyout Placement="Bottom">
                             <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Einträge" />
                             <MenuFlyoutItem Click="Filter2_Click" Text="Heute erstellt" />
-                            <MenuFlyoutSubItem Text="Lagerorte">
+                            <MenuFlyoutSubItem Text="Sachnummer">
                                 <MenuFlyoutItem x:Name="PcbTypesFilterMenuItem" DataContext="{x:Bind ViewModel}">
                                     <MenuFlyoutItem.Template>
                                         <ControlTemplate x:Name="MenuControlTemplate" TargetType="MenuFlyoutItem">
@@ -113,7 +113,7 @@
                                                                 <CheckBox
                                                                     Margin="24,0,0,0"
                                                                     Checked="Option_Checked"
-                                                                    Content="{Binding Description}"
+                                                                    Content="{Binding PcbPartNumber}"
                                                                     Loaded="CheckBox_Loaded"
                                                                     Unchecked="Option_Unchecked" />
                                                             </DataTemplate>
