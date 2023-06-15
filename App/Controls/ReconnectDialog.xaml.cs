@@ -34,11 +34,19 @@ namespace App.Controls
         {
             ViewModel = App.GetService<ReconnectDialogViewModel>();
             InitializeComponent();
+            PrimaryButtonCommand = ViewModel.CheckConCommand;
         }
 
-        private void Click_Refresh(object sender, RoutedEventArgs e)
-        {
-            ViewModel.CheckConCommand.ExecuteAsync(null);
-        }
+        //private void Click_Refresh(object sender, RoutedEventArgs e)
+        //{
+        //    ViewModel.CheckConCommand.ExecuteAsync(null);
+            
+        //    if (ViewModel.ConnectionAvailable == true)
+        //    {
+        //        Hide();
+        //    }
+        //}
+
+
     }
 }

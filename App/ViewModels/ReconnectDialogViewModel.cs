@@ -16,16 +16,17 @@ namespace App.ViewModels
         {
             _boschContext = boschContext;
             CheckConCommand = new AsyncRelayCommand(CheckConnection);
+            
         }
 
         [ObservableProperty]
-        private bool _isConnected;
+        private bool _connectionAvailable;
 
         public IAsyncRelayCommand CheckConCommand { get; }
 
-        public async Task CheckConnection()
+        public async Task<bool> CheckConnection()
         {
-                IsConnected = await _boschContext.Database.CanConnectAsync();
+                return await _boschContext.Database.CanConnectAsync();
         }
     }
 }

@@ -117,32 +117,38 @@ public sealed class DialogService : IDialogService
         return null;
     }
 
-    public async Task<bool> RetryConnectionDialog(string title, string confirmButtonText, XamlRoot xamlRoot)
+    public async Task RetryConnectionDialog(XamlRoot xamlRoot, string title, string confirmButtonText)
     {
         if(rootElement != null)
         {
             ReconnectDialog reconnectDialog = new()
             {
-                XamlRoot = rootElement.XamlRoot,
-                RequestedTheme = rootElement.RequestedTheme
-
+                XamlRoot = xamlRoot,
+                RequestedTheme = rootElement.RequestedTheme,
+                PrimaryButtonText = "Neu Verbinden"
             };
 
             ReconnectDialogViewModel vm = reconnectDialog.ViewModel;
 
             var res = await reconnectDialog.ShowAsync();
+
             if (res == ContentDialogResult.None)
             {
-                return false;
-            }
-            if (res == ContentDialogResult.Primary)
-            {
-                return await _boschContext.Database.CanConnectAsync();
-            }
-            return false;
 
+            } else if (res == ContentDialogResult.Primary)
+            {
+                bool isConnected = await vm.CheckConnection();
+                while (isConnected)
+                {
+                    isConnected = await vm.CheckConnection();
+                    if (isConnected == true)
+                    {
+                        reconnectDialog.Hide();
+                        break;
+                    }
+                }
+            }
         }
-        return false;
     }
 
 

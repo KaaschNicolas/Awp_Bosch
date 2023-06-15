@@ -14,5 +14,5 @@ public interface IDialogService
 
     Task<Device> AddRestrictionDialog(string title, string confirmButtonText = "Speichern", string cancelButtonText = "Abbrechen");
 
-    public Task<bool> RetryConnectionDialog(string title, string confirmButtonText = "Neu Verbinden", XamlRoot xamlRoot);
+    public Task RetryConnectionDialog(XamlRoot xamlRoot, string title, string confirmButtonText = "Neu Verbinden");
 }

@@ -18,9 +18,7 @@
             Orientation="Vertical"
             Spacing="10">
             <TextBlock Text="Bitte neu Verbinden."/>
-            <Button 
-                Content="Neu Verbinden" 
-                Click=""/>
+            
         </StackPanel>
 
     </Grid>
