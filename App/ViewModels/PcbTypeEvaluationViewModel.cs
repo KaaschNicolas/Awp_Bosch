@@ -28,7 +28,11 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
     [ObservableProperty]
     private ObservableCollection<PcbType> _pcbTypes;
 
-    private int _pcbId = 1007;
+    [ObservableProperty]
+    private string _pcbNumber;
+
+    [ObservableProperty]
+    private DateTime _deadline;
 
     [ObservableProperty]
     private ObservableCollection<Pcb> _pcbs;
@@ -37,10 +41,10 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
     private ObservableCollection<EvaluationStorageLocationDTO> _locations;
 
     [ObservableProperty]
-    private int _countAtStorageLocation;
+    private PlotModel _pcbTypeFinalizedModel;
 
     [ObservableProperty]
-    private PlotModel _pcbTypeFinalizedModel;
+    private int _total;
 
     [ObservableProperty]
     private int _countFinalized;
@@ -54,6 +58,7 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
     private readonly IDialogService _dialogService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
+    private readonly IPcbTypeEvaluationService _pcbTypeEvaluationService;
 
     public PcbTypeEvaluationViewModel(
         IPcbDataService<Pcb> pcbDataService, 
@@ -61,7 +66,8 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
         ICrudService<PcbType> pcbTypesCrudService,
         IInfoBarService infoBarService, 
         IDialogService dialogService, 
-        INavigationService navigationService)
+        INavigationService navigationService,
+        IPcbTypeEvaluationService pcbTypeEvaluationService)
     {
         _pcbDataService = pcbDataService;
         _storageLocationCrudService = storageLocationDataService;
@@ -69,11 +75,15 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
         _dialogService = dialogService;
         _infoBarService = infoBarService;
         _navigationService = navigationService;
+        _pcbTypeEvaluationService = pcbTypeEvaluationService;
         _locations = new ObservableCollection<EvaluationStorageLocationDTO>();
         _pcbTypes = new ObservableCollection<PcbType>();
-        LoadStorageLocations();
+        //LoadStorageLocations();
 
         //_selectedPcbType = selectedPcbType1;
+        Total = 0;
+        PcbNumber = "1688400320";
+        Deadline = DateTime.Now;
 
         _pcbTypeFinalizedModel = new PlotModel { Title = "Bearbeitungsstatus für Sachnummer: "  };
         CreatePieChart();
@@ -81,7 +91,7 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
 
     private async void CalcStatus()
     {
-        if(_pcbId  != null)
+        /*if(_pcbId  != null)
         {
             var res = await _pcbTypeCrudService.GetById(_pcbId);
             if(res != null && res.Code == ResponseCode.Success)
@@ -89,7 +99,7 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
                     
                 
             }
-        }
+        }*/
     }
 
     private PlotModel CreatePieChart()
@@ -115,13 +125,17 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
     [RelayCommand]
     public async void LoadStorageLocations()
     {
+        Locations.Clear();
+        Total = 0;
+
         var storage = new List<StorageLocation>();
-        var response = await _storageLocationCrudService.GetAll();
+        var response = await _pcbTypeEvaluationService.GetAllByPcbType(PcbNumber, Deadline);
         if (response != null && response.Code == ResponseCode.Success)
         {
             foreach (var item in response.Data)
             {
-                storage.Add(item);
+                _locations.Add(item);
+                Total += item.SumCount;
             }
             foreach(var item in storage)
             {
@@ -134,116 +148,7 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
             _infoBarService.showError("Fehler bei Laden der Lagerorte", "Error");
         }
     }
-    //public async Task LoadData(PcbType pcbType)
-    //{
-    //    using (var dbContext = BoschContext)
-    //    {
-    //        var query = "SELECT Count(Pcb) FROM Pcbs WHERE PcbType == pcbType GROUP BY StorageLocation";
-    //        var result = await dbContext.Database.SqlQuery<MyModel>(query).ToListAsync();
-    //        Data = new ObservableCollection<MyModel>(result);
-    //    }
-    //}
-
-    /*private async Task GetPcbs(int pageIndex, int pageSize, bool isAscending)
-    {
-        Response<List<Pcb>> pcbs;
-        Response<int> maxEntries;
-
-        if (_storageLocations.Count == 0)
-        {
-            var storageLocations = await _storageLocationCrudService.GetAll();
-
-            if (storageLocations.Code == ResponseCode.Success)
-            {
-                storageLocations.Data.ForEach(x => _storageLocations.Add(x));
-            }
-        }
-
-        if (_filterOptions != PcbFilterOptions.None && _filterOptions != PcbFilterOptions.FilterStorageLocation)
-        {
-            switch (_filterOptions)
-            {
-                case PcbFilterOptions.Search:
-                    maxEntries = await _pcbDataService.MaxEntriesSearch(QueryText);
-                    pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
-                    break;
-                default:
-                    maxEntries = await _pcbDataService.MaxEntries();
-                    pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
-                    break;
-            }
-            
-            if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
-            {
-                List<PaginatedPcb> convertedPcbs = new();
-
-                // TODO: Error handling
-                var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
-                var newPcbs = new List<Pcb>();
-                foreach (var item in resEager.Data)
-                {
-                    foreach (var pcb in pcbs.Data)
-                    {
-                        if (item.Id.Equals(pcb.Id))
-                        {
-                            newPcbs.Add(item);
-                        }
-                    }
-                }
-
-            }
-        }
-        else if (_filterOptions != PcbFilterOptions.None && _filterOptions == PcbFilterOptions.FilterStorageLocation)
-        {
-            if (_selectedComboBox.StorageName == "Alles")
-            {
-                maxEntries = await _pcbDataService.MaxEntries();
-                pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
-            }
-            else
-            {
-                switch (_filterOptions)
-                {
-                    case PcbFilterOptions.Search:
-                        maxEntries = await _pcbDataService.MaxEntriesSearch(QueryText);
-                        pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
-                        break;
-                    default:
-                        maxEntries = await _pcbDataService.MaxEntries();
-                        pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, _sortyBy, isAscending);
-                        break;
-                }
-            }
-
-            if (pcbs.Code == ResponseCode.Success && maxEntries.Code == ResponseCode.Success)
-            {
-                List<PaginatedPcb> convertedPcbs = new();
-                // TODO: Error handling
-                var resEager = await _pcbDataService.GetAllEager(pageIndex, pageSize, _sortyBy, isAscending);
-                var newPcbs = new List<Pcb>();
-                foreach (var item in resEager.Data)
-                {
-                    foreach (var pcb in pcbs.Data)
-                    {
-                        if (item.Id.Equals(pcb.Id))
-                        {
-                            newPcbs.Add(item);
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-
-
-            FirstAsyncCommand.NotifyCanExecuteChanged();
-            PreviousAsyncCommand.NotifyCanExecuteChanged();
-            NextAsyncCommand.NotifyCanExecuteChanged();
-            LastAsyncCommand.NotifyCanExecuteChanged();
-            FilterItems.NotifyCanExecuteChanged();
-        }
-    }*/
+    
     public async void OnNavigatedTo(object parameter)
     {
         var pcbResponse = await _pcbTypeCrudService.GetAll();

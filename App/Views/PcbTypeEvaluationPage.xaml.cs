@@ -1,7 +1,7 @@
 ﻿using App.Core.Models;
 using App.Core.Models.Enums;
 using App.ViewModels;
-
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace App.Views;
@@ -39,21 +39,13 @@ public sealed partial class PcbTypeEvaluationPage : Page
         ViewModel.SelectedPcbType = (PcbType)args.SelectedItem;
     }
 
-    /*private async void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs e)
+    private void DateChanged(object sender, CalendarDatePickerDateChangedEventArgs e)
     {
-        _displayMode = DataGridDisplayMode.Search;
-        ViewModel.FilterOptions = PcbFilterOptions.Search;
-        ViewModel.QueryText = e.QueryText;
-        ComboBoxStorageLocation.SelectedItem = null;
-        await ViewModel.FilterItems.ExecuteAsync(null);
+        ViewModel.Deadline = ((DateTimeOffset)Deadline.Date).DateTime;
     }
 
-    private async void SearchBox_QueryClick(object sender, RoutedEventArgs e)
+    private void Evaluate_Click(object sender, RoutedEventArgs e)
     {
-        _displayMode = DataGridDisplayMode.Search;
-        ViewModel.FilterOptions = PcbFilterOptions.Search;
-        ViewModel.QueryText = SearchBox.Text;
-        ComboBoxStorageLocation.SelectedItem = null;
-        await ViewModel.FilterItems.ExecuteAsync(null);
-    }*/
+        ViewModel.LoadStorageLocationsCommand.Execute(null);
+    }
 }

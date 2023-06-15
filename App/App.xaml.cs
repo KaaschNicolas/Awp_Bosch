@@ -2,6 +2,7 @@
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
 using App.Core.DataAccess;
+using App.Core.DTOs;
 using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Services;
@@ -94,6 +95,7 @@ public partial class App : Application
             services.AddTransient<ITransferDataService<Transfer>, TransferDataService<Transfer>>();
             services.AddTransient<IMockDataService, MockDataService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IPcbTypeEvaluationService, PcbTypeEvaluationService>();
 
 
             // Views and ViewModels

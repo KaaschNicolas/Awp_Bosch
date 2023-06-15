@@ -71,9 +71,13 @@
                 TextChanged="AutoSuggestBox_TextChanged"
                 TextMemberPath="PcbPartNumber"/>
             <CalendarDatePicker
+                x:Name="Deadline"
                 Margin="10,0,0,0"
-                Header="Stichtag"/>
+                Header="Stichtag"
+                DateChanged="DateChanged"
+                DateFormat="{}{day.integer}.{month.integer}.{year.full}"/>
             <Button
+                Click="Evaluate_Click"
                 Margin="10,26,0,0"
                 Style="{StaticResource AccentButtonStyle}">
                 <StackPanel
@@ -113,13 +117,15 @@
                     Tag="StorageLocation"
                     CanUserSort="False"/>
                 <controls:DataGridTextColumn
-                    Binding="{Binding CountAtStorageLocation}"
+                    Binding="{Binding SumCount}"
                     Header="Anzahl"
                     Tag="Count"/>
                 <controls:DataGridTextColumn
+                    Binding="{Binding CountBefore}"
                     Header="Vor Stichtag"
                     Tag="Count_before"/>
                 <controls:DataGridTextColumn
+                    Binding="{Binding CountAfter}"
                     Header="Nach Stichtag"
                     Tag="Count_after"/>
             </controls:DataGrid.Columns>
@@ -127,7 +133,6 @@
         <StackPanel
             Grid.Column="0"
             Grid.Row="2"
-            Padding="10"
 	        Orientation="Horizontal"
             VerticalAlignment="Top"
             HorizontalAlignment="Stretch"
@@ -136,14 +141,13 @@
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
             <TextBlock Text="Gesamt:"/>
-            <TextBlock Margin="35,0,0,0" Text="1234"/>
+            <TextBlock Margin="35,0,0,0" Text="{Binding Total}"/>
         </StackPanel>
         
         <!-- rechtes Panel -->
-        <!--<StackPanel
+        <StackPanel
             Grid.Column="1"
             Grid.Row="0"
-            Padding="10"
             Margin="20,0,0,0"
 	        Orientation="Horizontal"
             VerticalAlignment="Top"
@@ -186,11 +190,7 @@
                 IsOpen="False"
                 VerticalAlignment="Bottom">
             </CommandBar>
-        </StackPanel>-->
-
-            
-
-        
+        </StackPanel>
         <oxyplot:PlotView x:Name="pieChart" 
                           Grid.Column="1"
                           Grid.Row="1"
