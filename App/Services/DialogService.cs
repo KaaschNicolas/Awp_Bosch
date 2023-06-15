@@ -88,8 +88,6 @@ public sealed class DialogService : IDialogService
                 PlaceholderText = "Text eintragen"
             };
 
-
-
             var dialog = new ContentDialog
             {
                 Title = title,
