@@ -1,6 +1,9 @@
 ﻿using App.Core.DataAccess;
+using App.Core.Helpers;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 
 namespace App.Helpers
@@ -16,12 +19,15 @@ namespace App.Helpers
 
         public static bool IsAdmin()
         {
+            var ts = Rolle;
             if (_authenticationService != null)
             {
                 return _authenticationService.IsAdmin;
             }
             return false;
         }
+
+        public static string Rolle;
 
         public static bool IsLesezugriff()
         {
