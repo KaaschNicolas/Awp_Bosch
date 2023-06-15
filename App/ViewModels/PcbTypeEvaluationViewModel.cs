@@ -84,18 +84,21 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
              GeneratePlot
         );
 
+        LoadStorageLocationsCommand = new AsyncRelayCommand(
+            LoadStorageLocations
+        );    
+
         Total = 0;
         PcbNumber = "1688400320";
         Deadline = DateTime.Now;
 
-        _pcbTypeFinalizedModel = new PlotModel { Title = "Bearbeitungsstatus für Sachnummer: "  };
+        //_pcbTypeFinalizedModel = new PlotModel { Title = "Bearbeitungsstatus für Sachnummer: "  };
         //CreatePieChart();
     }
 
-    [RelayCommand]
-    private async void CalcStatus()
+    private async Task CalcStatus()
     {
-        var response = await _pcbTypeEvaluationService.GetFinalizedByPcbType(PcbNumber, Deadline);
+        var response = await _pcbTypeEvaluationService.GetFinalizedByPcbType(_selectedPcbType.PcbPartNumber, Deadline);
         if (response != null && response.Code == ResponseCode.Success)
         {
             CountFinalized = response.Data[0].TotalFinalized;
@@ -108,6 +111,7 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
     }
 
     public IAsyncRelayCommand GeneratePlotCommand { get; }
+    public IAsyncRelayCommand LoadStorageLocationsCommand { get; }
 
     public async Task GeneratePlot() 
     {
@@ -119,7 +123,7 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
 
     private async Task<PlotModel> CreatePieChart()
     {
-        CalcStatus();
+        await CalcStatus();
 
         //var model = new PlotModel();
 
@@ -141,14 +145,14 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
         return PcbTypeFinalizedModel;
     }
 
-    [RelayCommand]
-    public async void LoadStorageLocations()
+  
+    private async Task LoadStorageLocations()
     {
         Locations.Clear();
         Total = 0;
 
         var storage = new List<StorageLocation>();
-        var response = await _pcbTypeEvaluationService.GetAllByPcbType(PcbNumber, Deadline);
+        var response = await _pcbTypeEvaluationService.GetAllByPcbType(SelectedPcbType.PcbPartNumber, Deadline);
         if (response != null && response.Code == ResponseCode.Success)
         {
             foreach (var item in response.Data)
@@ -156,16 +160,13 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
                 _locations.Add(item);
                 Total += item.SumCount;
             }
-            foreach(var item in storage)
-            {
-                
-            }
-            //_infoBarService.showMessage("Laden erfolgreich", "Erfolg");
         }
         else if ((response != null && response.Code == ResponseCode.Error) || response == null)
         {
             _infoBarService.showError("Fehler bei Laden der Lagerorte", "Error");
         }
+
+        await GeneratePlot();
     }
     
     public async void OnNavigatedTo(object parameter)

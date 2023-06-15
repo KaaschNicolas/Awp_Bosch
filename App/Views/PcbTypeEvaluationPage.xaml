@@ -105,7 +105,6 @@
             IsReadOnly="True"
             ItemsSource="{x:Bind ViewModel.Locations, Mode=OneWay}"
             RowDetailsVisibilityMode="Collapsed"
-            SelectedItem="{x:Bind ViewModel.SelectedPcbType, Mode=OneWay}"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             SelectionMode="Single">

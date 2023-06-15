@@ -30,13 +30,15 @@ public sealed partial class PcbTypeEvaluationPage : Page
             //Set the ItemsSource to be your filtered dataset
             var dataset = ViewModel.PcbTypes.Where(w => w.PcbPartNumber.Contains(sender.Text));
             sender.ItemsSource = dataset;
-        }
+        } 
     }
 
     private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
         // Set sender.Text. You can use args.SelectedItem to build your text string.
-        ViewModel.SelectedPcbType = (PcbType)args.SelectedItem;
+        var pt = (PcbType)args.SelectedItem;
+        var selectedPcbType = new PcbType() { PcbPartNumber = pt.PcbPartNumber };
+        ViewModel.SelectedPcbType = selectedPcbType; //(PcbType)args.SelectedItem;
     }
 
     private void DateChanged(object sender, CalendarDatePickerDateChangedEventArgs e)
@@ -46,7 +48,8 @@ public sealed partial class PcbTypeEvaluationPage : Page
 
     private void Evaluate_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.LoadStorageLocationsCommand.Execute(null);
+        ViewModel.LoadStorageLocationsCommand.ExecuteAsync(null);
+        //ViewModel.GeneratePlotCommand.ExecuteAsync(null);
     }
     private void Chart_Click(object sender, RoutedEventArgs e)
     {
