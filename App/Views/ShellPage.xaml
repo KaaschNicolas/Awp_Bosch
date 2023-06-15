@@ -69,7 +69,7 @@
                     </NavigationViewItem.MenuItems>
                 </NavigationViewItem>
 
-                <NavigationViewItem x:Uid="Shell_UserManagement" helpers:NavigationHelper.NavigateTo="App.ViewModels.MainViewModel">
+                <NavigationViewItem x:Uid="Shell_UserManagement" helpers:NavigationHelper.NavigateTo="App.ViewModels.UsersViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE716;" />
                     </NavigationViewItem.Icon>

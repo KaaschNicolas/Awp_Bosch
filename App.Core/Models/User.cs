@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using App.Core.Models.Enums;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +24,9 @@ namespace App.Core.Models
         {
             get; set;
         }
+        [MaxLength(24)]
+        [Column(TypeName = "nvarchar(24)")]
+        public Role Role { get; set; }
         public List<Transfer> Transfers
         {
             get; set;

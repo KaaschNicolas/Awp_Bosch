@@ -41,9 +41,8 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         {
             _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {entity.Id} upgedated", null);
 
-            entity.Id = id;
-            _boschContext.Set<T>().Update(entity);
-
+            var entry = _boschContext.Set<T>().First(e => e.Id == entity.Id);
+            _boschContext.Entry(entry).CurrentValues.SetValues(entity);
             await _boschContext.SaveChangesAsync();
 
             return new Response<T>(ResponseCode.Success, entity);
