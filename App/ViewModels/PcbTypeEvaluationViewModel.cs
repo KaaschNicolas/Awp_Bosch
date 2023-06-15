@@ -80,46 +80,65 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
         _pcbTypes = new ObservableCollection<PcbType>();
         //LoadStorageLocations();
 
-        //_selectedPcbType = selectedPcbType1;
+        GeneratePlotCommand = new AsyncRelayCommand(
+             GeneratePlot
+        );
+
         Total = 0;
         PcbNumber = "1688400320";
         Deadline = DateTime.Now;
 
         _pcbTypeFinalizedModel = new PlotModel { Title = "Bearbeitungsstatus für Sachnummer: "  };
-        CreatePieChart();
+        //CreatePieChart();
     }
 
+    [RelayCommand]
     private async void CalcStatus()
     {
-        /*if(_pcbId  != null)
+        var response = await _pcbTypeEvaluationService.GetFinalizedByPcbType(PcbNumber, Deadline);
+        if (response != null && response.Code == ResponseCode.Success)
         {
-            var res = await _pcbTypeCrudService.GetById(_pcbId);
-            if(res != null && res.Code == ResponseCode.Success)
-            {
-                    
-                
-            }
-        }*/
+            CountFinalized = response.Data[0].TotalFinalized;
+            CountOpen = response.Data[0].TotalInProgress;
+        }
+        else if ((response != null && response.Code == ResponseCode.Error) || response == null)
+        {
+            _infoBarService.showError("Fehler bei Laden der Lagerorte", "Error");
+        }
     }
 
-    private PlotModel CreatePieChart()
+    public IAsyncRelayCommand GeneratePlotCommand { get; }
+
+    public async Task GeneratePlot() 
     {
+        PcbTypeFinalizedModel = new PlotModel();
+        
+        PcbTypeFinalizedModel = await CreatePieChart();
+        
+    }
+
+    private async Task<PlotModel> CreatePieChart()
+    {
+        CalcStatus();
+
+        //var model = new PlotModel();
+
         var seriesP1 = new PieSeries { StrokeThickness = 1.5, InsideLabelFormat=" ", OutsideLabelFormat = "{0}\n{1}", AngleSpan = 360, StartAngle = 270, InnerDiameter = 0.5 };
 
 
-        seriesP1.Slices.Add(new PieSlice("abgeschlossen", 1030) { IsExploded = false, Fill = OxyColors.Green });
-        seriesP1.Slices.Add(new PieSlice("offen", 929) { IsExploded = true, Fill = OxyColors.Blue });
+        seriesP1.Slices.Add(new PieSlice("abgeschlossen", CountFinalized) { IsExploded = false, Fill = OxyColors.Green });
+        seriesP1.Slices.Add(new PieSlice("offen", CountOpen) { IsExploded = true, Fill = OxyColors.Blue });
 
-
-        _pcbTypeFinalizedModel.Series.Add(seriesP1);
+        PcbTypeFinalizedModel.Series.Add(seriesP1);
+        PcbTypeFinalizedModel.Title = "Bearbeitungsstatus für Sachnummer: ";
 
         // Gesamtzahl berechnen
         double total = seriesP1.Slices.Sum(slice => slice.Value);
 
         // Text in die Mitte schreiben
-        _pcbTypeFinalizedModel.Subtitle = $"Insgesamt: {total}";
+        PcbTypeFinalizedModel.Subtitle = $"Insgesamt: {total}";
 
-        return _pcbTypeFinalizedModel;
+        return PcbTypeFinalizedModel;
     }
 
     [RelayCommand]

@@ -48,4 +48,8 @@ public sealed partial class PcbTypeEvaluationPage : Page
     {
         ViewModel.LoadStorageLocationsCommand.Execute(null);
     }
+    private void Chart_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.GeneratePlotCommand.Execute(null);
+    }
 }

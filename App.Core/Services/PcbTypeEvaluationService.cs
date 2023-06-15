@@ -29,36 +29,7 @@ namespace App.Core.Services
         {
             try
             {
-                /*List<Transfer> lastTransfers = new();
-                await _boschContext
-               .Pcbs
-               .Include(x => x.Transfers)
-               .Where(x => x.CreatedDate < DateTime.Now) //TODO: Stichtag einbauen
-               .Where(x => x.DeletedDate < x.CreatedDate)
-               .ForEachAsync(x => lastTransfers.Add(x.Transfers.Last()));
-
-                List<Pcb> pcbs = new();
-
-                foreach (var transfers in lastTransfers)
-                {
-                    await _boschContext
-                    .Transfers
-                    .Include(x => x.Pcb)
-                    .ThenInclude(x => x.PcbType)
-                    .Where(x => x.Pcb.PcbType.PcbPartNumber == pcbType)
-                    .Where(x => x.Id == transfers.PcbId)
-                    .ForEachAsync(x => pcbs.Add(x.Pcb));
-                }
-
-                int total = pcbs.Count();
-
-                EvaluationStorageLocationDTO pcbDto*/
-
-                //var data = await query;
-                //return new Response<List<EvaluationStorageLocationDTO>>(ResponseCode.Success, pcbs, total);
-
-
-                string queryString = BuildQuery(pcbType, deadline);
+                string queryString = BuildQuery1(pcbType, deadline);
                 Debug.WriteLine(queryString);
                 var query = _boschContext.EvaluationStorageLocationDTO
                 .FromSqlRaw(queryString)
@@ -74,7 +45,28 @@ namespace App.Core.Services
             }
         }
 
-        private string BuildQuery(string? pcbtype = null, DateTime? deadline = null)
+        public async Task<Response<List<EvaluationFinalizedDTO>>> GetFinalizedByPcbType(string pcbType, DateTime deadline)
+        {
+            try
+            {
+                string queryString = BuildQuery2(pcbType, deadline);
+                Debug.WriteLine(queryString);
+                var query = _boschContext.EvaluationFinalizedDTO
+                .FromSqlRaw(queryString)
+                .ToListAsync();
+
+                var data = await query;
+                return new Response<List<EvaluationFinalizedDTO>>(ResponseCode.Success, data: data);
+            }
+
+            catch (DbUpdateException)
+            {
+                return new Response<List<EvaluationFinalizedDTO>>(ResponseCode.Error, error: "GetAllByPcbType() failed");
+            }
+        }
+
+
+        private string BuildQuery1(string? pcbtype = null, DateTime? deadline = null)
         {
             if (pcbtype != null && deadline != null)
             {
@@ -105,6 +97,29 @@ namespace App.Core.Services
             }
             return null;
         }
-    
+
+        private string BuildQuery2(string? pcbtype = null, DateTime? deadline = null)
+        {
+            if (pcbtype != null && deadline != null)
+            {
+                var date = ((DateTime)deadline).ToString("yyyy-MM-dd HH:mm:ss");
+                string query = $@"SELECT *,
+                                    t.TotalCount - t.TotalFinalized AS TotalInProgress
+                                    FROM (
+                                        SELECT
+                                        COUNT(Finalized) AS TotalCount,
+                                        SUM(CAST(Finalized AS INT)) AS TotalFinalized
+                                        FROM Pcbs AS p
+                                        INNER JOIN (SELECT 
+                                                    Id,
+                                                    PcbPartNumber
+                                                    FROM PcbTypes
+                                                    WHERE PcbPartNumber = '{pcbtype}') AS pt ON p.PcbTypeId = pt.Id
+                                       WHERE CreatedDate > DeletedDate ) as t";
+                return query;
+            }
+            return null;
+        }
+
     }
 }

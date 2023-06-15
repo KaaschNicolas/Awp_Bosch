@@ -9,6 +9,7 @@ namespace App.Core.Services.Interfaces
     {
         public Task<Response<List<EvaluationStorageLocationDTO>>> GetAllByPcbType(string pcbType, DateTime deadline);
 
+        public Task<Response<List<EvaluationFinalizedDTO>>> GetFinalizedByPcbType(string pcbType, DateTime deadline);
 
     }
 }

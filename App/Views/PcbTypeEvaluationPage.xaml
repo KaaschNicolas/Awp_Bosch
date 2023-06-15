@@ -148,48 +148,22 @@
         <StackPanel
             Grid.Column="1"
             Grid.Row="0"
-            Margin="20,0,0,0"
+            Margin="20,26,0,0"
 	        Orientation="Horizontal"
             VerticalAlignment="Top"
             HorizontalAlignment="Stretch"
-            Width="Auto"
-            Height="Auto"
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-            <AutoSuggestBox
-				MinWidth="200"
-                MaxWidth="320"
-                Margin="0,8,0,12"
-                Height="Auto"
-                HorizontalAlignment="Left"
-                PlaceholderText="Suche"
-                FontWeight="Normal"
-                QueryIcon="Find"
-		        Header="Sachnummer"
-                DisplayMemberPath="PcbPartNumber"
-                ItemsSource="{x:Bind ViewModel.PcbTypes}"
-                SuggestionChosen="AutoSuggestBox_SuggestionChosen"
-                Text="{x:Bind ViewModel.SelectedPcbType}"
-                TextChanged="AutoSuggestBox_TextChanged"
-                TextMemberPath="PcbPartNumber"/>
-            <CalendarDatePicker
-                Margin="10,0,0,0"
-                Header="Stichtag"/>
+            Width="500"
+            Height="Auto">
             <Button
+                Click="Chart_Click"
                 Margin="10,26,0,0"
                 Style="{StaticResource AccentButtonStyle}">
                 <StackPanel
                     Orientation="Horizontal">
                     <FontIcon Glyph="&#xEB05;" />
-                    <TextBlock Text="Auswerten"/>
+                    <TextBlock Margin="5,0,0,0" Text="Bearbeitungsstatus berechnen"/>
                 </StackPanel>
             </Button>
-            <CommandBar
-                Background="Transparent"
-                DefaultLabelPosition="Right"
-                IsOpen="False"
-                VerticalAlignment="Bottom">
-            </CommandBar>
         </StackPanel>
         <oxyplot:PlotView x:Name="pieChart" 
                           Grid.Column="1"
@@ -199,6 +173,8 @@
                           Height="250"
                           Model="{x:Bind ViewModel.PcbTypeFinalizedModel, Mode=TwoWay}"
                           HorizontalContentAlignment="Center"
-                          Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+                          Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                          BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"/>
+        
     </Grid>
 </Page>
