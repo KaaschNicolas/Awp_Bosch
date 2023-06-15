@@ -11,46 +11,23 @@ namespace App.Helpers
 {
     public static class AuthServiceHelper
     {
-        public static void Init(BoschContext boschContext)
-        {
-            _authenticationService = new AuthenticationService(boschContext);
-        }
-
-        private static IAuthenticationService _authenticationService;
-
+        public static Role Rolle;
         public static bool IsAdmin()
         {
-            var ts = Rolle;
-            if (_authenticationService != null)
-            {
-                return _authenticationService.IsAdmin;
-            }
-            return false;
+            return hasRole(Role.Admin);
         }
-
-        public static Role Rolle;
 
         public static bool IsLesezugriff()
         {
-            if (_authenticationService != null)
-            {
-                return _authenticationService.IsLesezugriff;
-
-            }
-            return false;
+                return hasRole(Role.Lesezugriff);
         }
 
         public static bool IsSchichtleitung()
         {
-            if (_authenticationService != null)
-            {
-                return _authenticationService.IsSchichtleitung;
-
-            }
-            return false;
+            return hasRole(Role.Schichtleitung);
         }
 
-        public static Visibility IsVisible()
+        public static Visibility IsVisibleAdmin()
         {
             if (IsAdmin())
             {
@@ -59,6 +36,19 @@ namespace App.Helpers
             return Visibility.Collapsed;
         }
 
+        public static Visibility IsVisible()
+        {
+            if (IsAdmin() || IsSchichtleitung())
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+        }
+
+        public static bool hasRole(Role role)
+        {
+            return Rolle.Equals(role);
+        }
 
     }
 }

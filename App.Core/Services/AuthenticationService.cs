@@ -55,32 +55,4 @@ namespace App.Core.Services
                 return _currentUser;
             }
         }
-
-        public bool IsAdmin 
-        {
-            get 
-            {
-                return hasRole(Role.Admin);
-            }
-        }
-        public bool IsSchichtleitung
-        {
-            get
-            {
-                return hasRole(Role.Schichtleitung);
-            }
-        }
-
-        public bool IsLesezugriff
-        {
-            get
-            {
-                return hasRole(Role.Lesezugriff);
-            }
-        }
-
-        public bool hasRole(Role role) {
-           return CurrentUser.Role.Equals(role);
-        }
-    }
 }
