@@ -148,15 +148,17 @@
         <StackPanel
             Grid.Column="1"
             Grid.Row="0"
-            Margin="20,26,0,0"
+            Margin="20,0,0,0"
 	        Orientation="Horizontal"
             VerticalAlignment="Top"
             HorizontalAlignment="Stretch"
             Width="500"
-            Height="Auto">
+            Height="Auto"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
             <Button
                 Click="Chart_Click"
-                Margin="10,26,0,0"
+                Margin="10,46,0,0"
                 Style="{StaticResource AccentButtonStyle}">
                 <StackPanel
                     Orientation="Horizontal">
