@@ -158,9 +158,9 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {id} erfolgreich gelöscht.",
+            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {id} erfolgreich gelÃ¶scht.",
                 null);
-            //setzt alle DeletedDate der anhängenden Objekte null, die es auch nur für diese Leiterplatte gibt.
+            //setzt alle DeletedDate der anhÃ¤ngenden Objekte null, die es auch nur fÃ¼r diese Leiterplatte gibt.
 
             Pcb pcb = _boschContext.Set<T>()
                 .Where(x => x.Id.Equals(id))
@@ -189,13 +189,13 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
                 await _boschContext.SaveChangesAsync();
             }
 
-            return new Response<T>(ResponseCode.Success, $"{typeof(T)} erfolgreich gelöscht.");
+            return new Response<T>(ResponseCode.Success, $"{typeof(T)} erfolgreich gelÃ¶scht.");
         }
         catch (DbUpdateException)
         {
-            _loggingService.Audit(LogLevel.Error, $"Fehler beim Löschen von {typeof(T)} mit der ID {id}", null);
+            _loggingService.Audit(LogLevel.Error, $"Fehler beim LÃ¶schen von {typeof(T)} mit der ID {id}", null);
             return new Response<T>(ResponseCode.Error,
-                error: $"Fehler beim Löschen von {typeof(T)} mit der ID {id}");
+                error: $"Fehler beim LÃ¶schen von {typeof(T)} mit der ID {id}");
         }
     }
 

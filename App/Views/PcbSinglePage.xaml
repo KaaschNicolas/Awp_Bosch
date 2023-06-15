@@ -234,7 +234,7 @@
                                         Height="40"
                                         Margin="10"
                                         Padding="0,9,0,0"
-                                        VerticalAlignment="top"
+                                        VerticalAlignment="Top"
                                         Background="{StaticResource AccentFillColorDefaultBrush}"
                                         BorderThickness="2"
                                         CornerRadius="50">

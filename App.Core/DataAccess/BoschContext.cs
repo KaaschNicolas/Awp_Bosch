@@ -56,6 +56,10 @@ namespace App.Core.DataAccess
             get; set;
         }
 
+        public virtual DbSet<EvaluationStorageLocationDTO> EvaluationStorageLocationDTO { get; set; }
+
+        public virtual DbSet<EvaluationFinalizedDTO> EvaluationFinalizedDTO { get; set; }
+
         public DbSet<AuditEntry> AuditEntries { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
