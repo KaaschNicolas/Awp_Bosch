@@ -8,7 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:viewModels="using:App.ViewModels"
     x:Name="_page"
-	mc:Ignorable="d">
+	mc:Ignorable="d"
+    xmlns:auth="using:App.Helpers"
+	xmlns:authTest="using:App.Helpers"
+	xmlns:helpers="using:App.Helpers"
+	IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"
+    Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}">
 
 
 	<behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
@@ -20,6 +25,8 @@
 				</Grid.ColumnDefinitions>
 
 				<CommandBar
+                    Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}"
+                    IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"
                     Grid.Column="0"
                     Padding="0"
                     Background="Transparent"
@@ -36,7 +43,11 @@
                         Click="NavigateCreateUser"
                         Icon="Add"
                         Label="Hinzufügen"/>
-					<AppBarButton Icon="Refresh" Label="Neu Laden"  Click="RefreshUsers"/>
+					<AppBarButton 
+                        IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"
+                        Icon="Refresh" 
+                        Label="Neu Laden"  
+                        Click="RefreshUsers"/>
 
 				</CommandBar>
 				<StackPanel
@@ -56,7 +67,7 @@
 		</DataTemplate>
 	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
-	<Grid x:Name="ContentArea">
+	<Grid x:Name="ContentArea" >
 
 		<!--  Remove wierd borders around cells, caused bug when opening MenuFlyout  -->
 		<Grid.Resources>

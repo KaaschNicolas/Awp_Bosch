@@ -79,7 +79,7 @@ namespace App.Core.Services
             }
         }
 
-        private bool hasRole(Role role) {
+        public bool hasRole(Role role) {
            return CurrentUser.Role.Equals(role);
         }
     }
