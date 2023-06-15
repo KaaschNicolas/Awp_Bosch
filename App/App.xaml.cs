@@ -6,6 +6,7 @@ using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
+using App.Helpers;
 using App.Models;
 using App.Services;
 using App.ViewModels;
@@ -153,6 +154,10 @@ public partial class App : Application
                 ServiceLifetime.Transient);
         }).
         Build();
+
+        var authService = Host.Services.GetService(typeof(IAuthenticationService)) as AuthenticationService;
+
+        AuthServiceHelper.Rolle = authService.CurrentUser.Role;
 
         UnhandledException += App_UnhandledException;
     }
