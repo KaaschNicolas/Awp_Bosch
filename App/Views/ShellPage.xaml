@@ -47,7 +47,7 @@
                 TODO: Update item icons by updating FontIcon.Glyph properties.
                 https://docs.microsoft.com/windows/apps/design/style/segoe-fluent-icons-font#icon-list
                 -->
-                <NavigationViewItem x:Uid="Shell_Dashboard" helpers:NavigationHelper.NavigateTo="App.ViewModels.MainViewModel">
+                <NavigationViewItem x:Uid="Shell_Dashboard" helpers:NavigationHelper.NavigateTo="App.ViewModels.DashboardViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF246;" />
                     </NavigationViewItem.Icon>
@@ -57,14 +57,14 @@
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8FD;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_Analysis" helpers:NavigationHelper.NavigateTo="App.ViewModels.MainViewModel">
+                <NavigationViewItem x:Uid="Shell_Analysis">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9D2;" />
                     </NavigationViewItem.Icon>
                     <NavigationViewItem.MenuItems>
-                        <NavigationViewItem x:Uid="Shell_Analysis_WhereAbouts_1" helpers:NavigationHelper.NavigateTo="App.ViewModels.DwellTimeEvaluationViewModel"/>
+                        <NavigationViewItem x:Uid="Shell_Analysis_WhereAbouts_1" helpers:NavigationHelper.NavigateTo="App.ViewModels.DwellTimeEvaluationViewModel" />
                         <NavigationViewItem x:Uid="Shell_Analysis_WhereAbouts_2" />
-                        <NavigationViewItem x:Uid="Shell_PcbTypeEvaluation" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbTypeEvaluationViewModel"/>
+                        <NavigationViewItem x:Uid="Shell_PcbTypeEvaluation" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbTypeEvaluationViewModel" />
                         <NavigationViewItem x:Uid="Shell_Analysis_PartNumber_I_O" />
                     </NavigationViewItem.MenuItems>
                 </NavigationViewItem>
@@ -79,7 +79,7 @@
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE82D;" />
                     </NavigationViewItem.Icon>
                     <NavigationViewItem.MenuItems>
-                        <NavigationViewItem x:Uid="Shell_MD_StorageLocation" helpers:NavigationHelper.NavigateTo="App.ViewModels.StorageLocationViewModel"/>
+                        <NavigationViewItem x:Uid="Shell_MD_StorageLocation" helpers:NavigationHelper.NavigateTo="App.ViewModels.StorageLocationViewModel" />
                         <NavigationViewItem x:Uid="Shell_MD_PartNumber" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbTypeViewModel" />
                         <NavigationViewItem x:Uid="Shell_MD_ErrorCategory" helpers:NavigationHelper.NavigateTo="App.ViewModels.DiagnoseViewModel" />
                     </NavigationViewItem.MenuItems>

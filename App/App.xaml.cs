@@ -100,6 +100,8 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<DashboardViewModel>();
+            services.AddTransient<DashboardPage>();
 
             services.AddTransient<PcbTypeEvaluationViewModel>();
             services.AddTransient<PcbTypeEvaluationPage>();
