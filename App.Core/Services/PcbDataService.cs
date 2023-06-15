@@ -3,11 +3,11 @@ using App.Core.DataAccess;
 using App.Core.DTOs;
 using App.Core.Helpers;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using System.Linq.Expressions;
 
 public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T : Pcb
@@ -23,7 +23,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         try
         {
             string queryString = BuildQuery();
-            Debug.WriteLine(queryString);
+
             var query = _boschContext.PcbsDTO
             .FromSqlRaw(queryString)
             .OrderBy(orderByProperty, isAscending)
@@ -72,6 +72,22 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    public async Task<Response<int>> MaxEntriesPcbTypes(string selectedPcbTypesId)
+    {
+        try
+        {
+            var query = _boschContext.PcbsDTO
+                .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: selectedPcbTypesId))
+                .CountAsync();
+            int count = await query;
+            return new Response<int>(ResponseCode.Success, data: count);
+        }
+        catch (DbUpdateException)
+        {
+            return new Response<int>(ResponseCode.Error, error: "MaxEntriesPcbTypes() failed");
+        }
+    }
+
     public async Task<Response<int>> MaxEntriesByStorageLocation(int storageLocationId)
     {
         try
@@ -84,7 +100,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
         catch (DbUpdateException)
         {
-            return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
+            return new Response<int>(ResponseCode.Error, error: "MaxEntriesByStorageLocation() failed");
         }
     }
 
@@ -100,7 +116,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
         catch (DbUpdateException)
         {
-            return new Response<int>(ResponseCode.Error, error: "MaxEntries() failed");
+            return new Response<int>(ResponseCode.Error, error: "MaxEntriesSearch() failed");
         }
     }
 
@@ -120,24 +136,29 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
         catch (DbUpdateException)
         {
-            return new Response<List<PcbDTO>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
+            return new Response<List<PcbDTO>>(ResponseCode.Error, error: "Like() failed");
         }
     }
 
-    public async Task<Response<List<PcbDTO>>> GetWithFilter(int pageIndex, int pageSize, string value, string orderByProperty, bool isAscending, bool isFilterStoragLocation = false)
+    public async Task<Response<List<PcbDTO>>> GetWithFilter(int pageIndex, int pageSize, string value, string orderByProperty, bool isAscending, PcbFilterOptions filterOptions)
     {
         try
         {
             IQueryable<PcbDTO> query;
-            if (isFilterStoragLocation)
+            switch (filterOptions)
             {
-                query = _boschContext.PcbsDTO
-                .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: value));
-            }
-            else
-            {
-                query = _boschContext.PcbsDTO
-                    .FromSqlRaw(BuildQuery(whereFilterOnPcb: value));
+                case PcbFilterOptions.FilterStorageLocation:
+                    query = _boschContext.PcbsDTO
+                    .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: value));
+                    break;
+                case PcbFilterOptions.FilterPcbTypes:
+                    query = _boschContext.PcbsDTO
+                    .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: value));
+                    break;
+                default:
+                    query = _boschContext.PcbsDTO
+                   .FromSqlRaw(BuildQuery(whereFilterOnPcb: value));
+                    break;
             }
 
             var data = query
@@ -150,7 +171,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
         catch (DbUpdateException)
         {
-            return new Response<List<PcbDTO>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
+            return new Response<List<PcbDTO>>(ResponseCode.Error, error: "GetWithFilter() failed");
         }
     }
 
@@ -223,11 +244,17 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
-    private string BuildQuery(string? whereFilterOnStorageLocation = null, string? whereFilterOnPcb = null, string? likeFilterOnPcb = null)
+
+    private string BuildQuery(
+        string? whereFilterOnStorageLocation = null,
+        string? whereFilterOnPcb = null,
+        string? likeFilterOnPcb = null,
+        string? whereFilterOnPcbTypes = null)
     {
         whereFilterOnPcb = whereFilterOnPcb is not null ? $"AND {whereFilterOnPcb}" : whereFilterOnPcb;
         whereFilterOnStorageLocation = whereFilterOnStorageLocation is not null ? $"WHERE Id = {whereFilterOnStorageLocation} " : whereFilterOnStorageLocation;
         likeFilterOnPcb = likeFilterOnPcb is not null ? $"AND SerialNumber LIKE '%{likeFilterOnPcb}%'" : likeFilterOnPcb;
+        whereFilterOnPcbTypes = whereFilterOnPcbTypes is not null ? $"WHERE Id IN ({whereFilterOnPcbTypes})" : whereFilterOnPcbTypes;
 
         string query = $@"SELECT 
                     b.PcbId,
@@ -271,7 +298,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
 		                    WHERE CreatedDate > DeletedDate) as t
 	                    INNER JOIN  (SELECT SerialNumber, CreatedDate, Finalized, Id, PcbTypeId FROM Pcbs WHERE CreatedDate > DeletedDate {whereFilterOnPcb} {likeFilterOnPcb}) AS p ON t.PcbId=p.Id
                         INNER JOIN(SELECT Id, StorageName, DwellTimeRed, DwellTimeYellow FROM StorageLocations {whereFilterOnStorageLocation}) AS s ON t.StorageLocationId = s.Id
-                        INNER JOIN(SELECT Id, PcbPartNumber FROM PcbTypes) AS pt ON p.PcbTypeId = pt.Id
+                        INNER JOIN(SELECT Id, PcbPartNumber FROM PcbTypes {whereFilterOnPcbTypes} ) AS pt ON p.PcbTypeId = pt.Id
                         INNER JOIN(SELECT* FROM (
                                         SELECT
                                         PcbId,
@@ -287,7 +314,6 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
 				                    ) AS e on p.Id = e.PcbId
 
                         WHERE rn = 1) as b ";
-
         return query;
     }
 
