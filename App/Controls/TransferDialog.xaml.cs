@@ -6,7 +6,6 @@
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 using App.ViewModels;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 
 namespace App.Controls;
@@ -16,8 +15,6 @@ public sealed partial class TransferDialog : ContentDialog
     {
         get;
     }
-
-    public AppWindow TransferAppWindow { get; set; }
 
     public TransferDialog()
     {

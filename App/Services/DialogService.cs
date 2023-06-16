@@ -5,8 +5,6 @@ using App.Core.Models;
 using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.DirectoryServices.ActiveDirectory;
-using ZXing;
 
 namespace App.Services;
 
@@ -117,29 +115,27 @@ public sealed class DialogService : IDialogService
         return null;
     }
 
-    public async Task<bool> RetryConnectionDialog(string title, string confirmButtonText, XamlRoot xamlRoot)
+    public async Task<bool> RetryConnectionDialog(XamlRoot xamlRoot, string title, string confirmButtonText)
     {
-        if(rootElement != null)
+        if (xamlRoot != null)
         {
-            ReconnectDialog reconnectDialog = new()
+            ContentDialog reconnectDialog = new ReconnectDialog()
             {
-                XamlRoot = rootElement.XamlRoot,
-                RequestedTheme = rootElement.RequestedTheme
-
+                XamlRoot = xamlRoot
             };
 
-            ReconnectDialogViewModel vm = reconnectDialog.ViewModel;
+            //ReconnectDialogViewModel vm = reconnectDialog.ViewModel;
 
             var res = await reconnectDialog.ShowAsync();
-            if (res == ContentDialogResult.None)
-            {
-                return false;
-            }
-            if (res == ContentDialogResult.Primary)
-            {
-                return await _boschContext.Database.CanConnectAsync();
-            }
-            return false;
+            /* if (res == ContentDialogResult.None)
+             {
+                 return false;
+             }
+             if (res == ContentDialogResult.Primary)
+             {
+                 return await _boschContext.Database.CanConnectAsync();
+             }
+             return false;*/
 
         }
         return false;
@@ -189,7 +185,7 @@ public sealed class DialogService : IDialogService
 
 
 
-    public async void UnAuthorizedDialogAsync(string title, string content, XamlRoot xamlRoot)
+    public async void UnAuthorizedDialogAsync(XamlRoot xamlRoot, string title, string content)
     {
 
         if (xamlRoot != null)

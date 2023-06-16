@@ -6,7 +6,7 @@ namespace App.Contracts.Services;
 public interface IDialogService
 {
     Task<bool?> ConfirmDeleteDialogAsync(string title, string content, string confirmButtonText = "Löschen", string cancelButtonText = "Abbrechen");
-    void UnAuthorizedDialogAsync(string title, string content, XamlRoot xamlRoot);
+    void UnAuthorizedDialogAsync(XamlRoot xamlRoot, string title, string content);
 
     Task<Response<Transfer>?> ShowCreateTransferDialog();
 
@@ -14,5 +14,5 @@ public interface IDialogService
 
     Task<Device> AddRestrictionDialog(string title, string confirmButtonText = "Speichern", string cancelButtonText = "Abbrechen");
 
-    public Task<bool> RetryConnectionDialog(string title, string confirmButtonText = "Neu Verbinden", XamlRoot xamlRoot);
+    public Task<bool> RetryConnectionDialog(XamlRoot xamlRoot, string title, string confirmButtonText = "Neu Verbinden");
 }

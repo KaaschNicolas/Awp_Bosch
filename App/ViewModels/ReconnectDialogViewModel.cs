@@ -1,11 +1,6 @@
 ﻿using App.Core.DataAccess;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.ViewModels
 {
@@ -15,17 +10,16 @@ namespace App.ViewModels
         public ReconnectDialogViewModel(BoschContext boschContext)
         {
             _boschContext = boschContext;
-            CheckConCommand = new AsyncRelayCommand(CheckConnection);
         }
 
         [ObservableProperty]
         private bool _isConnected;
 
-        public IAsyncRelayCommand CheckConCommand { get; }
 
+        [RelayCommand]
         public async Task CheckConnection()
         {
-                IsConnected = await _boschContext.Database.CanConnectAsync();
+            IsConnected = await _boschContext.Database.CanConnectAsync();
         }
     }
 }

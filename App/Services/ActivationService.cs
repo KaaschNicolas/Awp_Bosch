@@ -5,6 +5,7 @@ using App.Views;
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Diagnostics;
 
 namespace App.Services;
 
@@ -77,15 +78,23 @@ public class ActivationService : IActivationService
         {
             if (App.MainWindow.Content is FrameworkElement fe)
             {
-                fe.Loaded += (ss, ee) => _dialogService.RetryConnectionDialog("No Connection", "Es besteht keine Verbindung zur Datenbank, \n Bitte wenden sie sich an einen Vorgesetzten.", App.MainWindow.Content.XamlRoot);
-                return;
+                try
+                {
+                    fe.Loaded += (ss, ee) => _dialogService.RetryConnectionDialog(App.MainWindow.Content.XamlRoot, "No Connection", "Es besteht keine Verbindung zur Datenbank, \n Bitte wenden sie sich an einen Vorgesetzten.");
+                    return;
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
+
             }
         }
         if (!_authenticationService.IsAuthenticated)
         {
             if (App.MainWindow.Content is FrameworkElement fr)
             {
-                fr.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync("Unauthorized", "Sie haben keine Berechtigungen diese Anwendung zu nutzen.\n Bitte wenden sie sich an ihren nächsten Vorgesetzten,\n wenn Sie dennoch Zugriff benötigen.", App.MainWindow.Content.XamlRoot);
+                fr.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync(App.MainWindow.Content.XamlRoot, "Unauthorized", "Sie haben keine Berechtigungen diese Anwendung zu nutzen.\n Bitte wenden sie sich an ihren nächsten Vorgesetzten,\n wenn Sie dennoch Zugriff benötigen.");
                 return;
             }
             return;

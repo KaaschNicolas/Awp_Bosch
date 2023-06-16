@@ -1,15 +1,15 @@
-<!-- Copyright (c) Microsoft Corporation and Contributors. -->
-<!-- Licensed under the MIT License. -->
+<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+<!--  Licensed under the MIT License.  -->
 
 <ContentDialog
     x:Class="App.Controls.ReconnectDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:App.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:App.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
 
     <Grid>
         <StackPanel
@@ -17,10 +17,8 @@
             CornerRadius="4"
             Orientation="Vertical"
             Spacing="10">
-            <TextBlock Text="Bitte neu Verbinden."/>
-            <Button 
-                Content="Neu Verbinden" 
-                Click=""/>
+            <TextBlock Text="Bitte neu Verbinden." />
+            <Button Click="Click_Refresh" Content="Neu Verbinden" />
         </StackPanel>
 
     </Grid>
