@@ -1,0 +1,246 @@
+﻿<Page
+    x:Class="App.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="using:App.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <converter:IntToPercentageConverter x:Key="IntToPercentageConverter" />
+        <converter:IntToPlacingConverter x:Key="IntToPlacingConverter" />
+    </Page.Resources>
+
+    <Grid x:Name="ContentArea" RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Spacing="10">
+            <TextBlock FontSize="20" Text="Leiterplatten Verweildauer über alle PVBs" />
+            <StackPanel
+                Height="120"
+                Orientation="Horizontal"
+                Spacing="20">
+                <Grid
+                    Width="250"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="19*" />
+                    </Grid.ColumnDefinitions>
+                    <Rectangle Grid.Column="0" Fill="green" />
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="30"
+                        HorizontalAlignment="Center"
+                        Orientation="Vertical">
+                        <!--  Hier kann dann der Converter benutz werden um Int in Prozente zu konvertieren  -->
+                        <TextBlock
+                            FontSize="16"
+                            Opacity="0.7"
+                            Text="56%" />
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock FontSize="20" Text="142" />
+                            <TextBlock FontSize="20" Text="/" />
+                            <TextBlock FontSize="20" Text="256" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel
+            Grid.Row="1"
+            Orientation="Vertical"
+            Spacing="10">
+            <TextBlock FontSize="20" Text="Leiterplatten Übersicht" />
+            <StackPanel
+                Width="250"
+                Height="120"
+                Padding="30"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Orientation="Vertical"
+                Spacing="20">
+                <StackPanel HorizontalAlignment="Center" Spacing="10">
+                    <TextBlock Text="Hinzugefügt heute" />
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock FontSize="24" Text="35" />
+                    </StackPanel>
+
+                </StackPanel>
+
+            </StackPanel>
+        </StackPanel>
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Vertical"
+            Spacing="10">
+            <TextBlock FontSize="20" Text="Top 3 häufigsten Sachnummern letzte 7 Tage" />
+            <StackPanel
+                Width="250"
+                Height="120"
+                Padding="25"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Spacing="10">
+                <Grid ColumnSpacing="20" RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        FontSize="20"
+                        Text="1." />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Text="1688400308" />
+                    <!--  Hier kann dann der Converter benutz werden um Int in Prozente zu konvertieren  -->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalAlignment="Bottom"
+                        FontSize="14"
+                        Opacity="0.7"
+                        Text="57%" />
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="5">
+                        <TextBlock FontSize="20" Text="20" />
+                        <TextBlock FontSize="20" Text="/" />
+                        <TextBlock FontSize="20" Text="35" />
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+        </StackPanel>
+        <StackPanel
+            Grid.Row="3"
+            Orientation="Vertical"
+            Spacing="10">
+            <TextBlock FontSize="20" Text="Top 3 PVBs mit den meisten Leiterplatten" />
+            <StackPanel
+                Width="250"
+                Height="150"
+                Padding="30,20,30,20"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Spacing="10">
+                <Grid ColumnSpacing="20" RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <!--  Hier kann dann der Converter benutz werden um Int in Placing zu konvertieren (Punkt hinzufügen)  -->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        FontSize="20"
+                        Text="1." />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Text="PVB-Labor" />
+                    <!--  Hier kann dann der Converter benutz werden um Int in Prozente zu konvertieren  -->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalAlignment="Bottom"
+                        FontSize="14"
+                        Opacity="0.7"
+                        Text="27%" />
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="5">
+                        <TextBlock FontSize="20" Text="70" />
+                        <TextBlock FontSize="20" Text="/" />
+                        <TextBlock FontSize="20" Text="256" />
+                    </StackPanel>
+                </Grid>
+                <Grid
+                    Grid.Row="2"
+                    Margin="0,10,0,0"
+                    ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel
+                        Grid.Row="0"
+                        Orientation="Horizontal"
+                        Spacing="2">
+                        <Ellipse Width="15" Fill="Green" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="12" Text="50" />
+                            <TextBlock FontSize="12" Text="/" />
+                            <TextBlock FontSize="12" Text="70" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="2">
+                        <Ellipse Width="15" Fill="Yellow" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="12" Text="15" />
+                            <TextBlock FontSize="12" Text="/" />
+                            <TextBlock FontSize="12" Text="70" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Orientation="Horizontal"
+                        Spacing="2">
+                        <Ellipse Width="15" Fill="Red" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="12" Text="5" />
+                            <TextBlock FontSize="12" Text="/" />
+                            <TextBlock FontSize="12" Text="70" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

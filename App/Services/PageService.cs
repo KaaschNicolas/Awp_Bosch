@@ -37,6 +37,7 @@ public class PageService : IPageService
         Configure<UsersViewModel, UsersPage>();
         Configure<CreateUserViewModel, CreateUserPage>();
         Configure<UpdateUserViewModel, UpdateUserPage>();
+        Configure<DashboardViewModel, DashboardPage>();
     }
 
     public Type GetPageType(string key)
