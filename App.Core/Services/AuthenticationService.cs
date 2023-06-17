@@ -55,4 +55,5 @@ namespace App.Core.Services
                 return _currentUser;
             }
         }
+    }
 }
