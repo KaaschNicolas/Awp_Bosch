@@ -107,7 +107,15 @@ namespace App.Core.Services
 
         public async Task<Response<DashboardStorageLocationDTO>> GetTop3StorageLocations()
         {
+            try
+            {
+                
+            }
+            catch (DbUpdateException)
+            {
 
+                throw;
+            }
         }
     }
 }
