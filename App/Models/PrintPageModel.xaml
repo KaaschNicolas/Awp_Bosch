@@ -30,7 +30,6 @@
                 <ColumnDefinition Width="4*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0"
-                        x:Name="parentstackpanel"
                         Orientation="Vertical"
                         Margin="25,0,0,12">
                 <StackPanel Orientation="Horizontal"
@@ -104,8 +103,7 @@
                   Grid.Column="1"
                   BorderThickness="1"
                   CornerRadius="7">
-                <StackPanel x:Name="StatusPanelContent"
-                            Width="280"
+                <StackPanel Width="280"
                             Background="#FBFBFB"
                             BackgroundSizing="OuterBorderEdge"
                             BorderBrush="#FBFBFB"

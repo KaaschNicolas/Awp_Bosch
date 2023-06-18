@@ -1,8 +1,11 @@
 ﻿using App.Contracts.Services;
 using App.Contracts.ViewModels;
 using App.Core.Models;
+using App.Core.Services;
 using App.Core.Services.Interfaces;
+using App.Helpers;
 using App.Messages;
+using App.Models;
 using App.Services.PrintService.impl;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -111,7 +114,6 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [ObservableProperty]
     private ObservableCollection<Pcb> _pcbs;
 
-
     private readonly IAuthenticationService _authenticationService;
     private readonly ICrudService<Pcb> _pcbCrudService;
     private readonly IPcbDataService<Pcb> _pcbDataService;
@@ -171,8 +173,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [RelayCommand]
     public async void Print(Page page)
     {
+        IDataMatrixService _dmService = new DataMatrixService();
+        var dmImage = _dmService.GetDataMatrix(SerialNumber);
+        var dmImageConverted = BitmapToBitmapImageConverter.GetBitmapImage(dmImage);
+        var printPageModel = new PrintPageModel(SerialNumber, PcbType.PcbPartNumber, dmImageConverted, Restriction.Name, PanelComment.Content, Status, InCirculationDays, Storage ,AtLocationDays, NotedBy, FirstErrorCode, FirstErrorDescription, SecondErrorCode, SecondErrorDescription);
         var _printService = new PrintService();
-        await _printService.Print(page);
+        _printService.Print(printPageModel);
     }
 
     [RelayCommand]
