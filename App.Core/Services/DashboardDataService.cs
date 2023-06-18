@@ -23,7 +23,7 @@ namespace App.Core.Services
                 var data = await _boschContext
                     .Pcbs
                     .AsNoTracking()
-                    .Include(x => x.PcbTypeId)
+                    .Include(x => x.PcbType)
                     .Where(x => x.CreatedDate >= DateTime.Now.AddDays(-7))
                     .GroupBy(x => x.PcbType.PcbPartNumber)
                     .Select(x => new DashboardPcbTypeDTO() { PcbPartNumber = x.Key, Count = x.Count() })
@@ -62,7 +62,7 @@ namespace App.Core.Services
                 var data = await _boschContext
                     .Pcbs
                     .AsNoTracking()
-                    .Where(x => x.CreatedDate == DateTime.Now)
+                    .Where(x => x.CreatedDate.Date == DateTime.Now.Date)
                     .CountAsync();
                 return new Response<int>(ResponseCode.Success, data: data);
             }
@@ -105,17 +105,41 @@ namespace App.Core.Services
             }
         }
 
-        public async Task<Response<DashboardStorageLocationDTO>> GetTop3StorageLocations()
+        public async Task<Response<List<DashboardStorageLocationDTO>>> GetTop3StorageLocations()
         {
             try
             {
-                
+                var data =  await _boschContext
+                    .DashboardStorageLocationDTO
+                    .FromSqlRaw(BuildQueryDashboardStorageeLocationDTO())
+                    .ToListAsync();
+                return new Response<List<DashboardStorageLocationDTO>>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {
-
-                throw;
+                return new Response<List<DashboardStorageLocationDTO>>(ResponseCode.Error, error: "GetTop3StorageLocations() failed");
             }
+        }
+
+        private static string BuildQueryDashboardStorageeLocationDTO()
+        {
+            return $@"SELECT TOP(3)  b.StorageName,
+                                    COUNT(b.StorageName) AS CountStorageName
+                        FROM
+                          (SELECT PcbId,
+                                  t.Id,
+                                  CreatedDate AS TransferDate,
+                                  StorageLocationId,
+                                  s.StorageName,
+                                  DATEDIFF(DAY, CreatedDate, lag(CreatedDate, 1, GETDATE()) OVER(PARTITION BY PcbId
+                                                                                                 ORDER BY PcbId DESC, CreatedDate DESC)) AS DwellTime
+                        FROM Transfers AS t
+                           INNER JOIN
+                             (SELECT Id,
+                                     StorageName
+                              FROM StorageLocations) AS s ON s.Id = t.StorageLocationId
+                           WHERE CreatedDate > DeletedDate) AS b
+                        GROUP BY b.StorageName ORDER BY  CountStorageName DESC";
         }
     }
 }

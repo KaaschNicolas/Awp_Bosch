@@ -42,6 +42,8 @@ namespace App.Core.DataAccess
 
         public virtual DbSet<DwellTimeEvaluationDTO> DwellTimeEvaluationDTO { get; set; }
 
+        public virtual DbSet<DashboardStorageLocationDTO> DashboardStorageLocationDTO { get; set; }
+
 
         public DbSet<PcbType> PcbTypes
         {
