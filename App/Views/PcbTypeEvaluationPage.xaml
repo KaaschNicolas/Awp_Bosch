@@ -155,16 +155,7 @@
             Height="Auto"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-            <Button
-                Click="Chart_Click"
-                Margin="10,46,0,0"
-                Style="{StaticResource AccentButtonStyle}">
-                <StackPanel
-                    Orientation="Horizontal">
-                    <FontIcon Glyph="&#xEB05;" />
-                    <TextBlock Margin="5,0,0,0" Text="Bearbeitungsstatus berechnen"/>
-                </StackPanel>
-            </Button>
+            
         </StackPanel>
         <oxyplot:PlotView x:Name="pieChart" 
                           Grid.Column="1"
