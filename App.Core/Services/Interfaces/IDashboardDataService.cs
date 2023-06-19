@@ -16,5 +16,6 @@ namespace App.Core.Services.Interfaces
         public Task<Response<int>> GetFinalizedPcbsToday();
         public Task<Response<int>> GetPcbsInCirculation();
         public Task<Response<List<DashboardStorageLocationDTO>>> GetTop3StorageLocations();
+        public Task<Response<List<DashboardDwellTimeDTO>>> GetDwellTimeDTO();
     }
 }

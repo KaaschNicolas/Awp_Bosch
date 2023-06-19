@@ -3,6 +3,7 @@ using App.Core.Models;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace App.ViewModels;
 
@@ -15,25 +16,7 @@ public sealed partial class DashboardViewModel : ObservableRecipient
     }
 
     private IDashboardDataService<BaseEntity> _dashboardDataService;
-
-    [ObservableProperty]
-    private DashboardPcbTypeDTO _pcbType1;
-
-    [ObservableProperty]
-    private DashboardPcbTypeDTO _pcbType2;
-
-    [ObservableProperty]
-    private DashboardPcbTypeDTO _pcbType3;
-
-    [ObservableProperty]
-    private DashboardStorageLocationDTO _storageLocation1;
-
-    [ObservableProperty]
-    private DashboardStorageLocationDTO _storageLocation2;
-
-    [ObservableProperty]
-    private DashboardStorageLocationDTO _storageLocation3;
-
+                
     [ObservableProperty]
     private int _pcbsAddedToday;
 
@@ -46,6 +29,15 @@ public sealed partial class DashboardViewModel : ObservableRecipient
     [ObservableProperty]
     private int _pcbCountLast7Days;
 
+    [ObservableProperty]
+    private ObservableCollection<DashboardPcbTypeDTO> _pcbTypeDTOs = new();
+    
+    [ObservableProperty]
+    private ObservableCollection<DashboardStorageLocationDTO> _storageLocationDTOs = new();
+
+    [ObservableProperty]
+    private ObservableCollection<DashboardDwellTimeDTO> _dwellTimeDTOs = new();
+
     public IAsyncRelayCommand LoadDashboardCommand { get; set; }
     public async Task LoadDashboard()
     {
@@ -54,6 +46,13 @@ public sealed partial class DashboardViewModel : ObservableRecipient
         if (pcbsAddedToday.Code == ResponseCode.Success)
         {
             PcbsAddedToday = pcbsAddedToday.Data;
+        }
+
+        var  pcbInCirculation = await _dashboardDataService.GetPcbsInCirculation();
+
+        if (pcbInCirculation.Code == ResponseCode.Success)
+        {
+            PcbsInCirculation = pcbInCirculation.Data;
         }
 
         var pcbCountLast7Days = await _dashboardDataService.GetPcbCountLast7Days();
@@ -67,17 +66,24 @@ public sealed partial class DashboardViewModel : ObservableRecipient
 
         if (top3PcbType.Code == ResponseCode.Success)
         {
-            if (top3PcbType.Data.Count >= 1)
+            top3PcbType.Data.ForEach(x => PcbTypeDTOs.Add(x));
+
+            if (PcbTypeDTOs.Count >= 1)
             {
-                PcbType1 = top3PcbType.Data[0];
+                PcbTypeDTOs[0].Number = "1.";
+                PcbTypeDTOs[0].Percentage = (PcbTypeDTOs[0].Count * 100 / PcbCountLast7Days);
             }
-            if (top3PcbType.Data.Count >= 2)
+
+            if (PcbTypeDTOs.Count >= 2)
             {
-                PcbType2 = top3PcbType.Data[1];
+                PcbTypeDTOs[1].Number = "2.";
+                PcbTypeDTOs[1].Percentage = (PcbTypeDTOs[1].Count * 100 / PcbCountLast7Days);
             }
-            if (top3PcbType.Data.Count  == 3) 
-            { 
-                PcbType3 = top3PcbType.Data[2];
+
+            if (PcbTypeDTOs.Count == 3)
+            {
+                PcbTypeDTOs[2].Number = "3.";
+                PcbTypeDTOs[2].Percentage = (PcbTypeDTOs[2].Count * 100 / PcbCountLast7Days);
             }
         }
 
@@ -85,16 +91,51 @@ public sealed partial class DashboardViewModel : ObservableRecipient
 
         if (top3StorageLocations.Code == ResponseCode.Success)
         {
-            StorageLocation1 = top3StorageLocations.Data[0];
-            StorageLocation2 = top3StorageLocations.Data[1];
-            StorageLocation3 = top3StorageLocations.Data[2];
+            top3StorageLocations.Data.ForEach(x => StorageLocationDTOs.Add(x));
+
+            if (StorageLocationDTOs.Count >= 1)
+            {
+                StorageLocationDTOs[0].Number = "1.";
+                StorageLocationDTOs[0].Percentage = (top3StorageLocations.Data[0].CountPcbs * 100/ pcbInCirculation.Data);
+            }
+
+            if (StorageLocationDTOs.Count >= 2)
+            {
+                StorageLocationDTOs[1].Number = "2.";
+                StorageLocationDTOs[1].Percentage = (top3StorageLocations.Data[1].CountPcbs * 100 / pcbInCirculation.Data);
+            }
+
+            if (StorageLocationDTOs.Count == 3)
+            {
+                StorageLocationDTOs[2].Number = "3.";
+                StorageLocationDTOs[2].Percentage = (top3StorageLocations.Data[2].CountPcbs * 100 / pcbInCirculation.Data);
+            }
         }
 
-        var  pcbInCirculation = await _dashboardDataService.GetPcbsInCirculation();
+        var dwellTimeDTOs = await _dashboardDataService.GetDwellTimeDTO();
 
-        if (pcbInCirculation.Code == ResponseCode.Success)
+        if (dwellTimeDTOs.Code == ResponseCode.Success)
         {
-            PcbsInCirculation = pcbInCirculation.Data;
+            dwellTimeDTOs.Data.ForEach(x => DwellTimeDTOs.Add(x));
+            
+            if (DwellTimeDTOs.Count >= 1)
+            {
+                dwellTimeDTOs.Data[0].Color = "green";
+                dwellTimeDTOs.Data[0].Percentage = (dwellTimeDTOs.Data[0].CountDwellTimeStatus * 100 / pcbInCirculation.Data);
+
+            }
+
+            if (DwellTimeDTOs.Count >= 2)
+            {
+                dwellTimeDTOs.Data[1].Color = "yellow";
+                dwellTimeDTOs.Data[1].Percentage = (dwellTimeDTOs.Data[1].CountDwellTimeStatus * 100/ pcbInCirculation.Data);
+            }
+
+            if (DwellTimeDTOs.Count == 3)
+            {
+                dwellTimeDTOs.Data[2].Color = "red";
+                dwellTimeDTOs.Data[2].Percentage = (dwellTimeDTOs.Data[2].CountDwellTimeStatus * 100 / pcbInCirculation.Data);
+            }
         }
     }
 }

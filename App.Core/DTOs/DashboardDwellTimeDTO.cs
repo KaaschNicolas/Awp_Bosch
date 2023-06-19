@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -7,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace App.Core.DTOs
 {
-    public class DashboardPcbTypeDTO
+    [Keyless]
+    public class DashboardDwellTimeDTO
     {
-        public int Count { get; set; }
-        public string PcbPartNumber { get; set; }
+        public int DwellTimeStatus { get; set; }
+        public int CountDwellTimeStatus { get; set; }
 
         [NotMapped]
-        public string Number { get; set; }
+        public string Color { get; set; }
 
         [NotMapped]
         public int Percentage { get; set; }
