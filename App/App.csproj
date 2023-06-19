@@ -19,6 +19,7 @@
   <ItemGroup>
     <None Remove="Controls\ErrorCardUserControl.xaml" />
     <None Remove="Controls\TransferDialog.xaml" />
+    <None Remove="Models\PrintPageModel.xaml" />
     <None Remove="Views\CreateDiagnosePage.xaml" />
     <None Remove="Views\DiagnosePage.xaml" />
     <None Remove="Views\DwellTimeEvalutionPage.xaml" />
@@ -92,6 +93,12 @@
 		<Page Include="Controls\TransferDialog.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Models\PrintPageModel.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 
 	<ItemGroup>
