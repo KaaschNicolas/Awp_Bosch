@@ -1,0 +1,1 @@
+﻿SELECT TOP(3) COUNT(p.PcbTypeId) as CountPcbTypeId, pt.PcbPartNumber  FROM Pcbs as p INNER JOIN PcbTypes pt ON p.PcbTypeId = pt.Id Group by pt.PcbPartNumber

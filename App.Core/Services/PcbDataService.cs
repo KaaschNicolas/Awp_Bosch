@@ -243,8 +243,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
         }
     }
-
-
+    
     private string BuildQuery(
         string? whereFilterOnStorageLocation = null,
         string? whereFilterOnPcb = null,

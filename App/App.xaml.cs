@@ -20,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
 using Serilog;
+using Windows.Devices.WiFiDirect.Services;
 
 namespace App;
 
@@ -97,6 +98,7 @@ public partial class App : Application
             services.AddTransient<IMockDataService, MockDataService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IPcbTypeEvaluationService, PcbTypeEvaluationService>();
+            services.AddTransient<IDashboardDataService<BaseEntity>, DashboardDataService<BaseEntity>>();
 
 
             // Views and ViewModels
