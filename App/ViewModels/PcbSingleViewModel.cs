@@ -178,7 +178,25 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         IDataMatrixService _dmService = new DataMatrixService();
         var dmImage = _dmService.GetDataMatrix(SerialNumber);
         var dmImageConverted = BitmapToBitmapImageConverter.Convert(dmImage);
-        var printPageModel = new PrintPageModel(SerialNumber, PcbType.PcbPartNumber, dmImageConverted, Restriction.Name, PanelComment, Status, InCirculationDays, Storage ,AtLocationDays, NotedBy, FirstErrorCode, FirstErrorDescription, SecondErrorCode, SecondErrorDescription);
+        var pcbPrintPageDto = new PcbPrintPageDTO()
+        {
+            Seriennummer = SerialNumber,
+            Sachnummer = PcbType.PcbPartNumber,
+            Datamatrix = dmImageConverted,
+            Einschraenkung = Restriction.Name,
+            Panel = PanelComment,
+            Status = Status,
+            UmlaufTage = InCirculationDays,
+            AktuellerStandort = Storage,
+            Verweildauer = AtLocationDays,
+            LetzteBearbeitung = NotedBy,
+            Oberfehler = FirstErrorCode,
+            OberfehlerBeschreibung = FirstErrorDescription,
+            Unterfehler = SecondErrorCode,
+            UnterfehlerBeschreibung = SecondErrorDescription
+        };
+        //var printPageModel = new PrintPageModel(SerialNumber, PcbType.PcbPartNumber, dmImageConverted, Restriction.Name, PanelComment, Status, InCirculationDays, Storage ,AtLocationDays, NotedBy, FirstErrorCode, FirstErrorDescription, SecondErrorCode, SecondErrorDescription);
+        var printPageModel = new PrintPageModel(pcbPrintPageDto);
         var _printService = new PrintService();
         _printService.Print(printPageModel);
     }
