@@ -291,25 +291,55 @@ namespace App.ViewModels
         [RelayCommand]
         public async void Print()
         {
+            var res = await _pcbDataService.GetByIdEager(_selectedItem.PcbId);
+            var pcbRes = res.Data;
             IDataMatrixService _dmService = new DataMatrixService();
             var dmImage = _dmService.GetDataMatrix(_selectedItem.SerialNumber);
             var dmImageConverted = BitmapToBitmapImageConverter.Convert(dmImage);
+            var ErrorTypes = pcbRes.ErrorTypes;
+            String FirstErrorCode;
+            String FirstErrorDescription;
+            String SecondErrorCode;
+            String SecondErrorDescription;
+            if (ErrorTypes[0].Code != null && ErrorTypes[0].ErrorDescription != null && ErrorTypes != null)
+            {
+                FirstErrorCode = ErrorTypes[0].Code;
+                FirstErrorDescription = ErrorTypes[0].ErrorDescription;
+
+                if (ErrorTypes[1].Code != null && ErrorTypes[1].ErrorDescription != null)
+                {
+                     SecondErrorCode = ErrorTypes[1].Code;
+                     SecondErrorDescription = ErrorTypes[1].ErrorDescription;
+                }
+                else
+                {
+                     SecondErrorCode = " nicht vorhanden";
+                     SecondErrorDescription = " nicht vorhanden";
+                }
+            }
+            else
+            {
+                FirstErrorCode = " nicht vorhanden";
+                 FirstErrorDescription = " nicht vorhanden";
+                 SecondErrorCode = " nicht vorhanden";
+                 SecondErrorDescription = " nicht vorhanden";
+            }
             var pcbPrintPageDto = new PcbPrintPageDTO()
             {
                 Seriennummer = _selectedItem.SerialNumber,
                 Sachnummer = _selectedItem.PcbPartNumber,
                 Datamatrix = dmImageConverted,
-                Einschraenkung = "null", //null
-                Panel = null, //null
+                Einschraenkung = pcbRes.Restriction.Name,
+                Panel = pcbRes.Comment,
                 Status = _selectedItem.IsFinalized ? "abgeschlossen" : "offen",
-                UmlaufTage = 0, //null
+                UmlaufTage = (int)Math.Round((DateTime.Now - pcbRes.CreatedDate).TotalDays),
                 AktuellerStandort = _selectedItem.StorageName,
-                Verweildauer = 0, //null
-                LetzteBearbeitung = "null", //null
-                Oberfehler = _selectedItem.MainErrorCode,
-                OberfehlerBeschreibung = "null", //null
-                Unterfehler = _selectedItem.SubErrorCode,
-                UnterfehlerBeschreibung = "null", //null
+                Verweildauer = _selectedItem.DwellTime,
+                LetzteBearbeitung = pcbRes.Transfers.Last().NotedBy.Name,
+                Oberfehler = FirstErrorCode,
+                OberfehlerBeschreibung = FirstErrorDescription,
+                Unterfehler = SecondErrorCode,
+                UnterfehlerBeschreibung = SecondErrorDescription,
             };
             var printPageModel = new PrintPageModel(pcbPrintPageDto);
             var _printService = new PrintService();

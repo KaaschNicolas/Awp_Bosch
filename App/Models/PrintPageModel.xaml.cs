@@ -1,6 +1,4 @@
-using App.Core.Models;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace App.Models
 {
