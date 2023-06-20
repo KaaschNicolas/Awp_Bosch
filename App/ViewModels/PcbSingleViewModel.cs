@@ -195,7 +195,6 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
             Unterfehler = SecondErrorCode,
             UnterfehlerBeschreibung = SecondErrorDescription
         };
-        //var printPageModel = new PrintPageModel(SerialNumber, PcbType.PcbPartNumber, dmImageConverted, Restriction.Name, PanelComment, Status, InCirculationDays, Storage ,AtLocationDays, NotedBy, FirstErrorCode, FirstErrorDescription, SecondErrorCode, SecondErrorDescription);
         var printPageModel = new PrintPageModel(pcbPrintPageDto);
         var _printService = new PrintService();
         _printService.Print(printPageModel);

@@ -3,9 +3,12 @@ using App.Contracts.ViewModels;
 using App.Core.DTOs;
 using App.Core.Models;
 using App.Core.Models.Enums;
+using App.Core.Services;
 using App.Core.Services.Interfaces;
+using App.Helpers;
 using App.Messages;
 using App.Models;
+using App.Services.PrintService.impl;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -288,8 +291,29 @@ namespace App.ViewModels
         [RelayCommand]
         public async void Print()
         {
-            var test = new PcbSingleViewModel();
-            test.OnNavigatedTo(SelectedItem.PcbId);
+            IDataMatrixService _dmService = new DataMatrixService();
+            var dmImage = _dmService.GetDataMatrix(_selectedItem.SerialNumber);
+            var dmImageConverted = BitmapToBitmapImageConverter.Convert(dmImage);
+            var pcbPrintPageDto = new PcbPrintPageDTO()
+            {
+                Seriennummer = _selectedItem.SerialNumber,
+                Sachnummer = _selectedItem.PcbPartNumber,
+                Datamatrix = dmImageConverted,
+                Einschraenkung = "null", //null
+                Panel = null, //null
+                Status = _selectedItem.IsFinalized ? "abgeschlossen" : "offen",
+                UmlaufTage = 0, //null
+                AktuellerStandort = _selectedItem.StorageName,
+                Verweildauer = 0, //null
+                LetzteBearbeitung = "null", //null
+                Oberfehler = _selectedItem.MainErrorCode,
+                OberfehlerBeschreibung = "null", //null
+                Unterfehler = _selectedItem.SubErrorCode,
+                UnterfehlerBeschreibung = "null", //null
+            };
+            var printPageModel = new PrintPageModel(pcbPrintPageDto);
+            var _printService = new PrintService();
+            _printService.Print(printPageModel);
         }
 
         [RelayCommand]
