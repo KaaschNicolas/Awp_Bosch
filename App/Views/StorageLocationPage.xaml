@@ -42,14 +42,6 @@
                             Icon="Refresh"
                             Label="Neu laden" />
                     </CommandBar>
-                    <AutoSuggestBox
-                        MinWidth="304"
-                        MaxWidth="320"
-                        Margin="0,8,0,12"
-                        HorizontalAlignment="Left"
-                        FontWeight="Normal"
-                        PlaceholderText="Suche"
-                        QueryIcon="Find" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
