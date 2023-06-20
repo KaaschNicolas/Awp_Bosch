@@ -51,8 +51,12 @@
                         Label="Neu Laden"  
                         Click="RefreshUsers"/>
                 </CommandBar>
+                <StackPanel Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Background="{ThemeResource CommandBarBackground}">
+                </StackPanel>
             </Grid>
-		</DataTemplate>
+        </DataTemplate>
 	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
     <Grid x:Name="ContentArea" Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}">
