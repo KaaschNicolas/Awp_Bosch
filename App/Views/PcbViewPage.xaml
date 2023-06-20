@@ -308,6 +308,10 @@
                                             Click="NavigateToDetails"
                                             Icon="OpenWith"
                                             Text="Detailansicht" />
+                                        <MenuFlyoutItem 
+                                            Click="PrintClick"
+                                            Icon="Print"
+                                            Text="Drucken" />
                                         <MenuFlyoutItem
                                             Click="TransferClick"
                                             Icon="RepeatAll"

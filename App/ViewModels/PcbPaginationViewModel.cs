@@ -285,6 +285,12 @@ namespace App.ViewModels
             }
         }
 
+        [RelayCommand]
+        public async void Print()
+        {
+            var test = new PcbSingleViewModel();
+            test.OnNavigatedTo(SelectedItem.PcbId);
+        }
 
         [RelayCommand]
         public void NavigateToDetails(int pcbId)

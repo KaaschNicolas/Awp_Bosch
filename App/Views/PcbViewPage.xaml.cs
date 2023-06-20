@@ -280,6 +280,11 @@ namespace App.Views
             ViewModel.DeleteCommand.Execute(null);
         }
 
+        private void PrintClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.PrintCommand.Execute(null);
+        }
+
         void EditClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem.PcbId);

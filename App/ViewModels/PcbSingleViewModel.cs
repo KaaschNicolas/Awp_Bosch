@@ -145,6 +145,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         _pcbs = new ObservableCollection<Pcb>();
     }
 
+    public PcbSingleViewModel(){}
+
 
     [RelayCommand]
     public async void ShowTransfer()
@@ -171,12 +173,12 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     }
 
     [RelayCommand]
-    public async void Print(Page page)
+    public async void Print()
     {
         IDataMatrixService _dmService = new DataMatrixService();
         var dmImage = _dmService.GetDataMatrix(SerialNumber);
-        var dmImageConverted = BitmapToBitmapImageConverter.GetBitmapImage(dmImage);
-        var printPageModel = new PrintPageModel(SerialNumber, PcbType.PcbPartNumber, dmImageConverted, Restriction.Name, PanelComment.Content, Status, InCirculationDays, Storage ,AtLocationDays, NotedBy, FirstErrorCode, FirstErrorDescription, SecondErrorCode, SecondErrorDescription);
+        var dmImageConverted = BitmapToBitmapImageConverter.Convert(dmImage);
+        var printPageModel = new PrintPageModel(SerialNumber, PcbType.PcbPartNumber, dmImageConverted, Restriction.Name, PanelComment, Status, InCirculationDays, Storage ,AtLocationDays, NotedBy, FirstErrorCode, FirstErrorDescription, SecondErrorCode, SecondErrorDescription);
         var _printService = new PrintService();
         _printService.Print(printPageModel);
     }

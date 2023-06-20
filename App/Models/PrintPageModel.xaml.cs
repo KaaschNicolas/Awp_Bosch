@@ -1,3 +1,4 @@
+using App.Core.Models;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 
@@ -10,15 +11,16 @@ namespace App.Models
             this.InitializeComponent();
         }
 
-        public PrintPageModel(string seriennummer, string leiterplatte, BitmapImage datamatrix, string einschraenkung, string anmerkungen, string status, int umlaufTage, string aktuellerStandort, int verweildauer, string letzteBearbeitung, string oberfehler, string oberfehlerBeschreibung, string unterfehler, string unterfehlerBeschreibung)
+        public PrintPageModel(string seriennummer, string sachnummer, BitmapImage datamatrix, string einschraenkung, Comment panel, string status, int umlaufTage, string aktuellerStandort, int verweildauer, string letzteBearbeitung, string oberfehler, string oberfehlerBeschreibung, string unterfehler, string unterfehlerBeschreibung)
         {
             this.InitializeComponent();
             datumTextBlock.Text = DateTime.Now.ToString("dd.MM.yyy HH:mm:ss");
             seriennummerTextBlock.Text = seriennummer;
-            leiterplatteTextBlock.Text = leiterplatte;
+            sachnummerTextBlock.Text = sachnummer;
             datamatrixImage.Source = datamatrix;
             einschraenkungInfoBar.Message = einschraenkung;
-            anmerkungenTextBlock.Text = anmerkungen;
+            anmerkungenTextBlock.Text = panel == null ? "" : panel.Content;
+            anmerkungenBearbeitetvonTextBlock.Text = "bearbeitet von: " + letzteBearbeitung;
             statusTextBlock.Text = status;
             umlaufTageTextBlock.Text = umlaufTage.ToString();
             aktuellerStandortTextBlock.Text = aktuellerStandort;
