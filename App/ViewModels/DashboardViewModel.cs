@@ -4,6 +4,8 @@ using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Drawing.Text;
+using System.Windows.Controls;
 
 namespace App.ViewModels;
 
@@ -116,26 +118,71 @@ public sealed partial class DashboardViewModel : ObservableRecipient
 
         if (dwellTimeDTOs.Code == ResponseCode.Success)
         {
-            dwellTimeDTOs.Data.ForEach(x => DwellTimeDTOs.Add(x));
-            
-            if (DwellTimeDTOs.Count >= 1)
-            {
-                dwellTimeDTOs.Data[0].Color = "green";
-                dwellTimeDTOs.Data[0].Percentage = (dwellTimeDTOs.Data[0].CountDwellTimeStatus * 100 / pcbInCirculation.Data);
 
+            var code1 = StatusCodeExists(dwellTimeDTOs.Data, 1);
+            if (code1.Item1)
+            {
+                code1.Item2.Color = "green";
+                code1.Item2.Percentage = code1.Item2.CountDwellTimeStatus * 100 / pcbInCirculation.Data;
+                DwellTimeDTOs.Add(code1.Item2);
+            }
+            else
+            {
+                DwellTimeDTOs.Add(new DashboardDwellTimeDTO()
+                {
+                    CountDwellTimeStatus = 0,
+                    Percentage = 0,
+                    Color = "green"
+                });
             }
 
-            if (DwellTimeDTOs.Count >= 2)
+            var code2 = StatusCodeExists(dwellTimeDTOs.Data, 2);
+            if (code2.Item1)
             {
-                dwellTimeDTOs.Data[1].Color = "yellow";
-                dwellTimeDTOs.Data[1].Percentage = (dwellTimeDTOs.Data[1].CountDwellTimeStatus * 100/ pcbInCirculation.Data);
+                code2.Item2.Color = "yellow";
+                code2.Item2.Percentage = code2.Item2.CountDwellTimeStatus * 100 / pcbInCirculation.Data;
+                DwellTimeDTOs.Add(code2.Item2);
+            }
+            else
+            {
+                DwellTimeDTOs.Add(new DashboardDwellTimeDTO()
+                {
+                    CountDwellTimeStatus = 0,
+                    Percentage = 0,
+                    Color = "yellow"
+                });
             }
 
-            if (DwellTimeDTOs.Count == 3)
+            var code3 = StatusCodeExists(dwellTimeDTOs.Data, 3);
+            if (code3.Item1)
             {
-                dwellTimeDTOs.Data[2].Color = "red";
-                dwellTimeDTOs.Data[2].Percentage = (dwellTimeDTOs.Data[2].CountDwellTimeStatus * 100 / pcbInCirculation.Data);
+                code3.Item2.Color = "red";
+                code3.Item2.Percentage = code3.Item2.CountDwellTimeStatus * 100 / pcbInCirculation.Data;
+                DwellTimeDTOs.Add(code3.Item2);
+            }
+            else
+            {
+                DwellTimeDTOs.Add(new DashboardDwellTimeDTO()
+                {
+                    CountDwellTimeStatus = 0,
+                    Percentage = 0,
+                    Color = "red"
+                });
             }
         }
+    }
+
+    private (bool, DashboardDwellTimeDTO) StatusCodeExists(List<DashboardDwellTimeDTO> dto, int code)
+    {
+        int count = 0;
+        foreach (var item in dto)
+        {
+            if (item.DwellTimeStatus == code)
+            {
+                return (true, item);
+            }
+            count++;
+        }
+        return (false, null);
     }
 }
