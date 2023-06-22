@@ -23,21 +23,25 @@
                     Background="Transparent"
                     DefaultLabelPosition="Right"
                     IsOpen="False">
-					<CommandBar.Content>
-						<!--  Get MainPageTitle.Text from localizx:ed resources  -->
-						<TextBlock Text="Auswertung - Sachnummer pro Lagerort" />
+                    <CommandBar.Content>
+                        <TextBlock Text="Auswertung - Sachnummer pro Lagerort" />
 					</CommandBar.Content>
 				</CommandBar>
 			</Grid>
 		</DataTemplate>
 	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-	
-	<Grid x:Name="ContentArea">
+
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Enabled">
+        <Grid x:Name="ContentArea"
+          HorizontalAlignment="Center">
 		<Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -95,10 +99,28 @@
             </CommandBar>
         </StackPanel>
 
+        <StackPanel
+            Grid.Column="0"
+            Grid.Row="1"
+            Padding="10,0,0,10"
+	        Orientation="Horizontal"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Stretch"
+            Width="Auto"
+            Height="Auto"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+            <TextBlock Text="Gesamt:"/>
+            <TextBlock Margin="35,0,0,0" Text="{Binding Total}"/>
+        </StackPanel>
+
         <controls:DataGrid 
             x:Name="ListArea"
             Grid.Column="0"
-            Grid.Row="1"
+            Grid.Row="2"
+            Grid.RowSpan="4"
+            
+            Padding="10,20,0,0"
             AutoGenerateColumns="False"
             CanUserSortColumns="True"
             GridLinesVisibility="All"
@@ -129,44 +151,49 @@
                     Tag="Count_after"/>
             </controls:DataGrid.Columns>
         </controls:DataGrid>
-        <StackPanel
-            Grid.Column="0"
-            Grid.Row="2"
-	        Orientation="Horizontal"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Stretch"
-            Width="Auto"
-            Height="Auto"
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-            <TextBlock Text="Gesamt:"/>
-            <TextBlock Margin="35,0,0,0" Text="{Binding Total}"/>
-        </StackPanel>
+        
+        
         
         <!-- rechtes Panel -->
         <StackPanel
             Grid.Column="1"
             Grid.Row="0"
-            Margin="20,0,0,0"
+            Grid.RowSpan="2"
+            Margin="40,0,0,0"
 	        Orientation="Horizontal"
             VerticalAlignment="Top"
             HorizontalAlignment="Stretch"
             Width="500"
-            Height="Auto"
+            Height="120"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-            
         </StackPanel>
         <oxyplot:PlotView x:Name="pieChart" 
                           Grid.Column="1"
                           Grid.Row="1"
                           Grid.RowSpan="4"
-                          Margin="20,0,0,0"
+                          Padding="100"
+                          Margin="40,0,0,0"
                           Height="250"
-                          Model="{x:Bind ViewModel.PcbTypeFinalizedModel, Mode=TwoWay}"
+                          Model="{x:Bind ViewModel.PcbTypeFinalizedModel, Mode=OneWay}"
                           HorizontalContentAlignment="Center"
                           Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                           BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"/>
+        <StackPanel
+            Grid.Column="1"
+            Grid.Row="8"
+            Grid.RowSpan="10"
+            Margin="40,0,0,0"
+	        Orientation="Horizontal"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Stretch"
+            Width="500"
+            Height="100"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+        </StackPanel>
         
     </Grid>
+    </ScrollViewer>
+
 </Page>
