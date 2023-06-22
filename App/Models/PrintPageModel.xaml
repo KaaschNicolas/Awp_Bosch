@@ -6,7 +6,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       RequestedTheme="Light">
-    <Grid Margin="5,5,25,5">
+    <Grid Margin="35">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -41,8 +41,8 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Spacing="1">
-                    <TextBlock Text="Leiterplatte:" />
-                    <TextBlock x:Name="leiterplatteTextBlock"
+                    <TextBlock Text="Sachnummer:" />
+                    <TextBlock x:Name="sachnummerTextBlock"
                                Text="-"
                                FontWeight="Bold" />
                 </StackPanel>
@@ -52,8 +52,7 @@
                    Width="100"
                    Height="100"
                    Stretch="Uniform"
-                   HorizontalAlignment="Right"
-                   Margin="0,0,15,0" />
+                   HorizontalAlignment="Right" />
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -67,7 +66,8 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0"
-                            Margin="25,15,0,15">
+                            Margin="25,15,0,15"
+                            MinWidth="160">
                     <InfoBar    x:Name="einschraenkungInfoBar"
                                 Title="Einschränkung"
                                 HorizontalAlignment="Left"
@@ -81,6 +81,7 @@
                                 BorderBrush="#FBFBFB" />
                 </StackPanel>
                 <StackPanel Grid.Row="1"
+                            MinWidth="160"
                             Orientation="Vertical"
                             BorderBrush="#FBFBFB"
                             BorderThickness="1"
@@ -89,13 +90,13 @@
                             HorizontalAlignment="Left">
                     <TextBlock Text="Anmerkungen:"
                                FontWeight="Bold"
-                               Margin="10,10,0,0" />
-                    <TextBlock Text="bearbeitet von:"
+                               Margin="10,10,10,0" />
+                    <TextBlock x:Name="anmerkungenBearbeitetvonTextBlock"
                                FontSize="8"
                                FontWeight="Light"
                                Margin="10,0,0,0" />
                     <TextBlock x:Name="anmerkungenTextBlock"
-                               Text="alles gut ja"
+                               Text="-"
                                Margin="10,10,0,15" />
                 </StackPanel>
             </Grid>
@@ -107,7 +108,7 @@
                             Background="#FBFBFB"
                             BackgroundSizing="OuterBorderEdge"
                             BorderBrush="#FBFBFB"
-                            Margin="0,15,25,0"
+                            Margin="0,15,25,15"
                             HorizontalAlignment="Right"
                             Orientation="Vertical"
                             ScrollViewer.VerticalScrollMode="Disabled">
@@ -187,7 +188,7 @@
                   Margin="25,10,0,0"
                   HorizontalAlignment="Left"
                   HorizontalContentAlignment="Stretch"
-                  Width="575"
+                  Width="550"
                   ExpandDirection="Down"
                   IsExpanded="True">
             <Expander.Header>

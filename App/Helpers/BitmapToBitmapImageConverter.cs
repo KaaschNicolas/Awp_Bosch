@@ -11,7 +11,7 @@ namespace App.Helpers
         {
         }
 
-        public static BitmapImage GetBitmapImage(Bitmap bitmap)
+        public static BitmapImage Convert(Bitmap bitmap)
         {
             return convertBitmap(bitmap);
         }

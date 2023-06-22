@@ -37,21 +37,7 @@
                         Icon="Add"
                         Label="Hinzufügen"/>
                     <AppBarButton Icon="Refresh" Label="Neu Laden" Click="RefreshPartNumberButton_Click"/>
-
                 </CommandBar>
-                <StackPanel
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Background="{ThemeResource CommandBarBackground}">
-                    <AutoSuggestBox
-                        MinWidth="304"
-                        MaxWidth="320"
-                        Margin="0,8,0,12"
-                        HorizontalAlignment="Left"
-                        PlaceholderText="Suche"
-                        FontWeight="Normal"
-                        QueryIcon="Find"/>
-                </StackPanel>
             </Grid>
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>

@@ -103,7 +103,7 @@ public sealed partial class PcbSinglePage : Page
     //    private void GenerateBarcode()
     //    {
     //        IDataMatrixService dms = new DataMatrixService();
-    //        var dataMatrixImageSource = BitmapToBitmapImageConverter.GetBitmapImage(dms.GetDataMatrix(ViewModel.SerialNumber));
+    //        var dataMatrixImageSource = BitmapToBitmapImageConverter.Convert(dms.GetDataMatrix(ViewModel.SerialNumber));
     //        ImageBrush dataMatrixImageBrush = new ImageBrush();
     //        dataMatrixImageBrush.ImageSource = dataMatrixImageSource;
     //        dataMatrixRectangle.Fill = dataMatrixImageBrush;

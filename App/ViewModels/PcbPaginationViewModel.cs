@@ -3,9 +3,12 @@ using App.Contracts.ViewModels;
 using App.Core.DTOs;
 using App.Core.Models;
 using App.Core.Models.Enums;
+using App.Core.Services;
 using App.Core.Services.Interfaces;
+using App.Helpers;
 using App.Messages;
 using App.Models;
+using App.Services.PrintService.impl;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -285,6 +288,63 @@ namespace App.ViewModels
             }
         }
 
+        [RelayCommand]
+        public async void Print()
+        {
+            var res = await _pcbDataService.GetByIdEager(_selectedItem.PcbId);
+            var pcbRes = res.Data;
+            IDataMatrixService _dmService = new DataMatrixService();
+            var dmImage = _dmService.GetDataMatrix(_selectedItem.SerialNumber);
+            var dmImageConverted = BitmapToBitmapImageConverter.Convert(dmImage);
+            var ErrorTypes = pcbRes.ErrorTypes;
+            String FirstErrorCode;
+            String FirstErrorDescription;
+            String SecondErrorCode;
+            String SecondErrorDescription;
+            if (ErrorTypes[0].Code != null && ErrorTypes[0].ErrorDescription != null && ErrorTypes != null)
+            {
+                FirstErrorCode = ErrorTypes[0].Code;
+                FirstErrorDescription = ErrorTypes[0].ErrorDescription;
+
+                if (ErrorTypes[1].Code != null && ErrorTypes[1].ErrorDescription != null)
+                {
+                     SecondErrorCode = ErrorTypes[1].Code;
+                     SecondErrorDescription = ErrorTypes[1].ErrorDescription;
+                }
+                else
+                {
+                     SecondErrorCode = " nicht vorhanden";
+                     SecondErrorDescription = " nicht vorhanden";
+                }
+            }
+            else
+            {
+                FirstErrorCode = " nicht vorhanden";
+                 FirstErrorDescription = " nicht vorhanden";
+                 SecondErrorCode = " nicht vorhanden";
+                 SecondErrorDescription = " nicht vorhanden";
+            }
+            var pcbPrintPageDto = new PcbPrintPageDTO()
+            {
+                Seriennummer = _selectedItem.SerialNumber,
+                Sachnummer = _selectedItem.PcbPartNumber,
+                Datamatrix = dmImageConverted,
+                Einschraenkung = pcbRes.Restriction.Name,
+                Panel = pcbRes.Comment,
+                Status = _selectedItem.IsFinalized ? "abgeschlossen" : "offen",
+                UmlaufTage = (int)Math.Round((DateTime.Now - pcbRes.CreatedDate).TotalDays),
+                AktuellerStandort = _selectedItem.StorageName,
+                Verweildauer = _selectedItem.DwellTime,
+                LetzteBearbeitung = pcbRes.Transfers.Last().NotedBy.Name,
+                Oberfehler = FirstErrorCode,
+                OberfehlerBeschreibung = FirstErrorDescription,
+                Unterfehler = SecondErrorCode,
+                UnterfehlerBeschreibung = SecondErrorDescription,
+            };
+            var printPageModel = new PrintPageModel(pcbPrintPageDto);
+            var _printService = new PrintService();
+            _printService.Print(printPageModel);
+        }
 
         [RelayCommand]
         public void NavigateToDetails(int pcbId)
