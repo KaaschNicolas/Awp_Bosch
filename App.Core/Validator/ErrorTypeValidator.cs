@@ -1,42 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using App.Core.Models;
+﻿using App.Core.Models;
 
-namespace App.Core.Validator;
-public class ErrorTypeValidator
+namespace App.Core.Validator
 {
-    private ErrorType _errorType;
-    public ErrorTypeValidator(ErrorType errorType)
+    public class ErrorTypeValidator
     {
-        _errorType = errorType;
-    }
-    private List<string> Validate()
-    {
-        List<string> errors = new List<string>();
-        if(string.IsNullOrEmpty(_errorType.Code) || _errorType.Code.Length > 5)
+        private ErrorType _errorType;
+        public ErrorTypeValidator(ErrorType errorType)
         {
-            errors.Add("Code darf nicht null sein oder 5 Zeichen überschreiten.");
+            _errorType = errorType;
         }
-        if(string.IsNullOrEmpty(_errorType.ErrorDescription) || _errorType.ErrorDescription.Length > 650)
+
+        private List<string> Validate()
         {
-            errors.Add("Description darf nicht null sein oder 650 Zeichen überschreiten.");
+            List<string> errors = new List<string>();
+
+            // Überprüfung, ob der Code des ErrorType null oder länger als 5 Zeichen ist
+            if (string.IsNullOrEmpty(_errorType.Code) || _errorType.Code.Length > 5)
+            {
+                errors.Add("Code darf nicht null sein oder 5 Zeichen überschreiten.");
+            }
+
+            // Überprüfung, ob die ErrorDescription des ErrorType null oder länger als 650 Zeichen ist
+            if (string.IsNullOrEmpty(_errorType.ErrorDescription) || _errorType.ErrorDescription.Length > 650)
+            {
+                errors.Add("Description darf nicht null sein oder 650 Zeichen überschreiten.");
+            }
+
+            return errors; 
         }
-  
-        return errors;
-    }
-    public bool IsValid()
-    {
-        if (Validate().Count == 0)
+
+        // Eine Methode zur Überprüfung der Validität des ErrorType
+        public bool IsValid()
         {
-            return true;
+            // Überprüfung, ob die Anzahl der Validierungsfehler null ist
+            if (Validate().Count == 0)
+            {
+                return true; // Der ErrorType ist valide
+            }
+
+            return false; // Es sind Validierungsfehler vorhanden
         }
-        return false;
-    }
-    public List<string> GetErrors()
-    {
-        return Validate();
+
+        // Eine Methode zur Rückgabe der Liste der Validierungsfehler
+        public List<string> GetErrors()
+        {
+            return Validate();
+        }
     }
 }
+

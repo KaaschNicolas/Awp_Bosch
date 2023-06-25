@@ -44,7 +44,7 @@ namespace App.Core.Validator
             // Überprüfung, ob die Anzahl der Validierungsfehler null ist
             if (Validate().Count == 0)
             {
-                return true; // Der PcbType ist gültig
+                return true; // Der PcbType ist valide
             }
 
             return false; // Es sind Validierungsfehler vorhanden
