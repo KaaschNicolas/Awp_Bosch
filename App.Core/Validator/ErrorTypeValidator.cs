@@ -32,7 +32,7 @@ namespace App.Core.Validator
         // Eine Methode zur Überprüfung der Validität des ErrorType
         public bool IsValid()
         {
-            // Überprüfung, ob die Anzahl der Validierungsfehler null ist
+            // Überprüfung, ob die Anzahl der Validierungsfehler 0 ist
             if (Validate().Count == 0)
             {
                 return true; // Der ErrorType ist valide

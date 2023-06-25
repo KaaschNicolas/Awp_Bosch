@@ -68,7 +68,7 @@ public class PcbValidator
     // Eine Methode zur Überprüfung der Validität der Leiterplatte
     public bool IsValid()
     {
-        // Überprüfung, ob die Anzahl der Validierungsfehler null ist
+        // Überprüfung, ob die Anzahl der Validierungsfehler 0 ist
         if (Validate().Count == 0)
         {
             return true; // Die Leiterplatte ist valide

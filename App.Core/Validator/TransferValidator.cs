@@ -35,7 +35,7 @@ namespace App.Core.Validator
         // Eine Methode zur Überprüfung der Validität des Transferobjekts
         public bool IsValid()
         {
-            // Überprüfung, ob die Anzahl der Validierungsfehler null ist
+            // Überprüfung, ob die Anzahl der Validierungsfehler 0 ist
             if (Validate().Count == 0)
             {
                 return true; // Das Transferobjekt ist valide
