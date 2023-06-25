@@ -1,41 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using App.Core.Models;
+﻿using App.Core.Models;
 
-namespace App.Core.Validator;
-public class StorageLocationValidator
+namespace App.Core.Validator
 {
-    private StorageLocation _storageLocation;
-
-    public StorageLocationValidator(StorageLocation storageLocation)
+    // Eine Klasse zur Validierung von StorageLocation-Objekten
+    public class StorageLocationValidator
     {
-        _storageLocation = storageLocation;
-    }
+        private StorageLocation _storageLocation; // Eine private Instanzvariable zur Speicherung der zu überprüfenden StorageLocation
 
-private List<string> Validate()
-{
-    List<string> errors = new List<string>();
-    if (string.IsNullOrEmpty(_storageLocation.StorageName) || _storageLocation.StorageName.Length > 50)
-    {
-        errors.Add("Code darf nicht null sein oder 50 Zeichen überschreiten.");
-    }
-    
-    return errors;
-}
-public bool IsValid()
-{
-    if (Validate().Count == 0)
-    {
-        return true;
-    }
-    return false;
-}
-public List<string> GetErrors()
-{
-    return Validate();
-}
+        // Der Konstruktor der Klasse, der die zu überprüfende StorageLocation erhält
+        public StorageLocationValidator(StorageLocation storageLocation)
+        {
+            _storageLocation = storageLocation;
+        }
 
+        private List<string> Validate()
+        {
+            List<string> errors = new List<string>(); 
+
+            // Überprüfung, ob der StorageName der StorageLocation null oder länger als 50 Zeichen ist
+            if (string.IsNullOrEmpty(_storageLocation.StorageName) || _storageLocation.StorageName.Length > 50)
+            {
+                errors.Add("Code darf nicht null sein oder 50 Zeichen überschreiten.");
+            }
+
+            return errors; // Rückgabe der Liste der Validierungsfehler
+        }
+
+        // Eine Methode zur Überprüfung der Validität der StorageLocation
+        public bool IsValid()
+        {
+            // Überprüfung, ob die Anzahl der Validierungsfehler null ist
+            if (Validate().Count == 0)
+            {
+                return true; // Die StorageLocation ist valide
+            }
+            return false; // Es sind Validierungsfehler vorhanden
+        }
+
+        // Eine Methode zur Rückgabe der Liste der Validierungsfehler
+        public List<string> GetErrors()
+        {
+            return Validate();
+        }
+    }
 }
