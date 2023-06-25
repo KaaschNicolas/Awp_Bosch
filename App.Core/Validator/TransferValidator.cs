@@ -1,42 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using App.Core.Models;
+﻿using App.Core.Models;
 
-namespace App.Core.Validator;
-public class TransferValidator
+namespace App.Core.Validator
 {
-    private Transfer _transfer;
-    public TransferValidator(Transfer transfer)
+    // Eine Klasse zur Validierung von Transferobjekten
+    public class TransferValidator
     {
-        _transfer = transfer;
-    }
-    private List<string> Validate()
-    {
-        List<string> errors = new List<string>();
-        if(_transfer.StorageLocation == null)
+        private Transfer _transfer;
+
+        // Der Konstruktor der Klasse, der das zu überprüfende Transferobjekt erhält
+        public TransferValidator(Transfer transfer)
         {
-            errors.Add("StorageLocation darf nicht null sein.");
+            _transfer = transfer;
         }
-        if(_transfer.NotedBy == null)
+        // Validiert das Transferobjekt und gibt ggf. eine Liste an Validierungsfehlern zurück
+        private List<string> Validate()
         {
-            errors.Add("NotedBy darf nicht null sein.");
+            List<string> errors = new List<string>(); 
+
+            // Überprüfung, ob die StorageLocation des Transferobjekts null ist
+            if (_transfer.StorageLocation == null)
+            {
+                errors.Add("StorageLocation darf nicht null sein.");
+            }
+
+            // Überprüfung, ob die NotedBy-Eigenschaft des Transferobjekts null ist
+            if (_transfer.NotedBy == null)
+            {
+                errors.Add("NotedBy darf nicht null sein.");
+            }
+
+            return errors;
         }
 
-        return errors;
-    }
-    public bool IsValid()
-    {
-        if (Validate().Count == 0)
+        // Eine Methode zur Überprüfung der Validität des Transferobjekts
+        public bool IsValid()
         {
-            return true;
+            // Überprüfung, ob die Anzahl der Validierungsfehler null ist
+            if (Validate().Count == 0)
+            {
+                return true; // Das Transferobjekt ist gültig
+            }
+
+            return false; // Es sind Validierungsfehler vorhanden
         }
-        return false;
-    }
-    public List<string> GetErrors()
-    {
-        return Validate();
+
+        // Eine Methode zur Rückgabe der Liste der Validierungsfehler
+        public List<string> GetErrors()
+        {
+            return Validate();
+        }
     }
 }
