@@ -38,7 +38,7 @@ namespace App.Core.Validator
             // Überprüfung, ob die Anzahl der Validierungsfehler null ist
             if (Validate().Count == 0)
             {
-                return true; // Das Transferobjekt ist gültig
+                return true; // Das Transferobjekt ist valide
             }
 
             return false; // Es sind Validierungsfehler vorhanden
