@@ -2,7 +2,7 @@
 
 namespace App.Core.Validator
 {
-    // Eine Klasse zur Validierung von StorageLocation-Objekten
+    // Eine Klasse zur Validierung von StorageLocation-Objekten (Lagerorte)
     public class StorageLocationValidator
     {
         private StorageLocation _storageLocation; 

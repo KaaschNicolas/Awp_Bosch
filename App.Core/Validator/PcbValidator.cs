@@ -6,7 +6,7 @@ public class PcbValidator
 {
     private Pcb _pcb;
 
-    // Der Konstruktor der Klasse, der die zu überprüfende Leiterplatte erhält
+    // Der Konstruktor der Klasse, der die zu überprüfende Leiterplatte(Pcb - ProgrammableCircuitBoard) erhält
     public PcbValidator(Pcb pcb)
     {
         _pcb = pcb;
