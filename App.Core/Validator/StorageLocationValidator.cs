@@ -5,7 +5,7 @@ namespace App.Core.Validator
     // Eine Klasse zur Validierung von StorageLocation-Objekten
     public class StorageLocationValidator
     {
-        private StorageLocation _storageLocation; // Eine private Instanzvariable zur Speicherung der zu überprüfenden StorageLocation
+        private StorageLocation _storageLocation; 
 
         // Der Konstruktor der Klasse, der die zu überprüfende StorageLocation erhält
         public StorageLocationValidator(StorageLocation storageLocation)

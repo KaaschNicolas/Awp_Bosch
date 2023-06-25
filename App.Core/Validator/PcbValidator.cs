@@ -4,30 +4,12 @@ namespace App.Core.Validator;
 
 public class PcbValidator
 {
-    /*private string _serialNumber;
-    private Device _restriction;
-    private string _errorDescription;
-    private List<ErrorType> _errorTypes;
-    private bool _finalized;
-    private PcbType _pcbType;
-    private Comment _comment;
-    private List<Transfer> _transfers;
-    private Diagnose _diagnose;*/
-
     private Pcb _pcb;
 
+    // Der Konstruktor der Klasse, der die zu überprüfende Leiterplatte erhält
     public PcbValidator(Pcb pcb)
     {
         _pcb = pcb;
-        /*_serialNumber = pcb.SerialNumber;
-        _restriction = pcb.Restriction;
-        _errorDescription = pcb.ErrorDescription;
-        _errorTypes = pcb.ErrorTypes;
-        _finalized = pcb.Finalized;
-        _pcbType = pcb.PcbType;
-        _comment = pcb.Comment;
-        _transfers = pcb.Transfers;
-        _diagnose = pcb.Diagnose;*/
     }
 
     private List<string> Validate()
@@ -40,6 +22,7 @@ public class PcbValidator
             return errors;
         }
 
+        // Überprüfung, ob die Seriennummner der Leiterplaate null, leer oder länger als 10 Zeichen ist
         if (string.IsNullOrEmpty(_pcb.SerialNumber) || _pcb.SerialNumber.Length < 10)
         {
             errors.Add("SerialNumber muss 10 stellig sein.");
@@ -79,18 +62,22 @@ public class PcbValidator
             errors.Add("EndgültigerVerbleibOrt darf nicht null sein, wenn die Leiterplatte abgeschlossen ist");
         }
 
-        return errors;
+        return errors; // Rückgabe der Liste der Validierungsfehler
     }
+
+    // Eine Methode zur Überprüfung der Validität der Leiterplatte
     public bool IsValid()
     {
+        // Überprüfung, ob die Anzahl der Validierungsfehler null ist
         if (Validate().Count == 0)
         {
-            return true;
+            return true; // Die Leiterplatte ist valide
         }
 
-        return false;
+        return false; // Es sind Validierungsfehler vorhanden
     }
 
+    // Eine Methode zur Rückgabe der Liste der Validierungsfehler
     public List<string> GetErrors()
     {
         return Validate();
