@@ -1,9 +1,10 @@
-﻿using App.Core.Models;
-using App.ViewModels;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using App.ViewModels;
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.UI.Xaml.Data;
+using System.Data;
+
 
 namespace App.Views;
 
@@ -28,14 +29,14 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         //var countRows = ViewModel.Table.Count;
         List<DataGridTextColumn> columns = new List<DataGridTextColumn>();
         //columns.Add()
-        
-            
-            /*ListArea.Columns.Add(new Microsoft.UI.Xaml.Controls.DataGridTextColumn
-            {
-                Header = columnName,
-                Binding = new Microsoft.UI.Xaml.Data.Binding(columName)
-            });*/
-        
+
+
+        /*ListArea.Columns.Add(new Microsoft.UI.Xaml.Controls.DataGridTextColumn
+        {
+            Header = columnName,
+            Binding = new Microsoft.UI.Xaml.Data.Binding(columName)
+        });*/
+
 
         // Festlegen der Zeilen des DataGrids
         /*foreach (Dictionary<string, object> dict in ViewModel.Table)
@@ -49,7 +50,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
 
 
 
-private void CheckBox_Loaded(object sender, RoutedEventArgs e)
+    private void CheckBox_Loaded(object sender, RoutedEventArgs e)
     {
 
         /*CheckBox cb = sender as CheckBox;
@@ -161,38 +162,42 @@ private void CheckBox_Loaded(object sender, RoutedEventArgs e)
 
     private void DateChangedFrom(object sender, CalendarDatePickerDateChangedEventArgs e)
     {
-        
+
     }
 
     private void DateChangedTo(object sender, CalendarDatePickerDateChangedEventArgs e)
     {
-        
+
     }
+
 
     private void Click_EvaluationButton(object sender, RoutedEventArgs e)
     {
-        DataGridTextColumn l = new DataGridTextColumn();
-        l.Header = "Lagerorte";
-        ListArea.Columns.Add(l);        
-        foreach (string column in ViewModel.AllPcbTypes)
+
+        var dt = new DataTable();
+        int columnCount = ViewModel.Header.Count;
+
+        for (int i = 0; i < columnCount; i++)
         {
-            DataGridTextColumn c = new DataGridTextColumn();
-            c.Header = column;
-            /*foreach (Dictionary<string, object> dict in ViewModel.Table)
+            dt.Columns.Add(ViewModel.Header[i]);
+            ListArea.Columns.Add(new DataGridTextColumn()
             {
-                if (dict.ContainsKey(column)) { }
-            }*/
-            
-            ListArea.Columns.Add(c);
-            
+                Header = dt.Columns[i].ColumnName,
+                Binding = new Binding { Path = new PropertyPath("[" + i.ToString() + "]") }
+            });
         }
 
-        
-        /*foreach (var pair in column)
-            {
-                DataGridTextColumn c = new DataGridTextColumn();
-                c.Header = pair.Key;
-                ListArea.Columns.Add(c);
-            }*/
+
+
+
+        for (int i = 0; i < ViewModel.Rows.Count; i++)
+            dt.Rows.Add(ViewModel.Rows[i].Take(columnCount).ToArray());
+
+        var collectionObjects = new System.Collections.ObjectModel.ObservableCollection<object>();
+        foreach (DataRow row in dt.Rows)
+        {
+            collectionObjects.Add(row.ItemArray);
+        }
+        ListArea.ItemsSource = collectionObjects;
     }
 }

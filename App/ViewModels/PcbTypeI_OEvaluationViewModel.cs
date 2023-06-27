@@ -4,14 +4,10 @@ using App.Core.DTOs;
 using App.Core.Models;
 using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
-using App.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.WinUI.UI.Controls;
-using OxyPlot;
 using System.Collections.ObjectModel;
-using System.Globalization;
-
+using System.Diagnostics;
 
 namespace App.ViewModels;
 
@@ -64,6 +60,10 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
     [ObservableProperty]
     public DateTime _endDate;
 
+    public List<string> Header;
+
+    public List<List<object>> Rows = new();
+
     [ObservableProperty]
     public ObservableCollection<Dictionary<string, object>> _table = new();
 
@@ -90,7 +90,19 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
         var response = await _evaluationService.GetPcbTypePosition(AllPcbTypes, StartDate, EndDate);
         if (response != null && response.Code == ResponseCode.Success)
         {
+
             Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
+            if (Table.Count > 0)
+            {
+                Header = new List<string>(Table[0].Keys);
+                foreach (var item in Table)
+                {
+                    List<object> row = item.Values.ToList();
+                    Rows.Add(row);
+                }
+
+            }
+            Debug.WriteLine(Rows);
         }
         else
         {
@@ -129,12 +141,12 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
     {
         await GetPcbTypes();
         await GetTable();
-        await FillTable();
+        //await FillTable();
     }
 
     public void OnNavigatedFrom()
     {
-        
+
     }
 }
 
