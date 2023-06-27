@@ -1,31 +1,26 @@
 ﻿using App.Core.DataAccess;
 using App.Core.DTOs;
 using App.Core.Models;
-using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace App.Core.Services
 {
-    public class PcbTypeEvaluationService : IPcbTypeEvaluationService 
+    public class PcbTypeEvaluationService : IPcbTypeEvaluationService
     {
         protected BoschContext _boschContext;
         protected ILoggingService _loggingService;
 
-        public PcbTypeEvaluationService(BoschContext context, ILoggingService loggingService) 
+        public PcbTypeEvaluationService(BoschContext context, ILoggingService loggingService)
         {
             _boschContext = context;
             _loggingService = loggingService;
         }
-       
-        
-        public async Task<Response<List<EvaluationStorageLocationDTO>>> GetAllByPcbType(string pcbType, DateTime deadline )
+
+
+        public async Task<Response<List<EvaluationStorageLocationDTO>>> GetAllByPcbType(string pcbType, DateTime deadline)
         {
             try
             {
@@ -65,7 +60,7 @@ namespace App.Core.Services
             }
         }
 
-        public async Task<Response<List<Dictionary<string,object>>>> GetPcbTypePosition(List<string> pcbTypeList, DateTime start, DateTime end)
+        public async Task<Response<List<Dictionary<string, object>>>> GetPcbTypePosition(List<string> pcbTypeList, DateTime start, DateTime end)
         {
             try
             {
@@ -82,7 +77,7 @@ namespace App.Core.Services
             }
         }
 
-        public async Task<Response<List<EvaluationPcbTypeI_ODTO>>>GetPcbTypeI_O(string? pcbType, DateTime start, DateTime end)
+        public async Task<Response<List<EvaluationPcbTypeI_ODTO>>> GetPcbTypeI_O(string? pcbType, DateTime start, DateTime end)
         {
             try
             {
@@ -95,7 +90,7 @@ namespace App.Core.Services
                 var data = await query;
                 return new Response<List<EvaluationPcbTypeI_ODTO>>(ResponseCode.Success, data: data);
             }
-            catch(DbUpdateException)
+            catch (DbUpdateException)
             {
                 return new Response<List<EvaluationPcbTypeI_ODTO>>(ResponseCode.Error, error: "GetPcbTypeI_O() failed");
             }
@@ -164,11 +159,11 @@ namespace App.Core.Services
                 var startDate = ((DateTime)start).ToString("yyyy-MM-dd HH:mm:ss");
                 var endDate = ((DateTime)end).ToString("yyyy-MM-dd HH:mm:ss");
 
-                StringBuilder list = new(); 
+                StringBuilder list = new();
                 // pcbTypeList.ForEach(x => list.Add("[" + x + "]"));
-                for(var i = 0; i < pcbTypeList.Count; i++)
+                for (var i = 0; i < pcbTypeList.Count; i++)
                 {
-                    if(i == pcbTypeList.Count - 1)
+                    if (i == pcbTypeList.Count - 1)
                     {
                         list.Append("[" + pcbTypeList[i] + "]");
                     }
@@ -184,7 +179,7 @@ namespace App.Core.Services
                                 *
                                 FROM (
 	                                SELECT
-	                                StorageName  + ' ' + TotalName AS PVBMovement ,
+	                                StorageName  + ' ' + TotalName AS PVBs ,
 	                                PcbPartNumber,
 	                                TotalValue
 	                                FROM (
