@@ -144,7 +144,7 @@ namespace App.ViewModels
             var response = await _pcbTypeCrudService.GetAll();
             if (response != null && response.Code == ResponseCode.Success)
             {
-                AllPcbTypes = new List<PcbType>(response.Data.OrderBy(x => x.Description));
+                AllPcbTypes = new List<PcbType>(response.Data.OrderBy(x => x.PcbPartNumber));
             }
             else
             {
@@ -308,21 +308,21 @@ namespace App.ViewModels
 
                 if (ErrorTypes[1].Code != null && ErrorTypes[1].ErrorDescription != null)
                 {
-                     SecondErrorCode = ErrorTypes[1].Code;
-                     SecondErrorDescription = ErrorTypes[1].ErrorDescription;
+                    SecondErrorCode = ErrorTypes[1].Code;
+                    SecondErrorDescription = ErrorTypes[1].ErrorDescription;
                 }
                 else
                 {
-                     SecondErrorCode = " nicht vorhanden";
-                     SecondErrorDescription = " nicht vorhanden";
+                    SecondErrorCode = " nicht vorhanden";
+                    SecondErrorDescription = " nicht vorhanden";
                 }
             }
             else
             {
                 FirstErrorCode = " nicht vorhanden";
-                 FirstErrorDescription = " nicht vorhanden";
-                 SecondErrorCode = " nicht vorhanden";
-                 SecondErrorDescription = " nicht vorhanden";
+                FirstErrorDescription = " nicht vorhanden";
+                SecondErrorCode = " nicht vorhanden";
+                SecondErrorDescription = " nicht vorhanden";
             }
             var pcbPrintPageDto = new PcbPrintPageDTO()
             {
