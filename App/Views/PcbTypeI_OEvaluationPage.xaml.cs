@@ -1,0 +1,198 @@
+﻿using App.Core.Models;
+using App.ViewModels;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using CommunityToolkit.WinUI.UI.Controls;
+
+namespace App.Views;
+
+public sealed partial class PcbTypeI_OEvaluationPage : Page
+{
+    private List<CheckBox> _listCheckBox = new();
+
+    private bool _wasChecked = true;
+    private bool _canExecute = true;
+
+    public PcbTypeI_OEvaluationViewModel ViewModel
+    {
+        get;
+    }
+
+    public PcbTypeI_OEvaluationPage()
+    {
+        ViewModel = App.GetService<PcbTypeI_OEvaluationViewModel>();
+        InitializeComponent();
+        DataContext = ViewModel;
+
+        //var countRows = ViewModel.Table.Count;
+        List<DataGridTextColumn> columns = new List<DataGridTextColumn>();
+        //columns.Add()
+        
+            
+            /*ListArea.Columns.Add(new Microsoft.UI.Xaml.Controls.DataGridTextColumn
+            {
+                Header = columnName,
+                Binding = new Microsoft.UI.Xaml.Data.Binding(columName)
+            });*/
+        
+
+        // Festlegen der Zeilen des DataGrids
+        /*foreach (Dictionary<string, object> dict in ViewModel.Table)
+        {
+            ListArea.Items.Add(dict);
+        }*/
+    }
+
+
+
+
+
+
+private void CheckBox_Loaded(object sender, RoutedEventArgs e)
+    {
+
+        /*CheckBox cb = sender as CheckBox;
+        if (!_listCheckBox.Contains(cb))
+        {
+            _listCheckBox.Add(cb);
+        }
+
+        if ((_listCheckBox.Count - 1) == ViewModel.PtList.Count)
+        {
+            SelectAll_Checked(sender, e);
+        }*/
+
+    }
+
+    private void Option_Checked(object sender, RoutedEventArgs e)
+    {
+        /*CheckBox cb = sender as CheckBox;
+        if (cb.Content is not null)
+        {
+            PcbType checkedPcbType = ViewModel.PtList.Where(i => i.Description == (string)cb.Content).Single();
+            ViewModel.SelectedPcbTypes.Add(checkedPcbType);
+
+        }
+        if (cb != _listCheckBox[0] && (ViewModel.SelectedPcbTypes.Count == (_listCheckBox.Count - 1)))
+        {
+
+            _listCheckBox[0].Checked -= SelectAll_Checked;
+            _listCheckBox[0].IsChecked = true;
+            _listCheckBox[0].Checked += SelectAll_Checked;
+            _canExecute = false;
+        }*/
+
+    }
+
+    private void Option_Unchecked(object sender, RoutedEventArgs e)
+    {
+        /*CheckBox cb = sender as CheckBox;
+        ViewModel.SelectedPcbTypes.Remove(ViewModel.SelectedPcbTypes.Where(i => i.Description == (string)cb.Content).Single());
+        if (cb != _listCheckBox[0])
+        {
+            _listCheckBox[0].Indeterminate -= SelectAll_Indeterminate;
+            _listCheckBox[0].IsChecked = null;
+            _listCheckBox[0].Indeterminate += SelectAll_Indeterminate;
+        }
+
+        if (ViewModel.SelectedPcbTypes.Count == 0)
+        {
+            _listCheckBox[0].IsChecked = false;
+
+            _canExecute = true;
+        }*/
+    }
+
+    private void SelectAll_Checked(object sender, RoutedEventArgs e)
+    {
+        _wasChecked = true;
+
+        foreach (CheckBox cb in _listCheckBox)
+        {
+            cb.IsChecked = true;
+        }
+
+
+
+    }
+
+    private void SelectAll_Unchecked(object sender, RoutedEventArgs e)
+    {
+        /*
+        foreach (CheckBox cb in _listCheckBox)
+        {
+            cb.IsChecked = false;
+        }
+        ViewModel.SelectedPcbTypes.Clear();
+        _wasChecked = false;*/
+    }
+
+
+    private void SelectAll_Indeterminate(object sender, RoutedEventArgs e)
+    {
+        if (_wasChecked)
+        {
+            SelectAll_Unchecked(sender, e);
+            _listCheckBox[0].Unchecked -= SelectAll_Unchecked;
+            _listCheckBox[0].IsChecked = false;
+            _listCheckBox[0].Unchecked += SelectAll_Unchecked;
+        }
+        else
+        {
+            SelectAll_Checked(sender, e);
+            _listCheckBox[0].Checked -= SelectAll_Checked;
+            _listCheckBox[0].IsChecked = true;
+            _listCheckBox[0].Checked += SelectAll_Checked;
+        }
+
+    }
+
+    private void FilterPcbTypes_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void FilterClear_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+
+    private void DateChangedFrom(object sender, CalendarDatePickerDateChangedEventArgs e)
+    {
+        
+    }
+
+    private void DateChangedTo(object sender, CalendarDatePickerDateChangedEventArgs e)
+    {
+        
+    }
+
+    private void Click_EvaluationButton(object sender, RoutedEventArgs e)
+    {
+        DataGridTextColumn l = new DataGridTextColumn();
+        l.Header = "Lagerorte";
+        ListArea.Columns.Add(l);        
+        foreach (string column in ViewModel.AllPcbTypes)
+        {
+            DataGridTextColumn c = new DataGridTextColumn();
+            c.Header = column;
+            /*foreach (Dictionary<string, object> dict in ViewModel.Table)
+            {
+                if (dict.ContainsKey(column)) { }
+            }*/
+            
+            ListArea.Columns.Add(c);
+            
+        }
+
+        
+        /*foreach (var pair in column)
+            {
+                DataGridTextColumn c = new DataGridTextColumn();
+                c.Header = pair.Key;
+                ListArea.Columns.Add(c);
+            }*/
+    }
+}

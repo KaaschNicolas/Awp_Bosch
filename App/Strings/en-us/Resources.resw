@@ -242,4 +242,7 @@
   <data name="Shell_PcbTypeEvaluation.Content" xml:space="preserve">
     <value>PcbTypeEvaluation</value>
   </data>
+  <data name="Shell_PcbTypeInputOutputEvaluation.Content" xml:space="preserve">
+    <value>PcbTypeInputOutputEvaluation</value>
+  </data>
 </root>

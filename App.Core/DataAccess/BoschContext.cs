@@ -1,8 +1,10 @@
 ﻿using App.Core.DTOs;
 using App.Core.Helpers;
 using App.Core.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace App.Core.DataAccess
 {
@@ -91,8 +93,56 @@ namespace App.Core.DataAccess
         // Virtuelles DbSet für "EvaluationFinalizedDTO"
         public virtual DbSet<EvaluationFinalizedDTO> EvaluationFinalizedDTO { get; set; }
 
+        // Virtuelles DbSet für "EvaluationPcbTypeI_ODTO"
+        public virtual DbSet<EvaluationPcbTypeI_ODTO> EvaluationPcbTypeI_ODTO { get; set; }
+
         // Tabelle "AuditEntries"
         public DbSet<AuditEntry> AuditEntries { get; set; }
+
+        // jedes Dict ist eine Reihe, Key = Spaltenname & Value = Wert an Stelle
+        public List<Dictionary<string, object>> GenerateDTO(string sqlQuery)
+        {
+            List<Dictionary<string, object>> dto = new List<Dictionary<string, object>>();
+
+            if (sqlQuery != null)
+            {
+                using (var connection = (SqlConnection)this.Database.GetDbConnection())
+                {
+                    connection.Open();
+                    //this.Database.OpenConnection();
+                    using (var command = new SqlCommand(sqlQuery, connection))
+                    {
+                        //command.CommandText = sqlQuery;
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            // Spaltennamen und -typen abrufen
+                            DataTable schemaTable = reader.GetSchemaTable();
+                            List<string> columnNames = new List<string>();
+                            foreach (DataRow row in schemaTable.Rows)
+                            {
+                                string columnName = row["ColumnName"].ToString();
+                                columnNames.Add(columnName);
+                            }
+
+                            // Daten in das DTO übertragen
+                            while (reader.Read())
+                            {
+                                Dictionary<string, object> data = new Dictionary<string, object>();
+                                foreach (string columnName in columnNames)
+                                {
+                                    object value = reader[columnName];
+                                    data[columnName] = value;
+                                }
+                                dto.Add(data);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return dto;
+        }
 
         // Die Methode OnConfiguring wird aufgerufen, wenn die DbContext-Instanz konfiguriert wird.
         // Hier wird die Verbindungszeichenfolge für die Datenbankkonfiguration aus der AppSettings-Datei geholt und verwendet.
