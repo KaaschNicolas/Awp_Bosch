@@ -27,8 +27,7 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
         ICrudService<PcbType> pcbTypeCrudService,
         IPcbTypeEvaluationService evaluationService)
     {
-        FilterItems = new AsyncRelayCommand(
-            async () => await _evaluationService.GetPcbTypePosition(AllPcbTypes, StartDate, EndDate),
+        FilterItems = new AsyncRelayCommand(GetTable,
             () => _filterOptions != PcbFilterOptions.None
         );
 
