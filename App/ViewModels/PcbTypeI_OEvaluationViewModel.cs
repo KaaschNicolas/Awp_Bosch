@@ -6,8 +6,12 @@ using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using OxyPlot;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing.Printing;
+using System.Globalization;
+using System.IO;
 
 namespace App.ViewModels;
 
@@ -32,8 +36,6 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
 
         StartDate = DateTime.Parse("01/01/0001");
         EndDate = DateTime.Now;
-
-        FillTable();
     }
 
 
@@ -87,30 +89,77 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
 
     private async Task GetTable()
     {
-        var response = await _evaluationService.GetPcbTypePosition(AllPcbTypes, StartDate, EndDate);
-        if (response != null && response.Code == ResponseCode.Success)
+        if (FilterOptions != PcbFilterOptions.None)
         {
-
-            Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
-            if (Table.Count > 0)
+            switch (FilterOptions)
             {
-                Header = new List<string>(Table[0].Keys);
-                foreach (var item in Table)
-                {
-                    List<object> row = item.Values.ToList();
-                    Rows.Add(row);
-                }
+                case PcbFilterOptions.FilterPcbTypes:
+                    if (SelectedPcbTypes.Count > 0)
+                    {
+                        var l = new List<PcbType>(SelectedPcbTypes);
+                        var pcbTypeIds = l.Select(x => x.Id);
+                        string pcbTypeIdsString = string.Join(", ", pcbTypeIds);
+                        maxEntries = await _pcbDataService.MaxEntriesPcbTypes(pcbTypeIdsString);
 
+                    }
+                    else
+                    {
+                        maxEntries = new Response<int>(ResponseCode.Success, 0);
+                        pcbs = new Response<List<PcbDTO>>(ResponseCode.Success, new List<PcbDTO>());
+                    }
+                    break;
+
+                default:
+                    var response = await _evaluationService.GetPcbTypePosition(AllPcbTypes, StartDate, EndDate);
+                    break;
+                    if (response != null && response.Code == ResponseCode.Success)
+                    {
+                        Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
+                        if (Table.Count > 0)
+                        {
+                            Header = new List<string>(Table[0].Keys);
+                            foreach (var item in Table)
+                            {
+                                List<object> row = item.Values.ToList();
+                                Rows.Add(row);
+                            }
+
+                        }
+                        Debug.WriteLine(Rows);
+                    }
+                    else
+                    {
+                        _infoBarService.showError("Fehler beim Laden des Tables", "Error");
+                    }
             }
-            Debug.WriteLine(Rows);
         }
         else
         {
-            _infoBarService.showError("Fehler beim Laden des Tables", "Error");
+            var response = await _evaluationService.GetPcbTypePosition(AllPcbTypes, StartDate, EndDate);
+            if (response != null && response.Code == ResponseCode.Success)
+            {
+                Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
+                if (Table.Count > 0)
+                {
+                    Header = new List<string>(Table[0].Keys);
+                    foreach (var item in Table)
+                    {
+                        List<object> row = item.Values.ToList();
+                        Rows.Add(row);
+                    }
+
+                }
+                Debug.WriteLine(Rows);
+            }
+            else
+            {
+                _infoBarService.showError("Fehler beim Laden des Tables", "Error");
+            }
         }
+        FilterItems.NotifyCanExecuteChanged();
     }
 
-    private async Task FillTable()
+    /*private async Task FillTable()
     {
         var response = await _evaluationService.GetPcbTypeI_O("1688400308", StartDate, EndDate);
         if (response != null && response.Code == ResponseCode.Success)
@@ -121,24 +170,16 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
         {
             _infoBarService.showError("Fehler beim Laden des Tables", "Error");
         }
-    }
-
-
-
-    private async Task GetPcbs(int pageIndex, int pageSize, bool isAscending)
-    {
-        Response<List<PcbDTO>> pcbs;
-        Response<int> maxEntries;
-
-        if (FilterOptions != PcbFilterOptions.None)
-        {
-
-        }
-        FilterItems.NotifyCanExecuteChanged();
-    }
+    }*/
 
     public async void OnNavigatedTo(object parameter)
     {
+
+        FilterItems = new AsyncRelayCommand(
+                async () => await GetTable(),
+                () => _pageNumber != _pageCount && _filterOptions != PcbFilterOptions.None
+        );
+
         await GetPcbTypes();
         await GetTable();
         //await FillTable();

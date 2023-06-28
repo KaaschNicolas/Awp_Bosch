@@ -28,29 +28,30 @@
             </Grid>
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    
         <Grid x:Name="GridView" RowDefinitions="auto, auto">
-            <StackPanel
+
+        <StackPanel
                 Grid.Row="0"
                 Height="Auto"
-                Margin="50,0,0,0"
+                Margin="50,0,0,10"
                 HorizontalAlignment="Left"
                 CornerRadius="4"
                 Orientation="Horizontal"
                 Spacing="10">
 
-                <AppBarButton
+            <AppBarButton
                     Width="80"
                     AllowFocusOnInteraction="True"
                     Icon="Filter"
                     Label="Filter">
-                    <AppBarButton.Flyout>
-                        <MenuFlyout Placement="Bottom">
-                            <MenuFlyoutItem x:Name="PcbTypesFilterMenuItem" DataContext="{x:Bind ViewModel}">
-                                <MenuFlyoutItem.Template>
-                                    <ControlTemplate x:Name="MenuControlTemplate" TargetType="MenuFlyoutItem">
-                                        <StackPanel Margin="15" Orientation="Vertical">
-                                            <CheckBox
+                <AppBarButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuFlyoutItem x:Name="PcbTypesFilterMenuItem" DataContext="{x:Bind ViewModel}">
+                            <MenuFlyoutItem.Template>
+                                <ControlTemplate x:Name="MenuControlTemplate" TargetType="MenuFlyoutItem">
+                                    <StackPanel Margin="15" Orientation="Vertical">
+                                        <CheckBox
                                                 x:Name="OptionsAllCheckBox"
                                                 Checked="SelectAll_Checked"
                                                 Content="Alle auswählen"
@@ -58,61 +59,65 @@
                                                 IsThreeState="True"
                                                 Loaded="CheckBox_Loaded"
                                                 Unchecked="SelectAll_Unchecked" />
-                                            <ScrollViewer
+                                        <ScrollViewer
                                                 Height="100"
                                                 IsTabStop="True"
                                                 IsVerticalScrollChainingEnabled="True"
                                                 VerticalScrollBarVisibility="Auto">
-                                                <ItemsControl x:Name="CheckBoxList" ItemsSource="{Binding AllPcbTypes, Mode=OneWay}">
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <CheckBox
+                                            <ItemsControl x:Name="CheckBoxList" ItemsSource="{Binding AllPcbTypes, Mode=OneWay}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox
                                                                 Margin="24,0,0,0"
                                                                 Checked="Option_Checked"
                                                                 Content="{Binding Description}"
                                                                 Loaded="CheckBox_Loaded"
                                                                 Unchecked="Option_Unchecked" />
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
-                                            </ScrollViewer>
-                                            <Button
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                        <Button
                                                 Margin="0,20,20,0"
                                                 Click="FilterPcbTypes_Click"
                                                 Content="Filter anwenden" />
-                                        </StackPanel>
-                                    </ControlTemplate>
-                                </MenuFlyoutItem.Template>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Click="FilterClear_Click" Text="Filter entfernen" />
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </MenuFlyoutItem.Template>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Click="FilterClear_Click" Text="Filter entfernen" />
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
 
-                <CalendarDatePicker
-                    x:Name="From"
-                    DateChanged="DateChangedFrom"
+            <CalendarDatePicker
+                    x:Name="Start"
+                    DateChanged="StartDateChanged"
                     DateFormat="{}{day.integer}.{month.integer}.{year.full}"
                     Header="Start"
                     PlaceholderText="Startdatum" />
-                <CalendarDatePicker
-                    x:Name="To"
-                    DateChanged="DateChangedTo"
+            <CalendarDatePicker
+                    x:Name="End"
+                    DateChanged="EndDateChanged"
                     DateFormat="{}{day.integer}.{month.integer}.{year.full}"
                     Header="Ende"
                     PlaceholderText="Enddatum" />
-                <Button
+            <Button
                     Margin="10,26,0,0"
                     Click="Click_EvaluationButton"
                     Style="{StaticResource AccentButtonStyle}">
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xEB05;" />
-                        <TextBlock Text="Auswerten" />
-                    </StackPanel>
-                </Button>
-            </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xEB05;" />
+                    <TextBlock Text="Auswerten" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
 
+        <ScrollViewer Grid.Row="1" 
+                      HorizontalScrollBarVisibility="Auto" 
+                      VerticalScrollBarVisibility="Auto">
+            <Grid>
             <controls:DataGrid
                 x:Name="ListArea"
                 Grid.Row="1"
@@ -122,9 +127,10 @@
                 IsReadOnly="True"
                 ItemsSource="{Binding}"
                 RowDetailsVisibilityMode="Collapsed"
-                SelectionMode="Single" />
-
-
-        </Grid>
-    </ScrollViewer>
+                SelectionMode="Single"
+                CanBeScrollAnchor="True"/>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+    
 </Page>

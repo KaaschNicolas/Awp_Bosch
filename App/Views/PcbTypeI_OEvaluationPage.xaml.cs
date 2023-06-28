@@ -160,14 +160,14 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
     }
 
 
-    private void DateChangedFrom(object sender, CalendarDatePickerDateChangedEventArgs e)
+    private void StartDateChanged(object sender, CalendarDatePickerDateChangedEventArgs e)
     {
-
+        ViewModel.StartDate = ((DateTimeOffset)Start.Date).DateTime;
     }
 
-    private void DateChangedTo(object sender, CalendarDatePickerDateChangedEventArgs e)
+    private void EndDateChanged(object sender, CalendarDatePickerDateChangedEventArgs e)
     {
-
+        ViewModel.EndDate = ((DateTimeOffset)End.Date).DateTime;
     }
 
 
@@ -186,8 +186,6 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
                 Binding = new Binding { Path = new PropertyPath("[" + i.ToString() + "]") }
             });
         }
-
-
 
 
         for (int i = 0; i < ViewModel.Rows.Count; i++)

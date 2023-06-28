@@ -77,7 +77,7 @@ namespace App.Core.Services
             }
         }
 
-        public async Task<Response<List<EvaluationPcbTypeI_ODTO>>> GetPcbTypeI_O(string? pcbType, DateTime start, DateTime end)
+        /*public async Task<Response<List<EvaluationPcbTypeI_ODTO>>> GetPcbTypeI_O(string? pcbType, DateTime start, DateTime end)
         {
             try
             {
@@ -94,7 +94,7 @@ namespace App.Core.Services
             {
                 return new Response<List<EvaluationPcbTypeI_ODTO>>(ResponseCode.Error, error: "GetPcbTypeI_O() failed");
             }
-        }
+        }*/
 
 
         private string BuildQuery1(string? pcbtype = null, DateTime? deadline = null)
@@ -236,9 +236,7 @@ namespace App.Core.Services
             return null;
         }
 
-        private string BuildQuery4(string pcbType = null, DateTime? start = null, DateTime? end = null)
-        {
-            if (pcbType != null && start != null && end != null)
+        /*Type != null && start != null && end != null)
             {
                 var startDate = ((DateTime)start).ToString("yyyy-MM-dd HH:mm:ss");
                 var endDate = ((DateTime)end).ToString("yyyy-MM-dd HH:mm:ss");
@@ -302,7 +300,7 @@ namespace App.Core.Services
                 return query;
             }
             return null;
-        }
+        }*/
 
     }
 }
