@@ -160,7 +160,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
     {
         _displayMode = DataGridDisplayMode.Filtered;
         ViewModel.FilterOptions = PcbFilterOptions.FilterPcbTypes;
-        await ViewModel.FilterItems.ExecuteAsync(null);
+        await ViewModel.GetTable.ExecuteAsync(null);
     }
 
     private async void FilterClear_Click(object sender, RoutedEventArgs e)

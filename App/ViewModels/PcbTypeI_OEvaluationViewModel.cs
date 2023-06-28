@@ -32,6 +32,10 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
             () => _filterOptions != PcbFilterOptions.None
         );
 
+        TableItems = new AsyncRelayCommand(
+            GetTable
+        );
+
         FilterOptions = PcbFilterOptions.None;
         _infoBarService = infoBarService;
         _pcbTypeCrudService = pcbTypeCrudService;
@@ -46,6 +50,8 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
 
 
     public IAsyncRelayCommand FilterItems { get; }
+
+    public IAsyncRelayCommand TableItems { get; }
 
 
     [ObservableProperty]
@@ -91,7 +97,7 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
         }
     }
 
-    private async Task GetTable()
+    public async Task GetTable()
     {
         if (FilterOptions != PcbFilterOptions.None)
         {
