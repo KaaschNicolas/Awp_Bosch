@@ -84,7 +84,6 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         }
         if (cb != _listCheckBox[0] && (ViewModel.SelectedPcbTypes.Count == (_listCheckBox.Count - 1)))
         {
-
             _listCheckBox[0].Checked -= SelectAll_Checked;
             _listCheckBox[0].IsChecked = true;
             _listCheckBox[0].Checked += SelectAll_Checked;
@@ -160,7 +159,9 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
     {
         _displayMode = DataGridDisplayMode.Filtered;
         ViewModel.FilterOptions = PcbFilterOptions.FilterPcbTypes;
-        ViewModel.GetTable.ExecuteAsync(null);
+        ViewModel.FilterItems.ExecuteAsync(null);
+        createDataGrid();
+
     }
 
     private async void FilterClear_Click(object sender, RoutedEventArgs e)
@@ -183,9 +184,14 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
     }
 
 
-    private void Click_EvaluationButton(object sender, RoutedEventArgs e)
+    private async void Click_EvaluationButton(object sender, RoutedEventArgs e)
     {
+        ViewModel.FilterItems.ExecuteAsync(null);
+        createDataGrid();
+    }
 
+    private void createDataGrid()
+    {
         var dt = new DataTable();
         int columnCount = ViewModel.Header.Count;
 

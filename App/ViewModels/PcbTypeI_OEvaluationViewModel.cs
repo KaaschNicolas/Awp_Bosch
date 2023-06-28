@@ -28,7 +28,7 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
         IPcbTypeEvaluationService evaluationService)
     {
         FilterItems = new AsyncRelayCommand(GetTable,
-            () => _filterOptions != PcbFilterOptions.None
+            () => _filterOptions != PcbFilterOptions.FilterPcbTypes
         );
 
         TableItems = new AsyncRelayCommand(
@@ -116,6 +116,27 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
                         string pcbTypeIdsString = string.Join(", ", pcbTypeIds);*/
 
                         response = await _evaluationService.GetPcbTypePosition(slist, StartDate, EndDate);
+                        if (response != null && response.Code == ResponseCode.Success)
+                        {
+                            Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
+
+                            Rows = new List<List<object>>();
+                            if (Table.Count > 0)
+                            {
+                                Header = new List<string>(Table[0].Keys);
+                                foreach (var item in Table)
+                                {
+                                    List<object> row = item.Values.ToList();
+                                    Rows.Add(row);
+                                }
+
+                            }
+                            Debug.WriteLine(Rows);
+                        }
+                        else
+                        {
+                            _infoBarService.showError("Fehler beim Laden des Tables", "Error");
+                        }
                     }
                     else
                     {
@@ -154,6 +175,8 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
             if (response != null && response.Code == ResponseCode.Success)
             {
                 Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
+
+                Rows = new List<List<object>>(); 
                 if (Table.Count > 0)
                 {
                     Header = new List<string>(Table[0].Keys);
@@ -189,11 +212,6 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
 
     public async void OnNavigatedTo(object parameter)
     {
-
-        /*FilterItems = new AsyncRelayCommand(
-                async () => await GetTable(),
-                () => _pageNumber != _pageCount && _filterOptions != PcbFilterOptions.None
-        );*/
 
         await GetPcbTypes();
         await GetTable();
