@@ -138,6 +138,7 @@ namespace App.Core.DataAccess
                             }
                         }
                     }
+                    connection.Close();
                 }
             }
 

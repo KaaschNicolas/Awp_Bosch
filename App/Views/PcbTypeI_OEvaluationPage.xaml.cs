@@ -1,4 +1,5 @@
-﻿using App.Core.Models.Enums;
+﻿using App.Core.Models;
+using App.Core.Models.Enums;
 using App.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
@@ -95,7 +96,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
     private void Option_Unchecked(object sender, RoutedEventArgs e)
     {
         CheckBox cb = sender as CheckBox;
-        ViewModel.SelectedPcbTypes.Remove(ViewModel.SelectedPcbTypes.Where(i => i.Description == (string)cb.Content).Single());
+        ViewModel.SelectedPcbTypes.Remove(ViewModel.SelectedPcbTypes.Where(i => i.PcbPartNumber == (string)cb.Content).Single());
         if (cb != _listCheckBox[0])
         {
             _listCheckBox[0].Indeterminate -= SelectAll_Indeterminate;
@@ -155,16 +156,19 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
 
     }
 
-    private void FilterPcbTypes_Click(object sender, RoutedEventArgs e)
+    private async void FilterPcbTypes_Click(object sender, RoutedEventArgs e)
     {
         _displayMode = DataGridDisplayMode.Filtered;
         ViewModel.FilterOptions = PcbFilterOptions.FilterPcbTypes;
         await ViewModel.FilterItems.ExecuteAsync(null);
     }
 
-    private void FilterClear_Click(object sender, RoutedEventArgs e)
+    private async void FilterClear_Click(object sender, RoutedEventArgs e)
     {
-
+        _displayMode = DataGridDisplayMode.Default;
+        ViewModel.FilterOptions = PcbFilterOptions.None;
+        SelectAll_Checked(sender, e);
+        await ViewModel.FilterItems.ExecuteAsync(null);
     }
 
 

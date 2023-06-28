@@ -64,13 +64,13 @@
                                                 IsTabStop="True"
                                                 IsVerticalScrollChainingEnabled="True"
                                                 VerticalScrollBarVisibility="Auto">
-                                            <ItemsControl x:Name="CheckBoxList" ItemsSource="{Binding AllPcbTypes, Mode=OneWay}">
+                                            <ItemsControl x:Name="CheckBoxList" ItemsSource="{Binding PtList, Mode=OneWay}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <CheckBox
                                                                 Margin="24,0,0,0"
                                                                 Checked="Option_Checked"
-                                                                Content="{Binding Description}"
+                                                                Content="{Binding PcbPartNumber}"
                                                                 Loaded="CheckBox_Loaded"
                                                                 Unchecked="Option_Unchecked" />
                                                     </DataTemplate>

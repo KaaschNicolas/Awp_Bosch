@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.IO;
+using Windows.System.Power.Diagnostics;
 
 namespace App.ViewModels;
 
@@ -26,6 +27,11 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
         ICrudService<PcbType> pcbTypeCrudService,
         IPcbTypeEvaluationService evaluationService)
     {
+        FilterItems = new AsyncRelayCommand(
+            async () => await _evaluationService.GetPcbTypePosition(AllPcbTypes, StartDate, EndDate),
+            () => _filterOptions != PcbFilterOptions.None
+        );
+
         FilterOptions = PcbFilterOptions.None;
         _infoBarService = infoBarService;
         _pcbTypeCrudService = pcbTypeCrudService;
@@ -41,11 +47,9 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
 
     public IAsyncRelayCommand FilterItems { get; }
 
-    [ObservableProperty]
-    private PcbFilterOptions _filterOptions;
 
     [ObservableProperty]
-    private StorageLocation _selectedComboBox;
+    private PcbFilterOptions _filterOptions;
 
     [ObservableProperty]
     public ObservableCollection<PcbType> selectedPcbTypes = new();
@@ -91,46 +95,52 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
     {
         if (FilterOptions != PcbFilterOptions.None)
         {
+            var response = new Response<List<Dictionary<string, object>>>();
             switch (FilterOptions)
             {
                 case PcbFilterOptions.FilterPcbTypes:
                     if (SelectedPcbTypes.Count > 0)
                     {
                         var l = new List<PcbType>(SelectedPcbTypes);
-                        var pcbTypeIds = l.Select(x => x.Id);
-                        string pcbTypeIdsString = string.Join(", ", pcbTypeIds);
-                        maxEntries = await _pcbDataService.MaxEntriesPcbTypes(pcbTypeIdsString);
+                        var slist = new List<string>();
+                        foreach (var x in l)
+                        {
+                            slist.Add(x.PcbPartNumber);
+                        }
+                        /*var pcbTypeIds = l.Select(x => x.Id);
+                        string pcbTypeIdsString = string.Join(", ", pcbTypeIds);*/
 
+                        response = await _evaluationService.GetPcbTypePosition(slist, StartDate, EndDate);
                     }
                     else
                     {
-                        maxEntries = new Response<int>(ResponseCode.Success, 0);
-                        pcbs = new Response<List<PcbDTO>>(ResponseCode.Success, new List<PcbDTO>());
+                        
                     }
                     break;
 
                 default:
-                    var response = await _evaluationService.GetPcbTypePosition(AllPcbTypes, StartDate, EndDate);
+                    response = await _evaluationService.GetPcbTypePosition(AllPcbTypes, StartDate, EndDate);
                     break;
-                    if (response != null && response.Code == ResponseCode.Success)
-                    {
-                        Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
-                        if (Table.Count > 0)
-                        {
-                            Header = new List<string>(Table[0].Keys);
-                            foreach (var item in Table)
-                            {
-                                List<object> row = item.Values.ToList();
-                                Rows.Add(row);
-                            }
 
-                        }
-                        Debug.WriteLine(Rows);
-                    }
-                    else
+            }
+            if (response != null && response.Code == ResponseCode.Success)
+            {
+                Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
+                if (Table.Count > 0)
+                {
+                    Header = new List<string>(Table[0].Keys);
+                    foreach (var item in Table)
                     {
-                        _infoBarService.showError("Fehler beim Laden des Tables", "Error");
+                        List<object> row = item.Values.ToList();
+                        Rows.Add(row);
                     }
+
+                }
+                Debug.WriteLine(Rows);
+            }
+            else
+            {
+                _infoBarService.showError("Fehler beim Laden des Tables", "Error");
             }
         }
         else
@@ -175,10 +185,10 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
     public async void OnNavigatedTo(object parameter)
     {
 
-        FilterItems = new AsyncRelayCommand(
+        /*FilterItems = new AsyncRelayCommand(
                 async () => await GetTable(),
                 () => _pageNumber != _pageCount && _filterOptions != PcbFilterOptions.None
-        );
+        );*/
 
         await GetPcbTypes();
         await GetTable();
