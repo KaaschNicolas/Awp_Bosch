@@ -1,4 +1,5 @@
-﻿using App.ViewModels;
+﻿using App.Core.Models.Enums;
+using App.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,6 +15,11 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
 
     private bool _wasChecked = true;
     private bool _canExecute = true;
+    private enum DataGridDisplayMode
+    {
+        Default,
+        Filtered
+    }
 
     public PcbTypeI_OEvaluationViewModel ViewModel
     {
@@ -45,7 +51,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         }*/
     }
 
-
+    private DataGridDisplayMode _displayMode = DataGridDisplayMode.Default;
 
 
 
@@ -53,7 +59,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
     private void CheckBox_Loaded(object sender, RoutedEventArgs e)
     {
 
-        /*CheckBox cb = sender as CheckBox;
+        CheckBox cb = sender as CheckBox;
         if (!_listCheckBox.Contains(cb))
         {
             _listCheckBox.Add(cb);
@@ -62,16 +68,16 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         if ((_listCheckBox.Count - 1) == ViewModel.PtList.Count)
         {
             SelectAll_Checked(sender, e);
-        }*/
+        }
 
     }
 
     private void Option_Checked(object sender, RoutedEventArgs e)
     {
-        /*CheckBox cb = sender as CheckBox;
+        CheckBox cb = sender as CheckBox;
         if (cb.Content is not null)
         {
-            PcbType checkedPcbType = ViewModel.PtList.Where(i => i.Description == (string)cb.Content).Single();
+            PcbType checkedPcbType = ViewModel.PtList.Where(i => i.PcbPartNumber == (string)cb.Content).Single();
             ViewModel.SelectedPcbTypes.Add(checkedPcbType);
 
         }
@@ -82,13 +88,13 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
             _listCheckBox[0].IsChecked = true;
             _listCheckBox[0].Checked += SelectAll_Checked;
             _canExecute = false;
-        }*/
+        }
 
     }
 
     private void Option_Unchecked(object sender, RoutedEventArgs e)
     {
-        /*CheckBox cb = sender as CheckBox;
+        CheckBox cb = sender as CheckBox;
         ViewModel.SelectedPcbTypes.Remove(ViewModel.SelectedPcbTypes.Where(i => i.Description == (string)cb.Content).Single());
         if (cb != _listCheckBox[0])
         {
@@ -102,7 +108,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
             _listCheckBox[0].IsChecked = false;
 
             _canExecute = true;
-        }*/
+        }
     }
 
     private void SelectAll_Checked(object sender, RoutedEventArgs e)
@@ -120,13 +126,13 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
 
     private void SelectAll_Unchecked(object sender, RoutedEventArgs e)
     {
-        /*
+        
         foreach (CheckBox cb in _listCheckBox)
         {
             cb.IsChecked = false;
         }
         ViewModel.SelectedPcbTypes.Clear();
-        _wasChecked = false;*/
+        _wasChecked = false;
     }
 
 
@@ -151,7 +157,9 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
 
     private void FilterPcbTypes_Click(object sender, RoutedEventArgs e)
     {
-
+        _displayMode = DataGridDisplayMode.Filtered;
+        ViewModel.FilterOptions = PcbFilterOptions.FilterPcbTypes;
+        await ViewModel.FilterItems.ExecuteAsync(null);
     }
 
     private void FilterClear_Click(object sender, RoutedEventArgs e)
