@@ -1,4 +1,3 @@
-
 using App.Core.DataAccess;
 using App.Core.DTOs;
 using App.Core.Helpers;
@@ -17,6 +16,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
     }
 
+    // Ruft eine Liste von PcbDTOs ab, die entsprechend der angegebenen Parameter sortiert und paginiert sind.
     public async Task<Response<List<PcbDTO>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty,
         bool isAscending)
     {
@@ -41,6 +41,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    // Ermittelt die maximale Anzahl von Einträgen, die nicht gelöscht wurden.
     public async Task<Response<int>> MaxEntries()
     {
         try
@@ -56,6 +57,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    // Ermittelt die maximale Anzahl von Einträgen, die nicht gelöscht wurden und einem angegebenen Filter entsprechen.
     public async Task<Response<int>> MaxEntriesFiltered(Expression<Func<T, bool>> where)
     {
         try
@@ -72,6 +74,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    // Ermittelt die maximale Anzahl von Einträgen für bestimmte Pcb-Typen.
     public async Task<Response<int>> MaxEntriesPcbTypes(string selectedPcbTypesId)
     {
         try
@@ -88,6 +91,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    // Ermittelt die maximale Anzahl von Einträgen für einen bestimmten Lagerort.
     public async Task<Response<int>> MaxEntriesByStorageLocation(int storageLocationId)
     {
         try
@@ -104,6 +108,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    // Methode zum Suchen nach der maximalen Anzahl von Einträgen, die ein bestimmtes Kriterium erfüllen
     public async Task<Response<int>> MaxEntriesSearch(string queryText)
     {
         try
@@ -121,6 +126,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     }
 
 
+    // Methode zum Abrufen einer Liste von Einträgen, die einem bestimmten Kriterium entsprechen
     public async Task<Response<List<PcbDTO>>> Like(int pageIndex, int pageSize, string queryText)
     {
         try
