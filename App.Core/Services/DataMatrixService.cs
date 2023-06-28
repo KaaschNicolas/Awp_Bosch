@@ -9,11 +9,13 @@ namespace App.Core.Services
 {
     public class DataMatrixService : IDataMatrixService
     {
+        // Generiert einen DataMatrix-Code als Bitmap anhand der angegebenen Daten
         public Bitmap GetDataMatrix(string data)
         {
             return GenerateDataMatrix(data);
         }
-        
+
+        // Generiert einen DataMatrix-Code anhand der angegebenen Daten und speichert ihn als PNG-Datei im angegebenen Pfad
         public void SaveDataMatrix(string data, string path)
         {
             try
@@ -29,6 +31,7 @@ namespace App.Core.Services
             }
         }
 
+        // Generiert einen DataMatrix-Code als Bitmap anhand der angegebenen Daten
         private Bitmap GenerateDataMatrix(string data)
         {
             BarcodeWriter<Bitmap> barcodeWriter = new()
