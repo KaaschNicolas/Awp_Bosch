@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,21 +35,34 @@ namespace App.Views
             ViewModel = App.GetService<DwellTimeEvaluationViewModel>();
             InitializeComponent();
             Loaded += Page_Loaded;
-            
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            ApplyTheme(ActualTheme);
             ViewModel.GeneratePlotCommand.ExecuteAsync(null);
+            ApplyTheme(ActualTheme);
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             ActualThemeChanged += Page_ActualThemeChanged;
-            ViewModel.GeneratePlotCommand.ExecuteAsync(null);
-            BarPlot.InvalidatePlot(true);
+            //ViewModel.GeneratePlotCommand.ExecuteAsync(null);
             base.OnNavigatedTo(e);
+        }
+
+        private void DateChangedFrom(object sender, CalendarDatePickerDateChangedEventArgs e)
+        {
+            ViewModel.From = ((DateTimeOffset)From.Date).DateTime;
+        }
+
+        private void DateChangedTo(object sender, CalendarDatePickerDateChangedEventArgs e)
+        {
+            ViewModel.To = ((DateTimeOffset)To.Date).DateTime;
+        }
+
+        private void Click_EvaluationButton(object sender, RoutedEventArgs e)
+        {
+            ViewModel.GeneratePlotCommand.ExecuteAsync(null);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

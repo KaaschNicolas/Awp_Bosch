@@ -38,8 +38,8 @@ namespace App.Core.Services
                 {
                     Margin = 1,
                     PureBarcode = true,
-                    Height = 150,
-                    Width = 150
+                    Height = 25,
+                    Width = 25
                 },
                 Renderer = new BitmapRenderer()
             };

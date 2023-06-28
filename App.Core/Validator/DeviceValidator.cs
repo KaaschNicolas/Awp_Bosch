@@ -1,39 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using App.Core.Models;
+﻿using App.Core.Models;
 
-namespace App.Core.Validator;
-public class DeviceValidator
+namespace App.Core.Validator
 {
-    private Device _device;
-    public DeviceValidator(Device device)
+    // Eine Klasse zur Validierung von Device-Objekten (Gerät - EInschränkungen)
+    public class DeviceValidator
     {
-        _device = device;
-    }
-    private List<string> Validate()
-    {
-        List<string> errors = new List<string>();
+        private Device _device;
 
-        if(string.IsNullOrEmpty(_device.Name) || _device.Name.Length > 50)
+        // Der Konstruktor der Klasse, der das zu überprüfende Device erhält 
+        public DeviceValidator(Device device)
         {
-            errors.Add("Name darf nicht null sein oder 50 Zeichen überschreiten.");
+            _device = device;
         }
 
-        return errors;
-    }
-    public bool IsValid()
-    {
-        if (Validate().Count == 0)
+        private List<string> Validate()
         {
-            return true;
+            List<string> errors = new List<string>();
+
+            // Überprüfung, ob der Name des Geräts null oder länger als 50 Zeichen ist
+            if (string.IsNullOrEmpty(_device.Name) || _device.Name.Length > 50)
+            {
+                errors.Add("Name darf nicht null sein oder 50 Zeichen überschreiten.");
+            }
+
+            return errors; // Rückgabe der Liste der Validierungsfehler
         }
-        return false;
-    }
-    public List<string> GetErrors()
-    {
-        return Validate();
+
+        // Eine Methode zur Überprüfung der Validität des Geräts
+        public bool IsValid()
+        {
+            // Überprüfung, ob die Anzahl der Validierungsfehler 0 ist
+            if (Validate().Count == 0)
+            {
+                return true; // Das Gerät ist valide
+            }
+
+            return false; // Es sind Validierungsfehler vorhanden
+        }
+
+        // Eine entliche Methode zur Rückgabe der Liste der Validierungsfehler
+        public List<string> GetErrors()
+        {
+            return Validate();
+        }
     }
 }
+

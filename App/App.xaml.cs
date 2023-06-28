@@ -2,10 +2,12 @@
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
 using App.Core.DataAccess;
+using App.Core.DTOs;
 using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
+using App.Helpers;
 using App.Models;
 using App.Services;
 using App.ViewModels;
@@ -18,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
 using Serilog;
+using Windows.Devices.WiFiDirect.Services;
 
 namespace App;
 
@@ -94,9 +97,16 @@ public partial class App : Application
             services.AddTransient<ITransferDataService<Transfer>, TransferDataService<Transfer>>();
             services.AddTransient<IMockDataService, MockDataService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IPcbTypeEvaluationService, PcbTypeEvaluationService>();
+            services.AddTransient<IDashboardDataService<BaseEntity>, DashboardDataService<BaseEntity>>();
 
 
             // Views and ViewModels
+            services.AddTransient<DashboardViewModel>();
+            services.AddTransient<DashboardPage>();
+
+            services.AddTransient<PcbTypeEvaluationViewModel>();
+            services.AddTransient<PcbTypeEvaluationPage>();
             services.AddTransient<UpdateUserViewModel>();
             services.AddTransient<UpdateUserPage>();
             services.AddTransient<CreateUserViewModel>();
@@ -153,6 +163,10 @@ public partial class App : Application
                 ServiceLifetime.Transient);
         }).
         Build();
+
+        var authService = Host.Services.GetService(typeof(IAuthenticationService)) as AuthenticationService;
+
+        AuthServiceHelper.Rolle = authService.CurrentUser.Role;
 
         UnhandledException += App_UnhandledException;
     }

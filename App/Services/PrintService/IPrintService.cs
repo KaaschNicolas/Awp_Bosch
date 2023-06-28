@@ -1,9 +1,9 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml.Controls;
 
 namespace App.Services.PrintService
 {
     interface IPrintService
     {
-        Task Print(UIElement contentElement);
+        Task Print(Page page);
     }
 }

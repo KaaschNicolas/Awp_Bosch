@@ -8,7 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:viewModels="using:App.ViewModels"
     x:Name="_page"
-	mc:Ignorable="d">
+	mc:Ignorable="d"
+    xmlns:auth="using:App.Helpers"
+	xmlns:authTest="using:App.Helpers"
+	xmlns:helpers="using:App.Helpers"
+	IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"
+    Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}">
 
 
 	<behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
@@ -20,6 +25,9 @@
 				</Grid.ColumnDefinitions>
 
 				<CommandBar
+                    Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}"
+                    IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"
+                   
                     Grid.Column="0"
                     Padding="0"
                     Background="Transparent"
@@ -32,33 +40,28 @@
 
 					<!--  All your AppBar buttons  -->
 					<!--  Get SendAppBarButton.Label from localized resources  -->
-					<AppBarButton
+                    <AppBarButton
                         Click="NavigateCreateUser"
                         Icon="Add"
                         Label="Hinzufügen"/>
-					<AppBarButton Icon="Refresh" Label="Neu Laden"  Click="RefreshUsers"/>
-
-				</CommandBar>
-				<StackPanel
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Background="{ThemeResource CommandBarBackground}">
-					<AutoSuggestBox
-                        MinWidth="304"
-                        MaxWidth="320"
-                        Margin="0,8,0,12"
-                        HorizontalAlignment="Left"
-                        PlaceholderText="Suche"
-                        FontWeight="Normal"
-                        QueryIcon="Find"/>
-				</StackPanel>
-			</Grid>
-		</DataTemplate>
+					<AppBarButton 
+                        IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"
+                        
+                        Icon="Refresh" 
+                        Label="Neu Laden"  
+                        Click="RefreshUsers"/>
+                </CommandBar>
+                <StackPanel Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Background="{ThemeResource CommandBarBackground}">
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
 	</behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
 
-	<Grid x:Name="ContentArea">
+    <Grid x:Name="ContentArea" Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}">
 
-		<!--  Remove wierd borders around cells, caused bug when opening MenuFlyout  -->
+        <!--  Remove wierd borders around cells, caused bug when opening MenuFlyout  -->
 		<Grid.Resources>
 			<ResourceDictionary>
 				<SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush" Color="Transparent" />

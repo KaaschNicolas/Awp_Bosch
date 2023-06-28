@@ -20,6 +20,7 @@
     <None Remove="Controls\ErrorCardUserControl.xaml" />
     <None Remove="Controls\ReconnectDialog.xaml" />
     <None Remove="Controls\TransferDialog.xaml" />
+    <None Remove="Models\PrintPageModel.xaml" />
     <None Remove="Views\CreateDiagnosePage.xaml" />
     <None Remove="Views\DiagnosePage.xaml" />
     <None Remove="Views\DwellTimeEvalutionPage.xaml" />
@@ -97,6 +98,12 @@
 
 	<ItemGroup>
 	  <Page Update="Controls\ReconnectDialog.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Models\PrintPageModel.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	</ItemGroup>

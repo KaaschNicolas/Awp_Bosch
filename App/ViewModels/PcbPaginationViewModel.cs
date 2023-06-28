@@ -3,9 +3,12 @@ using App.Contracts.ViewModels;
 using App.Core.DTOs;
 using App.Core.Models;
 using App.Core.Models.Enums;
+using App.Core.Services;
 using App.Core.Services.Interfaces;
+using App.Helpers;
 using App.Messages;
 using App.Models;
+using App.Services.PrintService.impl;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -23,7 +26,8 @@ namespace App.ViewModels
             IInfoBarService infoBarService,
             IDialogService dialogService,
             INavigationService navigationService,
-            ITransferDataService<Transfer> transferDataService
+            ITransferDataService<Transfer> transferDataService,
+            ICrudService<PcbType> pcbTypeCrudService
         )
         {
 
@@ -58,17 +62,20 @@ namespace App.ViewModels
                 () => _pageNumber != _pageCount && _filterOptions != PcbFilterOptions.None
             );
 
+
             FilterOptions = PcbFilterOptions.None;
             _dialogService = dialogService;
             _infoBarService = infoBarService;
             _navigationService = navigationService;
             _transferDataService = transferDataService;
             _storageLocationCrudService = storageLocationDataService;
+            _pcbTypeCrudService = pcbTypeCrudService;
             Refresh();
         }
 
         private readonly IPcbDataService<Pcb> _pcbDataService;
         private readonly ICrudService<StorageLocation> _storageLocationCrudService;
+        private readonly ICrudService<PcbType> _pcbTypeCrudService;
         private readonly IInfoBarService _infoBarService;
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
@@ -125,6 +132,26 @@ namespace App.ViewModels
 
         public string SortBy { get => _sortyBy; set => SetProperty(ref _sortyBy, value); }
 
+        [ObservableProperty]
+        public ObservableCollection<PcbType> selectedPcbTypes = new();
+
+        [ObservableProperty]
+        private List<PcbType> _allPcbTypes;
+
+
+        private async Task GetPcbTypes()
+        {
+            var response = await _pcbTypeCrudService.GetAll();
+            if (response != null && response.Code == ResponseCode.Success)
+            {
+                AllPcbTypes = new List<PcbType>(response.Data.OrderBy(x => x.PcbPartNumber));
+            }
+            else
+            {
+                _infoBarService.showError("Fehler beim Laden der Sachnnummern", "Error");
+            }
+        }
+
         private async Task CreatePcbList(int pageIndex, int pageSize, List<PcbDTO> pcbs, bool isAscending, int maxEntries)
         {
 
@@ -142,11 +169,13 @@ namespace App.ViewModels
 
         }
 
+
         private async Task GetPcbs(int pageIndex, int pageSize, bool isAscending)
         {
 
             Response<List<PcbDTO>> pcbs;
             Response<int> maxEntries;
+
 
             // Get storage locations for filter
 
@@ -173,16 +202,32 @@ namespace App.ViewModels
                     case PcbFilterOptions.Filter1:
                         Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "Finalized = 1", SortBy, isAscending);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "Finalized = 1", SortBy, isAscending, PcbFilterOptions.Filter1);
                         break;
                     case PcbFilterOptions.Filter2:
                         Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.UtcNow.Date;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "DATEDIFF(DAY, CreatedDate, GETDATE()) = 0", SortBy, isAscending);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "DATEDIFF(DAY, CreatedDate, GETDATE()) = 0", SortBy, isAscending, PcbFilterOptions.Filter2);
+                        break;
+                    case PcbFilterOptions.FilterPcbTypes:
+                        if (SelectedPcbTypes.Count > 0)
+                        {
+                            var l = new List<PcbType>(SelectedPcbTypes);
+                            var pcbTypeIds = l.Select(x => x.Id);
+                            string pcbTypeIdsString = string.Join(", ", pcbTypeIds);
+                            maxEntries = await _pcbDataService.MaxEntriesPcbTypes(pcbTypeIdsString);
+                            pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, pcbTypeIdsString, SortBy, isAscending, PcbFilterOptions.FilterPcbTypes);
+
+                        }
+                        else
+                        {
+                            maxEntries = new Response<int>(ResponseCode.Success, 0);
+                            pcbs = new Response<List<PcbDTO>>(ResponseCode.Success, new List<PcbDTO>());
+                        }
                         break;
                     case PcbFilterOptions.FilterStorageLocation:
                         maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);
-                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, SelectedComboBox.Id.ToString(), SortBy, isAscending, true);
+                        pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, SelectedComboBox.Id.ToString(), SortBy, isAscending, PcbFilterOptions.FilterStorageLocation);
                         break;
                     default:
                         maxEntries = await _pcbDataService.MaxEntries();
@@ -241,6 +286,63 @@ namespace App.ViewModels
             }
         }
 
+        [RelayCommand]
+        public async void Print()
+        {
+            var res = await _pcbDataService.GetByIdEager(_selectedItem.PcbId);
+            var pcbRes = res.Data;
+            IDataMatrixService _dmService = new DataMatrixService();
+            var dmImage = _dmService.GetDataMatrix(_selectedItem.SerialNumber);
+            var dmImageConverted = BitmapToBitmapImageConverter.Convert(dmImage);
+            var ErrorTypes = pcbRes.ErrorTypes;
+            String FirstErrorCode;
+            String FirstErrorDescription;
+            String SecondErrorCode;
+            String SecondErrorDescription;
+            if (ErrorTypes[0].Code != null && ErrorTypes[0].ErrorDescription != null && ErrorTypes != null)
+            {
+                FirstErrorCode = ErrorTypes[0].Code;
+                FirstErrorDescription = ErrorTypes[0].ErrorDescription;
+
+                if (ErrorTypes[1].Code != null && ErrorTypes[1].ErrorDescription != null)
+                {
+                    SecondErrorCode = ErrorTypes[1].Code;
+                    SecondErrorDescription = ErrorTypes[1].ErrorDescription;
+                }
+                else
+                {
+                    SecondErrorCode = " nicht vorhanden";
+                    SecondErrorDescription = " nicht vorhanden";
+                }
+            }
+            else
+            {
+                FirstErrorCode = " nicht vorhanden";
+                FirstErrorDescription = " nicht vorhanden";
+                SecondErrorCode = " nicht vorhanden";
+                SecondErrorDescription = " nicht vorhanden";
+            }
+            var pcbPrintPageDto = new PcbPrintPageDTO()
+            {
+                Seriennummer = _selectedItem.SerialNumber,
+                Sachnummer = _selectedItem.PcbPartNumber,
+                Datamatrix = dmImageConverted,
+                Einschraenkung = pcbRes.Restriction.Name,
+                Panel = pcbRes.Comment,
+                Status = _selectedItem.IsFinalized ? "abgeschlossen" : "offen",
+                UmlaufTage = (int)Math.Round((DateTime.Now - pcbRes.CreatedDate).TotalDays),
+                AktuellerStandort = _selectedItem.StorageName,
+                Verweildauer = _selectedItem.DwellTime,
+                LetzteBearbeitung = pcbRes.Transfers.Last().NotedBy.Name,
+                Oberfehler = FirstErrorCode,
+                OberfehlerBeschreibung = FirstErrorDescription,
+                Unterfehler = SecondErrorCode,
+                UnterfehlerBeschreibung = SecondErrorDescription,
+            };
+            var printPageModel = new PrintPageModel(pcbPrintPageDto);
+            var _printService = new PrintService();
+            _printService.Print(printPageModel);
+        }
 
         [RelayCommand]
         public void NavigateToDetails(int pcbId)
@@ -286,9 +388,10 @@ namespace App.ViewModels
 
 
 
-        public void OnNavigatedTo(object parameter)
+        public async void OnNavigatedTo(object parameter)
         {
             IsActive = true; // invokes onActivated
+            await GetPcbTypes();
         }
 
 

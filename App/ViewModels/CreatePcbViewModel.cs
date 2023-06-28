@@ -199,7 +199,7 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
         CreatedBy = _authenticationService.CurrentUser;
 
     }
-
+        
     public void OnNavigatedFrom()
     {
 

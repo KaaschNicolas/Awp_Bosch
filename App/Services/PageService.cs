@@ -33,9 +33,11 @@ public class PageService : IPageService
         Configure<PcbPaginationViewModel, PcbViewPage>();
         Configure<UpdatePcbViewModel, UpdatePcbPage>();
         Configure<DwellTimeEvaluationViewModel, DwellTimeEvalutionPage>();
+        Configure<PcbTypeEvaluationViewModel, PcbTypeEvaluationPage>();
         Configure<UsersViewModel, UsersPage>();
         Configure<CreateUserViewModel, CreateUserPage>();
         Configure<UpdateUserViewModel, UpdateUserPage>();
+        Configure<DashboardViewModel, DashboardPage>();
     }
 
     public Type GetPageType(string key)

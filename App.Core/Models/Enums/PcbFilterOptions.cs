@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace App.Core.Models.Enums
+﻿namespace App.Core.Models.Enums
 {
     public enum PcbFilterOptions
     {
@@ -13,6 +7,7 @@ namespace App.Core.Models.Enums
         Filter1,
         Filter2,
         Filter3,
+        FilterPcbTypes,
         FilterStorageLocation
     }
 }

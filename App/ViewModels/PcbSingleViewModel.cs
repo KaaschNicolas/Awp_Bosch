@@ -1,8 +1,11 @@
 ﻿using App.Contracts.Services;
 using App.Contracts.ViewModels;
 using App.Core.Models;
+using App.Core.Services;
 using App.Core.Services.Interfaces;
+using App.Helpers;
 using App.Messages;
+using App.Models;
 using App.Services.PrintService.impl;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -111,7 +114,6 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [ObservableProperty]
     private ObservableCollection<Pcb> _pcbs;
 
-
     private readonly IAuthenticationService _authenticationService;
     private readonly ICrudService<Pcb> _pcbCrudService;
     private readonly IPcbDataService<Pcb> _pcbDataService;
@@ -143,6 +145,8 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
         _pcbs = new ObservableCollection<Pcb>();
     }
 
+    public PcbSingleViewModel(){}
+
 
     [RelayCommand]
     public async void ShowTransfer()
@@ -169,10 +173,31 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     }
 
     [RelayCommand]
-    public async void Print(Page page)
+    public async void Print()
     {
+        IDataMatrixService _dmService = new DataMatrixService();
+        var dmImage = _dmService.GetDataMatrix(SerialNumber);
+        var dmImageConverted = BitmapToBitmapImageConverter.Convert(dmImage);
+        var pcbPrintPageDto = new PcbPrintPageDTO()
+        {
+            Seriennummer = SerialNumber,
+            Sachnummer = PcbType.PcbPartNumber,
+            Datamatrix = dmImageConverted,
+            Einschraenkung = Restriction.Name,
+            Panel = PanelComment,
+            Status = Status,
+            UmlaufTage = InCirculationDays,
+            AktuellerStandort = Storage,
+            Verweildauer = AtLocationDays,
+            LetzteBearbeitung = NotedBy,
+            Oberfehler = FirstErrorCode,
+            OberfehlerBeschreibung = FirstErrorDescription,
+            Unterfehler = SecondErrorCode,
+            UnterfehlerBeschreibung = SecondErrorDescription
+        };
+        var printPageModel = new PrintPageModel(pcbPrintPageDto);
         var _printService = new PrintService();
-        await _printService.Print(page);
+        _printService.Print(printPageModel);
     }
 
     [RelayCommand]

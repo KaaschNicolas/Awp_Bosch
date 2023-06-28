@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!--  Copyright (c) Microsoft Corporation and Contributors.  -->
 <!--  Licensed under the MIT License.  -->
-
 <Page
     x:Class="App.Views.PcbViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -11,10 +10,11 @@
     xmlns:ctWinUI="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:App.Core.Models"
     xmlns:viewModels="using:App.ViewModels"
+    x:Name="PcbPaginationPage"
     Background="Transparent"
     mc:Ignorable="d">
-
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
         <DataTemplate x:DataType="viewModels:PcbPaginationViewModel">
             <Grid Margin="0,0,50,0">
@@ -22,7 +22,6 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-
                 <CommandBar
                     Grid.Column="0"
                     Padding="0"
@@ -33,22 +32,20 @@
                         <!--  Get MainPageTitle.Text from localizx:ed resources  -->
                         <TextBlock Text="Leiterplatten" />
                     </CommandBar.Content>
-
                     <!--  All your AppBar buttons  -->
                     <!--  Get SendAppBarButton.Label from localized resources  -->
                     <AppBarButton
-                        Click="CreatePcbButton_Click"
-                        Icon="Add"
-                        Label="Hinzufügen" 
-                        FontWeight="SemiBold"
                         Background="{StaticResource AccentFillColorDefaultBrush}"
-                        Foreground="{StaticResource TextOnAccentFillColorPrimary}"/>
-                        
+                        Click="CreatePcbButton_Click"
+                        FontWeight="SemiBold"
+                        Foreground="{StaticResource TextOnAccentFillColorPrimary}"
+                        Icon="Add"
+                        Label="Hinzufügen" />
                 </CommandBar>
             </Grid>
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-    <Grid Margin="0,0,0,80">
+    <Grid x:Name="Content" Margin="0,0,0,80">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
@@ -84,9 +81,49 @@
                     Icon="Filter"
                     Label="Filter">
                     <AppBarButton.Flyout>
-                        <MenuFlyout>
+                        <MenuFlyout Placement="Bottom">
                             <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Einträge" />
                             <MenuFlyoutItem Click="Filter2_Click" Text="Heute erstellt" />
+                            <MenuFlyoutSubItem Text="Sachnummer">
+                                <MenuFlyoutItem x:Name="PcbTypesFilterMenuItem" DataContext="{x:Bind ViewModel}">
+                                    <MenuFlyoutItem.Template>
+                                        <ControlTemplate x:Name="MenuControlTemplate" TargetType="MenuFlyoutItem">
+                                            <StackPanel Margin="15" Orientation="Vertical">
+                                                <CheckBox
+                                                    x:Name="OptionsAllCheckBox"
+                                                    Checked="SelectAll_Checked"
+                                                    Content="Alle auswählen"
+                                                    Indeterminate="SelectAll_Indeterminate"
+                                                    IsThreeState="True"
+                                                    Loaded="CheckBox_Loaded"
+                                                    Unchecked="SelectAll_Unchecked" />
+                                                <ScrollViewer
+                                                    Height="100"
+                                                    IsTabStop="True"
+                                                    IsVerticalScrollChainingEnabled="True"
+                                                    VerticalScrollBarVisibility="Auto">
+                                                    <ItemsControl x:Name="CheckBoxList" ItemsSource="{Binding AllPcbTypes, Mode=OneWay}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox
+                                                                    Margin="24,0,0,0"
+                                                                    Checked="Option_Checked"
+                                                                    Content="{Binding PcbPartNumber}"
+                                                                    Loaded="CheckBox_Loaded"
+                                                                    Unchecked="Option_Unchecked" />
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                                <Button
+                                                    Margin="0,20,20,0"
+                                                    Click="FilterPcbTypes_Click"
+                                                    Content="Filter anwenden" />
+                                            </StackPanel>
+                                        </ControlTemplate>
+                                    </MenuFlyoutItem.Template>
+                                </MenuFlyoutItem>
+                            </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem Click="FilterClear_Click" Text="Filter entfernen" />
                         </MenuFlyout>
@@ -207,7 +244,7 @@
                 </ctWinUI:DataGridTemplateColumn>
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding DwellTime}"
-                    CanUserSort="False"
+                    CanUserSort="True"
                     Header="Verweildauer"
                     Tag="DwellTime" />
                 <ctWinUI:DataGridTextColumn
@@ -216,25 +253,37 @@
                     Tag="SerialNumber" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding PcbPartNumber}"
-                    CanUserSort="False"
+                    CanUserSort="True"
                     Header="Sachnummer"
                     Tag="PcbPartNumber" />
                 <ctWinUI:DataGridComboBoxColumn
                     Binding="{Binding MainErrorCode}"
                     CanUserSort="True"
-                    Header="Hauptfehler"
+                    Header="Oberfehler"
                     Tag="MainErrorCode" />
                 <ctWinUI:DataGridComboBoxColumn
                     Binding="{Binding SubErrorCode}"
                     CanUserSort="True"
                     Header="Unterfehler"
                     Tag="SubErrorCode" />
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding IsFinalized}"
-                    Header="Abgeschlossen"
-                    Tag="IsFinalized" />
+                <controls:DataGridTemplateColumn Header="Abgeschlossen">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button
+                                Name="CheckedIcon"
+                                HorizontalAlignment="Center"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                Foreground="Green"
+                                Visibility="{Binding IsFinalized}">
+                                <FontIcon FontWeight="Bold" Glyph="&#xE73E;" />
+                            </Button>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding TransferCount}"
+                    CanUserSort="True"
                     Header="Weitergaben"
                     Tag="TransferCount" />
                 <ctWinUI:DataGridTextColumn
@@ -265,6 +314,10 @@
                                             Click="NavigateToDetails"
                                             Icon="OpenWith"
                                             Text="Detailansicht" />
+                                        <MenuFlyoutItem
+                                            Click="PrintClick"
+                                            Icon="Print"
+                                            Text="Drucken" />
                                         <MenuFlyoutItem
                                             Click="TransferClick"
                                             Icon="RepeatAll"
