@@ -146,6 +146,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    // Methode zum Abrufen einer Liste von Einträgen mit Filtern und Sortierung
     public async Task<Response<List<PcbDTO>>> GetWithFilter(int pageIndex, int pageSize, string value, string orderByProperty, bool isAscending, PcbFilterOptions filterOptions)
     {
         try
@@ -181,6 +182,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    // Methode zum Löschen eines Eintrags anhand seiner ID
     public async Task<Response<T>> Delete(int id)
     {
         try
@@ -226,6 +228,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
         }
     }
 
+    // Methode zum Abrufen eines Eintrags anhand seiner ID und zugehöriger Daten
     public async Task<Response<T>> GetByIdEager(int id)
     {
         try
@@ -249,7 +252,7 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
             return new Response<T>(ResponseCode.Error, error: $"Fehler beim abfragen von {typeof(T)} mit der ID {id}");
         }
     }
-    
+
     private string BuildQuery(
         string? whereFilterOnStorageLocation = null,
         string? whereFilterOnPcb = null,
