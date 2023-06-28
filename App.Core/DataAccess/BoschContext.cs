@@ -106,7 +106,7 @@ namespace App.Core.DataAccess
 
             if (sqlQuery != null)
             {
-                using (var connection = (SqlConnection)this.Database.GetDbConnection())
+                using (var connection = new SqlConnection(ConfigurationHelper.Configuration.GetConnectionString("BoschContext")))
                 {
                     connection.Open();
                     //this.Database.OpenConnection();
