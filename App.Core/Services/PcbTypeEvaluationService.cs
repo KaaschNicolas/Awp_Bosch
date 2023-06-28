@@ -1,15 +1,9 @@
 ﻿using App.Core.DataAccess;
 using App.Core.DTOs;
 using App.Core.Models;
-using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.Core.Services
 {
@@ -23,8 +17,9 @@ namespace App.Core.Services
             _boschContext = context;
             _loggingService = loggingService;
         }
-       
-        
+
+
+        // Methode zum Abrufen von EvaluationStorageLocationDTO-Objekten basierend auf dem PCB-Typ und dem DeadlineDate
         public async Task<Response<List<EvaluationStorageLocationDTO>>> GetAllByPcbType(string pcbType, DateTime deadline )
         {
             try
@@ -45,6 +40,7 @@ namespace App.Core.Services
             }
         }
 
+        // Methode zum Abrufen von EvaluationFinalizedDTO-Objekten basierend auf dem PCB-Typ und dem DeadlineDate
         public async Task<Response<List<EvaluationFinalizedDTO>>> GetFinalizedByPcbType(string pcbType, DateTime deadline)
         {
             try
@@ -66,6 +62,7 @@ namespace App.Core.Services
         }
 
 
+        // Methode zum Erstellen der SQL-Abfrage für EvaluationStorageLocationDTO basierend auf dem PCB-Typ und dem DeadlineDate
         private string BuildQuery1(string? pcbtype = null, DateTime? deadline = null)
         {
             if (pcbtype != null && deadline != null)
@@ -98,6 +95,7 @@ namespace App.Core.Services
             return null;
         }
 
+        // Methode zum Erstellen der SQL-Abfrage für EvaluationFinalizedDTO basierend auf dem PCB-Typ und dem DeadlineDate
         private string BuildQuery2(string? pcbtype = null, DateTime? deadline = null)
         {
             if (pcbtype != null && deadline != null)
