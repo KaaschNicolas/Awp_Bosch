@@ -137,7 +137,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         {
             return await _boschContext.Database.CanConnectAsync();
         }
-        catch (DbUpdateException)
+        catch (Exception)
         {
             return false;
         }

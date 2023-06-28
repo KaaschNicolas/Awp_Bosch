@@ -1,5 +1,6 @@
 ﻿using App.Core.DataAccess;
 using App.Core.DTOs;
+using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
@@ -24,19 +25,22 @@ namespace App.Core.Services
             _loggingService = loggingService;
         }
        
-        
         public async Task<Response<List<EvaluationStorageLocationDTO>>> GetAllByPcbType(string pcbType, DateTime deadline )
         {
             try
             {
-                string queryString = BuildQuery1(pcbType, deadline);
-                Debug.WriteLine(queryString);
-                var query = _boschContext.EvaluationStorageLocationDTO
-                .FromSqlRaw(queryString)
-                .ToListAsync();
+                if (await ConnectionHelper.CanConnect(_boschContext))
+                {
+                    string queryString = BuildQuery1(pcbType, deadline);
+                    Debug.WriteLine(queryString);
+                    var query = _boschContext.EvaluationStorageLocationDTO
+                    .FromSqlRaw(queryString)
+                    .ToListAsync();
 
-                var data = await query;
-                return new Response<List<EvaluationStorageLocationDTO>>(ResponseCode.Success, data: data);
+                    var data = await query;
+                    return new Response<List<EvaluationStorageLocationDTO>>(ResponseCode.Success, data: data);
+                }
+                throw new DbUpdateException();
             }
 
             catch (DbUpdateException)
@@ -49,14 +53,18 @@ namespace App.Core.Services
         {
             try
             {
-                string queryString = BuildQuery2(pcbType, deadline);
-                Debug.WriteLine(queryString);
-                var query = _boschContext.EvaluationFinalizedDTO
-                .FromSqlRaw(queryString)
-                .ToListAsync();
+                if (await ConnectionHelper.CanConnect(_boschContext))
+                {
+                    string queryString = BuildQuery2(pcbType, deadline);
+                    Debug.WriteLine(queryString);
+                    var query = _boschContext.EvaluationFinalizedDTO
+                    .FromSqlRaw(queryString)
+                    .ToListAsync();
 
-                var data = await query;
-                return new Response<List<EvaluationFinalizedDTO>>(ResponseCode.Success, data: data);
+                    var data = await query;
+                    return new Response<List<EvaluationFinalizedDTO>>(ResponseCode.Success, data: data);
+                }
+                throw new DbUpdateException();
             }
 
             catch (DbUpdateException)
@@ -120,6 +128,5 @@ namespace App.Core.Services
             }
             return null;
         }
-
     }
 }

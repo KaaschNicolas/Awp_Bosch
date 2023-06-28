@@ -22,17 +22,21 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            string queryString = BuildQuery();
+            if (await CanConnect())
+            {
+                string queryString = BuildQuery();
 
-            var query = _boschContext.PcbsDTO
-            .FromSqlRaw(queryString)
-            .OrderBy(orderByProperty, isAscending)
-            .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+                var query = _boschContext.PcbsDTO
+                .FromSqlRaw(queryString)
+                .OrderBy(orderByProperty, isAscending)
+                .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-            var data = await query;
-            return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
+                var data = await query;
+                return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
+            }
+            throw new DbUpdateException();
         }
 
         catch (DbUpdateException)
@@ -84,11 +88,15 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var query = _boschContext.PcbsDTO
-                .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: selectedPcbTypesId))
-                .CountAsync();
-            int count = await query;
-            return new Response<int>(ResponseCode.Success, data: count);
+            if (await CanConnect())
+            {
+                var query = _boschContext.PcbsDTO
+                    .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: selectedPcbTypesId))
+                    .CountAsync();
+                int count = await query;
+                return new Response<int>(ResponseCode.Success, data: count);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -100,11 +108,15 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var query = _boschContext.PcbsDTO
-                .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: storageLocationId.ToString()))
-                .CountAsync();
-            int count = await query;
-            return new Response<int>(ResponseCode.Success, data: count);
+            if (await CanConnect())
+            {
+                var query = _boschContext.PcbsDTO
+                    .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: storageLocationId.ToString()))
+                    .CountAsync();
+                int count = await query;
+                return new Response<int>(ResponseCode.Success, data: count);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -137,14 +149,18 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var query = _boschContext.PcbsDTO
-                       .FromSqlRaw(BuildQuery(likeFilterOnPcb: queryText))
-                       .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
-                       .Take(pageSize)
-                       .ToListAsync();
+            if (await  CanConnect())
+            {
+                var query = _boschContext.PcbsDTO
+                           .FromSqlRaw(BuildQuery(likeFilterOnPcb: queryText))
+                           .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
+                           .Take(pageSize)
+                           .ToListAsync();
 
-            var data = await query;
-            return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
+                var data = await query;
+                return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -156,30 +172,34 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            IQueryable<PcbDTO> query;
-            switch (filterOptions)
+            if ( await CanConnect())
             {
-                case PcbFilterOptions.FilterStorageLocation:
-                    query = _boschContext.PcbsDTO
-                    .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: value));
-                    break;
-                case PcbFilterOptions.FilterPcbTypes:
-                    query = _boschContext.PcbsDTO
-                    .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: value));
-                    break;
-                default:
-                    query = _boschContext.PcbsDTO
-                   .FromSqlRaw(BuildQuery(whereFilterOnPcb: value));
-                    break;
-            }
+                IQueryable<PcbDTO> query;
+                switch (filterOptions)
+                {
+                    case PcbFilterOptions.FilterStorageLocation:
+                        query = _boschContext.PcbsDTO
+                        .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: value));
+                        break;
+                    case PcbFilterOptions.FilterPcbTypes:
+                        query = _boschContext.PcbsDTO
+                        .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: value));
+                        break;
+                    default:
+                        query = _boschContext.PcbsDTO
+                       .FromSqlRaw(BuildQuery(whereFilterOnPcb: value));
+                        break;
+                }
 
-            var data = query
-                .OrderBy(orderByProperty, isAscending)
-                .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-            var result = await data;
-            return new Response<List<PcbDTO>>(ResponseCode.Success, data: result);
+                var data = query
+                    .OrderBy(orderByProperty, isAscending)
+                    .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                var result = await data;
+                return new Response<List<PcbDTO>>(ResponseCode.Success, data: result);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {

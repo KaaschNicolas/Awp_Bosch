@@ -23,12 +23,12 @@ public class LoggingService : ILoggingService
         _boschContext = boschContext;
     }
 
-    private void AuditBase(LogLevel logLevel, string message, AuditEntry auditEntry)
+    private async void AuditBase(LogLevel logLevel, string message, AuditEntry auditEntry)
     {
         _logger.Log(logLevel: logLevel, message: message);
         try
         {
-            if (_boschContext.Database.CanConnect())
+            if (await ConnectionHelper.CanConnect(_boschContext))
             {
                 _boschContext.AuditEntries.Add(auditEntry);
                 _boschContext.SaveChanges();
