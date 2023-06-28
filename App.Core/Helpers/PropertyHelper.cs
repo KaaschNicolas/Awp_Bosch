@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 
 namespace App.Core.Helpers;
 public static class PropertyHelper
 {
+    // Erweiterungsmethode, die die Eigenschaften eines Objekts in einen String konvertiert
     public static string PropertiesToString(this object obj)
     {
         Type type = obj.GetType();

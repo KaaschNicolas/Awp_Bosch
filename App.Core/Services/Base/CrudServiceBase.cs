@@ -17,6 +17,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         _loggingService = loggingService;
     }
 
+    // Erstellt eine neue Entität vom Type T.
     public async Task<Response<T>> Create(T entity)
     {
         try
@@ -35,6 +36,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         }
     }
 
+    // Aktualisiert eine vorhandene Entität vom Type T anhand der ID.
     public async Task<Response<T>> Update(int id, T entity)
     {
         try
@@ -54,6 +56,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         }
     }
 
+    // Löscht eine vorhandene Entität vom Type T.
     public async Task<Response<T>> Delete(T entity)
     {
         try
@@ -71,6 +74,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         }
     }
 
+    // Ruft alle Entitäten vom Type T ab.
     public async Task<Response<List<T>>> GetAll()
     {
         try
@@ -96,6 +100,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         }
     }
 
+    // Ruft eine Entität vom Type T anhand der ID ab.
     public async Task<Response<T>> GetById(int id)
     {
         try
@@ -111,6 +116,7 @@ public abstract class CrudServiceBase<T> where T : BaseEntity
         }
     }
 
+    // Entsorgt den BoschContext.
     public async Task Dispose()
     {
         await _boschContext.DisposeAsync();
