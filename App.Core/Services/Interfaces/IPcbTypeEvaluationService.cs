@@ -11,5 +11,6 @@ namespace App.Core.Services.Interfaces
 
         public Task<Response<List<EvaluationFinalizedDTO>>> GetFinalizedByPcbType(string pcbType, DateTime deadline);
 
+        public Task<Response<List<Dictionary<string, object>>>> GetPcbTypePosition(List<string> pcbTypeList, DateTime start, DateTime end);
     }
 }

@@ -20,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
 using Serilog;
+
 using Windows.Devices.WiFiDirect.Services;
 
 namespace App;
@@ -102,6 +103,8 @@ public partial class App : Application
 
 
             // Views and ViewModels
+            services.AddTransient<PcbTypeI_OEvaluationViewModel>();
+            services.AddTransient<PcbTypeI_OEvaluationPage>();
             services.AddTransient<DashboardViewModel>();
             services.AddTransient<DashboardPage>();
 
