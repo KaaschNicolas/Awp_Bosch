@@ -21,6 +21,8 @@ using Microsoft.UI.Xaml;
 
 using Serilog;
 
+using Windows.Devices.WiFiDirect.Services;
+
 namespace App;
 // Die Klasse "App" ist die Hauptklasse der Anwendung und erbt von der Klasse "Application" in WinUI 3.
 // To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
@@ -113,6 +115,8 @@ public partial class App : Application
 
             // Views and ViewModels
             // Hier werden die Views und ViewModels der Anwendung registriert.
+            services.AddTransient<PcbTypeI_OEvaluationViewModel>();
+            services.AddTransient<PcbTypeI_OEvaluationPage>();
             services.AddTransient<DashboardViewModel>();
             services.AddTransient<DashboardPage>();
 

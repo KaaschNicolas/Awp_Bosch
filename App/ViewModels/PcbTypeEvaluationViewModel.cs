@@ -91,9 +91,6 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
         Total = 0;
         PcbNumber = "1688400320";
         Deadline = DateTime.Now;
-
-        //_pcbTypeFinalizedModel = new PlotModel { Title = "Bearbeitungsstatus für Sachnummer: "  };
-        //CreatePieChart();
     }
 
     private async Task CalcStatus()
@@ -116,16 +113,14 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
     public async Task GeneratePlot() 
     {
         PcbTypeFinalizedModel = new PlotModel();
-        
-        PcbTypeFinalizedModel = await CreatePieChart();
-        
+        PcbTypeFinalizedModel = await CreatePieChart();       
     }
 
     private async Task<PlotModel> CreatePieChart()
     {
         await CalcStatus();
 
-        //var model = new PlotModel();
+        var model = new PlotModel();
 
         var seriesP1 = new PieSeries { StrokeThickness = 1.5, InsideLabelFormat=" ", OutsideLabelFormat = "{0}\n{1}", AngleSpan = 360, StartAngle = 270, InnerDiameter = 0.5 };
 
@@ -133,16 +128,16 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
         seriesP1.Slices.Add(new PieSlice("abgeschlossen", CountFinalized) { IsExploded = false, Fill = OxyColors.Green });
         seriesP1.Slices.Add(new PieSlice("offen", CountOpen) { IsExploded = true, Fill = OxyColors.Blue });
 
-        PcbTypeFinalizedModel.Series.Add(seriesP1);
-        PcbTypeFinalizedModel.Title = "Bearbeitungsstatus für Sachnummer: ";
+        model.Series.Add(seriesP1);
+        model.Title = "Bearbeitungsstatus für Sachnummer: ";
 
         // Gesamtzahl berechnen
         double total = seriesP1.Slices.Sum(slice => slice.Value);
 
         // Text in die Mitte schreiben
-        PcbTypeFinalizedModel.Subtitle = $"Insgesamt: {total}";
+        model.Subtitle = $"Insgesamt: {total}";
 
-        return PcbTypeFinalizedModel;
+        return model;        
     }
 
   
@@ -153,7 +148,13 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
 
         var storage = new List<StorageLocation>();
         var response = await _pcbTypeEvaluationService.GetAllByPcbType(SelectedPcbType.PcbPartNumber, Deadline);
-        if (response != null && response.Code == ResponseCode.Success)
+
+
+        if (response != null && response.Code == ResponseCode.Success && response.Data.Count == 0)
+        {
+            _infoBarService.showMessage("Keine Daten vorhanden", "Info");
+        }
+        else if (response != null && response.Code == ResponseCode.Success)
         {
             foreach (var item in response.Data)
             {
