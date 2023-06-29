@@ -171,7 +171,7 @@
     &lt;binding template="ToastGeneric"&gt;
       &lt;text&gt;App Notification&lt;/text&gt;
       &lt;text&gt;&lt;/text&gt;
-      &lt;image placement="appLogoOverride" hint-crop="circle" src="{0}Assets/WindowIcon.ico"/&gt;
+      &lt;image placement="appLogoOverride" hint-crop="circle" src="{0}Assets/PfeilIcon.ico"/&gt;
     &lt;/binding&gt;
   &lt;/visual&gt;
   &lt;actions&gt;
