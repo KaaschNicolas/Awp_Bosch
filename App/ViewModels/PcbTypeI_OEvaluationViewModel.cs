@@ -108,8 +108,6 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
                 slist.Add(x.PcbPartNumber);
             }
             slist.Sort();
-            /*var pcbTypeIds = l.Select(x => x.Id);
-            string pcbTypeIdsString = string.Join(", ", pcbTypeIds);*/
 
             var response = await _evaluationService.GetPcbTypePosition(slist, StartDate, EndDate);
             if (response != null && response.Code == ResponseCode.Success)

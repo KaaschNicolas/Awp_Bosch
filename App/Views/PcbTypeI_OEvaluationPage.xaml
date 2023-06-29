@@ -28,8 +28,8 @@
             </Grid>
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-    
-        <Grid x:Name="GridView" RowDefinitions="auto, auto">
+
+    <Grid x:Name="GridView" RowDefinitions="auto, auto">
 
         <StackPanel
                 Grid.Row="0"
@@ -90,6 +90,14 @@
                     </MenuFlyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
+            <AppBarElementContainer x:Name="FilterIndicator"
+                                        Margin="-16,0,0,0"
+                                        Visibility="Collapsed">
+                <FontIcon VerticalAlignment="Top"
+                              FontSize="12"
+                              Foreground="Coral"
+                              Glyph="&#xE73E;" />
+            </AppBarElementContainer>
 
             <CalendarDatePicker
                     x:Name="Start"
@@ -114,12 +122,10 @@
             </Button>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1" 
-                      HorizontalScrollBarVisibility="Auto" 
-                      VerticalScrollBarVisibility="Auto">
-            <controls:DataGrid
-                VerticalScrollBarVisibility="Auto"
-                HorizontalScrollBarVisibility="Auto"
+        <controls:DataGrid
+                ClipboardCopyMode="ExcludeHeader"
+                VerticalScrollBarVisibility="Visible"
+                Height="550"
                 x:Name="ListArea"
                 Grid.Row="1"
                 AutoGenerateColumns="False"
@@ -128,9 +134,6 @@
                 IsReadOnly="True"
                 ItemsSource="{Binding}"
                 RowDetailsVisibilityMode="Collapsed"
-                SelectionMode="Single"
-                CanBeScrollAnchor="True"/>
-        </ScrollViewer>
+                SelectionMode="Single"/>
     </Grid>
-    
 </Page>

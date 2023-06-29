@@ -50,10 +50,12 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         {
             ListArea.Items.Add(dict);
         }*/
+
+        FilterIndicator.Visibility = Visibility.Collapsed;
     }
 
     private DataGridDisplayMode _displayMode = DataGridDisplayMode.Default;
-
+    
 
 
 
@@ -131,9 +133,6 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         {
             cb.IsChecked = true;
         }
-
-
-
     }
 
     private void SelectAll_Unchecked(object sender, RoutedEventArgs e)
@@ -173,6 +172,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         ViewModel.FilterOptions = PcbFilterOptions.FilterPcbTypes;
         await ViewModel.FilterItems.ExecuteAsync(null);
         createDataGrid();
+        FilterIndicator.Visibility = Visibility.Visible;
     }
 
     private async void FilterClear_Click(object sender, RoutedEventArgs e)
@@ -182,6 +182,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         SelectAll_Checked(sender, e);
         await ViewModel.FilterItems.ExecuteAsync(null);
         createDataGrid() ;
+        FilterIndicator.Visibility = Visibility.Collapsed;
     }
 
 
