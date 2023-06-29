@@ -49,7 +49,7 @@ public partial class CreateStorageLocationViewModel : ObservableValidator
             if (IsFinalDestination)
             {
                 dwellTimeRedVal = "--";
-                dwellTimeRedVal = "--";
+                dwellTimeYellowVal = "--";
             }
             var response = await _crudService.Create(new StorageLocation { StorageName = StorageName, DwellTimeYellow = dwellTimeYellowVal, DwellTimeRed = dwellTimeRedVal, IsFinalDestination = IsFinalDestination });
             if (response != null)
