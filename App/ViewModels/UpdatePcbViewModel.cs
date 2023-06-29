@@ -1,6 +1,7 @@
 ﻿using App.Contracts.Services;
 using App.Contracts.ViewModels;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using App.Errors;
 using App.Models;

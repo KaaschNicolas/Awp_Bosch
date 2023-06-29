@@ -4,26 +4,32 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.Core.Models
 {
+    // Die Klasse "StorageLocation" erbt von der Basisklasse "BaseEntity" (Lagerorte)
     public class StorageLocation : BaseEntity
     {
+        // Der Name des Lagerorts
         [Required]
         [Column(TypeName = "nvarchar(50)")]
         public string StorageName
         {
             get; set;
         }
+        // Die Zeit der Verweildauer des Lagerorts, bis die Gelbphase erreicht wurde
         public string DwellTimeYellow
         {
             get; set;
         }
+        // Die Zeit der Verweildauer des Lagerorts, bis die Rotphase erreicht wurde
         public string DwellTimeRed
         {
             get; set;
         }
+        // Gibt an, ob der Lagerort ein endgültiger Lagerort ist oder nicht
         public bool IsFinalDestination
         {
             get; set;
         }
+        // Eine Liste von Umbuchungen, die diesem Lagerort zugeordnet sind
         public List<Transfer> Transfers
         {
             get; set;

@@ -1,5 +1,6 @@
 ﻿using App.Contracts.Services;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using App.Errors;
 using CommunityToolkit.Mvvm.ComponentModel;
