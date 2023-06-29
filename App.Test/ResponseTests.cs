@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using App.Core.Models.Enums;
+using NUnit.Framework;
 using Assert = NUnit.Framework.Assert;
 
 namespace App.Core.Models.Tests

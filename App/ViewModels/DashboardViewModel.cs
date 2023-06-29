@@ -1,5 +1,6 @@
 ﻿using App.Core.DTOs;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;

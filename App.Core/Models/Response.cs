@@ -1,4 +1,6 @@
-﻿namespace App.Core.Models;
+﻿using App.Core.Models.Enums;
+
+namespace App.Core.Models;
 public class Response<T>
 {
     public ResponseCode Code { get; set; }

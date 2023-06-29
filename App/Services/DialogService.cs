@@ -1,6 +1,7 @@
 ﻿using App.Contracts.Services;
 using App.Controls;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
