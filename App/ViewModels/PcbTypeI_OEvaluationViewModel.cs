@@ -6,6 +6,7 @@ using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Media.Animation;
 using OxyPlot;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -98,60 +99,24 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
 
     public async Task GetTable()
     {
-        if (FilterOptions != PcbFilterOptions.None)
+        if (SelectedPcbTypes.Count > 0)
         {
-            var response = new Response<List<Dictionary<string, object>>>();
-            switch (FilterOptions)
+            var l = new List<PcbType>(SelectedPcbTypes);
+            var slist = new List<string>();
+            foreach (var x in l)
             {
-                case PcbFilterOptions.FilterPcbTypes:
-                    if (SelectedPcbTypes.Count > 0)
-                    {
-                        var l = new List<PcbType>(SelectedPcbTypes);
-                        var slist = new List<string>();
-                        foreach (var x in l)
-                        {
-                            slist.Add(x.PcbPartNumber);
-                        }
-                        /*var pcbTypeIds = l.Select(x => x.Id);
-                        string pcbTypeIdsString = string.Join(", ", pcbTypeIds);*/
-
-                        response = await _evaluationService.GetPcbTypePosition(slist, StartDate, EndDate);
-                        if (response != null && response.Code == ResponseCode.Success)
-                        {
-                            Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
-
-                            Rows = new List<List<object>>();
-                            if (Table.Count > 0)
-                            {
-                                Header = new List<string>(Table[0].Keys);
-                                foreach (var item in Table)
-                                {
-                                    List<object> row = item.Values.ToList();
-                                    Rows.Add(row);
-                                }
-
-                            }
-                            Debug.WriteLine(Rows);
-                        }
-                        else
-                        {
-                            _infoBarService.showError("Fehler beim Laden des Tables", "Error");
-                        }
-                    }
-                    else
-                    {
-                        
-                    }
-                    break;
-
-                default:
-                    response = await _evaluationService.GetPcbTypePosition(AllPcbTypes, StartDate, EndDate);
-                    break;
-
+                slist.Add(x.PcbPartNumber);
             }
+            slist.Sort();
+            /*var pcbTypeIds = l.Select(x => x.Id);
+            string pcbTypeIdsString = string.Join(", ", pcbTypeIds);*/
+
+            var response = await _evaluationService.GetPcbTypePosition(slist, StartDate, EndDate);
             if (response != null && response.Code == ResponseCode.Success)
             {
                 Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
+
+                Rows = new List<List<object>>();
                 if (Table.Count > 0)
                 {
                     Header = new List<string>(Table[0].Keys);
@@ -171,12 +136,14 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
         }
         else
         {
-            var response = await _evaluationService.GetPcbTypePosition(AllPcbTypes, StartDate, EndDate);
+            var slist = new List<string>(AllPcbTypes);
+
+            var response = await _evaluationService.GetPcbTypePosition(slist, StartDate, EndDate);
             if (response != null && response.Code == ResponseCode.Success)
             {
                 Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
 
-                Rows = new List<List<object>>(); 
+                Rows = new List<List<object>>();
                 if (Table.Count > 0)
                 {
                     Header = new List<string>(Table[0].Keys);
@@ -194,6 +161,28 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
                 _infoBarService.showError("Fehler beim Laden des Tables", "Error");
             }
         }
+        /*if (response != null && response.Code == ResponseCode.Success)
+        {
+            Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
+
+            Rows = new List<List<object>>();
+            if (Table.Count > 0)
+            {
+                Header = new List<string>(Table[0].Keys);
+                foreach (var item in Table)
+                {
+                    List<object> row = item.Values.ToList();
+                    Rows.Add(row);
+                }
+
+            }
+            Debug.WriteLine(Rows);
+        }
+        else
+        {
+            _infoBarService.showError("Fehler beim Laden des Tables", "Error");
+        }*/
+
         FilterItems.NotifyCanExecuteChanged();
     }
 

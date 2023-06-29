@@ -59,18 +59,30 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
 
     private void CheckBox_Loaded(object sender, RoutedEventArgs e)
     {
-
         CheckBox cb = sender as CheckBox;
         if (!_listCheckBox.Contains(cb))
         {
             _listCheckBox.Add(cb);
         }
-
         if ((_listCheckBox.Count - 1) == ViewModel.PtList.Count)
         {
-            SelectAll_Checked(sender, e);
-        }
+            if (ViewModel?.SelectedPcbTypes.Count != ViewModel.PtList.Count && ViewModel?.SelectedPcbTypes.Count > 0 )
+            {
+                foreach (var pt in ViewModel.SelectedPcbTypes)
+                {
+                    var found = _listCheckBox.Find(x => x.Equals(pt.PcbPartNumber));
+                    if (found != null)
+                    {
+                        found.IsChecked = true;
+                    }
+                }
+            }
+            else
+            {
+                SelectAll_Checked(sender, e);
 
+            }
+        }
     }
 
     private void Option_Checked(object sender, RoutedEventArgs e)
@@ -159,9 +171,8 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
     {
         _displayMode = DataGridDisplayMode.Filtered;
         ViewModel.FilterOptions = PcbFilterOptions.FilterPcbTypes;
-        ViewModel.FilterItems.ExecuteAsync(null);
+        await ViewModel.FilterItems.ExecuteAsync(null);
         createDataGrid();
-
     }
 
     private async void FilterClear_Click(object sender, RoutedEventArgs e)
@@ -170,6 +181,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         ViewModel.FilterOptions = PcbFilterOptions.None;
         SelectAll_Checked(sender, e);
         await ViewModel.FilterItems.ExecuteAsync(null);
+        createDataGrid() ;
     }
 
 
@@ -186,7 +198,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
 
     private async void Click_EvaluationButton(object sender, RoutedEventArgs e)
     {
-        ViewModel.FilterItems.ExecuteAsync(null);
+        await ViewModel.FilterItems.ExecuteAsync(null);
         createDataGrid();
     }
 
@@ -195,6 +207,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         var dt = new DataTable();
         int columnCount = ViewModel.Header.Count;
 
+        ListArea.Columns.Clear();
         for (int i = 0; i < columnCount; i++)
         {
             dt.Columns.Add(ViewModel.Header[i]);

@@ -117,7 +117,6 @@
         <ScrollViewer Grid.Row="1" 
                       HorizontalScrollBarVisibility="Auto" 
                       VerticalScrollBarVisibility="Auto">
-            <Grid>
             <controls:DataGrid
                 VerticalScrollBarVisibility="Auto"
                 HorizontalScrollBarVisibility="Auto"
@@ -131,7 +130,6 @@
                 RowDetailsVisibilityMode="Collapsed"
                 SelectionMode="Single"
                 CanBeScrollAnchor="True"/>
-            </Grid>
         </ScrollViewer>
     </Grid>
     
