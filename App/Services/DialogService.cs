@@ -16,7 +16,7 @@ public sealed class DialogService : IDialogService
     /// <inheritdoc/>
     private readonly FrameworkElement? rootElement = App.MainWindow.Content as FrameworkElement;
 
-    // Methode zum Anzeigen eines Bestätigungsdialogs für das Löschen.
+    // Methode zum Anzeigen eines Bestätigungsdialogs für das Löschen eines Objekts.
     public async Task<bool?> ConfirmDeleteDialogAsync(string title, string content, string confirmButtonText, string cancelButtonText)
     {
         if (rootElement != null)
