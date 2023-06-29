@@ -63,7 +63,6 @@
                     </NavigationViewItem.Icon>
                     <NavigationViewItem.MenuItems>
                         <NavigationViewItem x:Uid="Shell_Analysis_WhereAbouts_1" helpers:NavigationHelper.NavigateTo="App.ViewModels.DwellTimeEvaluationViewModel" />
-                        <NavigationViewItem x:Uid="Shell_Analysis_WhereAbouts_2" />
                         <NavigationViewItem x:Uid="Shell_PcbTypeEvaluation" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbTypeEvaluationViewModel" />
                         <NavigationViewItem x:Uid="Shell_Analysis_PartNumber_I_O" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbTypeI_OEvaluationViewModel"/>
                     </NavigationViewItem.MenuItems>

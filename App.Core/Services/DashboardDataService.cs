@@ -4,11 +4,6 @@ using App.Core.Models;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.Core.Services
 {
@@ -16,6 +11,7 @@ namespace App.Core.Services
     {
         public DashboardDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) {  }
 
+        // Ruft die Top 3 PCB-Typen ab und gibt sie als List von DashboardPcbTypeDTO zurück
         public async Task<Response<List<DashboardPcbTypeDTO>>> GetTop3PcbTypes()
         {
             try
@@ -38,6 +34,7 @@ namespace App.Core.Services
             }
         }
 
+        // Ruft die Anzahl der PCBs der letzten 7 Tage ab zurück
         public async Task<Response<int>> GetPcbCountLast7Days()
         {
             try
@@ -55,6 +52,7 @@ namespace App.Core.Services
             }
         }
 
+        // Ruft die Anzahl der heute erstellten PCBs ab und gibt sie zurück
         public async Task<Response<int>> GetPcbsCreatedToday()
         {
             try
@@ -72,6 +70,7 @@ namespace App.Core.Services
             }
         }
 
+        // Ruft die Anzahl der heute abgeschlossenen PCBs ab und gibt sie zurück
         public async Task<Response<int>> GetFinalizedPcbsToday()
         {
             try
@@ -89,6 +88,7 @@ namespace App.Core.Services
             }
         }
 
+        // Ruft die Anzahl der sich im Umlauf befindlichen PCBs ab und gibt sie zurück
         public async Task<Response<int>> GetPcbsInCirculation()
         {
             try
@@ -106,6 +106,7 @@ namespace App.Core.Services
             }
         }
 
+        // Ruft die Top 3 Lagerorte ab und gibt sie als List von DashboardStorageLocationDTO zurück
         public async Task<Response<List<DashboardStorageLocationDTO>>> GetTop3StorageLocations()
         {
             try
@@ -122,6 +123,7 @@ namespace App.Core.Services
             }
         }
 
+        // Ruft die Dwell-Time-Daten ab und gibt sie als List von DashboardDwellTimeDTO zurück
         public async Task<Response<List<DashboardDwellTimeDTO>>> GetDwellTimeDTO()
         {
             try
@@ -138,6 +140,7 @@ namespace App.Core.Services
             }
         }
 
+        // Erstellt die SQL-Abfrage für die Top 3 Lagerorte
         private static string BuildQueryDashboardStorageeLocationDTO()
         {
             return $@"SELECT TOP(3)
@@ -181,6 +184,7 @@ namespace App.Core.Services
                         ORDER BY CountPcbs DESC";
         }
 
+        // Erstellt die SQL-Abfrage für die Dwell-Time-Daten
         private static string BuildQueryDwellTime()
         {
             return $@"SELECT 
