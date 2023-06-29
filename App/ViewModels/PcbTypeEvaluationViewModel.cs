@@ -112,6 +112,7 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
 
     public async Task GeneratePlot() 
     {
+        PcbTypeFinalizedModel = new PlotModel();
         PcbTypeFinalizedModel = await CreatePieChart();       
     }
 
@@ -147,7 +148,13 @@ public partial class PcbTypeEvaluationViewModel : ObservableRecipient, INavigati
 
         var storage = new List<StorageLocation>();
         var response = await _pcbTypeEvaluationService.GetAllByPcbType(SelectedPcbType.PcbPartNumber, Deadline);
-        if (response != null && response.Code == ResponseCode.Success)
+
+
+        if (response != null && response.Code == ResponseCode.Success && response.Data.Count == 0)
+        {
+            _infoBarService.showMessage("Keine Daten vorhanden", "Info");
+        }
+        else if (response != null && response.Code == ResponseCode.Success)
         {
             foreach (var item in response.Data)
             {

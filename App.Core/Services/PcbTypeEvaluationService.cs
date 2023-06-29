@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Text;
 
+
 namespace App.Core.Services
 {
     public class PcbTypeEvaluationService : IPcbTypeEvaluationService
@@ -20,7 +21,9 @@ namespace App.Core.Services
         }
 
 
-        public async Task<Response<List<EvaluationStorageLocationDTO>>> GetAllByPcbType(string pcbType, DateTime deadline)
+        // Methode zum Abrufen von EvaluationStorageLocationDTO-Objekten basierend auf dem PCB-Typ und dem DeadlineDate
+        public async Task<Response<List<EvaluationStorageLocationDTO>>> GetAllByPcbType(string pcbType, DateTime deadline )
+
         {
             try
             {
@@ -40,6 +43,7 @@ namespace App.Core.Services
             }
         }
 
+        // Methode zum Abrufen von EvaluationFinalizedDTO-Objekten basierend auf dem PCB-Typ und dem DeadlineDate
         public async Task<Response<List<EvaluationFinalizedDTO>>> GetFinalizedByPcbType(string pcbType, DateTime deadline)
         {
             try
@@ -60,6 +64,7 @@ namespace App.Core.Services
             }
         }
 
+        // Methode zum Generieren eines dynamischen DTO für die Auswertung nach Ein- & Ausgängen basierend auf einer Liste von PCB-Type, einem StartDate und einem EndDate
         public async Task<Response<List<Dictionary<string, object>>>> GetPcbTypePosition(List<string> pcbTypeList, DateTime start, DateTime end)
         {
             try
@@ -97,6 +102,7 @@ namespace App.Core.Services
         }*/
 
 
+        // Methode zum Erstellen der SQL-Abfrage für EvaluationStorageLocationDTO basierend auf dem PCB-Typ und dem DeadlineDate
         private string BuildQuery1(string? pcbtype = null, DateTime? deadline = null)
         {
             if (pcbtype != null && deadline != null)
@@ -129,6 +135,7 @@ namespace App.Core.Services
             return null;
         }
 
+        // Methode zum Erstellen der SQL-Abfrage für EvaluationFinalizedDTO basierend auf dem PCB-Typ und dem DeadlineDate
         private string BuildQuery2(string? pcbtype = null, DateTime? deadline = null)
         {
             if (pcbtype != null && deadline != null)
