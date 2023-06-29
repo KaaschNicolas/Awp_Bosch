@@ -16,6 +16,7 @@ public sealed class DialogService : IDialogService
     /// <inheritdoc/>
     private readonly FrameworkElement? rootElement = App.MainWindow.Content as FrameworkElement;
 
+    // Methode zum Anzeigen eines Bestätigungsdialogs für das Löschen.
     public async Task<bool?> ConfirmDeleteDialogAsync(string title, string content, string confirmButtonText, string cancelButtonText)
     {
         if (rootElement != null)
@@ -43,6 +44,7 @@ public sealed class DialogService : IDialogService
         }
         return null;
     }
+    // Methode zum Anzeigen eines Dialogs zur Erstellung einer Weitergabe.
     public async Task<Response<Transfer>?> ShowCreateTransferDialog()
     {
         if (rootElement != null)
@@ -72,6 +74,7 @@ public sealed class DialogService : IDialogService
         return null;
     }
 
+    // Methode zum Hinzufügen einer Anmerkung durch einen Dialog.
     public async Task<Comment> AddCommentDialog(string title, string confirmButtonText, string cancelButtonText)
     {
         if (rootElement != null)
@@ -115,6 +118,7 @@ public sealed class DialogService : IDialogService
 
 
 
+    // Methode zum Hinzufügen einer Einschränkung durch einen Dialog.
     public async Task<Device> AddRestrictionDialog(string title, string confirmButtonText, string cancelButtonText)
     {
         if (rootElement != null)
@@ -157,6 +161,7 @@ public sealed class DialogService : IDialogService
 
 
 
+    // Methode zum Anzeigen eines Dialogs, wenn ein user nicht autorisiert ist.
     public async void UnAuthorizedDialogAsync(string title, string content, XamlRoot xamlRoot)
     {
 
