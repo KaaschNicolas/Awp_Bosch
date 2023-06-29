@@ -33,31 +33,13 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
         InitializeComponent();
         DataContext = ViewModel;
 
-        //var countRows = ViewModel.Table.Count;
         List<DataGridTextColumn> columns = new List<DataGridTextColumn>();
-        //columns.Add()
-
-
-        /*ListArea.Columns.Add(new Microsoft.UI.Xaml.Controls.DataGridTextColumn
-        {
-            Header = columnName,
-            Binding = new Microsoft.UI.Xaml.Data.Binding(columName)
-        });*/
-
-
-        // Festlegen der Zeilen des DataGrids
-        /*foreach (Dictionary<string, object> dict in ViewModel.Table)
-        {
-            ListArea.Items.Add(dict);
-        }*/
 
         FilterIndicator.Visibility = Visibility.Collapsed;
     }
 
     private DataGridDisplayMode _displayMode = DataGridDisplayMode.Default;
     
-
-
 
     private void CheckBox_Loaded(object sender, RoutedEventArgs e)
     {
@@ -188,7 +170,10 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
 
     private void StartDateChanged(object sender, CalendarDatePickerDateChangedEventArgs e)
     {
-        ViewModel.StartDate = ((DateTimeOffset)Start.Date).DateTime;
+        if(ViewModel.StartDate != ((DateTimeOffset)Start.Date).DateTime)
+        {
+            ViewModel.StartDate = ((DateTimeOffset)Start.Date).DateTime;
+        }
     }
 
     private void EndDateChanged(object sender, CalendarDatePickerDateChangedEventArgs e)

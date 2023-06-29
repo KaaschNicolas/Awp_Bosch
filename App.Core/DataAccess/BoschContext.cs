@@ -93,9 +93,6 @@ namespace App.Core.DataAccess
         // Virtuelles DbSet für "EvaluationFinalizedDTO"
         public virtual DbSet<EvaluationFinalizedDTO> EvaluationFinalizedDTO { get; set; }
 
-        // Virtuelles DbSet für "EvaluationPcbTypeI_ODTO"
-        public virtual DbSet<EvaluationPcbTypeI_ODTO> EvaluationPcbTypeI_ODTO { get; set; }
-
         // Tabelle "AuditEntries"
         public DbSet<AuditEntry> AuditEntries { get; set; }
 

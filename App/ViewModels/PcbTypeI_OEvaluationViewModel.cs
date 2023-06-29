@@ -40,7 +40,6 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
         _infoBarService = infoBarService;
         _pcbTypeCrudService = pcbTypeCrudService;
         _evaluationService = evaluationService;
-        //_table = new ObservableCollection<List<Dictionary<string, object>>>();
 
         AllPcbTypes = new List<string>();
 
@@ -159,50 +158,15 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
                 _infoBarService.showError("Fehler beim Laden des Tables", "Error");
             }
         }
-        /*if (response != null && response.Code == ResponseCode.Success)
-        {
-            Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
-
-            Rows = new List<List<object>>();
-            if (Table.Count > 0)
-            {
-                Header = new List<string>(Table[0].Keys);
-                foreach (var item in Table)
-                {
-                    List<object> row = item.Values.ToList();
-                    Rows.Add(row);
-                }
-
-            }
-            Debug.WriteLine(Rows);
-        }
-        else
-        {
-            _infoBarService.showError("Fehler beim Laden des Tables", "Error");
-        }*/
 
         FilterItems.NotifyCanExecuteChanged();
     }
-
-    /*private async Task FillTable()
-    {
-        var response = await _evaluationService.GetPcbTypeI_O("1688400308", StartDate, EndDate);
-        if (response != null && response.Code == ResponseCode.Success)
-        {
-            Content = new ObservableCollection<EvaluationPcbTypeI_ODTO>(response.Data);
-        }
-        else
-        {
-            _infoBarService.showError("Fehler beim Laden des Tables", "Error");
-        }
-    }*/
 
     public async void OnNavigatedTo(object parameter)
     {
 
         await GetPcbTypes();
         await GetTable();
-        //await FillTable();
     }
 
     public void OnNavigatedFrom()
