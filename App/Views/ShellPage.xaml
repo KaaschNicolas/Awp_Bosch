@@ -25,7 +25,7 @@
                 Width="16"
                 Height="16"
                 HorizontalAlignment="Left"
-                Source="/Assets/WindowIcon.ico" />
+                Source="/Assets/PfeilIcon.ico" />
 
             <!-- TextBlock-Element für den Anwendungstitel in der Titelleiste -->
             <TextBlock
