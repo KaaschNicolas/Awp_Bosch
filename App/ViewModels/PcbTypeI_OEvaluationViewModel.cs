@@ -98,68 +98,76 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
 
     public async Task GetTable()
     {
-        if (SelectedPcbTypes.Count > 0)
+        if (StartDate > EndDate)
         {
-            var l = new List<PcbType>(SelectedPcbTypes);
-            var slist = new List<string>();
-            foreach (var x in l)
-            {
-                slist.Add(x.PcbPartNumber);
-            }
-            slist.Sort();
-
-            var response = await _evaluationService.GetPcbTypePosition(slist, StartDate, EndDate);
-            if (response != null && response.Code == ResponseCode.Success)
-            {
-                Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
-
-                Rows = new List<List<object>>();
-                if (Table.Count > 0)
-                {
-                    Header = new List<string>(Table[0].Keys);
-                    foreach (var item in Table)
-                    {
-                        List<object> row = item.Values.ToList();
-                        Rows.Add(row);
-                    }
-
-                }
-                Debug.WriteLine(Rows);
-            }
-            else
-            {
-                _infoBarService.showError("Fehler beim Laden des Tables", "Error");
-            }
+            _infoBarService.showError("Das Enddatum darf nicht größer als das Startdatum sein!", "Error");
         }
         else
         {
-            var slist = new List<string>(AllPcbTypes);
-
-            var response = await _evaluationService.GetPcbTypePosition(slist, StartDate, EndDate);
-            if (response != null && response.Code == ResponseCode.Success)
+            if (SelectedPcbTypes.Count > 0)
             {
-                Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
-
-                Rows = new List<List<object>>();
-                if (Table.Count > 0)
+                var l = new List<PcbType>(SelectedPcbTypes);
+                var slist = new List<string>();
+                foreach (var x in l)
                 {
-                    Header = new List<string>(Table[0].Keys);
-                    foreach (var item in Table)
-                    {
-                        List<object> row = item.Values.ToList();
-                        Rows.Add(row);
-                    }
-
+                    slist.Add(x.PcbPartNumber);
                 }
-                Debug.WriteLine(Rows);
+                slist.Sort();
+
+                var response = await _evaluationService.GetPcbTypePosition(slist, StartDate, EndDate);
+                if (response != null && response.Code == ResponseCode.Success)
+                {
+                    Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
+
+                    Rows = new List<List<object>>();
+                    if (Table.Count > 0)
+                    {
+                        Header = new List<string>(Table[0].Keys);
+                        foreach (var item in Table)
+                        {
+                            List<object> row = item.Values.ToList();
+                            Rows.Add(row);
+                        }
+
+                    }
+                    Debug.WriteLine(Rows);
+                }
+                else
+                {
+                    _infoBarService.showError("Fehler beim Laden des Tables", "Error");
+                }
             }
             else
             {
-                _infoBarService.showError("Fehler beim Laden des Tables", "Error");
-            }
-        }
+                var slist = new List<string>(AllPcbTypes);
 
-        FilterItems.NotifyCanExecuteChanged();
+                var response = await _evaluationService.GetPcbTypePosition(slist, StartDate, EndDate);
+                if (response != null && response.Code == ResponseCode.Success)
+                {
+                    Table = new ObservableCollection<Dictionary<string, object>>(response.Data);
+
+                    Rows = new List<List<object>>();
+                    if (Table.Count > 0)
+                    {
+                        Header = new List<string>(Table[0].Keys);
+                        foreach (var item in Table)
+                        {
+                            List<object> row = item.Values.ToList();
+                            Rows.Add(row);
+                        }
+
+                    }
+                    Debug.WriteLine(Rows);
+                }
+                else
+                {
+                    _infoBarService.showError("Fehler beim Laden des Tables", "Error");
+                }
+            }
+
+
+            FilterItems.NotifyCanExecuteChanged();
+        }
     }
 
     public async void OnNavigatedTo(object parameter)
