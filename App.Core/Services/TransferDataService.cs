@@ -17,18 +17,14 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect())
-                {
-                    var data = await _boschContext
-                        .Set<T>()
-                        .Where(x => x.PcbId == pcbId)
-                        .Include("Pcb")
-                        .Include("StorageLocation")
-                        .Include("NotedBy")
-                        .ToListAsync();
-                    return new Response<List<T>>(ResponseCode.Success, data: data);
-                }
-                throw new DbUpdateException();
+                var data = await _boschContext
+                    .Set<T>()
+                    .Where(x => x.PcbId == pcbId)
+                    .Include("Pcb")
+                    .Include("StorageLocation")
+                    .Include("NotedBy")
+                    .ToListAsync();
+                return new Response<List<T>>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {
@@ -39,36 +35,28 @@ namespace App.Core.Services
         // Methode zum Erstellen eines Transfers
         public async Task<Response<T>> CreateTransfer(T transfer, int? diagnoseId = null)
         {
-            try
+            using (var transaction = await _boschContext.Database.BeginTransactionAsync())
             {
-                using (var transaction = await _boschContext.Database.BeginTransactionAsync())
+                try
                 {
-                    try
+                    EntityEntry<T> entityEntry = await _boschContext.Set<T>().AddAsync(transfer);
+                    var pcb = await _boschContext.Set<Pcb>().FirstOrDefaultAsync(x => x.Id == transfer.PcbId);
+                    var storageLocation = await _boschContext.Set<StorageLocation>().FirstOrDefaultAsync(x => x.Id == transfer.StorageLocationId);
+                    if (diagnoseId != null)
                     {
-                        EntityEntry<T> entityEntry = await _boschContext.Set<T>().AddAsync(transfer);
-                        var pcb = await _boschContext.Set<Pcb>().FirstOrDefaultAsync(x => x.Id == transfer.PcbId);
-                        var storageLocation = await _boschContext.Set<StorageLocation>().FirstOrDefaultAsync(x => x.Id == transfer.StorageLocationId);
-                        if (diagnoseId != null)
-                        {
-                            pcb.DiagnoseId = diagnoseId;
-                        }
-
-                        pcb.Finalized = storageLocation.IsFinalDestination;
-                        await _boschContext.SaveChangesAsync();
-                        await transaction.CommitAsync();
-                        return new Response<T>(ResponseCode.Success, (T)entityEntry.Entity);
-
+                        pcb.DiagnoseId = diagnoseId;
                     }
-                    catch (Exception ex)
-                    {
-                        return new Response<T>(ResponseCode.Error, error: $"Fehler beim Erstellen von {typeof(T)}");
-                    }
+
+                    pcb.Finalized = storageLocation.IsFinalDestination;
+                    await _boschContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return new Response<T>(ResponseCode.Success, (T)entityEntry.Entity);
+
                 }
-
-            }
-            catch (Exception)
-            {
-                return new Response<T>(ResponseCode.Error, error: "CreateTransfer() failed");
+                catch (Exception ex)
+                {
+                    return new Response<T>(ResponseCode.Error, error: $"Fehler beim Erstellen von {typeof(T)}");
+                }
             }
         }
 
@@ -77,16 +65,12 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect())
-                {
-                    var data = await _boschContext
-                        .Set<T>()
-                        .OrderBy(x => x.CreatedDate)
-                        .GroupBy(x => x.StorageLocationId)
-                        .ToListAsync();
-                    return new Response<List<IGrouping<int, T>>>(ResponseCode.Success, data: data);
-                }
-                throw new DbUpdateException();
+                var data = await _boschContext
+                    .Set<T>()
+                    .OrderBy(x => x.CreatedDate)
+                    .GroupBy(x => x.StorageLocationId)
+                    .ToListAsync();
+                return new Response<List<IGrouping<int, T>>>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {
@@ -99,24 +83,20 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect())
+                var list = await _boschContext
+                    .Set<T>()
+                    .Include(x => x.StorageLocation)
+                    .ToListAsync();
+                var res = new List<T>();
+                foreach (var item in list)
                 {
-                    var list = await _boschContext
-                        .Set<T>()
-                        .Include(x => x.StorageLocation)
-                        .ToListAsync();
-                    var res = new List<T>();
-                    foreach (var item in list)
+                    if (item.DeletedDate == DateTime.MinValue)
                     {
-                        if (item.DeletedDate == DateTime.MinValue)
-                        {
-                            res.Add(item);
-                        }
+                        res.Add(item);
                     }
-
-                    return new Response<List<T>>(ResponseCode.Success, data: res);
                 }
-                throw new DbUpdateException();
+
+                return new Response<List<T>>(ResponseCode.Success, data: res);
             }
             catch (DbUpdateException)
             {
@@ -129,24 +109,20 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect())
+                string queryString = string.Empty;
+                if (from != null && to != null)
                 {
-                    string queryString = string.Empty;
-                    if (from != null && to != null)
-                    {
-                        queryString = BuildQuery(from, to);
-                    }
-                    else
-                    {
-                        queryString = BuildQuery(null, null);
-                    }
-                    var data = await _boschContext
-                        .DwellTimeEvaluationDTO
-                        .FromSqlRaw(queryString)
-                        .ToListAsync();
-                    return new Response<List<DwellTimeEvaluationDTO>>(ResponseCode.Success, data: data);
+                    queryString = BuildQuery(from, to);
                 }
-                throw new DbUpdateException();
+                else
+                {
+                    queryString = BuildQuery(null, null);
+                }
+                var data = await _boschContext
+                    .DwellTimeEvaluationDTO
+                    .FromSqlRaw(queryString)
+                    .ToListAsync();
+                return new Response<List<DwellTimeEvaluationDTO>>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {

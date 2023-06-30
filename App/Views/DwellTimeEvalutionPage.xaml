@@ -17,14 +17,12 @@
         <converter:TimeConverter x:Key="TimeConverter" />
     </Page.Resources>
 
-    <Grid x:Name="ContentArea">
-        <ScrollViewer>
-            <Grid x:Name="GridView"
-                      Margin="0 0 0 80"
-                  RowDefinitions="auto, auto, auto"
-                  ColumnSpacing="0"
-                  RowSpacing="10">
-
+    <Grid x:Name="GridView"
+              Margin="0 0 0 80"
+          RowDefinitions="auto, auto, auto"
+          ColumnSpacing="0"
+          RowSpacing="10">
+        
         <StackPanel
             Grid.Row="0"
             Height="Auto"
@@ -51,21 +49,21 @@
             <Button Click="Click_EvaluationButton"
                     Margin="10,26,0,0"
                     Style="{StaticResource AccentButtonStyle}">
-                        <StackPanel
-                            Orientation="Horizontal">
-                            <FontIcon Glyph="&#xEB05;" />
-                            <TextBlock Text="Auswerten"/>
-                        </StackPanel>
-                    </Button>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <FontIcon Glyph="&#xEB05;" />
+                    <TextBlock Text="Auswerten"/>
                 </StackPanel>
+            </Button>
+        </StackPanel>
         
-                <TextBlock 
-                    Grid.Row="1"
-                    Text="Übersicht der durschnittlichen Verweildauer pro PVB im gesamten Zeitraum"
-                    Padding="0"
-                    HorizontalAlignment="Stretch"
-                    FontSize="16"
-                    Margin="50,5" />
+        <TextBlock 
+            Grid.Row="1"
+            Text="Übersicht der durschnittlichen Verweildauer pro PVB im gesamten Zeitraum"
+            Padding="0"
+            HorizontalAlignment="Stretch"
+            FontSize="16"
+            Margin="50,5" />
 
         <oxyplot:PlotView Model="{x:Bind ViewModel.DwellTimeBarPlot, Mode=TwoWay}"
             Grid.Row="2"
@@ -76,5 +74,4 @@
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"           
             ScrollViewer.IsDeferredScrollingEnabled="False"/>
     </Grid>
-    </ScrollViewer>
 </Page>

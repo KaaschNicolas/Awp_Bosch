@@ -179,20 +179,20 @@ public partial class CreatePcbViewModel : ObservableValidator, INavigationAware
         _createdAt = DateTime.Now;
 
         var pcbResponse = await _pcbTypeCrudService.GetAll();
-        if (pcbResponse.Code == ResponseCode.Success)
+        if (pcbResponse != null)
         {
             pcbResponse.Data.ForEach(_pcbTypes.Add);
         }
 
         var storageLocationResponse = await _storageLocationCrudService.GetAll();
-        if (storageLocationResponse.Code == ResponseCode.Success)
+        if (storageLocationResponse != null)
         {
             storageLocationResponse.Data.ForEach(_storageLocations.Add);
 
         }
 
         var diagnoseResponse = await _diagnoseCrudService.GetAll();
-        if (diagnoseResponse.Code == ResponseCode.Success)
+        if (diagnoseResponse != null)
         {
             diagnoseResponse.Data.ForEach(_diagnoses.Add);
         }
