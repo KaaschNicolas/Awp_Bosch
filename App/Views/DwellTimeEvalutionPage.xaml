@@ -20,43 +20,42 @@
     <Grid x:Name="ContentArea">
         <ScrollViewer>
             <Grid x:Name="GridView"
-                      Margin="0 0 0 80"
+                  Margin="0 0 0 80"
                   RowDefinitions="auto, auto, auto"
                   ColumnSpacing="0"
                   RowSpacing="10">
 
                 <StackPanel
-            Grid.Row="0"
-            Height="Auto"
-            Margin="50,0,0,0"
-            HorizontalAlignment="Left"
-            CornerRadius="4"
-            Orientation="Horizontal"
-            Spacing="10">
+                    Grid.Row="0"
+                    Height="Auto"
+                    Margin="50,0,0,0"
+                    HorizontalAlignment="Left"
+                    CornerRadius="4"
+                    Orientation="Horizontal"
+                    Spacing="10">
 
                     <CalendarDatePicker
-                x:Name="From"
-                Header="Start"
-                DateChanged="DateChangedFrom"
-                DateFormat="{}{day.integer}.{month.integer}.{year.full}"
-                PlaceholderText="Startdatum"
-                />
+                        x:Name="From"
+                        Header="Start"
+                        DateChanged="DateChangedFrom"
+                        DateFormat="{}{day.integer}.{month.integer}.{year.full}"
+                        PlaceholderText="Startdatum"/>
                     <CalendarDatePicker
-                Header="Ende"
-                x:Name="To"
-                DateChanged="DateChangedTo"
-                DateFormat="{}{day.integer}.{month.integer}.{year.full}"
-                PlaceholderText="Enddatum"
-                />
+                        Header="Ende"
+                        x:Name="To"
+                        DateChanged="DateChangedTo"
+                        DateFormat="{}{day.integer}.{month.integer}.{year.full}"
+                        PlaceholderText="Enddatum"/>
                     <Button Click="Click_EvaluationButton"
-                    Margin="10,26,0,0"
-                    Style="{StaticResource AccentButtonStyle}">
-                <StackPanel
-                    Orientation="Horizontal">
-                    <FontIcon Glyph="&#xEB05;" />
-                    <TextBlock Text="Auswerten"/>
+                            Margin="10,26,0,0"
+                            Style="{StaticResource AccentButtonStyle}">
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <FontIcon Glyph="&#xEB05;" />
+                            <TextBlock Text="Auswerten"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
-
                 <TextBlock 
                     Grid.Row="1"
                     Text="Übersicht der durschnittlichen Verweildauer pro PVB im gesamten Zeitraum"
