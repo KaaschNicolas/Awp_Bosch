@@ -25,7 +25,7 @@
                   ColumnSpacing="0"
                   RowSpacing="10">
 
-        <StackPanel
+                <StackPanel
             Grid.Row="0"
             Height="Auto"
             Margin="50,0,0,0"
@@ -33,22 +33,22 @@
             CornerRadius="4"
             Orientation="Horizontal"
             Spacing="10">
-            
-            <CalendarDatePicker
+
+                    <CalendarDatePicker
                 x:Name="From"
                 Header="Start"
                 DateChanged="DateChangedFrom"
                 DateFormat="{}{day.integer}.{month.integer}.{year.full}"
                 PlaceholderText="Startdatum"
                 />
-            <CalendarDatePicker
+                    <CalendarDatePicker
                 Header="Ende"
                 x:Name="To"
                 DateChanged="DateChangedTo"
                 DateFormat="{}{day.integer}.{month.integer}.{year.full}"
                 PlaceholderText="Enddatum"
                 />
-            <Button Click="Click_EvaluationButton"
+                    <Button Click="Click_EvaluationButton"
                     Margin="10,26,0,0"
                     Style="{StaticResource AccentButtonStyle}">
                         <StackPanel
@@ -58,7 +58,7 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-        
+
                 <TextBlock 
                     Grid.Row="1"
                     Text="Übersicht der durschnittlichen Verweildauer pro PVB im gesamten Zeitraum"
@@ -67,7 +67,7 @@
                     FontSize="16"
                     Margin="50,5" />
 
-        <oxyplot:PlotView Model="{x:Bind ViewModel.DwellTimeBarPlot, Mode=TwoWay}"
+                <oxyplot:PlotView Model="{x:Bind ViewModel.DwellTimeBarPlot, Mode=TwoWay}"
             Grid.Row="2"
             Width="1000"
             Height="400"
@@ -75,6 +75,7 @@
             x:Name="BarPlot"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"           
             ScrollViewer.IsDeferredScrollingEnabled="False"/>
+            </Grid>
+        </ScrollViewer>
     </Grid>
-    </ScrollViewer>
 </Page>
