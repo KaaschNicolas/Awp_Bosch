@@ -22,8 +22,8 @@
 
             <!-- Image-Element für das Anwendungssymbol in der Titelleiste -->
             <Image
-                Width="16"
-                Height="16"
+                Width="28"
+                Height="28"
                 HorizontalAlignment="Left"
                 Source="/Assets/PfeilIcon.ico" />
 
