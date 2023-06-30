@@ -3,6 +3,7 @@
 
 using App.Core.Models;
 using App.Core.Models.Enums;
+using App.Helpers;
 using App.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
@@ -45,9 +46,14 @@ namespace App.Views
         private long _token;
         private DataGridColumn _actualSortedColumn;
 
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _token = DataGrid.RegisterPropertyChangedCallback(ctWinUI.DataGrid.ItemsSourceProperty, DataGridItemsSourceChangedCallback);
+            if(AuthServiceHelper.hasRole(Role.Lesezugriff))
+            {
+                //PcbViewPage.AddButton.IsEnabled = false;
+            }
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -275,19 +281,41 @@ namespace App.Views
             await ViewModel.FilterItems.ExecuteAsync(null);
         }
 
+        private void FlyoutMenuClick(object sender, RoutedEventArgs e)
+        {
+            if (!AuthServiceHelper.hasRole(Role.Admin))
+            {
+                /*PcbViewPage.DeleteButton.IsEnabled = false;
+                DeleteButton.Visibility = Visibility.Collapsed;*/
+            }
+        }
+
         private void DeleteClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.DeleteCommand.Execute(null);
+            if (AuthServiceHelper.hasRole(Role.Admin))
+            {
+                ViewModel.DeleteCommand.Execute(null);
+            }
+            else { }
         }
+            
 
         private void PrintClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.PrintCommand.Execute(null);
+            if (AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+            {
+                ViewModel.PrintCommand.Execute(null);
+            }
+            else { }
         }
 
         void EditClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem.PcbId);
+            if(AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+            {
+                ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem.PcbId);
+            }
+            else { }
         }
 
         private void NavigateToDetails(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -297,7 +325,11 @@ namespace App.Views
 
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.NavigateToCreateCommand.Execute(null);
+            if (AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+            {
+                ViewModel.NavigateToCreateCommand.Execute(null);
+            }
+            else { }
         }
 
         private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)
@@ -336,7 +368,12 @@ namespace App.Views
 
         void TransferClick(object sender, RoutedEventArgs e)
         {
-            ViewModel.ShowTransferCommand.Execute(null);
+            
+
+            if (AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser)){
+                ViewModel.ShowTransferCommand.Execute(null);
+            }
+            else { }
         }
     }
 }

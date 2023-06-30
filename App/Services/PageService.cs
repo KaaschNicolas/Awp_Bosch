@@ -38,6 +38,7 @@ public class PageService : IPageService
         Configure<CreateUserViewModel, CreateUserPage>();
         Configure<UpdateUserViewModel, UpdateUserPage>();
         Configure<DashboardViewModel, DashboardPage>();
+        Configure<PcbTypeI_OEvaluationViewModel, PcbTypeI_OEvaluationPage>();
     }
 
     public Type GetPageType(string key)

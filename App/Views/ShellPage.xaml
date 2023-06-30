@@ -9,18 +9,25 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Loaded="OnLoaded">
 
+    <!-- RootGrid ist der Hauptcontainer der Seite -->
     <Grid x:Name="RootGrid">
+
+        <!-- AppTitleBar enthält die Titelleiste der Anwendung -->
         <Grid
             x:Name="AppTitleBar"
             Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
             VerticalAlignment="Top"
             Canvas.ZIndex="1"
             IsHitTestVisible="True">
+
+            <!-- Image-Element für das Anwendungssymbol in der Titelleiste -->
             <Image
-                Width="16"
-                Height="16"
+                Width="28"
+                Height="28"
                 HorizontalAlignment="Left"
-                Source="/Assets/WindowIcon.ico" />
+                Source="/Assets/PfeilIcon.ico" />
+
+            <!-- TextBlock-Element für den Anwendungstitel in der Titelleiste -->
             <TextBlock
                 x:Name="AppTitleBarText"
                 Margin="28,0,0,0"
@@ -29,6 +36,8 @@
                 TextWrapping="NoWrap" />
 
         </Grid>
+
+        <!-- NavigationViewControl ist die Hauptnavigation der Seite -->
         <NavigationView
             x:Name="NavigationViewControl"
             Canvas.ZIndex="0"
@@ -39,52 +48,64 @@
             IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
             IsSettingsVisible="True"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}">
-            <NavigationView.MenuItems>
-                <!--
-                TODO: Update item titles by updating <x:Uid>.Content entries in Strings/en-us/Resources.resw.
-                https://docs.microsoft.com/windows/uwp/app-resources/localize-strings-ui-manifest#refer-to-a-string-resource-identifier-from-xaml
 
-                TODO: Update item icons by updating FontIcon.Glyph properties.
-                https://docs.microsoft.com/windows/apps/design/style/segoe-fluent-icons-font#icon-list
-                -->
+            <!-- MenuItems sind die einzelnen Elemente in der NavigationView -->
+            <NavigationView.MenuItems>
+
+                <!-- Dashboard -->
                 <NavigationViewItem x:Uid="Shell_Dashboard" helpers:NavigationHelper.NavigateTo="App.ViewModels.DashboardViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF246;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+
+                <!-- CircuitBoard -->
                 <NavigationViewItem x:Uid="Shell_CircuitBoard" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbPaginationViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8FD;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+
+                <!-- Analysis -->
                 <NavigationViewItem x:Uid="Shell_Analysis">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9D2;" />
                     </NavigationViewItem.Icon>
+
+                    <!-- Analysis-Untermenü -->
                     <NavigationViewItem.MenuItems>
                         <NavigationViewItem x:Uid="Shell_Analysis_WhereAbouts_1" helpers:NavigationHelper.NavigateTo="App.ViewModels.DwellTimeEvaluationViewModel" />
-                        <NavigationViewItem x:Uid="Shell_Analysis_WhereAbouts_2" />
                         <NavigationViewItem x:Uid="Shell_PcbTypeEvaluation" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbTypeEvaluationViewModel" />
-                        <NavigationViewItem x:Uid="Shell_Analysis_PartNumber_I_O" />
+                        <NavigationViewItem x:Uid="Shell_Analysis_PartNumber_I_O" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbTypeI_OEvaluationViewModel"/>
                     </NavigationViewItem.MenuItems>
                 </NavigationViewItem>
 
-                <NavigationViewItem x:Uid="Shell_UserManagement" helpers:NavigationHelper.NavigateTo="App.ViewModels.UsersViewModel">
+                <!-- UserManagement -->
+                <NavigationViewItem x:Uid="Shell_UserManagement" helpers:NavigationHelper.NavigateTo="App.ViewModels.UsersViewModel"
+                                    Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE716;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_MasterData">
+
+                <!-- MasterData -->
+                <NavigationViewItem x:Uid="Shell_MasterData"
+                                    Visibility="{x:Bind helpers:AuthServiceHelper.IsVisibleAdmin()}">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE82D;" />
                     </NavigationViewItem.Icon>
+
+                    <!-- MasterData-Untermenü -->
                     <NavigationViewItem.MenuItems>
                         <NavigationViewItem x:Uid="Shell_MD_StorageLocation" helpers:NavigationHelper.NavigateTo="App.ViewModels.StorageLocationViewModel" />
                         <NavigationViewItem x:Uid="Shell_MD_PartNumber" helpers:NavigationHelper.NavigateTo="App.ViewModels.PcbTypeViewModel" />
                         <NavigationViewItem x:Uid="Shell_MD_ErrorCategory" helpers:NavigationHelper.NavigateTo="App.ViewModels.DiagnoseViewModel" />
                     </NavigationViewItem.MenuItems>
                 </NavigationViewItem>
+
             </NavigationView.MenuItems>
+
+            <!-- HeaderTemplate für die Navigationsleiste -->
             <NavigationView.HeaderTemplate>
                 <DataTemplate>
                     <Grid>
@@ -92,6 +113,8 @@
                     </Grid>
                 </DataTemplate>
             </NavigationView.HeaderTemplate>
+
+            <!-- Interaction.Behaviors -->
             <i:Interaction.Behaviors>
                 <behaviors:NavigationViewHeaderBehavior DefaultHeader="{x:Bind ((ContentControl)ViewModel.Selected).Content, Mode=OneWay}">
                     <behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>

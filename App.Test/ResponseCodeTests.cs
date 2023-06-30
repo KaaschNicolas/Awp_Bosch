@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
-using App.Core.Models;
 using Assert = NUnit.Framework.Assert;
+using App.Core.Models.Enums;
 
 namespace App.Core.Models.Tests
 {

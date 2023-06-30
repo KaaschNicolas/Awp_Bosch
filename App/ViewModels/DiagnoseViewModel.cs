@@ -3,6 +3,7 @@ using System.Windows.Input;
 using App.Contracts.Services;
 using App.Contracts.ViewModels;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;

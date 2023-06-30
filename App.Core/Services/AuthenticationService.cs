@@ -15,6 +15,7 @@ namespace App.Core.Services
             _boschContext = boschContext;
         }
 
+        // Authentifiziert den Benutzer anhand des Active Directory-Benutzernamens.
         private void Authenticate()
         {
             List<User> result = new();
@@ -34,6 +35,7 @@ namespace App.Core.Services
             }
         }
 
+        // Gibt zurück, ob der Benutzer authentifiziert ist.
         public bool IsAuthenticated
         {
             get
@@ -46,8 +48,10 @@ namespace App.Core.Services
             }
         }
 
+        // Gibt zurück, ob eine Verbindung zur Datenbank besteht.
         public bool IsDbActive => _boschContext.Database.CanConnect();
 
+        // Gibt den aktuellen Benutzer zurück.
         public User CurrentUser
         {
             get

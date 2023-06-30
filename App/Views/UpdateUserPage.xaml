@@ -29,8 +29,8 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 
 		<controls:ValidationTextBox
             Grid.Row="0"
-            HeaderText="AD-Benutzername"
-            PlaceholderText="ADUSERNAME"
+            HeaderText="NT-Benutzername"
+            PlaceholderText="NTUSERNAME"
             PropertyName="Adusername"
             Text="{x:Bind Path=ViewModel.Adusername, Mode=TwoWay}" />
 		<controls:ValidationTextBox

@@ -15,6 +15,7 @@ using System.Net;
 using Windows.Graphics.Printing;
 using Windows.UI;
 using Microsoft.UI;
+using App.Core.Models.Enums;
 
 namespace App.Views;
 
@@ -25,87 +26,66 @@ public sealed partial class PcbSinglePage : Page
         get;
     }
 
-    //private static BitmapImage dataMatrixImageSource = new BitmapImage();
-    //private static ImageBrush dataMatrixImageBrush = new ImageBrush();
-
     public PcbSinglePage()
     {
         ViewModel = App.GetService<PcbSingleViewModel>();
         InitializeComponent();
         DataContext = ViewModel;
-        //dateOfFailure.Date = new DateTime(2023, 04, 23);
-        // GenerateBarcode();
-        // showRestrictionButton();
-        //colorDaysInCirculation();
     }
-
-    /*public void showRestrictionButton()
-    {
-        if (ViewModel.Restriction == null)
-        {
-            RestrictionInfoBar.Visibility = Visibility.Collapsed;
-            RestrictionButton.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            RestrictionInfoBar.Visibility = Visibility.Visible;
-            RestrictionButton.Visibility = Visibility.Collapsed;
-        }
-    }*/
 
     private void EditClick(object sender, RoutedEventArgs e)
     {
-        ViewModel.EditCommand.Execute(null);
+        if(AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+        {
+            ViewModel.EditCommand.Execute(null);
+        }
+        else { }
+        
     }
 
     private void DeleteClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        ViewModel.DeleteCommand.Execute(null);
+        if (AuthServiceHelper.hasRole(Role.Admin))
+        {
+            ViewModel.DeleteCommand.Execute(null);
+        }
+        else { }
     }
 
     private void PrintClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        ViewModel.PrintCommand.Execute(SinglePage);
+        if (AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+        {
+            ViewModel.PrintCommand.Execute(SinglePage);
+        }
+        else { }
 
     }
 
     void TransferClick(object sender, RoutedEventArgs e)
     {
-        ViewModel.ShowTransferCommand.Execute(null);
+        if (AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+        {
+            ViewModel.ShowTransferCommand.Execute(null);
+        }
+        else { }
     }
 
     void CommentClick(object sender, RoutedEventArgs e)
     {
-        ViewModel.AddCommentCommand.Execute(null);
+        if (AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+        {
+            ViewModel.AddCommentCommand.Execute(null);
+        }
+        else { }
     }
 
     void RestrictionClick(object sender, RoutedEventArgs e)
     {
-        ViewModel.AddRestrictionCommand.Execute(null);
+        if (AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+        {
+            ViewModel.AddRestrictionCommand.Execute(null);
+        }
+        else { }
     }
-
-    //    private async void OnPrintButtonClicked(object sender, RoutedEventArgs e)
-    //    {
-    //        /*var data = new PageData(this, dataMatrixRectangle);
-    //        var rect = (Rectangle)data.Rectangle.FindName("dataMatrixRectangle");
-    //        rect.Fill = dataMatrixImageBrush;
-    //        var page = data.Page;
-    //        var pageTest = new Page();
-    //        var layoutControl = new Grid();
-    //        //layoutControl.Children.Add(uiElementGrid1);
-    //        layoutControl.Children.Add(uiElementGrid2);
-    //        pageTest.Content = layoutControl;*/
-
-    //        IPrintService printSerivce = new PrintService();
-    //        await printSerivce.Print(PcbSinglePageContent); //Test
-    //    }
-
-    //    private void GenerateBarcode()
-    //    {
-    //        IDataMatrixService dms = new DataMatrixService();
-    //        var dataMatrixImageSource = BitmapToBitmapImageConverter.Convert(dms.GetDataMatrix(ViewModel.SerialNumber));
-    //        ImageBrush dataMatrixImageBrush = new ImageBrush();
-    //        dataMatrixImageBrush.ImageSource = dataMatrixImageSource;
-    //        dataMatrixRectangle.Fill = dataMatrixImageBrush;
-    //    }
 }

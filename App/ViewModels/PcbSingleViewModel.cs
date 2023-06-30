@@ -1,6 +1,7 @@
 ﻿using App.Contracts.Services;
 using App.Contracts.ViewModels;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
 using App.Helpers;
@@ -36,11 +37,6 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
 
     [ObservableProperty]
     private DateTime _createdDate;
-
-    //[ObservableProperty]
-    //[NotifyDataErrorInfo]
-    //[Required]
-    //private string _serialNumber;
 
     [ObservableProperty]
     private Device _restriction;

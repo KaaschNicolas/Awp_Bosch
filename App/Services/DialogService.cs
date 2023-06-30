@@ -2,6 +2,7 @@
 using App.Controls;
 using App.Core.DataAccess;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -22,6 +23,7 @@ public sealed class DialogService : IDialogService
     public DialogService(BoschContext boschContext) => _boschContext = boschContext;
     public DialogService() { }
 
+    // Methode zum Anzeigen eines Bestätigungsdialogs für das Löschen eines Objekts.
     public async Task<bool?> ConfirmDeleteDialogAsync(string title, string content, string confirmButtonText, string cancelButtonText)
     {
         if (rootElement != null)
@@ -49,6 +51,7 @@ public sealed class DialogService : IDialogService
         }
         return null;
     }
+    // Methode zum Anzeigen eines Dialogs zur Erstellung einer Weitergabe.
     public async Task<Response<Transfer>?> ShowCreateTransferDialog()
     {
         if (rootElement != null)
@@ -78,6 +81,7 @@ public sealed class DialogService : IDialogService
         return null;
     }
 
+    // Methode zum Hinzufügen einer Anmerkung durch einen Dialog.
     public async Task<Comment> AddCommentDialog(string title, string confirmButtonText, string cancelButtonText)
     {
         if (rootElement != null)
@@ -153,6 +157,7 @@ public sealed class DialogService : IDialogService
 
 
 
+    // Methode zum Hinzufügen einer Einschränkung durch einen Dialog.
     public async Task<Device> AddRestrictionDialog(string title, string confirmButtonText, string cancelButtonText)
     {
         if (rootElement != null)
@@ -195,6 +200,7 @@ public sealed class DialogService : IDialogService
 
 
 
+    // Methode zum Anzeigen eines Dialogs, wenn ein user nicht autorisiert ist.
     public async void UnAuthorizedDialogAsync(string title, string content, XamlRoot xamlRoot)
     {
 

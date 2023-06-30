@@ -1,20 +1,18 @@
 ﻿using App.Core.DataAccess;
 using App.Core.DTOs;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Logging.Abstractions;
-using System.Linq.Expressions;
-
 namespace App.Core.Services
 {
     public class TransferDataService<T> : CrudServiceBase<T>, ITransferDataService<T> where T : Transfer
     {
         public TransferDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) { }
 
+        // Methode, um Transfers basierend auf der PCB-ID abzurufen
         public async Task<Response<List<T>>> GetTransfersByPcb(int pcbId)
         {
             try
@@ -38,7 +36,7 @@ namespace App.Core.Services
             }
         }
 
-
+        // Methode zum Erstellen eines Transfers
         public async Task<Response<T>> CreateTransfer(T transfer, int? diagnoseId = null)
         {
             try
@@ -74,6 +72,7 @@ namespace App.Core.Services
             }
         }
 
+        // Methode zum Abrufen aller Transfers gruppiert nach StorageLocation
         public async Task<Response<List<IGrouping<int, T>>>> GetAllGroupedByStorageLocation()
         {
             try
@@ -95,6 +94,7 @@ namespace App.Core.Services
             }
         }
 
+        // Methode zum Abrufen aller Transfers mit Eager Loading
         public async Task<Response<List<T>>> GetAllEager()
         {
             try
@@ -124,6 +124,7 @@ namespace App.Core.Services
             }
         }
 
+        // Methode zum Abrufen der durchschnittlichen Verweildauer nach StorageLocation
         public async Task<Response<List<DwellTimeEvaluationDTO>>> GetAvgDwellTimeByStorageLocation(DateTime? from, DateTime? to)
         {
             try
@@ -153,6 +154,7 @@ namespace App.Core.Services
             }
         }
 
+        // Methode zum Erstellen der SQL-Abfrage für die durchschnittliche Verweildauer
         private string BuildQuery(DateTime? from, DateTime? to)
         {
             string dateCheck = null;
