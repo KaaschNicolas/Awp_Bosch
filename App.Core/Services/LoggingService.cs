@@ -18,13 +18,16 @@ public class LoggingService : ILoggingService
     }
 
     // private Basisfunktion für das Audit-Logging
-    private void AuditBase(LogLevel logLevel, string message, AuditEntry auditEntry)
+    private async void AuditBase(LogLevel logLevel, string message, AuditEntry auditEntry)
     {
         _logger.Log(logLevel: logLevel, message: message);
         try
         {
-            _boschContext.AuditEntries.Add(auditEntry);
-            _boschContext.SaveChanges();
+            if (await ConnectionHelper.CanConnect(_boschContext))
+            {
+                _boschContext.AuditEntries.Add(auditEntry);
+                _boschContext.SaveChanges();
+            }
         }
         catch (DbUpdateException ex)
         {

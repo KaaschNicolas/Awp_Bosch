@@ -267,7 +267,6 @@ namespace App.ViewModels
 
                 if (pcbs.Code == ResponseCode.Success)
                 {
-
                     await CreatePcbList(pageIndex, pageSize, pcbs.Data, isAscending, maxEntries.Data);
                 }
             }

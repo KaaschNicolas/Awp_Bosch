@@ -1,10 +1,13 @@
 ﻿using App.Contracts.Services;
 using App.Controls;
+using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Models.Enums;
 using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.DirectoryServices.ActiveDirectory;
+using ZXing;
 
 namespace App.Services;
 
@@ -15,6 +18,10 @@ public sealed class DialogService : IDialogService
 {
     /// <inheritdoc/>
     private readonly FrameworkElement? rootElement = App.MainWindow.Content as FrameworkElement;
+    private BoschContext _boschContext;
+
+    public DialogService(BoschContext boschContext) => _boschContext = boschContext;
+    public DialogService() { }
 
     // Methode zum Anzeigen eines Bestätigungsdialogs für das Löschen eines Objekts.
     public async Task<bool?> ConfirmDeleteDialogAsync(string title, string content, string confirmButtonText, string cancelButtonText)
@@ -85,8 +92,6 @@ public sealed class DialogService : IDialogService
                 PlaceholderText = "Text eintragen"
             };
 
-
-
             var dialog = new ContentDialog
             {
                 Title = title,
@@ -114,6 +119,40 @@ public sealed class DialogService : IDialogService
 
         }
         return null;
+    }
+
+    public async Task RetryConnectionDialog(XamlRoot xamlRoot, string title, string confirmButtonText)
+    {
+        if(rootElement != null)
+        {
+            ReconnectDialog reconnectDialog = new()
+            {
+                XamlRoot = xamlRoot,
+                RequestedTheme = rootElement.RequestedTheme,
+                PrimaryButtonText = "Neu Verbinden"
+            };
+
+            ReconnectDialogViewModel vm = reconnectDialog.ViewModel;
+
+            var res = await reconnectDialog.ShowAsync();
+
+            if (res == ContentDialogResult.None)
+            {
+
+            } else if (res == ContentDialogResult.Primary)
+            {
+                bool isConnected = await vm.CheckConnection();
+                while (isConnected)
+                {
+                    isConnected = await vm.CheckConnection();
+                    if (isConnected == true)
+                    {
+                        reconnectDialog.Hide();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 

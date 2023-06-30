@@ -77,7 +77,7 @@ public class ActivationService : IActivationService
         {
             if (App.MainWindow.Content is FrameworkElement fe)
             {
-                fe.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync("No Connection", "Es besteht keine Verbindung zur Datenbank, \n Bitte wenden sie sich an einen Vorgesetzten.", App.MainWindow.Content.XamlRoot);
+             fe.Loaded += (ss, ee) => _dialogService.UnAuthorizedDialogAsync("Keine Verbindung", "Es besteht keine Verbindung zur Datenbank, \n Bitte wenden sie sich an einen Vorgesetzten.", App.MainWindow.Content.XamlRoot);
                 return;
             }
         }
