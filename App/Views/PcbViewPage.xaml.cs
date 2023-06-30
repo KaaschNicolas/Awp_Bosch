@@ -3,6 +3,7 @@
 
 using App.Core.Models;
 using App.Core.Models.Enums;
+using App.Helpers;
 using App.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
@@ -48,6 +49,10 @@ namespace App.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _token = DataGrid.RegisterPropertyChangedCallback(ctWinUI.DataGrid.ItemsSourceProperty, DataGridItemsSourceChangedCallback);
+            if(AuthServiceHelper.hasRole(Role.Lesezugriff))
+            {
+                //PcbViewPage.AddButton.IsEnabled = false;
+            }
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -275,10 +280,27 @@ namespace App.Views
             await ViewModel.FilterItems.ExecuteAsync(null);
         }
 
+        private void FlyoutMenuClick(object sender, RoutedEventArgs e)
+        {
+            if (!AuthServiceHelper.hasRole(Role.Admin))
+            {
+                /*PcbViewPage.DeleteButton.IsEnabled = false;
+                DeleteButton.Visibility = Visibility.Collapsed;*/
+            }
+        }
+
         private void DeleteClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.DeleteCommand.Execute(null);
+            if (AuthServiceHelper.hasRole(Role.Admin))
+            {
+                ViewModel.DeleteCommand.Execute(null);
+            }
+            else
+            {
+                IsEnabled = false;
+            }
         }
+            
 
         private void PrintClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
