@@ -51,12 +51,10 @@
                     <Button Click="Click_EvaluationButton"
                     Margin="10,26,0,0"
                     Style="{StaticResource AccentButtonStyle}">
-                        <StackPanel
-                            Orientation="Horizontal">
-                            <FontIcon Glyph="&#xEB05;" />
-                            <TextBlock Text="Auswerten"/>
-                        </StackPanel>
-                    </Button>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <FontIcon Glyph="&#xEB05;" />
+                    <TextBlock Text="Auswerten"/>
                 </StackPanel>
 
                 <TextBlock 

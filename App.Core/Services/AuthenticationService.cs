@@ -18,16 +18,11 @@ namespace App.Core.Services
         // Authentifiziert den Benutzer anhand des Active Directory-Benutzernamens.
         private void Authenticate()
         {
-            List<User> result = new();
             var adUsername = Environment.UserName;
-            if (IsDbActive)
-            {
-                result = _boschContext
-                    .Users
-                    .Where(u => u.AdUsername.Equals(adUsername) && u.DeletedDate < u.CreatedDate)
-                    .ToList();
-
-            }
+            var result = _boschContext
+                .Users
+                .Where(u => u.AdUsername.Equals(adUsername) && u.DeletedDate < u.CreatedDate)
+                .ToList();
             if (result.Count != 0 && result[0] != null)
             {
                 _isAuthenticated = true;

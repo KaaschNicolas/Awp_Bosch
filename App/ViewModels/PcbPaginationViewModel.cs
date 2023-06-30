@@ -20,6 +20,7 @@ namespace App.ViewModels
     public partial class PcbPaginationViewModel : ObservableRecipient, INavigationAware
     {
 
+        // Konstruktor der Klasse, der alle erforderlichen Abhängigkeiten über Parameterübergabe(Dependency Injection) erhält
         public PcbPaginationViewModel(
             IPcbDataService<Pcb> pcbDataService,
             IStorageLocationDataService<StorageLocation> storageLocationDataService,
@@ -32,6 +33,7 @@ namespace App.ViewModels
         {
 
             _pcbDataService = pcbDataService;
+            // Initialisierung der AsyncRelayCommand-Objekte für verschiedene Aktionen
             FirstAsyncCommand = new AsyncRelayCommand(
                 async () => await GetPcbs(1, _pageSize, _isSortingAscending),
                 () => _pageNumber != 1
@@ -64,6 +66,7 @@ namespace App.ViewModels
 
 
             FilterOptions = PcbFilterOptions.None;
+            // Initialisierung der abhängigen Services
             _dialogService = dialogService;
             _infoBarService = infoBarService;
             _navigationService = navigationService;
@@ -73,6 +76,7 @@ namespace App.ViewModels
             Refresh();
         }
 
+        // Private Felder zur Speicherung der abhängigen Services und anderer Variablen
         private readonly IPcbDataService<Pcb> _pcbDataService;
         private readonly ICrudService<StorageLocation> _storageLocationCrudService;
         private readonly ICrudService<PcbType> _pcbTypeCrudService;
@@ -81,6 +85,7 @@ namespace App.ViewModels
         private readonly INavigationService _navigationService;
         private readonly ITransferDataService<Transfer> _transferDataService;
 
+        // Deklaration der Befehle (Commands)
         public IAsyncRelayCommand FirstAsyncCommand { get; }
         public IAsyncRelayCommand PreviousAsyncCommand { get; }
         public IAsyncRelayCommand NextAsyncCommand { get; }
@@ -88,6 +93,7 @@ namespace App.ViewModels
         public IAsyncRelayCommand SortByCommand { get; }
         public IAsyncRelayCommand FilterItems { get; }
 
+        // Deklaration der privaten Eigenschaften
         private int _pageSize = 10;
         private int _pageNumber;
         private int _pageCount;
@@ -112,6 +118,7 @@ namespace App.ViewModels
         [ObservableProperty]
         private PcbDTO _selectedItem;
 
+        // Deklaration der öffentlichen Eigenschaften
         public List<int> PageSizes => new() { 5, 10, 15, 20 };
 
         public string QueryText { get => _queryText; set => SetProperty(ref _queryText, value); }
@@ -139,12 +146,13 @@ namespace App.ViewModels
         private List<PcbType> _allPcbTypes;
 
 
+        //Ruft die Liste der PCB-Typen vom PCB-Typ CRUD-Service ab und aktualisiert die Liste aller PCB-Typen.
         private async Task GetPcbTypes()
         {
-            var response = await _pcbTypeCrudService.GetAll();
+            var response = await _pcbTypeCrudService.GetAll(); // Ruft alle Leiterplattentypen ab
             if (response != null && response.Code == ResponseCode.Success)
             {
-                AllPcbTypes = new List<PcbType>(response.Data.OrderBy(x => x.PcbPartNumber));
+                AllPcbTypes = new List<PcbType>(response.Data.OrderBy(x => x.PcbPartNumber)); // Ordnet die Leiterplattentypen nach ihrer PcbPartNumber und speichert sie in der Liste AllPcbTypes
             }
             else
             {
@@ -152,6 +160,7 @@ namespace App.ViewModels
             }
         }
 
+        // Erstellt eine Liste von PCB-Objekten basierend auf den ausgewählten PCB-Typen.
         private async Task CreatePcbList(int pageIndex, int pageSize, List<PcbDTO> pcbs, bool isAscending, int maxEntries)
         {
 
@@ -170,6 +179,7 @@ namespace App.ViewModels
         }
 
 
+        // Ruft PCB-Daten basierend auf den angegebenen Filteroptionen und -parametern ab und erstellt eine PCB-Liste.
         private async Task GetPcbs(int pageIndex, int pageSize, bool isAscending)
         {
 
@@ -177,7 +187,7 @@ namespace App.ViewModels
             Response<int> maxEntries;
 
 
-            // Get storage locations for filter
+            // Überprüfen der Lagerorte für das Filtern
 
             if (StorageLocations.Count == 0)
             {
@@ -193,22 +203,27 @@ namespace App.ViewModels
             if (FilterOptions != PcbFilterOptions.None)
             {
 
+                // Je nach Filteroption die entsprechende Logik ausführen
                 switch (FilterOptions)
                 {
+                    // Filteroption: Suche
                     case PcbFilterOptions.Search:
                         maxEntries = await _pcbDataService.MaxEntriesSearch(QueryText);
                         pcbs = await _pcbDataService.Like(pageIndex, pageSize, QueryText);
                         break;
+                    // Filteroption: Filter1
                     case PcbFilterOptions.Filter1:
                         Expression<Func<Pcb, bool>> where1 = x => x.Finalized == true;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where1);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "Finalized = 1", SortBy, isAscending, PcbFilterOptions.Filter1);
                         break;
+                    // Filteroption: Filter2
                     case PcbFilterOptions.Filter2:
                         Expression<Func<Pcb, bool>> where2 = x => x.CreatedDate.Date == DateTime.UtcNow.Date;
                         maxEntries = await _pcbDataService.MaxEntriesFiltered(where2);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, "DATEDIFF(DAY, CreatedDate, GETDATE()) = 0", SortBy, isAscending, PcbFilterOptions.Filter2);
                         break;
+                    // Filteroption: FilterPcbTypes
                     case PcbFilterOptions.FilterPcbTypes:
                         if (SelectedPcbTypes.Count > 0)
                         {
@@ -221,24 +236,30 @@ namespace App.ViewModels
                         }
                         else
                         {
+                            // Keine ausgewählten Pcb-Typen
                             maxEntries = new Response<int>(ResponseCode.Success, 0);
                             pcbs = new Response<List<PcbDTO>>(ResponseCode.Success, new List<PcbDTO>());
                         }
                         break;
+                    // Filteroption: FilterStorageLocation
                     case PcbFilterOptions.FilterStorageLocation:
                         maxEntries = await _pcbDataService.MaxEntriesByStorageLocation(SelectedComboBox.Id);
                         pcbs = await _pcbDataService.GetWithFilter(pageIndex, pageSize, SelectedComboBox.Id.ToString(), SortBy, isAscending, PcbFilterOptions.FilterStorageLocation);
                         break;
+                    // Kein spezifischer Filter angewendet
                     default:
                         maxEntries = await _pcbDataService.MaxEntries();
                         pcbs = await _pcbDataService.GetAllQueryable(pageSize, pageIndex, SortBy, isAscending);
                         break;
                 }
+                // Erstellen der PCB-Liste
                 if (pcbs.Code == ResponseCode.Success)
                 {
                     await CreatePcbList(pageIndex, pageSize, pcbs.Data, isAscending, maxEntries.Data);
                 }
             }
+
+            // Keine Filteroptionen angegeben
             else
             {
                 maxEntries = await _pcbDataService.MaxEntries();
@@ -246,9 +267,11 @@ namespace App.ViewModels
 
                 if (pcbs.Code == ResponseCode.Success)
                 {
+
                     await CreatePcbList(pageIndex, pageSize, pcbs.Data, isAscending, maxEntries.Data);
                 }
             }
+            // Aktualisierung der Befehle zur Navigation und Filterung
             FirstAsyncCommand.NotifyCanExecuteChanged();
             PreviousAsyncCommand.NotifyCanExecuteChanged();
             NextAsyncCommand.NotifyCanExecuteChanged();
@@ -257,6 +280,7 @@ namespace App.ViewModels
 
         }
 
+        // Löscht eine ausgewählte Leiterplatte: nach Bestätigung des Löschvorgangs wird eine Erfolg- oder Fehlersmeldung angezeigt.
         [RelayCommand]
         public async void Delete()
         {
@@ -271,6 +295,7 @@ namespace App.ViewModels
         }
 
 
+        // Zeigt einen Dialog zur Erstellung einer Weitergabe/Umbuchung an und zeigt entsprechende Erfolgs- oder Fehlermeldungen an.
         [RelayCommand]
         public async void ShowTransfer()
         {
@@ -286,6 +311,7 @@ namespace App.ViewModels
             }
         }
 
+        // Erstellt eine Druckseite mit den Informationen der ausgewählten Leiterplatte und druckt sie aus.
         [RelayCommand]
         public async void Print()
         {
@@ -344,24 +370,28 @@ namespace App.ViewModels
             _printService.Print(printPageModel);
         }
 
+        // Navigiert zur Detailansicht einer Leiterplatte anhand der übergebenen PCB-ID.
         [RelayCommand]
         public void NavigateToDetails(int pcbId)
         {
             _navigationService.NavigateTo("App.ViewModels.PcbSingleViewModel", pcbId);
         }
 
+        // Navigiert zur Aktualisierungsansicht einer Leiterplatte anhand der übergebenen PCB-ID.
         [RelayCommand]
         public void NavigateToUpdate(int pcbId)
         {
             _navigationService.NavigateTo("App.ViewModels.UpdatePcbViewModel", pcbId);
         }
 
+        // Navigiert zur Erstellungsansicht, um ein PCB zu erstellen.
         [RelayCommand]
         public void NavigateToCreate()
         {
             _navigationService.NavigateTo("App.ViewModels.CreatePcbViewModel");
         }
 
+        // Aktualisiert die Ansicht der Leiterplattenliste durch Setzen der Seitennummer auf 0 und Ausführen des FirstAsyncCommands Befehlsaktion.
         private void Refresh()
         {
             _pageNumber = 0;
@@ -388,13 +418,14 @@ namespace App.ViewModels
 
 
 
+        // Wird aufgerufen, wenn zur Seite navigiert wird, setzt IsActive auf true und ruft die Methode GetPcbTypes asynchron auf.
         public async void OnNavigatedTo(object parameter)
         {
             IsActive = true; // invokes onActivated
             await GetPcbTypes();
         }
 
-
+        // Wird aufgerufen, wenn von der Seite weg navigiert wird, setzt IsActive auf false und ruft OnDeactivated auf.
         public void OnNavigatedFrom()
         {
             IsActive = false; // invokes onDeactivated

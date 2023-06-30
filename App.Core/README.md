@@ -131,15 +131,15 @@ Per "Testverbindung" kann man die Verbindungprüfen und dann mit "Ok" die Verbin
 
 Zuerst öffnet man den Projektmappen-Explorer (STRG+ALT+L). Hier sucht man unter App.Core den Ordern Services und darunter die Datei AuthenticationService.cs.
 
-![Projektmappen-Explorer](images/Dateiexplorer.png)
+![Projektmappen-Explorer](images/Dateiexplorer.PNG)
 
 Diese Datei öffnet man mit einem Doppelklick. In dieser Datei sucht man nach der Funktion authenticate(). Diese sollte in Zeile 16 liegen.
 
-![Funktion authenticate()](images/Authenticate.png)
+![Funktion authenticate()](images/Authenticate.PNG)
 
 Nun kann man durch klicken am linken Rand einen Breakpoint nach dem Aufruf von "var adUsername = Environment.UserName;" setzen.
 
-![Breakpoint setzen](images/Breakpoint.png)
+![Breakpoint setzen](images/Breakpoint.PNG)
 
 Wenn man nun die Applikation startet wird diese hier stoppen. In den Variablen findet man nun den Wert von AdUsername.
 
