@@ -20,6 +20,7 @@ namespace App.ViewModels
     public partial class PcbPaginationViewModel : ObservableRecipient, INavigationAware
     {
 
+        // Konstruktor der Klasse, der alle erforderlichen Abhängigkeiten über Parameterübergabe erhält
         public PcbPaginationViewModel(
             IPcbDataService<Pcb> pcbDataService,
             IStorageLocationDataService<StorageLocation> storageLocationDataService,
@@ -32,6 +33,7 @@ namespace App.ViewModels
         {
 
             _pcbDataService = pcbDataService;
+            // Initialisierung der AsyncRelayCommand-Objekte für verschiedene Aktionen
             FirstAsyncCommand = new AsyncRelayCommand(
                 async () => await GetPcbs(1, _pageSize, _isSortingAscending),
                 () => _pageNumber != 1
@@ -64,6 +66,7 @@ namespace App.ViewModels
 
 
             FilterOptions = PcbFilterOptions.None;
+            // Initialisierung der abhängigen Services
             _dialogService = dialogService;
             _infoBarService = infoBarService;
             _navigationService = navigationService;
@@ -73,6 +76,7 @@ namespace App.ViewModels
             Refresh();
         }
 
+        // Private Felder zur Speicherung der abhängigen Services und anderer Variablen
         private readonly IPcbDataService<Pcb> _pcbDataService;
         private readonly ICrudService<StorageLocation> _storageLocationCrudService;
         private readonly ICrudService<PcbType> _pcbTypeCrudService;
