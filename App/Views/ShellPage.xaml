@@ -81,14 +81,16 @@
                 </NavigationViewItem>
 
                 <!-- UserManagement -->
-                <NavigationViewItem x:Uid="Shell_UserManagement" helpers:NavigationHelper.NavigateTo="App.ViewModels.UsersViewModel">
+                <NavigationViewItem x:Uid="Shell_UserManagement" helpers:NavigationHelper.NavigateTo="App.ViewModels.UsersViewModel"
+                                    Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE716;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
                 <!-- MasterData -->
-                <NavigationViewItem x:Uid="Shell_MasterData">
+                <NavigationViewItem x:Uid="Shell_MasterData"
+                                    Visibility="{x:Bind helpers:AuthServiceHelper.IsVisibleAdmin()}">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE82D;" />
                     </NavigationViewItem.Icon>

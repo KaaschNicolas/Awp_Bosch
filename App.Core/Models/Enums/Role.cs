@@ -9,7 +9,7 @@ namespace App.Core.Models.Enums
         Lesezugriff,
         [Description("Admin")]
         Admin,
-        [Description("Schichtleitung")]
-        Schichtleitung
+        [Description("StandardUser")]
+        StandardUser
     }
 }

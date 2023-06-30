@@ -14,7 +14,8 @@
     xmlns:viewModels="using:App.ViewModels"
     x:Name="PcbPaginationPage"
     Background="Transparent"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    xmlns:helpers="using:App.Helpers">
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
         <DataTemplate x:DataType="viewModels:PcbPaginationViewModel">
             <Grid Margin="0,0,50,0">
@@ -36,11 +37,13 @@
                     <!--  Get SendAppBarButton.Label from localized resources  -->
                     <AppBarButton
                         Background="{StaticResource AccentFillColorDefaultBrush}"
+                        x:Name="AddButton"
                         Click="CreatePcbButton_Click"
                         FontWeight="SemiBold"
                         Foreground="{StaticResource TextOnAccentFillColorPrimary}"
                         Icon="Add"
-                        Label="Hinzufügen" />
+                        Label="Hinzufügen" 
+                        IsEnabled="{x:Bind helpers:AuthServiceHelper.IsStandardUser()}"/>
                 </CommandBar>
             </Grid>
         </DataTemplate>
@@ -296,12 +299,16 @@
                     Header="Ausgefallen am"
                     Tag="FailedAt" />
                 <controls:DataGridTemplateColumn
+                    x:Name="AktionColumn"
                     Width="100"
                     CanUserSort="False"
                     Header="Aktion">
                     <controls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate
+                            x:Name="AktionFlyoutTemplate">
                             <AppBarButton
+                                x:Name="FlyoutMenuButton"
+                                Click="FlyoutMenuClick"
                                 Width="60"
                                 VerticalAlignment="Center"
                                 AllowFocusOnInteraction="True"
@@ -309,7 +316,8 @@
                                 Icon="More"
                                 LabelPosition="Collapsed">
                                 <AppBarButton.Flyout>
-                                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft"
+                                                x:Name="FlyoutMenu">
                                         <MenuFlyoutItem
                                             Click="NavigateToDetails"
                                             Icon="OpenWith"
@@ -325,11 +333,16 @@
                                         <MenuFlyoutItem
                                             Click="EditClick"
                                             Icon="Edit"
-                                            Text="Bearbeiten" />
+                                            Text="Bearbeiten" 
+                                            IsEnabled="{x:Bind helpers:AuthServiceHelper.IsStandardUser()}"
+                                            Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}"/>
                                         <MenuFlyoutItem
+                                            x:Name="DeleteButton"
                                             Click="DeleteClick"
                                             Icon="Delete"
-                                            Text="Löschen" />
+                                            Text="Löschen" 
+                                            IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"
+                                            Visibility="{x:Bind helpers:AuthServiceHelper.IsVisibleAdmin()}"/>
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>

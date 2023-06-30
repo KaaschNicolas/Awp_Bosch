@@ -22,9 +22,14 @@ namespace App.Helpers
                 return hasRole(Role.Lesezugriff);
         }
 
-        public static bool IsSchichtleitung()
+        public static bool IsStandardUser()
         {
-            return hasRole(Role.Schichtleitung);
+            return hasRole(Role.StandardUser);
+        }
+
+        public static bool IsStandardUserOrAdmin()
+        {
+            return hasRole(Role.StandardUser) || hasRole(Role.Admin);
         }
 
         public static Visibility IsVisibleAdmin()
@@ -38,7 +43,7 @@ namespace App.Helpers
 
         public static Visibility IsVisible()
         {
-            if (IsAdmin() || IsSchichtleitung())
+            if (IsAdmin() || IsStandardUser())
             {
                 return Visibility.Visible;
             }

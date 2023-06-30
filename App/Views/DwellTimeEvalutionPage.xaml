@@ -11,6 +11,7 @@
     mc:Ignorable="d"
     xmlns:oxyplot="using:OxyPlot"
     xmlns:converter="using:App.Converters"
+    xmlns:helpers="using:App.Helpers"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     
     <Page.Resources>

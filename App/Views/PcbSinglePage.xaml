@@ -13,7 +13,8 @@
     xmlns:visconverter="using:Microsoft.UI.Xaml.Data"
     xmlns:xaml="using:Microsoft.UI.Xaml"
     x:Name="SinglePage"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+	xmlns:helpers="using:App.Helpers">
 
 
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
@@ -43,11 +44,13 @@
                     HorizontalAlignment="Center"
                     Background="Transparent"
                     DefaultLabelPosition="Right"
-                    IsOpen="False">
+                    IsOpen="False"
+                    IsEnabled="{x:Bind helpers:AuthServiceHelper.IsStandardUserOrAdmin()}">
                     <AppBarButton
                         Click="PrintClick"
                         Icon="Print"
-                        Label="Drucken" />
+                        Label="Drucken" 
+                        IsEnabled="{x:Bind helpers:AuthServiceHelper.IsStandardUserOrAdmin()}"/>
                 </CommandBar>
                 <StackPanel
                     Grid.Row="1"
@@ -58,11 +61,13 @@
                         <AppBarButton
                             Click="EditClick"
                             Icon="Edit"
-                            Label="Bearbeiten" />
+                            Label="Bearbeiten" 
+                            IsEnabled="{x:Bind helpers:AuthServiceHelper.IsStandardUserOrAdmin()}"/>
                         <AppBarButton
                             Click="DeleteClick"
                             Icon="Delete"
-                            Label="Löschen" />
+                            Label="Löschen" 
+                            IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"/>
                     </CommandBar>
                 </StackPanel>
             </Grid>
@@ -148,6 +153,7 @@
                                     Background="#f7e771"
                                     Click="RestrictionClick"
                                     FontWeight="SemiBold"
+                                    IsEnabled="{x:Bind helpers:AuthServiceHelper.IsStandardUserOrAdmin()}"
                                     Visibility="{x:Bind Path=ViewModel.RestrictionButtonVisibility, Mode=TwoWay}">
                                     Einschränkung hinzufügen
                                 </Button>
@@ -272,8 +278,6 @@
                 </StackPanel>
             </Grid>
 
-            <!--  Weitergabe- & Anmerkungs-Buttons  -->
-
 
             <!--  Status & Info-Panel  -->
             <StackPanel
@@ -380,6 +384,8 @@
                     </StackPanel>
                     <TextBlock Text="{Binding PanelComment.Content, Mode=OneWay}" TextWrapping="Wrap" />
                 </StackPanel>
+
+                <!--  Weitergabe- & Anmerkungs-Buttons  -->
                 <StackPanel
                     Grid.Row="2"
                     Grid.RowSpan="2"
@@ -393,7 +399,8 @@
                         HorizontalAlignment="Right"
                         Click="TransferClick"
                         FontWeight="Bold"
-                        Style="{StaticResource AccentButtonStyle}">
+                        Style="{StaticResource AccentButtonStyle}"
+                        IsEnabled="{x:Bind helpers:AuthServiceHelper.IsStandardUserOrAdmin()}">
                         Weitergeben
                     </Button>
                     <Button
@@ -401,7 +408,8 @@
                         Height="60"
                         Margin="0,15,0,0"
                         HorizontalAlignment="Right"
-                        Click="CommentClick">
+                        Click="CommentClick"
+                        IsEnabled="{x:Bind helpers:AuthServiceHelper.IsStandardUserOrAdmin()}">
                         Anmerkung hinzufügen
                     </Button>
                 </StackPanel>

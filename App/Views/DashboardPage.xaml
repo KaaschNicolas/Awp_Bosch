@@ -7,7 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:App.Core.DTOs"
     mc:Ignorable="d"
-    x:Name="Dashboard">
+    x:Name="Dashboard"
+    xmlns:helpers="using:App.Helpers"
+    IsEnabled="{x:Bind helpers:AuthServiceHelper.IsLesezugriff()}">
 
     <Page.Resources>
         <converter:IntToPercentageConverter x:Key="IntToPercentageConverter" />
