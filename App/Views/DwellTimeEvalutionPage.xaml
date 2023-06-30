@@ -68,13 +68,13 @@
                     Margin="50,5" />
 
                 <oxyplot:PlotView Model="{x:Bind ViewModel.DwellTimeBarPlot, Mode=TwoWay}"
-            Grid.Row="2"
-            Width="1000"
-            Height="400"
-            HorizontalAlignment="Left"
-            x:Name="BarPlot"
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"           
-            ScrollViewer.IsDeferredScrollingEnabled="False"/>
+                    Grid.Row="2"
+                    Width="1000"
+                    Height="400"
+                    HorizontalAlignment="Left"
+                    x:Name="BarPlot"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"           
+                    ScrollViewer.IsDeferredScrollingEnabled="False"/>
             </Grid>
         </ScrollViewer>
     </Grid>
