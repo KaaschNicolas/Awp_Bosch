@@ -299,12 +299,15 @@
                     Header="Ausgefallen am"
                     Tag="FailedAt" />
                 <controls:DataGridTemplateColumn
+                    x:Name="AktionColumn"
                     Width="100"
                     CanUserSort="False"
                     Header="Aktion">
                     <controls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                        <DataTemplate
+                            x:Name="AktionFlyoutTemplate">
                             <AppBarButton
+                                x:Name="FlyoutMenuButton"
                                 Click="FlyoutMenuClick"
                                 Width="60"
                                 VerticalAlignment="Center"
@@ -313,7 +316,8 @@
                                 Icon="More"
                                 LabelPosition="Collapsed">
                                 <AppBarButton.Flyout>
-                                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft"
+                                                x:Name="FlyoutMenu">
                                         <MenuFlyoutItem
                                             Click="NavigateToDetails"
                                             Icon="OpenWith"
