@@ -10,8 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:oxyplot="using:OxyPlot"
-    xmlns:converter="using:App.Converters"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    xmlns:converter="using:App.Converters">
     
     <Page.Resources>
         <converter:TimeConverter x:Key="TimeConverter" />
@@ -71,7 +70,7 @@
             Height="400"
             HorizontalAlignment="Left"
             x:Name="BarPlot"
-            Background="Transparent"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"           
             ScrollViewer.IsDeferredScrollingEnabled="False"/>
     </Grid>
 </Page>

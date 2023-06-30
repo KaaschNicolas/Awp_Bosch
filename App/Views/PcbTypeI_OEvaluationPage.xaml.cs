@@ -170,10 +170,7 @@ public sealed partial class PcbTypeI_OEvaluationPage : Page
 
     private void StartDateChanged(object sender, CalendarDatePickerDateChangedEventArgs e)
     {
-        if(ViewModel.StartDate != ((DateTimeOffset)Start.Date).DateTime)
-        {
-            ViewModel.StartDate = ((DateTimeOffset)Start.Date).DateTime;
-        }
+       ViewModel.StartDate = ((DateTimeOffset)Start.Date).DateTime;
     }
 
     private void EndDateChanged(object sender, CalendarDatePickerDateChangedEventArgs e)

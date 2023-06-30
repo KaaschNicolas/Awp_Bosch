@@ -100,7 +100,9 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
     {
         if (StartDate > EndDate)
         {
-            _infoBarService.showError("Das Enddatum darf nicht größer als das Startdatum sein!", "Error");
+            Header = new List<string>();
+            Rows = new List<List<object>>();
+            _infoBarService.showError("Das Enddatum darf nicht vor dem Startdatum liegen!", "Error");
         }
         else
         {
@@ -165,9 +167,9 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
                 }
             }
 
-
-            FilterItems.NotifyCanExecuteChanged();
         }
+            FilterItems.NotifyCanExecuteChanged();
+        
     }
 
     public async void OnNavigatedTo(object parameter)
@@ -175,6 +177,7 @@ public partial class PcbTypeI_OEvaluationViewModel : ObservableRecipient, INavig
 
         await GetPcbTypes();
         await GetTable();
+        
     }
 
     public void OnNavigatedFrom()
