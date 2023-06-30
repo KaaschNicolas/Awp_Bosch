@@ -17,16 +17,12 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
     {
         try
         {
-            if (await CanConnect())
-            {
-                var data = await _boschContext.Set<T>()
-                    .OrderBy(orderByProperty, isAscending)
-                    .Skip((pageIndex - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-                return new Response<List<T>>(ResponseCode.Success, data: data);
-            }
-            throw new DbUpdateException();
+            var data = await _boschContext.Set<T>()
+                .OrderBy(orderByProperty, isAscending)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
         {
@@ -39,13 +35,9 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
     {
         try
         {
-            if (await CanConnect())
-            {
-                var data = await _boschContext.Set<T>()
-                    .CountAsync();
-                return new Response<int>(ResponseCode.Success, data: data);
-            }
-            throw new DbUpdateException();
+            var data = await _boschContext.Set<T>()
+                .CountAsync();
+            return new Response<int>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
         {
@@ -58,14 +50,10 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
     {
         try
         {
-            if (await CanConnect())
-            {
-                var data = await _boschContext.Set<T>()
-                    .Where(where)
-                    .CountAsync();
-                return new Response<int>(ResponseCode.Success, data: data);
-            }
-            throw new DbUpdateException();
+            var data = await _boschContext.Set<T>()
+                .Where(where)
+                .CountAsync();
+            return new Response<int>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
         {
@@ -78,14 +66,10 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
     {
         try
         {
-            if (await CanConnect())
-            {
-                var data = await _boschContext.Set<T>()
-                    .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
-                    .CountAsync();
-                return new Response<int>(ResponseCode.Success, data: data);
-            }
-            throw new DbUpdateException();
+            var data = await _boschContext.Set<T>()
+                .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
+                .CountAsync();
+            return new Response<int>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
         {
@@ -99,17 +83,13 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
     {
         try
         {
-            if (await CanConnect())
-            {
-                var data = await _boschContext.Set<T>()
-                    .OrderBy(orderByProperty, isAscending)
-                    .Skip((pageIndex - 1) * pageSize)
-                    .Take(pageSize)
-                    .AsNoTracking()
-                    .ToListAsync();
-                return new Response<List<T>>(ResponseCode.Success, data: data);
-            }
-            throw new DbUpdateException();
+            var data = await _boschContext.Set<T>()
+                .OrderBy(orderByProperty, isAscending)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
+            return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
         {
@@ -122,29 +102,25 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
     {
         try
         {
-            if (await CanConnect())
-            {
-                List<T> data;
+            List<T> data;
 
-                if (pageIndex == 0)
-                {
-                    data = await _boschContext.Set<T>()
+            if (pageIndex == 0)
+            {
+                data = await _boschContext.Set<T>()
+                .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
+                .Skip((pageIndex) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            }
+            else
+            {
+                data = await _boschContext.Set<T>()
                     .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
-                    .Skip((pageIndex) * pageSize)
+                    .Skip((pageIndex -1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-                }
-                else
-                {
-                    data = await _boschContext.Set<T>()
-                        .Where(x => EF.Functions.Like(x.StorageName, $"%{queryText}%"))
-                        .Skip((pageIndex -1) * pageSize)
-                        .Take(pageSize)
-                        .ToListAsync();
-                }
-                return new Response<List<T>>(ResponseCode.Success, data: data);
             }
-            throw new DbUpdateException();
+            return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
         {
@@ -157,16 +133,12 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
     {
         try
         {
-            if (await CanConnect())
-            {
-                var data = await _boschContext.Set<T>()
-                    .Where(where)
-                    .Skip((pageIndex - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-                return new Response<List<T>>(ResponseCode.Success, data: data);
-            }
-            throw new DbUpdateException();
+            var data = await _boschContext.Set<T>()
+                .Where(where)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return new Response<List<T>>(ResponseCode.Success, data: data);
         }
         catch (DbUpdateException)
         {

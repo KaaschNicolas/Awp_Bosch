@@ -17,21 +17,17 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect())
-                {
-                    var data = await _boschContext
-                        .Pcbs
-                        .AsNoTracking()
-                        .Include(x => x.PcbType)
-                        .Where(x => x.CreatedDate >= DateTime.Now.AddDays(-7))
-                        .GroupBy(x => x.PcbType.PcbPartNumber)
-                        .Select(x => new DashboardPcbTypeDTO() { PcbPartNumber = x.Key, Count = x.Count() })
-                        .Take(3)
-                        .ToListAsync();
+                var data = await _boschContext
+                    .Pcbs
+                    .AsNoTracking()
+                    .Include(x => x.PcbType)
+                    .Where(x => x.CreatedDate >= DateTime.Now.AddDays(-7))
+                    .GroupBy(x => x.PcbType.PcbPartNumber)
+                    .Select(x => new DashboardPcbTypeDTO() { PcbPartNumber = x.Key, Count = x.Count() })
+                    .Take(3)
+                    .ToListAsync();
                                   
-                    return new Response<List<DashboardPcbTypeDTO>>(ResponseCode.Success, data: data);
-                }
-                throw new DbUpdateException();
+                return new Response<List<DashboardPcbTypeDTO>>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {
@@ -44,16 +40,12 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect())
-                {
-                    var data = await _boschContext
-                        .Pcbs
-                        .AsNoTracking()
-                        .Where(x => x.CreatedDate >= DateTime.Now.AddDays(-7))
-                        .CountAsync();
-                    return new Response<int>(ResponseCode.Success, data: data);
-                }
-                throw new DbUpdateException();
+                var data = await _boschContext
+                    .Pcbs
+                    .AsNoTracking()
+                    .Where(x => x.CreatedDate >= DateTime.Now.AddDays(-7))
+                    .CountAsync();
+                return new Response<int>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {
@@ -66,16 +58,12 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect())
-                {
-                    var data = await _boschContext
-                        .Pcbs
-                        .AsNoTracking()
-                        .Where(x => x.CreatedDate.Date == DateTime.Now.Date)
-                        .CountAsync();
-                    return new Response<int>(ResponseCode.Success, data: data);
-                }
-                throw new DbUpdateException();
+                var data = await _boschContext
+                    .Pcbs
+                    .AsNoTracking()
+                    .Where(x => x.CreatedDate.Date == DateTime.Now.Date)
+                    .CountAsync();
+                return new Response<int>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {
@@ -88,16 +76,12 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect())
-                {
-                    var data = await _boschContext
-                        .Pcbs
-                        .Where(x => x.CreatedDate == DateTime.Now)
-                        .Where(x => x.Finalized == true)
-                        .CountAsync();
-                    return new Response<int>(ResponseCode.Success, data: data);
-                }
-                throw new DbUpdateException();
+                var data = await _boschContext
+                    .Pcbs
+                    .Where(x => x.CreatedDate == DateTime.Now)
+                    .Where(x => x.Finalized == true)
+                    .CountAsync();
+                return new Response<int>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {
@@ -110,16 +94,12 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect())
-                {
-                    var data = await _boschContext
-                        .Pcbs
-                        .Where(x => x.Finalized == false)
-                        .Where(x => x.CreatedDate > x.DeletedDate)
-                        .CountAsync();
-                    return new Response<int>(ResponseCode.Success, data: data);
-                }
-                throw new DbUpdateException();
+                var data = await _boschContext
+                    .Pcbs
+                    .Where(x => x.Finalized == false)
+                    .Where(x => x.CreatedDate > x.DeletedDate)
+                    .CountAsync();
+                return new Response<int>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {
@@ -132,15 +112,11 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect()) 
-                {
-                    var data =  await _boschContext
-                        .DashboardStorageLocationDTO
-                        .FromSqlRaw(BuildQueryDashboardStorageeLocationDTO())
-                        .ToListAsync();
-                    return new Response<List<DashboardStorageLocationDTO>>(ResponseCode.Success, data: data);
-                }
-                throw new DbUpdateException();
+                var data =  await _boschContext
+                    .DashboardStorageLocationDTO
+                    .FromSqlRaw(BuildQueryDashboardStorageeLocationDTO())
+                    .ToListAsync();
+                return new Response<List<DashboardStorageLocationDTO>>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {
@@ -153,15 +129,11 @@ namespace App.Core.Services
         {
             try
             {
-                if (await CanConnect())
-                {
-                    var data = await _boschContext
-                        .DashboardDwellTimeDTO
-                        .FromSqlRaw(BuildQueryDwellTime())
-                        .ToListAsync();
-                    return new Response<List<DashboardDwellTimeDTO>>(ResponseCode.Success, data: data);
-                }
-                throw new DbUpdateException();
+                var data = await _boschContext
+                    .DashboardDwellTimeDTO
+                    .FromSqlRaw(BuildQueryDwellTime())
+                    .ToListAsync();
+                return new Response<List<DashboardDwellTimeDTO>>(ResponseCode.Success, data: data);
             }
             catch (DbUpdateException)
             {
