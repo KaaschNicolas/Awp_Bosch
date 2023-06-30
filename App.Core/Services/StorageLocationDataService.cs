@@ -2,6 +2,7 @@
 using App.Core.DataAccess;
 using App.Core.Helpers;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Base;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;

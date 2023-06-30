@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace App.Services;
 
+// Die Klasse "NavigationService" implementiert das INavigationService-Interface und stellt die Navigation zwischen Seiten in der Anwendung bereit.
 // For more information on navigation between pages see
 // https://github.com/microsoft/TemplateStudio/blob/main/docs/WinUI/navigation.md
 public class NavigationService : INavigationService
@@ -19,6 +20,7 @@ public class NavigationService : INavigationService
 
     public event NavigatedEventHandler? Navigated;
 
+    // Eigenschaft "Frame", die das Fenster für die Navigation repräsentiert.
     public Frame? Frame
     {
         get
@@ -40,14 +42,17 @@ public class NavigationService : INavigationService
         }
     }
 
+    // Eigenschaft "CanGoBack", die angibt, ob ein Rückwärtsnavigieren möglich ist.
     [MemberNotNullWhen(true, nameof(Frame), nameof(_frame))]
     public bool CanGoBack => Frame != null && Frame.CanGoBack;
 
+    // Konstruktor der Klasse "NavigationService".
     public NavigationService(IPageService pageService)
     {
         _pageService = pageService;
     }
 
+    // Methode zum Registrieren der Ereignishandler für den Frame.
     private void RegisterFrameEvents()
     {
         if (_frame != null)
@@ -56,6 +61,7 @@ public class NavigationService : INavigationService
         }
     }
 
+    // Methode zum Abmelden der Ereignishandler für den Frame.
     private void UnregisterFrameEvents()
     {
         if (_frame != null)
@@ -64,6 +70,7 @@ public class NavigationService : INavigationService
         }
     }
 
+    // Methode zum Rückwärtsnavigieren.
     public bool GoBack()
     {
         if (CanGoBack)
@@ -81,6 +88,7 @@ public class NavigationService : INavigationService
         return false;
     }
 
+    // Methode zum Navigieren zu einer bestimmten Seite.
     public bool NavigateTo(string pageKey, object? parameter = null, bool clearNavigation = false)
     {
         var pageType = _pageService.GetPageType(pageKey);
@@ -105,6 +113,7 @@ public class NavigationService : INavigationService
         return false;
     }
 
+    // Methode zum Navigieren zu einer bestimmten Seite.
     private void OnNavigated(object sender, NavigationEventArgs e)
     {
         if (sender is Frame frame)

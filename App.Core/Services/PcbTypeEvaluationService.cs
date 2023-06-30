@@ -1,6 +1,7 @@
 ﻿using App.Core.DataAccess;
 using App.Core.DTOs;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;

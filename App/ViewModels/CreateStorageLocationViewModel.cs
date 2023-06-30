@@ -1,5 +1,6 @@
 ﻿using App.Contracts.Services;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using App.Errors;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -49,7 +50,7 @@ public partial class CreateStorageLocationViewModel : ObservableValidator
             if (IsFinalDestination)
             {
                 dwellTimeRedVal = "--";
-                dwellTimeRedVal = "--";
+                dwellTimeYellowVal = "--";
             }
             var response = await _crudService.Create(new StorageLocation { StorageName = StorageName, DwellTimeYellow = dwellTimeYellowVal, DwellTimeRed = dwellTimeRedVal, IsFinalDestination = IsFinalDestination });
             if (response != null)
