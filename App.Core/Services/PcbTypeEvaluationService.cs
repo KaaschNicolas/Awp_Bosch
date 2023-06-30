@@ -1,5 +1,6 @@
 ﻿using App.Core.DataAccess;
 using App.Core.DTOs;
+using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
@@ -21,21 +22,24 @@ namespace App.Core.Services
             _loggingService = loggingService;
         }
 
-
         // Methode zum Abrufen von EvaluationStorageLocationDTO-Objekten basierend auf dem PCB-Typ und dem DeadlineDate
         public async Task<Response<List<EvaluationStorageLocationDTO>>> GetAllByPcbType(string pcbType, DateTime deadline )
 
         {
             try
             {
-                string queryString = BuildQuery1(pcbType, deadline);
-                Debug.WriteLine(queryString);
-                var query = _boschContext.EvaluationStorageLocationDTO
-                .FromSqlRaw(queryString)
-                .ToListAsync();
+                if (await ConnectionHelper.CanConnect(_boschContext))
+                {
+                    string queryString = BuildQuery1(pcbType, deadline);
+                    Debug.WriteLine(queryString);
+                    var query = _boschContext.EvaluationStorageLocationDTO
+                    .FromSqlRaw(queryString)
+                    .ToListAsync();
 
-                var data = await query;
-                return new Response<List<EvaluationStorageLocationDTO>>(ResponseCode.Success, data: data);
+                    var data = await query;
+                    return new Response<List<EvaluationStorageLocationDTO>>(ResponseCode.Success, data: data);
+                }
+                throw new DbUpdateException();
             }
 
             catch (DbUpdateException)
@@ -49,14 +53,18 @@ namespace App.Core.Services
         {
             try
             {
-                string queryString = BuildQuery2(pcbType, deadline);
-                Debug.WriteLine(queryString);
-                var query = _boschContext.EvaluationFinalizedDTO
-                .FromSqlRaw(queryString)
-                .ToListAsync();
+                if (await ConnectionHelper.CanConnect(_boschContext))
+                {
+                    string queryString = BuildQuery2(pcbType, deadline);
+                    Debug.WriteLine(queryString);
+                    var query = _boschContext.EvaluationFinalizedDTO
+                    .FromSqlRaw(queryString)
+                    .ToListAsync();
 
-                var data = await query;
-                return new Response<List<EvaluationFinalizedDTO>>(ResponseCode.Success, data: data);
+                    var data = await query;
+                    return new Response<List<EvaluationFinalizedDTO>>(ResponseCode.Success, data: data);
+                }
+                throw new DbUpdateException();
             }
 
             catch (DbUpdateException)
@@ -141,6 +149,7 @@ namespace App.Core.Services
             return null;
         }
 
+        // Methode zum Erstellen der SQL-Abfrage, um das DTO für PcbTypeI_OEvaluation zu erstellen, basierend auf dem PCB-Typ, einem StartDate und einem EndDate
         private string BuildQuery3(List<string>? pcbTypeList = null, DateTime? start = null, DateTime? end = null)
         {
             if (pcbTypeList != null && start != null && end != null)

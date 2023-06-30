@@ -22,17 +22,21 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            string queryString = BuildQuery();
+            if (await CanConnect())
+            {
+                string queryString = BuildQuery();
 
-            var query = _boschContext.PcbsDTO
-            .FromSqlRaw(queryString)
-            .OrderBy(orderByProperty, isAscending)
-            .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+                var query = _boschContext.PcbsDTO
+                .FromSqlRaw(queryString)
+                .OrderBy(orderByProperty, isAscending)
+                .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-            var data = await query;
-            return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
+                var data = await query;
+                return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
+            }
+            throw new DbUpdateException();
         }
 
         catch (DbUpdateException)
@@ -46,10 +50,14 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
-                .Where(x => x.DeletedDate < x.CreatedDate)
-                .CountAsync();
-            return new Response<int>(ResponseCode.Success, data: data);
+            if (await CanConnect())
+            {
+                var data = await _boschContext.Set<T>()
+                    .Where(x => x.DeletedDate < x.CreatedDate)
+                    .CountAsync();
+                return new Response<int>(ResponseCode.Success, data: data);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -62,11 +70,15 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
-                .Where(where)
-                .Where(x => x.DeletedDate < x.CreatedDate)
-                .CountAsync();
-            return new Response<int>(ResponseCode.Success, data: data);
+            if (await CanConnect())
+            {
+                var data = await _boschContext.Set<T>()
+                    .Where(where)
+                    .Where(x => x.DeletedDate < x.CreatedDate)
+                    .CountAsync();
+                return new Response<int>(ResponseCode.Success, data: data);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -79,11 +91,15 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var query = _boschContext.PcbsDTO
-                .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: selectedPcbTypesId))
-                .CountAsync();
-            int count = await query;
-            return new Response<int>(ResponseCode.Success, data: count);
+            if (await CanConnect())
+            {
+                var query = _boschContext.PcbsDTO
+                    .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: selectedPcbTypesId))
+                    .CountAsync();
+                int count = await query;
+                return new Response<int>(ResponseCode.Success, data: count);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -96,11 +112,15 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var query = _boschContext.PcbsDTO
-                .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: storageLocationId.ToString()))
-                .CountAsync();
-            int count = await query;
-            return new Response<int>(ResponseCode.Success, data: count);
+            if (await CanConnect())
+            {
+                var query = _boschContext.PcbsDTO
+                    .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: storageLocationId.ToString()))
+                    .CountAsync();
+                int count = await query;
+                return new Response<int>(ResponseCode.Success, data: count);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -113,11 +133,15 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var data = await _boschContext.Set<T>()
-                .Where(x => x.DeletedDate < x.CreatedDate)
-                .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
-                .CountAsync();
-            return new Response<int>(ResponseCode.Success, data: data);
+            if (await CanConnect())
+            {
+                var data = await _boschContext.Set<T>()
+                    .Where(x => x.DeletedDate < x.CreatedDate)
+                    .Where(x => EF.Functions.Like(x.SerialNumber, $"%{queryText}%"))
+                    .CountAsync();
+                return new Response<int>(ResponseCode.Success, data: data);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -131,14 +155,18 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var query = _boschContext.PcbsDTO
-                       .FromSqlRaw(BuildQuery(likeFilterOnPcb: queryText))
-                       .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
-                       .Take(pageSize)
-                       .ToListAsync();
+            if (await  CanConnect())
+            {
+                var query = _boschContext.PcbsDTO
+                           .FromSqlRaw(BuildQuery(likeFilterOnPcb: queryText))
+                           .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
+                           .Take(pageSize)
+                           .ToListAsync();
 
-            var data = await query;
-            return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
+                var data = await query;
+                return new Response<List<PcbDTO>>(ResponseCode.Success, data: data);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -151,30 +179,34 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            IQueryable<PcbDTO> query;
-            switch (filterOptions)
+            if ( await CanConnect())
             {
-                case PcbFilterOptions.FilterStorageLocation:
-                    query = _boschContext.PcbsDTO
-                    .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: value));
-                    break;
-                case PcbFilterOptions.FilterPcbTypes:
-                    query = _boschContext.PcbsDTO
-                    .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: value));
-                    break;
-                default:
-                    query = _boschContext.PcbsDTO
-                   .FromSqlRaw(BuildQuery(whereFilterOnPcb: value));
-                    break;
-            }
+                IQueryable<PcbDTO> query;
+                switch (filterOptions)
+                {
+                    case PcbFilterOptions.FilterStorageLocation:
+                        query = _boschContext.PcbsDTO
+                        .FromSqlRaw(BuildQuery(whereFilterOnStorageLocation: value));
+                        break;
+                    case PcbFilterOptions.FilterPcbTypes:
+                        query = _boschContext.PcbsDTO
+                        .FromSqlRaw(BuildQuery(whereFilterOnPcbTypes: value));
+                        break;
+                    default:
+                        query = _boschContext.PcbsDTO
+                       .FromSqlRaw(BuildQuery(whereFilterOnPcb: value));
+                        break;
+                }
 
-            var data = query
-                .OrderBy(orderByProperty, isAscending)
-                .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-            var result = await data;
-            return new Response<List<PcbDTO>>(ResponseCode.Success, data: result);
+                var data = query
+                    .OrderBy(orderByProperty, isAscending)
+                    .Skip((pageIndex == 0 ? pageIndex : pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+                var result = await data;
+                return new Response<List<PcbDTO>>(ResponseCode.Success, data: result);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -187,38 +219,42 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {id} erfolgreich gelöscht.",
-                null);
-            //setzt alle DeletedDate der anhängenden Objekte null, die es auch nur für diese Leiterplatte gibt.
-
-            Pcb pcb = _boschContext.Set<T>()
-                .Where(x => x.Id.Equals(id))
-                .Include(pcb => pcb.Restriction)
-                .Include(etp => etp.ErrorTypes)
-                .Include(pcb => pcb.Transfers)
-                .First();
-            if (!(pcb is null))
+            if (await CanConnect())
             {
-                pcb.DeletedDate = DateTime.Now;
-                if (!(pcb.Restriction is null))
+                _loggingService.Audit(LogLevel.Information, $"{typeof(T)} mit der ID {id} erfolgreich gelöscht.",
+                    null);
+                //setzt alle DeletedDate der anhängenden Objekte null, die es auch nur für diese Leiterplatte gibt.
+
+                Pcb pcb = _boschContext.Set<T>()
+                    .Where(x => x.Id.Equals(id))
+                    .Include(pcb => pcb.Restriction)
+                    .Include(etp => etp.ErrorTypes)
+                    .Include(pcb => pcb.Transfers)
+                    .First();
+                if (!(pcb is null))
                 {
-                    pcb.Restriction.DeletedDate = DateTime.Now;
+                    pcb.DeletedDate = DateTime.Now;
+                    if (!(pcb.Restriction is null))
+                    {
+                        pcb.Restriction.DeletedDate = DateTime.Now;
+                    }
+
+                    if (!(pcb.ErrorTypes is null))
+                    {
+                        pcb.ErrorTypes.ForEach(et => et.DeletedDate = DateTime.Now);
+                    }
+
+                    if (!(pcb.ErrorTypes is null))
+                    {
+                        pcb.Transfers.ForEach(t => t.DeletedDate = DateTime.Now);
+                    }
+
+                    await _boschContext.SaveChangesAsync();
                 }
 
-                if (!(pcb.ErrorTypes is null))
-                {
-                    pcb.ErrorTypes.ForEach(et => et.DeletedDate = DateTime.Now);
-                }
-
-                if (!(pcb.ErrorTypes is null))
-                {
-                    pcb.Transfers.ForEach(t => t.DeletedDate = DateTime.Now);
-                }
-
-                await _boschContext.SaveChangesAsync();
+                return new Response<T>(ResponseCode.Success, $"{typeof(T)} erfolgreich gelöscht.");
             }
-
-            return new Response<T>(ResponseCode.Success, $"{typeof(T)} erfolgreich gelöscht.");
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {
@@ -233,19 +269,23 @@ public class PcbDataService<T> : CrudServiceBase<T>, IPcbDataService<T> where T 
     {
         try
         {
-            var entity = await _boschContext.Set<T>()
-                .Where(x => x.DeletedDate < x.CreatedDate)
-                .Include(T => T.Transfers)
-                .ThenInclude(transfer => transfer.NotedBy)
-                .Include(T => T.Transfers)
-                .ThenInclude(transfer => transfer.StorageLocation)
-                .Include(T => T.Restriction)
-                .Include(T => T.Comment)
-                .Include(T => T.Diagnose)
-                .Include(T => T.PcbType)
-                .Include(T => T.ErrorTypes)
-                .FirstAsync(x => x.Id == id);
-            return new Response<T>(ResponseCode.Success, entity);
+            if (await CanConnect())
+            {
+                var entity = await _boschContext.Set<T>()
+                    .Where(x => x.DeletedDate < x.CreatedDate)
+                    .Include(T => T.Transfers)
+                    .ThenInclude(transfer => transfer.NotedBy)
+                    .Include(T => T.Transfers)
+                    .ThenInclude(transfer => transfer.StorageLocation)
+                    .Include(T => T.Restriction)
+                    .Include(T => T.Comment)
+                    .Include(T => T.Diagnose)
+                    .Include(T => T.PcbType)
+                    .Include(T => T.ErrorTypes)
+                    .FirstAsync(x => x.Id == id);
+                return new Response<T>(ResponseCode.Success, entity);
+            }
+            throw new DbUpdateException();
         }
         catch (DbUpdateException)
         {

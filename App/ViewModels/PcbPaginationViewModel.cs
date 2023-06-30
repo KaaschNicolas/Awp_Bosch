@@ -239,7 +239,6 @@ namespace App.ViewModels
                     await CreatePcbList(pageIndex, pageSize, pcbs.Data, isAscending, maxEntries.Data);
                 }
             }
-
             else
             {
                 maxEntries = await _pcbDataService.MaxEntries();
@@ -247,7 +246,6 @@ namespace App.ViewModels
 
                 if (pcbs.Code == ResponseCode.Success)
                 {
-
                     await CreatePcbList(pageIndex, pageSize, pcbs.Data, isAscending, maxEntries.Data);
                 }
             }
