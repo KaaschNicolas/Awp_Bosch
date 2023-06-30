@@ -37,11 +37,6 @@ public partial class PcbSingleViewModel : ObservableValidator, INavigationAware
     [ObservableProperty]
     private DateTime _createdDate;
 
-    //[ObservableProperty]
-    //[NotifyDataErrorInfo]
-    //[Required]
-    //private string _serialNumber;
-
     [ObservableProperty]
     private Device _restriction;
 

@@ -27,6 +27,11 @@ namespace App.Helpers
             return hasRole(Role.StandardUser);
         }
 
+        public static bool IsStandardUserOrAdmin()
+        {
+            return hasRole(Role.StandardUser) || hasRole(Role.Admin);
+        }
+
         public static Visibility IsVisibleAdmin()
         {
             if (IsAdmin())
