@@ -1,44 +1,53 @@
 ﻿using App.Core.Models;
 
-namespace App.Core.Validator;
-public class CommentValidator
+namespace App.Core.Validator
 {
-    private Comment _comment;
-
-    public CommentValidator(Comment comment)
+    // Eine Klasse zur Validierung von Comment-Objekten (Anmerkung)
+    public class CommentValidator
     {
-        _comment = comment;
-    }
+        private Comment _comment;
 
-    private List<string> Validate()
-    {
-        List<string> errors = new List<string>();
-
-        if (string.IsNullOrEmpty(_comment.Content) || _comment.Content.Length > 650)
+        // Der Konstruktor der Klasse, der die zu überprüfende Comment erhält
+        public CommentValidator(Comment comment)
         {
-            errors.Add("Name darf nicht null sein oder 650 Zeichen überschreiten.");
+            _comment = comment;
         }
 
-        if (_comment.NotedBy == null)
+        private List<string> Validate()
         {
-            errors.Add("NotedBy darf nicht null sein.");
+            List<string> errors = new List<string>();
+
+            // Überprüfung, ob der Inhalt des Comments null ist oder mehr als 650 Zeichen enthält
+            if (string.IsNullOrEmpty(_comment.Content) || _comment.Content.Length > 650)
+            {
+                errors.Add("Name darf nicht null sein oder 650 Zeichen überschreiten.");
+            }
+
+            // Überprüfung, ob der Verfasser des Comments null ist
+            if (_comment.NotedBy == null)
+            {
+                errors.Add("NotedBy darf nicht null sein.");
+            }
+
+            return errors; // Rückgabe der Liste der Validierungsfehler
         }
 
-        return errors;
-    }
-
-    public bool IsValid()
-    {
-        if (Validate().Count == 0)
+        // Eine Methode zur Überprüfung der Validität des Comments
+        public bool IsValid()
         {
-            return true;
+            // Überprüfung, ob die Anzahl der Validierungsfehler 0 ist
+            if (Validate().Count == 0)
+            {
+                return true; // Der Comment ist valide
+            }
+
+            return false; // Es sind Validierungsfehler vorhanden
         }
 
-        return false;
-    }
-
-    public List<string> GetErrors()
-    {
-        return Validate();
+        // Eine Methode zur Rückgabe der Liste der Validierungsfehler
+        public List<string> GetErrors()
+        {
+            return Validate();
+        }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using App.Core.Models;
+using Microsoft.UI;
+using Microsoft.UI.Xaml.Media;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.ExceptionServices;
 
 namespace App.Models
 {
@@ -25,6 +28,17 @@ namespace App.Models
         {
             get; set;
         }
+
+        public string FirstErrorCode
+        {
+            get; set;
+        }
+
+        public string SecondErrorCode
+        {
+            get; set;
+        }
+
         public bool Finalized
         {
             get; set;
@@ -65,10 +79,17 @@ namespace App.Models
         }
         public string? LastStorageLocationName { get; set; }
 
+        public int AtLocationDays { get; set; }
+
+        public SolidColorBrush Status { get; set; }
+
 
         public static PaginatedPcb ToPaginatedPcb(Pcb pcb)
         {
             string? currentStorageLocationName = pcb.Transfers.Count > 0 ? pcb.Transfers[0].StorageLocation.StorageName : null;
+            int days = (int)Math.Round((DateTime.Now - pcb.Transfers[^1].CreatedDate).TotalDays);
+            string? first = pcb.ErrorTypes[0].Code;
+            string? second = pcb.ErrorTypes[1].Code;
             return new PaginatedPcb()
             {
                 Id = pcb.Id,
@@ -78,6 +99,8 @@ namespace App.Models
                 Restriction = pcb.Restriction,
                 ErrorDescription = pcb.ErrorDescription,
                 ErrorTypes = pcb.ErrorTypes,
+                FirstErrorCode = first,
+                SecondErrorCode = second,
                 Finalized = pcb.Finalized,
                 PcbTypeId = pcb.PcbTypeId,
                 PcbType = pcb.PcbType,
@@ -86,7 +109,37 @@ namespace App.Models
                 Diagnose = pcb.Diagnose,
                 DiagnoseId = pcb.DiagnoseId,
                 LastStorageLocationName = currentStorageLocationName,
+                AtLocationDays = days,
+                Status = getStatusColor(pcb, days),
             };
+        }
+
+        public static SolidColorBrush getStatusColor(Pcb pcb, int atLocationDays)
+        {
+            var Status = new SolidColorBrush();
+            if (pcb != null &&
+                pcb.Transfers[^1].StorageLocation.DwellTimeRed != "--" &&
+                pcb.Transfers[^1].StorageLocation.DwellTimeYellow != "--")
+            {
+
+                if (atLocationDays >= int.Parse(pcb.Transfers[^1].StorageLocation.DwellTimeRed))
+                {
+                    Status = new SolidColorBrush(Colors.Red);
+                }
+                else if (atLocationDays >= int.Parse(pcb.Transfers[^1].StorageLocation.DwellTimeYellow))
+                {
+                    Status = new SolidColorBrush(Colors.Yellow);
+                }
+                else
+                {
+                    Status = new SolidColorBrush(Colors.LimeGreen);
+                }
+                return Status;
+            }
+            else
+            {
+                return Status = new SolidColorBrush(Colors.Transparent);
+            }
         }
 
         public static Pcb ToPcb(PaginatedPcb paginatedPcb)

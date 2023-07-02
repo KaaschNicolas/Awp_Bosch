@@ -1,11 +1,10 @@
 ﻿using App.Contracts.Services;
 using App.Controls;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics;
-
 
 namespace App.Services;
 
@@ -17,6 +16,7 @@ public sealed class DialogService : IDialogService
     /// <inheritdoc/>
     private readonly FrameworkElement? rootElement = App.MainWindow.Content as FrameworkElement;
 
+    // Methode zum Anzeigen eines Bestätigungsdialogs für das Löschen eines Objekts.
     public async Task<bool?> ConfirmDeleteDialogAsync(string title, string content, string confirmButtonText, string cancelButtonText)
     {
         if (rootElement != null)
@@ -44,57 +44,37 @@ public sealed class DialogService : IDialogService
         }
         return null;
     }
-    public async Task<Tuple<Transfer, int?>?> ShowCreateTransferDialog(string title, string confirmButtonText, string cancelButtonText)
+    // Methode zum Anzeigen eines Dialogs zur Erstellung einer Weitergabe.
+    public async Task<Response<Transfer>?> ShowCreateTransferDialog()
     {
-        try
+        if (rootElement != null)
         {
-            if (rootElement != null)
+            /*  WindowEx window = new TransferWindow();
+              window.Activate();*/
+
+            var dialog = new TransferDialog
             {
-                var dialog = new ContentDialog
-                {
-                    Title = title,
-                    Content = new TransferDialog(),
-                    PrimaryButtonText = confirmButtonText,
-                    DefaultButton = ContentDialogButton.Primary,
-                    RequestedTheme = rootElement.RequestedTheme,
-                    CloseButtonText = cancelButtonText,
-                    XamlRoot = rootElement.XamlRoot
-                };
-                var result = await dialog.ShowAsync();
-                var view = (TransferDialog)dialog.Content;
+                XamlRoot = rootElement.XamlRoot,
+                RequestedTheme = rootElement.RequestedTheme
+            };
 
-                if (result == ContentDialogResult.None)
-                {
-                    return null;
-                }
+            var result = await dialog.ShowAsync();
 
-                if (result == ContentDialogResult.Primary)
-                {
+            TransferDialogViewModel vm = dialog.ViewModel;
 
-                    TransferDialogViewModel tdVM = (TransferDialogViewModel)view.ViewModel;
-
-                    int? diagnoseId = ((Diagnose)tdVM.SelectedDiagnose) != null
-                        ? ((Diagnose)tdVM.SelectedDiagnose).Id
-                        : null;
-                    return Tuple.Create(
-                        new Transfer
-                        {
-                            NotedById = tdVM.NotedBy.Id,
-                            CreatedDate = tdVM.TransferDate,
-                            StorageLocationId = ((StorageLocation)tdVM.SelectedStorageLocation).Id,
-                            Comment = tdVM.Comment
-                        }, diagnoseId);
-
-                }
+            if (result == ContentDialogResult.None)
+            {
+                return new Response<Transfer>(ResponseCode.None, "None");
             }
-        } catch(Exception ex) {
-
-            Debug.WriteLine(ex);
+            if (result == ContentDialogResult.Primary)
+            {
+                return await vm.Save();
+            }
         }
-
         return null;
     }
 
+    // Methode zum Hinzufügen einer Anmerkung durch einen Dialog.
     public async Task<Comment> AddCommentDialog(string title, string confirmButtonText, string cancelButtonText)
     {
         if (rootElement != null)
@@ -104,6 +84,8 @@ public sealed class DialogService : IDialogService
                 Header = "Anmerkung",
                 PlaceholderText = "Text eintragen"
             };
+
+
 
             var dialog = new ContentDialog
             {
@@ -117,7 +99,6 @@ public sealed class DialogService : IDialogService
 
             };
             var result = await dialog.ShowAsync();
-
             if (result == ContentDialogResult.None)
             {
                 return null;
@@ -135,6 +116,9 @@ public sealed class DialogService : IDialogService
         return null;
     }
 
+
+
+    // Methode zum Hinzufügen einer Einschränkung durch einen Dialog.
     public async Task<Device> AddRestrictionDialog(string title, string confirmButtonText, string cancelButtonText)
     {
         if (rootElement != null)
@@ -177,6 +161,7 @@ public sealed class DialogService : IDialogService
 
 
 
+    // Methode zum Anzeigen eines Dialogs, wenn ein user nicht autorisiert ist.
     public async void UnAuthorizedDialogAsync(string title, string content, XamlRoot xamlRoot)
     {
 

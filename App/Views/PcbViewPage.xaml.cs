@@ -1,29 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using ABI.Microsoft.UI.Xaml.Input;
 using App.Core.Models;
 using App.Core.Models.Enums;
+using App.Helpers;
 using App.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System.Diagnostics;
 using ctWinUI = CommunityToolkit.WinUI.UI.Controls;
-using System.Windows.Input;
-
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace App.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class PcbViewPage : Page
     {
+        private List<CheckBox> _listCheckBox = new();
+
+        private bool _wasChecked = true;
+        private bool _canExecute = true;
         private enum DataGridDisplayMode
         {
             Default,
@@ -39,6 +34,7 @@ namespace App.Views
         {
             ViewModel = App.GetService<PcbPaginationViewModel>();
             InitializeComponent();
+            DataContext = ViewModel;
             Loaded += Page_Loaded;
             Unloaded += Page_Unload;
             ViewModel.FilterOptions = PcbFilterOptions.None;
@@ -50,9 +46,14 @@ namespace App.Views
         private long _token;
         private DataGridColumn _actualSortedColumn;
 
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _token = DataGrid.RegisterPropertyChangedCallback(ctWinUI.DataGrid.ItemsSourceProperty, DataGridItemsSourceChangedCallback);
+            if(AuthServiceHelper.hasRole(Role.Lesezugriff))
+            {
+                //PcbViewPage.AddButton.IsEnabled = false;
+            }
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -65,9 +66,28 @@ namespace App.Views
         {
             _displayMode = DataGridDisplayMode.Default;
             DataGrid.ItemsSource = ViewModel.Pcbs; //nötig? weil schon in Xaml gebunden
-            DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Ascending;
+            DataGrid.Columns[0].SortDirection = ctWinUI.DataGridSortDirection.Descending;
             DataGrid.SelectionChanged += DataGrid_SelectionChanged;
             ViewModel.FilterOptions = PcbFilterOptions.None;
+
+
+        }
+
+
+        private void CheckBox_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            CheckBox cb = sender as CheckBox;
+            if (!_listCheckBox.Contains(cb))
+            {
+                _listCheckBox.Add(cb);
+            }
+
+            if ((_listCheckBox.Count - 1) == ViewModel.AllPcbTypes.Count)
+            {
+                SelectAll_Checked(sender, e);
+            }
+
         }
 
         private void Page_Unload(object sender, RoutedEventArgs e)
@@ -115,6 +135,91 @@ namespace App.Views
             await ViewModel.SortByCommand.ExecuteAsync(null); //hier nochmal schauen
         }
 
+        private void Option_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+            if (cb.Content is not null)
+            {
+                PcbType checkedPcbType = ViewModel.AllPcbTypes.Where(i => i.PcbPartNumber == (string)cb.Content).Single();
+                ViewModel.SelectedPcbTypes.Add(checkedPcbType);
+
+            }
+            if (cb != _listCheckBox[0] && (ViewModel.SelectedPcbTypes.Count == (_listCheckBox.Count - 1)))
+            {
+
+                _listCheckBox[0].Checked -= SelectAll_Checked;
+                _listCheckBox[0].IsChecked = true;
+                _listCheckBox[0].Checked += SelectAll_Checked;
+                _canExecute = false;
+            }
+
+        }
+
+        private void Option_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+            ViewModel.SelectedPcbTypes.Remove(ViewModel.SelectedPcbTypes.Where(i => i.PcbPartNumber == (string)cb.Content).Single());
+            if (cb != _listCheckBox[0])
+            {
+                _listCheckBox[0].Indeterminate -= SelectAll_Indeterminate;
+                _listCheckBox[0].IsChecked = null;
+                _listCheckBox[0].Indeterminate += SelectAll_Indeterminate;
+            }
+
+            if (ViewModel.SelectedPcbTypes.Count == 0)
+            {
+                _listCheckBox[0].IsChecked = false;
+
+                _canExecute = true;
+            }
+        }
+
+        private void SelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            _wasChecked = true;
+
+            foreach (CheckBox cb in _listCheckBox)
+            {
+                cb.IsChecked = true;
+            }
+
+
+
+        }
+
+        private void SelectAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+
+            foreach (CheckBox cb in _listCheckBox)
+            {
+                cb.IsChecked = false;
+            }
+            ViewModel.SelectedPcbTypes.Clear();
+            _wasChecked = false;
+        }
+
+
+        private void SelectAll_Indeterminate(object sender, RoutedEventArgs e)
+        {
+            if (_wasChecked)
+            {
+                SelectAll_Unchecked(sender, e);
+                _listCheckBox[0].Unchecked -= SelectAll_Unchecked;
+                _listCheckBox[0].IsChecked = false;
+                _listCheckBox[0].Unchecked += SelectAll_Unchecked;
+            }
+            else
+            {
+                SelectAll_Checked(sender, e);
+                _listCheckBox[0].Checked -= SelectAll_Checked;
+                _listCheckBox[0].IsChecked = true;
+                _listCheckBox[0].Checked += SelectAll_Checked;
+            }
+
+        }
+
+
+
         private async void Filter1_Click(object Sender, RoutedEventArgs e)
         {
             _displayMode = DataGridDisplayMode.Filtered;
@@ -140,11 +245,21 @@ namespace App.Views
             await ViewModel.FilterItems.ExecuteAsync(null);
         }
 
+        private async void FilterPcbTypes_Click(object Sender, RoutedEventArgs e)
+        {
+            _displayMode = DataGridDisplayMode.Filtered;
+            ViewModel.FilterOptions = PcbFilterOptions.FilterPcbTypes;
+            ComboBoxStorageLocation.SelectedItem = null;
+            await ViewModel.FilterItems.ExecuteAsync(null);
+
+        }
+
         private async void FilterClear_Click(object sender, RoutedEventArgs e)
         {
             _displayMode = DataGridDisplayMode.Default;
             ViewModel.FilterOptions = PcbFilterOptions.None;
             ComboBoxStorageLocation.SelectedItem = null;
+            SelectAll_Checked(sender, e);
             await ViewModel.FirstAsyncCommand.ExecuteAsync(null);
         }
 
@@ -166,24 +281,55 @@ namespace App.Views
             await ViewModel.FilterItems.ExecuteAsync(null);
         }
 
+        private void FlyoutMenuClick(object sender, RoutedEventArgs e)
+        {
+            if (!AuthServiceHelper.hasRole(Role.Admin))
+            {
+                /*PcbViewPage.DeleteButton.IsEnabled = false;
+                DeleteButton.Visibility = Visibility.Collapsed;*/
+            }
+        }
+
         private void DeleteClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.DeleteCommand.Execute(null);
+            if (AuthServiceHelper.hasRole(Role.Admin))
+            {
+                ViewModel.DeleteCommand.Execute(null);
+            }
+            else { }
+        }
+            
+
+        private void PrintClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+            {
+                ViewModel.PrintCommand.Execute(null);
+            }
+            else { }
         }
 
         void EditClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem);
+            if(AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+            {
+                ViewModel.NavigateToUpdateCommand.Execute(ViewModel.SelectedItem.PcbId);
+            }
+            else { }
         }
 
         private void NavigateToDetails(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.NavigateToDetailsCommand.Execute(ViewModel.SelectedItem);
+            ViewModel.NavigateToDetailsCommand.Execute(ViewModel.SelectedItem.PcbId);
         }
 
         private void CreatePcbButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(CreatePcbPage));
+            if (AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser))
+            {
+                ViewModel.NavigateToCreateCommand.Execute(null);
+            }
+            else { }
         }
 
         private void DataGridItemsSourceChangedCallback(DependencyObject sender, DependencyProperty dp)
@@ -222,14 +368,12 @@ namespace App.Views
 
         void TransferClick(object sender, RoutedEventArgs e)
         {
-            ViewModel.ShowTransferCommand.Execute(null);
+            
+
+            if (AuthServiceHelper.hasRole(Role.Admin) || AuthServiceHelper.hasRole(Role.StandardUser)){
+                ViewModel.ShowTransferCommand.Execute(null);
+            }
+            else { }
         }
-
-        /*private void UIElement_OnLostFocus(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("ok");
-        }*/
-
-
     }
 }

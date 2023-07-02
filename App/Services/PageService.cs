@@ -5,6 +5,7 @@ using App.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Microsoft.UI.Xaml.Controls;
+
 namespace App.Services;
 
 public class PageService : IPageService
@@ -17,6 +18,7 @@ public class PageService : IPageService
         Configure<BlankViewModel, BlankPage>();
         Configure<SettingsViewModel, SettingsPage>();
         Configure<StorageLocationViewModel, StorageLocationPage>();
+        Configure<CreateStorageLocationViewModel, CreateStorageLocationPage>();
         Configure<UpdateStorageLocationViewModel, UpdateStorageLocationPage>();
         Configure<PcbTypeViewModel, PcbTypePage>();
         Configure<DiagnoseViewModel, DiagnosePage>();
@@ -30,6 +32,13 @@ public class PageService : IPageService
         Configure<TransfersViewModel, TransfersPage>();
         Configure<PcbPaginationViewModel, PcbViewPage>();
         Configure<UpdatePcbViewModel, UpdatePcbPage>();
+        Configure<DwellTimeEvaluationViewModel, DwellTimeEvalutionPage>();
+        Configure<PcbTypeEvaluationViewModel, PcbTypeEvaluationPage>();
+        Configure<UsersViewModel, UsersPage>();
+        Configure<CreateUserViewModel, CreateUserPage>();
+        Configure<UpdateUserViewModel, UpdateUserPage>();
+        Configure<DashboardViewModel, DashboardPage>();
+        Configure<PcbTypeI_OEvaluationViewModel, PcbTypeI_OEvaluationPage>();
     }
 
     public Type GetPageType(string key)

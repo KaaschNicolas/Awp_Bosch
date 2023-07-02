@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using App.Core.DataAccess;
 using App.Core.Helpers;
 using App.Core.Models;
@@ -19,6 +12,7 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
 {
     public StorageLocationDataService(BoschContext boschContext, ILoggingService loggingService) : base(boschContext, loggingService) { }
 
+    // Methode zum Abrufen von StorageLocations mit anpassbaren Sortierungsoptionen
     public async Task<Response<List<T>>> GetAllQueryable(int pageIndex, int pageSize, string orderByProperty, bool isAscending)
     {
         try
@@ -36,6 +30,7 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         }
     }
 
+    // Methode zum Abrufen der maximalen Anzahl von Einträgen in der Tabelle
     public async Task<Response<int>> MaxEntries()
     {
         try
@@ -50,6 +45,7 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         }
     }
 
+    // Methode zum Abrufen der maximalen Anzahl von Einträgen nach Anwendung eines Filters
     public async Task<Response<int>> MaxEntriesFiltered(Expression<Func<T, bool>> where)
     {
         try
@@ -65,6 +61,7 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         }
     }
 
+    // Methode zum Abrufen der maximalen Anzahl von Einträgen nach Durchführung einer Suche
     public async Task<Response<int>> MaxEntriesSearch(string queryText)
     {
         try
@@ -81,6 +78,7 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
     }
 
 
+    // Methode zum Abrufen von StorageLocations mit anpassbarer Sortierung
     public async Task<Response<List<T>>> GetAllSortedBy(int pageIndex, int pageSize, string orderByProperty, bool isAscending)
     {
         try
@@ -99,6 +97,7 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         }
     }
 
+    // Methode zum Suchen von StorageLocations basierend auf einem Suchbegriff
     public async Task<Response<List<T>>> Like(int pageIndex, int pageSize, string queryText)
     {
         try
@@ -129,6 +128,7 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
         }
     }
 
+    // Methode zum Abrufen von StorageLocations mit anpassbarem Filter
     public async Task<Response<List<T>>> GetWithFilter(int pageIndex, int pageSize, Expression<Func<T, bool>> where)
     {
         try
@@ -145,6 +145,4 @@ public class StorageLocationDataService<T> : CrudServiceBase<T>, IStorageLocatio
             return new Response<List<T>>(ResponseCode.Error, error: "GetStorageLocationFiltered() failed");
         }
     }
-    
-
 }

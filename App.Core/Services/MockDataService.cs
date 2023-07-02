@@ -4,24 +4,30 @@ using App.Core.DataAccess;
 using App.Core.Models;
 using App.Core.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-//using Excel = Microsoft.Office.Interop.Excel;
+// using Excel = Microsoft.Office.Interop.Excel;
 
 namespace App.Core.Services;
+
+// Klasse, die Mock-Daten in den Datenbank einfügt
 public class MockDataService : IMockDataService
 {
     private BoschContext _boschContext;
     public MockDataService(BoschContext boschContext)
     {
         _boschContext = boschContext;
-        SeedMockData();
-        //fill where "Kreisläufer" Excel is located 
-        //SeedFromExcel("");
+
+
+        // Zeile 19 Entkommentieren einmal Programm starten, damit Db mit Daten befüllt wird. Die .json Dateien sind an das aktuelle Datenbank schmea anzupassen.
+        // SeedMockData();
+        // fill where "Kreisläufer" Excel is located 
+        // SeedFromExcel("");
     }
 
+    // Methode zum Einfügen von Mock-Daten in den Datenbankkontext
     public async void SeedMockData()
     {
         var prepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).Split("App")[0], @"App.Core\Services\mockData");
-        //Mocking of ErrorType Data
+        // Mocking of ErrorType Data
         var count = await _boschContext.ErrorTypes.CountAsync();
         if (count.Equals(0)) {
             var path = Path.Combine(prepath, "errorTypeMockData.json");
@@ -32,7 +38,7 @@ public class MockDataService : IMockDataService
 
             _boschContext.SaveChanges(); 
         }
-        //Mocking of Device Data
+        // Mocking of Device Data
         count = await _boschContext.Devices.CountAsync();
         if (count.Equals(0))
         {
@@ -44,7 +50,7 @@ public class MockDataService : IMockDataService
 
             _boschContext.SaveChanges();
         }
-        //Mocking of User Data
+        // Mocking of User Data
         count = await _boschContext.Users.CountAsync();
         if (count.Equals(0))
         {
@@ -56,7 +62,7 @@ public class MockDataService : IMockDataService
 
             _boschContext.SaveChanges();
         }
-        //Mocking of transfer Data
+        // Mocking of transfer Data
         count = await _boschContext.Transfers.CountAsync();
         if (count.Equals(0))
         {

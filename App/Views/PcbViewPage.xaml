@@ -1,7 +1,6 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-    <!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
 <!--  Licensed under the MIT License.  -->
-
 <Page
     x:Class="App.Views.PcbViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -11,10 +10,12 @@
     xmlns:ctWinUI="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:App.Core.Models"
     xmlns:viewModels="using:App.ViewModels"
+    x:Name="PcbPaginationPage"
     Background="Transparent"
-    mc:Ignorable="d">
-
+    mc:Ignorable="d"
+    xmlns:helpers="using:App.Helpers">
     <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
         <DataTemplate x:DataType="viewModels:PcbPaginationViewModel">
             <Grid Margin="0,0,50,0">
@@ -22,7 +23,6 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-
                 <CommandBar
                     Grid.Column="0"
                     Padding="0"
@@ -33,79 +33,28 @@
                         <!--  Get MainPageTitle.Text from localizx:ed resources  -->
                         <TextBlock Text="Leiterplatten" />
                     </CommandBar.Content>
-
                     <!--  All your AppBar buttons  -->
                     <!--  Get SendAppBarButton.Label from localized resources  -->
                     <AppBarButton
+                        Background="{StaticResource AccentFillColorDefaultBrush}"
+                        x:Name="AddButton"
                         Click="CreatePcbButton_Click"
+                        FontWeight="SemiBold"
+                        Foreground="{StaticResource TextOnAccentFillColorPrimary}"
                         Icon="Add"
-                        Label="Hinzufügen" />
-                    <AppBarButton Icon="Refresh" Label="Neu Laden" />
-
+                        Label="Hinzufügen" 
+                        IsEnabled="{x:Bind helpers:AuthServiceHelper.IsStandardUser()}"/>
                 </CommandBar>
-                <StackPanel
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Background="{ThemeResource CommandBarBackground}">
-                    <AutoSuggestBox
-                        MinWidth="304"
-                        MaxWidth="320"
-                        Margin="0,8,0,12"
-                        HorizontalAlignment="Left"
-                        PlaceholderText="Suche"
-                        FontWeight="Normal"
-                        QueryIcon="Find"/>
-                </StackPanel>
             </Grid>
         </DataTemplate>
     </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
-    <Grid Margin="0,0,0,80">
+    <Grid x:Name="Content" Margin="0,0,0,80">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid.Resources>
-            <DataTemplate x:Key="RowDetailsTemplate">
-                <Grid Padding="10" BorderThickness=".5,0,.5,.5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding SerialNumber}" />
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding ErrorDescription}" />
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding Finalized}" />
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding LastStorageLocationName}" />
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        HorizontalAlignment="Right"
-                        Text="{Binding CreatedDate}" />
-                </Grid>
-            </DataTemplate>
-        </Grid.Resources>
         <StackPanel
-            Height="52"
+            Height="Auto"
             Margin="0,0,0,16"
             HorizontalAlignment="Left"
             CornerRadius="4"
@@ -116,32 +65,68 @@
                 DefaultLabelPosition="Right"
                 OverflowButtonVisibility="Collapsed">
                 <AppBarElementContainer VerticalContentAlignment="Center">
-                    <ComboBox x:Name="ComboBoxStorageLocation" 
-                              ItemsSource="{x:Bind ViewModel.StorageLocations}"
-                              SelectedItem="{x:Bind ViewModel.SelectedComboBox}"
-                              SelectionChanged="ComboBox_SelectionChanged"
-                              PlaceholderText="Alles">
+                    <ComboBox
+                        x:Name="ComboBoxStorageLocation"
+                        ItemsSource="{x:Bind ViewModel.StorageLocations}"
+                        PlaceholderText="Alles"
+                        SelectedItem="{x:Bind ViewModel.SelectedComboBox}"
+                        SelectionChanged="ComboBox_SelectionChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding StorageName}"/>
+                                <TextBlock Text="{Binding StorageName}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </AppBarElementContainer>
                 <AppBarButton
                     Width="80"
+                    AllowFocusOnInteraction="True"
                     Icon="Filter"
-                    Label="Filter"
-                    AllowFocusOnInteraction="True">
+                    Label="Filter">
                     <AppBarButton.Flyout>
-                        <MenuFlyout>
+                        <MenuFlyout Placement="Bottom">
                             <MenuFlyoutItem Click="Filter1_Click" Text="Abgeschlossene Einträge" />
                             <MenuFlyoutItem Click="Filter2_Click" Text="Heute erstellt" />
-                            <MenuFlyoutSeparator />
-                            <MenuFlyoutItem
-                                x:Name="FilterHeightLow"
-                                Click="Filter3_Click"
-                                Text="keine Weitergaben" />
+                            <MenuFlyoutSubItem Text="Sachnummer">
+                                <MenuFlyoutItem x:Name="PcbTypesFilterMenuItem" DataContext="{x:Bind ViewModel}">
+                                    <MenuFlyoutItem.Template>
+                                        <ControlTemplate x:Name="MenuControlTemplate" TargetType="MenuFlyoutItem">
+                                            <StackPanel Margin="15" Orientation="Vertical">
+                                                <CheckBox
+                                                    x:Name="OptionsAllCheckBox"
+                                                    Checked="SelectAll_Checked"
+                                                    Content="Alle auswählen"
+                                                    Indeterminate="SelectAll_Indeterminate"
+                                                    IsThreeState="True"
+                                                    Loaded="CheckBox_Loaded"
+                                                    Unchecked="SelectAll_Unchecked" />
+                                                <ScrollViewer
+                                                    Height="100"
+                                                    IsTabStop="True"
+                                                    IsVerticalScrollChainingEnabled="True"
+                                                    VerticalScrollBarVisibility="Auto">
+                                                    <ItemsControl x:Name="CheckBoxList" ItemsSource="{Binding AllPcbTypes, Mode=OneWay}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox
+                                                                    Margin="24,0,0,0"
+                                                                    Checked="Option_Checked"
+                                                                    Content="{Binding PcbPartNumber}"
+                                                                    Loaded="CheckBox_Loaded"
+                                                                    Unchecked="Option_Unchecked" />
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </ScrollViewer>
+                                                <Button
+                                                    Margin="0,20,20,0"
+                                                    Click="FilterPcbTypes_Click"
+                                                    Content="Filter anwenden" />
+                                            </StackPanel>
+                                        </ControlTemplate>
+                                    </MenuFlyoutItem.Template>
+                                </MenuFlyoutItem>
+                            </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem Click="FilterClear_Click" Text="Filter entfernen" />
                         </MenuFlyout>
@@ -203,6 +188,7 @@
                 Margin="8,0,0,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
+                PlaceholderText="Seriennummer suchen"
                 QueryIcon="Find"
                 QuerySubmitted="SearchBox_QuerySubmitted" />
             <CommandBar
@@ -244,43 +230,102 @@
                 <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
             </ctWinUI:DataGrid.Resources>
             <ctWinUI:DataGrid.Columns>
+                <ctWinUI:DataGridTemplateColumn
+                    CanUserSort="True"
+                    Header="Status"
+                    Tag="DwellTimeStatus">
+                    <ctWinUI:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse
+                                Width="22"
+                                Height="22"
+                                Fill="{Binding DwellTimeColor}"
+                                Stroke="Black"
+                                StrokeThickness="0.2" />
+                        </DataTemplate>
+                    </ctWinUI:DataGridTemplateColumn.CellTemplate>
+                </ctWinUI:DataGridTemplateColumn>
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding DwellTime}"
+                    CanUserSort="True"
+                    Header="Verweildauer"
+                    Tag="DwellTime" />
                 <ctWinUI:DataGridTextColumn
                     Binding="{Binding SerialNumber}"
                     Header="Seriennummer"
                     Tag="SerialNumber" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding PcbPartNumber}"
+                    CanUserSort="True"
+                    Header="Sachnummer"
+                    Tag="PcbPartNumber" />
                 <ctWinUI:DataGridComboBoxColumn
-                    Binding="{Binding ErrorDescription}"
-                    Header="Fehlerbeschreibung"
-                    Tag="ErrorDescription" />
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding Finalized}"
-                    Header="Abgeschlossen"
-                    Tag="Finalized" />
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding LastStorageLocationName}"
-                    Header="Letzter Lagerort"
-                    Tag="LastStorageLocation" 
-                    CanUserSort="False" />
-                <ctWinUI:DataGridTextColumn
-                    Binding="{Binding CreatedDate}"
-                    Header="Ausgefallen am"
-                    Tag="CreateDate" />
-                <controls:DataGridTemplateColumn Width="100" Header="Aktion" CanUserSort="False">
+                    Binding="{Binding MainErrorCode}"
+                    CanUserSort="True"
+                    Header="Oberfehler"
+                    Tag="MainErrorCode" />
+                <ctWinUI:DataGridComboBoxColumn
+                    Binding="{Binding SubErrorCode}"
+                    CanUserSort="True"
+                    Header="Unterfehler"
+                    Tag="SubErrorCode" />
+                <controls:DataGridTemplateColumn Header="Abgeschlossen">
                     <controls:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
+                            <Button
+                                Name="CheckedIcon"
+                                HorizontalAlignment="Center"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                Foreground="Green"
+                                Visibility="{Binding IsFinalized}">
+                                <FontIcon FontWeight="Bold" Glyph="&#xE73E;" />
+                            </Button>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding TransferCount}"
+                    CanUserSort="True"
+                    Header="Weitergaben"
+                    Tag="TransferCount" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding StorageName}"
+                    CanUserSort="True"
+                    Header="Letzter Lagerort"
+                    Tag="StorageName" />
+                <ctWinUI:DataGridTextColumn
+                    Binding="{Binding FailedAt}"
+                    Header="Ausgefallen am"
+                    Tag="FailedAt" />
+                <controls:DataGridTemplateColumn
+                    x:Name="AktionColumn"
+                    Width="100"
+                    CanUserSort="False"
+                    Header="Aktion">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate
+                            x:Name="AktionFlyoutTemplate">
                             <AppBarButton
+                                x:Name="FlyoutMenuButton"
+                                Click="FlyoutMenuClick"
                                 Width="60"
                                 VerticalAlignment="Center"
+                                AllowFocusOnInteraction="True"
                                 Background="Transparent"
                                 Icon="More"
-                                LabelPosition="Collapsed"
-                                AllowFocusOnInteraction="True">
+                                LabelPosition="Collapsed">
                                 <AppBarButton.Flyout>
-                                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft"
+                                                x:Name="FlyoutMenu">
                                         <MenuFlyoutItem
                                             Click="NavigateToDetails"
                                             Icon="OpenWith"
                                             Text="Detailansicht" />
+                                        <MenuFlyoutItem
+                                            Click="PrintClick"
+                                            Icon="Print"
+                                            Text="Drucken" />
                                         <MenuFlyoutItem
                                             Click="TransferClick"
                                             Icon="RepeatAll"
@@ -288,16 +333,19 @@
                                         <MenuFlyoutItem
                                             Click="EditClick"
                                             Icon="Edit"
-                                            Text="Bearbeiten" />
+                                            Text="Bearbeiten" 
+                                            IsEnabled="{x:Bind helpers:AuthServiceHelper.IsStandardUser()}"
+                                            Visibility="{x:Bind helpers:AuthServiceHelper.IsVisible()}"/>
                                         <MenuFlyoutItem
+                                            x:Name="DeleteButton"
                                             Click="DeleteClick"
                                             Icon="Delete"
-                                            Text="Löschen" />
-
+                                            Text="Löschen" 
+                                            IsEnabled="{x:Bind helpers:AuthServiceHelper.IsAdmin()}"
+                                            Visibility="{x:Bind helpers:AuthServiceHelper.IsVisibleAdmin()}"/>
                                     </MenuFlyout>
                                 </AppBarButton.Flyout>
                             </AppBarButton>
-
                         </DataTemplate>
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>

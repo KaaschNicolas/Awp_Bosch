@@ -2,10 +2,12 @@
 using App.Contracts.Services;
 using App.Core.Contracts.Services;
 using App.Core.DataAccess;
+using App.Core.DTOs;
 using App.Core.Helpers;
 using App.Core.Models;
 using App.Core.Services;
 using App.Core.Services.Interfaces;
+using App.Helpers;
 using App.Models;
 using App.Services;
 using App.ViewModels;
@@ -18,12 +20,16 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
 using Serilog;
-namespace App;
 
+using Windows.Devices.WiFiDirect.Services;
+
+namespace App;
+// Die Klasse "App" ist die Hauptklasse der Anwendung und erbt von der Klasse "Application" in WinUI 3.
 // To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
 public partial class App : Application
 {
-    // The .NET Generic Host provides dependency injection, configuration, logging, and other services.
+    // Der .NET Generic Host bietet Dependency Injection, Konfiguration, Logging und andere Dienste.
+    // In diesem Fall wird der Host verwendet, um die Dienste der Anwendung zu verwalten.
     // https://docs.microsoft.com/dotnet/core/extensions/generic-host
     // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
     // https://docs.microsoft.com/dotnet/core/extensions/configuration
@@ -33,9 +39,13 @@ public partial class App : Application
         get;
     }
 
+    // Methode zum Abrufen eines Dienstes aus dem Host.
+    // Es wird das generische Type-Argument "T" erwartet, das den gewünschten Dienst repräsentiert.
     public static T GetService<T>()
         where T : class
     {
+        // Überprüfen, ob der Dienst im Host registriert ist um ihn zurückgeben.
+        // Andernfalls wird eine ArgumentException ausgelöst.
         if ((App.Current as App)!.Host.Services.GetService(typeof(T)) is not T service)
         {
             throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
@@ -44,22 +54,28 @@ public partial class App : Application
         return service;
     }
 
+    // Statische Eigenschaft, die das Hauptfenster der Anwendung repräsentiert.
     public static WindowEx MainWindow { get; } = new MainWindow();
 
+    // Konstruktor der Klasse "App".
     public App()
     {
         InitializeComponent();
 
+        // Konfiguration der Logger-Komponente "Serilog" aus der Konfigurationsdatei.
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(ConfigurationHelper.Configuration)
             .CreateLogger();
 
+        // Konfiguration des Hosts.
         Host = Microsoft.Extensions.Hosting.Host.
         CreateDefaultBuilder().
         UseContentRoot(AppContext.BaseDirectory).
         UseSerilog().
         ConfigureServices((context, services) =>
         {
+            // Registrierung von Diensten
+
             // Default Activation Handler
             services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
 
@@ -93,9 +109,25 @@ public partial class App : Application
             services.AddTransient<ITransferDataService<Transfer>, TransferDataService<Transfer>>();
             services.AddTransient<IMockDataService, MockDataService>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IPcbTypeEvaluationService, PcbTypeEvaluationService>();
+            services.AddTransient<IDashboardDataService<BaseEntity>, DashboardDataService<BaseEntity>>();
 
 
             // Views and ViewModels
+            // Hier werden die Views und ViewModels der Anwendung registriert.
+            services.AddTransient<PcbTypeI_OEvaluationViewModel>();
+            services.AddTransient<PcbTypeI_OEvaluationPage>();
+            services.AddTransient<DashboardViewModel>();
+            services.AddTransient<DashboardPage>();
+
+            services.AddTransient<PcbTypeEvaluationViewModel>();
+            services.AddTransient<PcbTypeEvaluationPage>();
+            services.AddTransient<UpdateUserViewModel>();
+            services.AddTransient<UpdateUserPage>();
+            services.AddTransient<CreateUserViewModel>();
+            services.AddTransient<CreateUserPage>();
+            services.AddTransient<UsersViewModel>();
+            services.AddTransient<UsersPage>();
             services.AddTransient<TransferDialogViewModel>();
             services.AddTransient<ICrudService<Comment>, CrudService<Comment>>();
             services.AddTransient<ICrudService<Device>, CrudService<Device>>();
@@ -131,22 +163,33 @@ public partial class App : Application
             services.AddTransient<MainPage>();
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
-            //services.AddTransient<CreateStorageLocation>();
+            services.AddTransient<CreateStorageLocationViewModel>();
             services.AddTransient<StorageLocation>();
             services.AddTransient<StorageLocationViewModel>();
+            services.AddTransient<TransferDialogViewModel>();
+            services.AddTransient<DwellTimeEvaluationViewModel>();
+            services.AddTransient<DwellTimeEvalutionPage>();
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
 
+            // Registrierung des DbContexts "BoschContext" für die Datenbankverbindung.
             services.AddDbContext<BoschContext>(
                 options => options.UseSqlServer(ConfigurationHelper.Configuration.GetConnectionString("BoschContext")),
                 ServiceLifetime.Transient);
         }).
         Build();
 
+        // Aktuellen Benutzer und seine Rolle im AuthServiceHelper speichern.
+        var authService = Host.Services.GetService(typeof(IAuthenticationService)) as AuthenticationService;
+
+        AuthServiceHelper.Rolle = authService.CurrentUser.Role;
+
+        // Event-Handler für unbehandelte Ausnahmen registrieren.
         UnhandledException += App_UnhandledException;
     }
 
+    // Event-Handler für unbehandelte Ausnahmen.
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
     {
         // TODO: Log and handle exceptions as appropriate.
@@ -154,6 +197,7 @@ public partial class App : Application
         var ex = e.Exception;
     }
 
+    // Überschriebene Methode "OnLaunched", die beim Start der Anwendung aufgerufen wird.
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);

@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using App.Contracts.Services;
+﻿using App.Contracts.Services;
 using App.Contracts.ViewModels;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
+using App.Errors;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels;
 
@@ -12,12 +14,14 @@ public partial class UpdatePcbTypeViewModel : ObservableValidator, INavigationAw
 {
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
+    [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Sachnummer muss aus genau 10 Zahlen bestehen.")]
     private string _pcbPartNumber;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _description;
 
     [ObservableProperty]
@@ -70,7 +74,7 @@ public partial class UpdatePcbTypeViewModel : ObservableValidator, INavigationAw
                 _infoBarService.showError("Fehler beim Update der Fehlerkategorie", "Error");
             }
         }
-       
+
 
     }
 

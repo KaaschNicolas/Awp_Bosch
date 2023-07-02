@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Formats.Asn1;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using App.Contracts.Services;
-using App.Core.Helpers;
+﻿using App.Contracts.Services;
 using App.Core.Models;
 using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
 using App.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 
 namespace App.ViewModels;
 public partial class StorageLocationPaginationViewModel : ObservableRecipient
-{   
+{
     public StorageLocationPaginationViewModel(IStorageLocationDataService<StorageLocation> crudService, IInfoBarService infoBarService, IDialogService dialogService, INavigationService navigationService)
     {
         _crudService = crudService;
@@ -28,7 +20,7 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
         );
 
         PreviousAsyncCommand = new AsyncRelayCommand(
-            async () => await GetStorageLocations(_pageNumber -1, _pageSize, _isSortingAscending),
+            async () => await GetStorageLocations(_pageNumber - 1, _pageSize, _isSortingAscending),
             () => _pageNumber > 1
         );
 
@@ -105,7 +97,7 @@ public partial class StorageLocationPaginationViewModel : ObservableRecipient
     public StorageLocationFilterOptions FilterOptions { get => _filterOptions; set => SetProperty(ref _filterOptions, value); }
     public string SortBy { get => _sortyBy; set => SetProperty(ref _sortyBy, value); }
 
-    
+
     [ObservableProperty]
     private StorageLocation _selectedItem;
 

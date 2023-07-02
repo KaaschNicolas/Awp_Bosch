@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Printing;
 using Windows.Graphics.Printing;
 
@@ -8,7 +9,7 @@ public class PrintService : IPrintService
     private PrintManager _printManager;
     private PrintDocument _printDoc;
     private IPrintDocumentSource _printDocSource;
-    private UIElement _contentArea;
+    private Page _contentArea;
     private IntPtr hWnd;
 
     public PrintService()
@@ -23,9 +24,9 @@ public class PrintService : IPrintService
         _printDocSource = _printDoc.DocumentSource;
     }
 
-    public async Task Print(UIElement contentElement)
+    public async Task Print(Page page)
     {
-        _contentArea = contentElement;
+        _contentArea = page;
         await PrintManagerInterop.ShowPrintUIForWindowAsync(hWnd);
     }
 

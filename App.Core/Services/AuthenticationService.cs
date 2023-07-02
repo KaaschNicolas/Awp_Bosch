@@ -10,34 +10,53 @@ namespace App.Core.Services
         private User _currentUser;
 
         private BoschContext _boschContext;
-        public AuthenticationService(BoschContext boschContext) {
+        public AuthenticationService(BoschContext boschContext)
+        {
             _boschContext = boschContext;
         }
-        private void authenticate() {
+
+        // Authentifiziert den Benutzer anhand des Active Directory-Benutzernamens.
+        private void Authenticate()
+        {
             var adUsername = Environment.UserName;
-            var result = _boschContext.Users.Where(u => u.AdUsername.Equals(adUsername)).ToList();
-            if (result.Count != 0 && result[0] != null) { 
+            var result = _boschContext
+                .Users
+                .Where(u => u.AdUsername.Equals(adUsername) && u.DeletedDate < u.CreatedDate)
+                .ToList();
+            if (result.Count != 0 && result[0] != null)
+            {
                 _isAuthenticated = true;
                 _currentUser = result[0];
             }
         }
 
-        public bool isAuthenticated()
+        // Gibt zurück, ob der Benutzer authentifiziert ist.
+        public bool IsAuthenticated
         {
-            if (_currentUser == null)
+            get
             {
-               authenticate();
+                if (_currentUser == null)
+                {
+                    Authenticate();
+                }
+                return _isAuthenticated;
             }
-            return _isAuthenticated;
         }
 
-        public User currentUser()
+        // Gibt zurück, ob eine Verbindung zur Datenbank besteht.
+        public bool IsDbActive => _boschContext.Database.CanConnect();
+
+        // Gibt den aktuellen Benutzer zurück.
+        public User CurrentUser
         {
-            if (_currentUser == null)
+            get
             {
-               authenticate();
+                if (_currentUser == null)
+                {
+                    Authenticate();
+                }
+                return _currentUser;
             }
-            return _currentUser;
         }
     }
 }

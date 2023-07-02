@@ -1,18 +1,12 @@
 // Copyright (c) Microsoft Corporation and Contributors.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -194,10 +188,14 @@ public sealed class ValidationTextBox : ContentControl
         ValidationResult result = dataContext.GetErrors(propertyName).OfType<ValidationResult>().FirstOrDefault();
 
         warningIcon.Visibility = result is not null ? Visibility.Visible : Visibility.Collapsed;
-        textBox.BorderBrush = result is not null ? new SolidColorBrush(Microsoft.UI.Colors.Red) : new SolidColorBrush(Microsoft.UI.Colors.LightGray);
         if (result is not null)
         {
+            textBox.BorderBrush = new SolidColorBrush(Colors.Red);
             ToolTipService.SetToolTip(warningIcon, result.ErrorMessage);
+        }
+        else
+        {
+            textBox.ClearValue(BorderBrushProperty);
         }
     }
 }

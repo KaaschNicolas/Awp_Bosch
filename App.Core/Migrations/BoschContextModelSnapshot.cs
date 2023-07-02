@@ -118,7 +118,6 @@ namespace App.Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(650)");
 
                     b.HasKey("Id");
@@ -135,7 +134,6 @@ namespace App.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
@@ -146,7 +144,6 @@ namespace App.Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ErrorDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(650)");
 
                     b.Property<int?>("PcbId")
@@ -331,6 +328,11 @@ namespace App.Core.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
 
                     b.HasKey("Id");
 

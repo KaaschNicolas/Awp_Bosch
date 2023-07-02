@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>PrototypeAWP</value>
+    <value>Kreisler</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>PrototypeAWP</value>
+    <value>Kreisler</value>
   </data>
   <data name="Shell_Main.Content" xml:space="preserve">
     <value>Main</value>
@@ -171,7 +171,7 @@
     &lt;binding template="ToastGeneric"&gt;
       &lt;text&gt;App Notification&lt;/text&gt;
       &lt;text&gt;&lt;/text&gt;
-      &lt;image placement="appLogoOverride" hint-crop="circle" src="{0}Assets/WindowIcon.ico"/&gt;
+      &lt;image placement="appLogoOverride" hint-crop="circle" src="{0}Assets/PfeilIcon.ico"/&gt;
     &lt;/binding&gt;
   &lt;/visual&gt;
   &lt;actions&gt;
@@ -220,5 +220,8 @@
   </data>
   <data name="Shell_UpdatePcb.Content" xml:space="preserve">
     <value>Leiterplatte bearbeiten</value>
+  </data>
+  <data name="Shell_PcbTypeEvaluation.Content" xml:space="preserve">
+    <value>Sachnummer</value>
   </data>
 </root>

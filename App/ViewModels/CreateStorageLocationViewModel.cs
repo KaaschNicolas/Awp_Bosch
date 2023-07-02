@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using App.Contracts.Services;
+﻿using App.Contracts.Services;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
+using App.Errors;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.ViewModels;
 
@@ -11,29 +13,25 @@ public partial class CreateStorageLocationViewModel : ObservableValidator
 {
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _storageName;
 
     [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
     private string _dwellTimeYellow;
 
     [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
     private string _dwellTimeRed;
 
     [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
-    private bool _finalDisposition;
+    private bool _isFinalDestination;
+
 
     private readonly ICrudService<StorageLocation> _crudService;
     private readonly IInfoBarService _infoBarService;
     private readonly INavigationService _navigationService;
 
-    public CreateStorageLocationViewModel( ICrudService<StorageLocation> crudService, IInfoBarService infoBarService, INavigationService navigationService)
+    public CreateStorageLocationViewModel(ICrudService<StorageLocation> crudService, IInfoBarService infoBarService, INavigationService navigationService)
     {
         _crudService = crudService;
         _infoBarService = infoBarService;
@@ -41,13 +39,20 @@ public partial class CreateStorageLocationViewModel : ObservableValidator
     }
 
 
-    [RelayCommand]
     public async Task Save()
     {
         ValidateAllProperties();
         if (!HasErrors)
         {
-            var response = await _crudService.Create(new StorageLocation { StorageName = _storageName, DwellTimeYellow = _dwellTimeYellow, DwellTimeRed = _dwellTimeRed });
+            var dwellTimeRedVal = DwellTimeRed;
+            var dwellTimeYellowVal = DwellTimeYellow;
+
+            if (IsFinalDestination)
+            {
+                dwellTimeRedVal = "--";
+                dwellTimeYellowVal = "--";
+            }
+            var response = await _crudService.Create(new StorageLocation { StorageName = StorageName, DwellTimeYellow = dwellTimeYellowVal, DwellTimeRed = dwellTimeRedVal, IsFinalDestination = IsFinalDestination });
             if (response != null)
             {
                 if (response.Code == ResponseCode.Success)
@@ -66,7 +71,7 @@ public partial class CreateStorageLocationViewModel : ObservableValidator
                 _infoBarService.showError("Lagerort konnte nicht erstellt werden", "Error");
             }
         }
-        
+
     }
 
     [RelayCommand]

@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using App.Contracts.Services;
+﻿using App.Contracts.Services;
 using App.Core.Models;
+using App.Core.Models.Enums;
 using App.Core.Services.Interfaces;
-using App.Services;
+using App.Errors;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace App.ViewModels;
@@ -12,8 +13,8 @@ public partial class CreateDiagnoseViewModel : ObservableValidator
 {
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
-    [MinLength(10)]
+    [Required(ErrorMessage = ValidationErrorMessage.Required)]
+    [MaxLength(100, ErrorMessage = ValidationErrorMessage.MaxLength100)]
     private string _name;
 
     private readonly ICrudService<Diagnose> _crudService;
@@ -40,18 +41,18 @@ public partial class CreateDiagnoseViewModel : ObservableValidator
             {
                 if (response.Code == ResponseCode.Success)
                 {
-                    _infoBarService.showMessage("Erfolgreich Leiterplatte erstellt", "Erfolg");
+                    _infoBarService.showMessage("Erfolgreich Fehlerkategorie erstellt", "Erfolg");
                     _navigationService.NavigateTo("App.ViewModels.DiagnoseViewModel");
                 }
                 else
                 {
                     // TODO Fehler in Dict damit man leichter Fehler ändern kann
-                    _infoBarService.showError("Leiterplatte konnte nicht erstellt werden", "Error");
+                    _infoBarService.showError("Fehlerkategorie konnte nicht erstellt werden", "Error");
                 }
             }
             else
             {
-                _infoBarService.showError("Leiterplatte konnte nicht erstellt werden", "Error");
+                _infoBarService.showError("Fehlerkategorie konnte nicht erstellt werden", "Error");
             }
 
 
